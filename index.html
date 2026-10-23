@@ -493,7 +493,6 @@ socket.on('init', (data) => {
     player.y = serverPlayers[myId].y;
     player.name = serverPlayers[myId].name;
   }
-  // Генерация декора
   decor = [];
   for (let i = 0; i < 520; i++){
     decor.push({
@@ -604,7 +603,6 @@ function update(dt) {
     player.ultTime -= dt;
     if (player.ultTime <= 0) { player.ultActive = false; socket.emit('ult', { active: false }); }
     
-    // Безопасная отправка урона (раз в 0.1 сек, а не 60 раз в секунду)
     player.ultTick = (player.ultTick || 0) + dt;
     if (player.ultTick > 0.1) {
       player.ultTick = 0;
@@ -612,7 +610,7 @@ function update(dt) {
         if (id === myId) continue;
         const p = serverPlayers[id];
         if (Math.hypot(p.x - player.x, p.y - player.y) < 800) {
-          socket.emit('hitPlayer', { target: id, damage: 5 }); // Фиксированный урон
+          socket.emit('hitPlayer', { target: id, damage: 5 });
         }
       }
     }
@@ -647,7 +645,6 @@ function update(dt) {
     if (player.reloading <= 0) { player.reloading = 0; player.ammo = MAX_AMMO; }
   }
 
-  // Частицы
   for (let i = particles.length - 1; i >= 0; i--){
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
