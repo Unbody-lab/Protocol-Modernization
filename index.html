@@ -688,7 +688,7 @@ function tryAttack(h) {
       tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 600;
+      const MAX_RANGE = 750; // УВЕЛИЧЕНА ДАЛЬНОСТЬ
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -702,7 +702,7 @@ function tryAttack(h) {
 
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800,
+      vx: Math.cos(h.aim) * 1100, vy: Math.sin(h.aim) * 1100, // УВЕЛИЧЕНА СКОРОСТЬ
       r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
@@ -720,7 +720,7 @@ function activateUlt(h) {
     const ty = h.y + Math.sin(h.aim) * 500;
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 600, vy: Math.sin(h.aim) * 600,
+      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800,
       r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
@@ -766,7 +766,6 @@ function updateBot(bot, dt) {
     return;
   }
 
-  // Обновляем кулдауны и перезарядку ДО логики
   bot.attackCd = Math.max(0, bot.attackCd - dt);
   bot.swing = Math.max(0, bot.swing - dt);
   if (bot.reloading > 0) {
@@ -835,7 +834,6 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // Атака ботов
   if (d < 720) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
@@ -882,7 +880,8 @@ function update(dt) {
          player.ultTick = 0;
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
-           if (Math.hypot(e.x - player.x, e.y - player.y) < 800) {
+           // Проверка, находится ли враг на луче
+           if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) {
              damage(e, 5, player);
            }
          }
@@ -997,7 +996,7 @@ function update(dt) {
         
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
-          if (Math.hypot(e.x - b.x, e.y - b.y) < 80) {
+          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) { // УВЕЛИЧЕН РАДИУС ВЗРЫВА
             damage(e, b.dmg, b.owner, b.poison);
           }
         }
@@ -1081,6 +1080,14 @@ function segCircle(x1,y1,x2,y2,cx,cy,r){
   if (t1 >= 0 && t1 <= 1) return t1;
   if (t2 >= 0 && t2 <= 1) return t2;
   return -1;
+}
+
+function pointSegDist(px,py,x1,y1,x2,y2){
+  const dx = x2-x1, dy = y2-y1;
+  const a = dx*dx + dy*dy;
+  let t = a > 0 ? ((px-x1)*dx + (py-y1)*dy) / a : 0;
+  t = clamp(t, 0, 1);
+  return Math.hypot(px - (x1+dx*t), py - (y1+dy*t));
 }
 
 function drawGround(){
