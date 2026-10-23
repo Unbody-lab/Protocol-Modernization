@@ -468,7 +468,7 @@ const MAX_AMMO = 5, RELOAD_TIME = 1.6;
 let myId = null;
 let serverPlayers = {};
 let rocks = [];
-let bullets = []; // Теперь это локальные пули
+let bullets = [];
 let particles = [];
 let gameOver = false;
 let winnerName = '';
@@ -481,7 +481,9 @@ const player = {
   alive: true, respawn: 0, score: 0, hitFlash: 0,
   ammo: MAX_AMMO, reloading: 0, walkPhase: 0,
   name: 'Вы', color: '#3fa9f5', colorLight: '#a8e0ff',
-  isPlayer: true
+  isPlayer: true,
+  moveTick: 0,
+  mvx: 0, mvy: 0 // <--- ВОЗВРАЩАЕМ ПЕРЕМЕННЫЕ ДЛЯ АНИМАЦИИ
 };
 
 socket.on('init', (data) => {
@@ -516,9 +518,8 @@ socket.on('updateHealth', (players) => {
   serverPlayers = players;
   if (players[myId]) player.hp = players[myId].hp;
 });
-// Получаем пули от других игроков
 socket.on('newBullet', (data) => {
-  bullets.push({ ...data.bullet, owner: data.owner, color: '#ff7a4d' }); // Вражеские пули оранжевые
+  bullets.push({ ...data.bullet, owner: data.owner, color: '#ff7a4d' });
 });
 socket.on('playerUlt', (data) => {
   if (serverPlayers[data.id]) serverPlayers[data.id].ultActive = data.active;
@@ -582,13 +583,12 @@ function tryAttack() {
     player.ammo--; player.attackCd = .4;
     const a = player.aim;
     
-    // Создаем пулю локально и отправляем на сервер
     const bullet = {
       x: player.x + Math.cos(a)*30, y: player.y + Math.sin(a)*30,
       vx: Math.cos(a)*900, vy: Math.sin(a)*900,
       r: 7, dmg: 16, life: 0.9
     };
-    bullets.push({ ...bullet, owner: myId, color: '#3fa9f5' }); // Мои пули синие
+    bullets.push({ ...bullet, owner: myId, color: '#3fa9f5' });
     socket.emit('shoot', bullet);
     
     spawnHitParticles(player.x + Math.cos(a)*32, player.y + Math.sin(a)*32, '#d8f2ff', 4);
@@ -605,7 +605,10 @@ function activateUlt() {
 function update(dt) {
   if (!myId || gameOver || !gameRunning) return;
 
-  player.aim = Math.atan2(mouse.y - H/2 + player.y, mouse.x - W/2 + player.x);
+  // ВОЗВРАЩАЕМ ПРАВИЛЬНОЕ ПРИЦЕЛИВАНИЕ
+  const mwx = mouse.x - W/2 + player.x;
+  const mwy = mouse.y - H/2 + player.y;
+  player.aim = Math.atan2(mwy - player.y, mwx - player.x);
 
   if (player.ultActive) {
     player.ultTime -= dt;
@@ -629,7 +632,9 @@ function update(dt) {
     if (keys['KeyS'] || keys['ArrowDown'])  my += 1;
     if (keys['KeyW'] || keys['ArrowUp'])    my -= 1;
     
-        if (mx !== 0 || my !== 0) {
+    player.mvx = mx; player.mvy = my; // <--- ДЛЯ АНИМАЦИИ
+
+    if (mx !== 0 || my !== 0) {
       player.walkPhase += dt * 14;
       const len = Math.hypot(mx, my);
       player.x += (mx/len) * 208 * dt;
@@ -637,9 +642,8 @@ function update(dt) {
       player.x = clamp(player.x, 20, WORLD_W - 20);
       player.y = clamp(player.y, 20, WORLD_H - 20);
       
-      // Отправляем координаты не чаще 15 раз в секунду
-      player.moveTick = (player.moveTick || 0) + dt;
-      if (player.moveTick > 0.066) { // 0.066 сек = ~15 раз в секунду
+      player.moveTick += dt;
+      if (player.moveTick > 0.066) {
         player.moveTick = 0;
         socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
       }
@@ -659,7 +663,7 @@ function update(dt) {
     if (player.reloading <= 0) { player.reloading = 0; player.ammo = MAX_AMMO; }
   }
 
-  // Физика пуль (ЛОКАЛЬНО)
+  // Физика пуль
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
     b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
@@ -678,10 +682,7 @@ function update(dt) {
         if (!serverPlayers[id].alive || id === b.owner) continue;
         const p = serverPlayers[id];
         if (Math.hypot(b.x - p.x, b.y - p.y) < 19 + b.r) {
-          // Если пуля моя, отправляю урон
-          if (b.owner === myId) {
-            socket.emit('hitPlayer', { target: id, damage: b.dmg });
-          }
+          if (b.owner === myId) socket.emit('hitPlayer', { target: id, damage: b.dmg });
           spawnHitParticles(b.x, b.y, b.color, 9);
           dead = true; break;
         }
@@ -783,7 +784,7 @@ function drawHero(h){
   }
 
   const walk = Math.sin(h.walkPhase || 0) * 4;
-  const isWalking = Math.hypot(player.mvx||0, player.mvy||0) > .001;
+  const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
 
   ctx.strokeStyle = '#2b323c'; ctx.lineWidth = 5; ctx.lineCap = 'round';
   ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 20); ctx.stroke();
