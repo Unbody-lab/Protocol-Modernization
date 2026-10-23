@@ -629,14 +629,20 @@ function update(dt) {
     if (keys['KeyS'] || keys['ArrowDown'])  my += 1;
     if (keys['KeyW'] || keys['ArrowUp'])    my -= 1;
     
-    if (mx !== 0 || my !== 0) {
+        if (mx !== 0 || my !== 0) {
       player.walkPhase += dt * 14;
       const len = Math.hypot(mx, my);
       player.x += (mx/len) * 208 * dt;
       player.y += (my/len) * 208 * dt;
       player.x = clamp(player.x, 20, WORLD_W - 20);
       player.y = clamp(player.y, 20, WORLD_H - 20);
-      socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
+      
+      // Отправляем координаты не чаще 15 раз в секунду
+      player.moveTick = (player.moveTick || 0) + dt;
+      if (player.moveTick > 0.066) { // 0.066 сек = ~15 раз в секунду
+        player.moveTick = 0;
+        socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
+      }
     } else {
       player.walkPhase = 0;
     }
