@@ -12,7 +12,6 @@ app.use(express.static(__dirname));
 const WORLD_W = 2600, WORLD_H = 2000;
 let players = {};
 let rocks = [];
-let bullets = [];
 
 function genWorld() {
     const rnd = (a, b) => a + Math.random() * (b - a);
@@ -50,15 +49,7 @@ io.on('connection', (socket) => {
     players[socket.id] = {
         id: socket.id,
         x: spawn.x, y: spawn.y,
-        hp: 100,
-        score: 0,
-        aim: 0,
-        alive: true,
-        respawnTimer: 0,
-        ult: 0,
-        ultActive: false,
-        ultTime: 0,
-        walkPhase: 0,
+        hp: 100, score: 0, aim: 0, alive: true, respawnTimer: 0, ult: 0, ultActive: false, ultTime: 0, walkPhase: 0,
         name: 'Игрок ' + Math.floor(Math.random() * 90 + 10),
         color: `hsl(${Math.random() * 360}, 100%, 50%)`,
         colorLight: `hsl(${Math.random() * 360}, 100%, 80%)`
@@ -79,38 +70,34 @@ io.on('connection', (socket) => {
     });
 
     socket.on('shoot', (bulletData) => {
-        const p = players[socket.id];
-        if (!p || !p.alive) return;
-        bullets.push({ ...bulletData, owner: socket.id, life: 0.9 });
+        socket.broadcast.volatile.emit('newBullet', { owner: socket.id, bullet: bulletData });
     });
 
+    // Сервер просто пересылает урон
     socket.on('hitPlayer', (data) => {
         const target = players[data.target];
-        const source = players[socket.id];
-        
-        if (!target || !target.alive || !source || !source.alive) return;
-
-        target.hp -= data.damage;
-        if (source.ultActive === false) source.ult = Math.min(100, source.ult + data.damage * 0.5);
-
-        if (target.hp <= 0) {
-            target.hp = 0;
-            target.alive = false;
-            target.respawnTimer = 3;
-            target.ultActive = false;
-            source.score += 1;
-            if (source.score >= 8) io.emit('gameOver', { winnerName: source.name });
+        if (target && target.alive) {
+            target.hp -= data.damage;
+            if (!players[socket.id].ultActive) {
+                players[socket.id].ult = Math.min(100, players[socket.id].ult + data.damage * 0.5);
+            }
+            if (target.hp <= 0) {
+                target.hp = 0;
+                target.alive = false;
+                target.respawnTimer = 3;
+                target.ultActive = false;
+                if (players[socket.id]) players[socket.id].score++;
+            }
+            io.emit('updateHealth', players);
         }
-        io.emit('updateHealth', players);
     });
 
+    // Сервер пересылает включение ульты
     socket.on('ult', (data) => {
         const p = players[socket.id];
-        if (p && p.ult >= 100 && !p.ultActive) {
-            p.ult = 0; p.ultActive = true; p.ultTime = 3.0;
-            io.emit('playerUlt', { id: socket.id, active: true });
-        } else if (p && !data.active) {
-            p.ultActive = false;
+        if (p) {
+            p.ultActive = data.active;
+            socket.broadcast.emit('playerUlt', { id: socket.id, active: data.active });
         }
     });
 
@@ -120,66 +107,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Оптимизированный цикл сервера
-setInterval(() => {
-    const dt = 1 / 60;
-    
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-        let dead = b.life <= 0;
-
-        if (!dead) {
-            for (const r of rocks) {
-                if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { dead = true; break; }
-            }
-        }
-        if (!dead) {
-            for (const id in players) {
-                const p = players[id];
-                if (!p.alive || id === b.owner) continue;
-                if (Math.hypot(b.x - p.x, b.y - p.y) < 19 + b.r) {
-                    const source = players[b.owner];
-                    if (source) {
-                        p.hp -= b.dmg || 16;
-                        if (!source.ultActive) source.ult = Math.min(100, source.ult + 8);
-                        if (p.hp <= 0) {
-                            p.hp = 0; p.alive = false; p.respawnTimer = 3;
-                            source.score += 1;
-                        }
-                        io.emit('updateHealth', players);
-                    }
-                    dead = true; break;
-                }
-            }
-        }
-        if (dead) bullets.splice(i, 1);
-    }
-
-    let changed = false;
-    for (const id in players) {
-        const p = players[id];
-        if (p.ultActive) {
-            p.ultTime -= dt;
-            if (p.ultTime <= 0) { p.ultActive = false; p.ultTime = 0; changed = true; }
-        }
-        if (!p.alive) {
-            p.respawnTimer -= dt;
-            if (p.respawnTimer <= 0) {
-                const spawn = findSpawnPoint();
-                p.x = spawn.x; p.y = spawn.y; p.hp = 100; p.alive = true;
-                changed = true;
-            }
-        }
-    }
-    if (changed) io.emit('updateHealth', players);
-    
-    if (bullets.length > 0) {
-        io.volatile.emit('bullets', bullets);
-    }
-}, 1000 / 60);
-
 const PORT = process.env.PORT || 10000;
 server.listen(PORT, () => {
-    console.log(`Сервер запущен на порту ${PORT}`);
+    console.log(`Легкий сервер запущен на порту ${PORT}`);
 });
