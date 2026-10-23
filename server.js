@@ -84,12 +84,10 @@ io.on('connection', (socket) => {
         bullets.push({ ...bulletData, owner: socket.id, life: 0.9 });
     });
 
-    // БЕЗОПАСНЫЙ УРОН
     socket.on('hitPlayer', (data) => {
         const target = players[data.target];
         const source = players[socket.id];
         
-        // Защита от краша: проверяем, что оба игрока живы и существуют
         if (!target || !target.alive || !source || !source.alive) return;
 
         target.hp -= data.damage;
@@ -181,7 +179,7 @@ setInterval(() => {
     }
 }, 1000 / 60);
 
-const PORT = process.env.PORT || 10000; // Render выдает порт 10000
+const PORT = process.env.PORT || 10000;
 server.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
