@@ -693,7 +693,7 @@ function tryAttack(h) {
       ty = mouse.y - H/2 + h.y;
       // Ограничиваем дальность броска (чтобы не кидал через всю карту)
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 650; // Дальность Лёхи
+      const MAX_RANGE = 950; // Дальность Лёхи
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
