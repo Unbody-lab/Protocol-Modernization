@@ -112,7 +112,9 @@
   .stat-head{display:flex; justify-content:space-between; font-size:13px; font-weight:700; color:rgba(170,205,235,0.9)}
   .stat-track{height:9px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden}
   .stat-fill{height:100%; border-radius:5px; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)}
-  #hero-modal-select{margin-top:10px; padding:14px 0; font-size:16px; font-weight:800; letter-spacing:2px; color:#0a1420; background:linear-gradient(180deg,#7ff0ff,#3fa9f5); border:none; border-radius:12px; cursor:pointer; box-shadow:0 4px 0 #1e6a9e; transition:transform .1s;}
+  
+  /* Серая кнопка выбора для обычной редкости */
+  #hero-modal-select{margin-top:10px; padding:14px 0; font-size:16px; font-weight:800; letter-spacing:2px; color:#0a1420; background:linear-gradient(180deg,#e0e5ec,#B0B8C4); border:none; border-radius:12px; cursor:pointer; box-shadow:0 4px 0 #7a8494; transition:transform .1s;}
   #hero-modal-select:hover{transform:translateY(-2px)}
   #hero-modal-select:active{transform:translateY(2px); box-shadow:none}
 
@@ -289,7 +291,7 @@
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
       <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (бомба)</span><span>20 (+яд)</span></div><div class="stat-track"><div class="stat-fill" style="width:70%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
+      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (бомба)</span><span>25 (+яд)</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
       <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>208</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
       <div class="stat-block"><div class="stat-head"><span>💣 Патроны</span><span>3 (перезарядка 2.0с)</span></div><div class="stat-track"><div class="stat-fill" style="width:60%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
       <button id="hero-modal-select" onclick="selectLeshaAndClose()" style="background:linear-gradient(180deg,#ffb450,#ff7a4d); box-shadow:0 4px 0 #b87a00;">ВЫБРАТЬ</button>
@@ -687,7 +689,7 @@ function tryAttack(h) {
       tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 450; 
+      const MAX_RANGE = 600; // УВЕЛИЧЕНА ДАЛЬНОСТЬ
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -695,14 +697,14 @@ function tryAttack(h) {
       }
       h.aim = Math.atan2(ty - h.y, tx - h.x);
     } else {
-      tx = h.x + Math.cos(h.aim) * 350;
-      ty = h.y + Math.sin(h.aim) * 350;
+      tx = h.x + Math.cos(h.aim) * 400;
+      ty = h.y + Math.sin(h.aim) * 400;
     }
 
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 600, vy: Math.sin(h.aim) * 600,
-      r: 10, dmg: 20, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
+      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, // УВЕЛИЧЕНА СКОРОСТЬ
+      r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
   }
@@ -715,11 +717,11 @@ function activateUlt(h) {
   h.ult = 0; h.ultActive = true; h.ultTime = 3.0;
   
   if (h.type === 'Lesha') {
-    const tx = h.x + Math.cos(h.aim) * 400;
-    const ty = h.y + Math.sin(h.aim) * 400;
+    const tx = h.x + Math.cos(h.aim) * 500;
+    const ty = h.y + Math.sin(h.aim) * 500;
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 500, vy: Math.sin(h.aim) * 500,
+      vx: Math.cos(h.aim) * 600, vy: Math.sin(h.aim) * 600,
       r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
@@ -823,7 +825,7 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // Исправлена логика атаки ботов
+  // Исправлена атака ботов
   if (d < 720 && hasLOS(bot, target)) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
@@ -871,7 +873,7 @@ function update(dt) {
     player.ultTime -= dt;
     
     if (player.type === 'Vitya') {
-       // Лазер управляется мышкой
+       // Управляемый лазер
        player.aim = Math.atan2(mwy - player.y, mwx - player.x);
        
        player.ultTick = (player.ultTick || 0) + dt;
@@ -884,8 +886,6 @@ function update(dt) {
            }
          }
        }
-    } else {
-       // Для Лёхи ульта просто заканчивается (бомба уже улетела)
     }
 
     if (player.ultTime <= 0) { player.ultActive = false; }
@@ -1204,6 +1204,12 @@ function drawHero(h){
   ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center';
   ctx.fillStyle = isMe ? '#a9e8ff' : 'rgba(222,234,246,0.82)';
   ctx.fillText(h.name, h.x, ammoY - 8);
+
+  // ВОЗВРАЩЕНА НАДПИСЬ ПЕРЕЗАРЯДКА НАД ГОЛОВОЙ
+  if (h.reloading > 0 && h.alive) {
+    ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900';
+    ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18);
+  }
 }
 
 function drawHeroes(){
