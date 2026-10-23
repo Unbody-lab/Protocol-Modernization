@@ -443,7 +443,7 @@ addEventListener('keydown', e => {
 /* ============================================================
    СЕТЕВАЯ ИГРА (С КРАСИВЫМ РЕНДЕРОМ)
 ============================================================ */
-const socket = io();
+const socket = io({ transports: ['websocket'] });
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let W = window.innerWidth, H = window.innerHeight;
@@ -468,7 +468,7 @@ const MAX_AMMO = 5, RELOAD_TIME = 1.6;
 let myId = null;
 let serverPlayers = {};
 let rocks = [];
-let bullets = [];
+let bullets = []; // Теперь это локальные пули
 let particles = [];
 let gameOver = false;
 let winnerName = '';
@@ -516,7 +516,10 @@ socket.on('updateHealth', (players) => {
   serverPlayers = players;
   if (players[myId]) player.hp = players[myId].hp;
 });
-socket.on('bullets', (b) => { bullets = b; });
+// Получаем пули от других игроков
+socket.on('newBullet', (data) => {
+  bullets.push({ ...data.bullet, owner: data.owner, color: '#ff7a4d' }); // Вражеские пули оранжевые
+});
 socket.on('playerUlt', (data) => {
   if (serverPlayers[data.id]) serverPlayers[data.id].ultActive = data.active;
 });
@@ -578,11 +581,16 @@ function tryAttack() {
     }
     player.ammo--; player.attackCd = .4;
     const a = player.aim;
-    socket.emit('shoot', {
+    
+    // Создаем пулю локально и отправляем на сервер
+    const bullet = {
       x: player.x + Math.cos(a)*30, y: player.y + Math.sin(a)*30,
       vx: Math.cos(a)*900, vy: Math.sin(a)*900,
-      r: 7, dmg: 16
-    });
+      r: 7, dmg: 16, life: 0.9
+    };
+    bullets.push({ ...bullet, owner: myId, color: '#3fa9f5' }); // Мои пули синие
+    socket.emit('shoot', bullet);
+    
     spawnHitParticles(player.x + Math.cos(a)*32, player.y + Math.sin(a)*32, '#d8f2ff', 4);
     if (player.ammo <= 0) player.reloading = RELOAD_TIME;
   }
@@ -643,6 +651,37 @@ function update(dt) {
   if (player.reloading > 0) {
     player.reloading -= dt;
     if (player.reloading <= 0) { player.reloading = 0; player.ammo = MAX_AMMO; }
+  }
+
+  // Физика пуль (ЛОКАЛЬНО)
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    const b = bullets[i];
+    b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
+    let dead = b.life <= 0;
+
+    if (!dead) {
+      for (const r of rocks) {
+        if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
+          spawnHitParticles(b.x, b.y, '#b9c9d8', 6);
+          dead = true; break;
+        }
+      }
+    }
+    if (!dead) {
+      for (let id in serverPlayers) {
+        if (!serverPlayers[id].alive || id === b.owner) continue;
+        const p = serverPlayers[id];
+        if (Math.hypot(b.x - p.x, b.y - p.y) < 19 + b.r) {
+          // Если пуля моя, отправляю урон
+          if (b.owner === myId) {
+            socket.emit('hitPlayer', { target: id, damage: b.dmg });
+          }
+          spawnHitParticles(b.x, b.y, b.color, 9);
+          dead = true; break;
+        }
+      }
+    }
+    if (dead) bullets.splice(i, 1);
   }
 
   for (let i = particles.length - 1; i >= 0; i--){
@@ -965,11 +1004,11 @@ function render() {
 
   for (const b of bullets) {
     ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU);
-    ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill();
+    ctx.fillStyle = b.color === '#ff7a4d' ? 'rgba(255,122,77,0.16)' : 'rgba(150,215,255,0.16)'; ctx.fill();
     ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
     ctx.fillStyle = '#e6f7ff'; ctx.fill();
     ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU);
-    ctx.fillStyle = '#3fa9f5'; ctx.fill();
+    ctx.fillStyle = b.color; ctx.fill();
   }
 
   drawLasers();
