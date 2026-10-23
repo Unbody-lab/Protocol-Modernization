@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
     players[socket.id] = {
         id: socket.id,
         x: spawn.x, y: spawn.y,
-        hp: 100, maxHp: 100,
+        hp: 100,
         score: 0,
         aim: 0,
         alive: true,
@@ -69,36 +69,37 @@ io.on('connection', (socket) => {
 
     socket.on('move', (data) => {
         const p = players[socket.id];
-        if (p && p.alive && !p.ultActive) {
+        if (p && p.alive) {
             p.x = data.x;
             p.y = data.y;
             p.aim = data.aim;
             p.walkPhase = data.walkPhase;
-            // Отправляем позицию только если она изменилась
             socket.broadcast.volatile.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, aim: data.aim, walkPhase: data.walkPhase });
         }
     });
 
     socket.on('shoot', (bulletData) => {
         const p = players[socket.id];
-        if (!p || !p.alive || p.ultActive) return;
+        if (!p || !p.alive) return;
         bullets.push({ ...bulletData, owner: socket.id, life: 0.9 });
     });
 
+    // БЕЗОПАСНЫЙ УРОН
     socket.on('hitPlayer', (data) => {
         const target = players[data.target];
         const source = players[socket.id];
+        
+        // Защита от краша: проверяем, что оба игрока живы и существуют
         if (!target || !target.alive || !source || !source.alive) return;
 
         target.hp -= data.damage;
-        if (!source.ultActive) source.ult = Math.min(100, source.ult + data.damage * 0.5);
+        if (source.ultActive === false) source.ult = Math.min(100, source.ult + data.damage * 0.5);
 
         if (target.hp <= 0) {
             target.hp = 0;
             target.alive = false;
             target.respawnTimer = 3;
             target.ultActive = false;
-            target.ultTime = 0;
             source.score += 1;
             if (source.score >= 8) io.emit('gameOver', { winnerName: source.name });
         }
@@ -121,11 +122,10 @@ io.on('connection', (socket) => {
     });
 });
 
-// Игровой цикл сервера (исправлен краш)
+// Оптимизированный цикл сервера
 setInterval(() => {
     const dt = 1 / 60;
     
-    // Обновление пуль
     for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
         b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
@@ -158,7 +158,6 @@ setInterval(() => {
         if (dead) bullets.splice(i, 1);
     }
 
-    // Обновление игроков
     let changed = false;
     for (const id in players) {
         const p = players[id];
@@ -177,13 +176,12 @@ setInterval(() => {
     }
     if (changed) io.emit('updateHealth', players);
     
-    // Отправляем пули (только если они есть)
     if (bullets.length > 0) {
         io.volatile.emit('bullets', bullets);
     }
 }, 1000 / 60);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000; // Render выдает порт 10000
 server.listen(PORT, () => {
-    console.log(`Сервер запущен! Открой http://localhost:${PORT}`);
+    console.log(`Сервер запущен на порту ${PORT}`);
 });
