@@ -766,6 +766,17 @@ function updateBot(bot, dt) {
     return;
   }
 
+  // Обновляем кулдауны и перезарядку ДО логики
+  bot.attackCd = Math.max(0, bot.attackCd - dt);
+  bot.swing = Math.max(0, bot.swing - dt);
+  if (bot.reloading > 0) {
+    bot.reloading -= dt;
+    if (bot.reloading <= 0) {
+      bot.reloading = 0;
+      bot.ammo = bot.maxAmmo;
+    }
+  }
+
   const enemies = getAllEnemies(bot);
   let target = null, best = Infinity;
   for (const e of enemies) {
@@ -824,20 +835,12 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // ИСПРАВЛЕННАЯ АТАКА (убран hasLOS, теперь боты не тупят за камнями)
+  // Атака ботов
   if (d < 720) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
     } else {
       tryAttack(bot);
-    }
-  }
-
-  if (bot.reloading > 0) {
-    bot.reloading -= dt;
-    if (bot.reloading <= 0) {
-      bot.reloading = 0;
-      bot.ammo = bot.maxAmmo;
     }
   }
 }
