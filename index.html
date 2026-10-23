@@ -237,7 +237,6 @@
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
       </div>
-      <!-- Карточка Скоро -->
       <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
         <div class="fighter-card-icon">?</div>
         <div class="fighter-card-name">Скоро</div>
@@ -286,7 +285,7 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Человек.<br><br>
-        Печально известный лидер Синдиката "Трусы", для него вся эта война Технократов и Охлократов, всего лишь способ заявить миру, что он всё ещё здесь..., ну и наверно реклама для его бренда трусов...<br>
+        Печально известный лидер Синдиката "Трусы"<br>
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
       <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
@@ -353,7 +352,6 @@
   </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script>
 (function(){
 'use strict';
@@ -454,8 +452,6 @@ window.startGame = function(){
   hintEl.style.display = 'block';
   gameRunning = true;
   playBattleMusic();
-  
-  // Запускаем игру. Если PVP, боты все равно добавляются в startTraining
   startTraining();
 };
 
@@ -543,7 +539,8 @@ function createHero(id, type, isBot) {
     colorLight: isVitya ? '#a8e0ff' : '#ffb99b',
     poison: 0, poisonTick: 0,
     botTimer: 0, botJitter: 0,
-    shootCount: 0, grenadeTimer: 0
+    shootCount: 0, grenadeTimer: 0,
+    kbx: 0, kby: 0
   };
 }
 
@@ -596,7 +593,6 @@ function startTraining(){
   player.isPlayer = true;
   player.name = 'Вы';
 
-  // В PVP или Тренировке всегда добавляем 4 ботов для игры
   for (let i = 0; i < 4; i++){
     const bType = Math.random() < 0.5 ? 'Vitya' : 'Lesha';
     const bot = createHero('bot_'+i, bType, true);
@@ -683,17 +679,15 @@ function tryAttack(h) {
     bullets.push({ ...bullet, owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
   } else {
-    // Лёха: Бомба летит в точку курсора (или просто вперед для бота)
     h.shootCount++;
     const isPoison = (h.shootCount % 3 === 0); 
     
     let tx, ty;
     if (h.isPlayer) {
-      tx = mouse.x - W/2 + h.x; // Точка клика
+      tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
-      // Ограничиваем дальность броска (чтобы не кидал через всю карту)
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 950; // Дальность Лёхи
+      const MAX_RANGE = 450; 
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -779,7 +773,10 @@ function updateBot(bot, dt) {
     if (d < best) { best = d; target = e; }
   }
 
-  if (!target) return;
+  if (!target) {
+    bot.mvx = 0; bot.mvy = 0;
+    return;
+  }
 
   bot.botTimer -= dt;
   if (bot.botTimer <= 0) {
@@ -814,16 +811,19 @@ function updateBot(bot, dt) {
 
   const len = Math.hypot(mx, my);
   if (len > 0.001) {
+    bot.mvx = mx; bot.mvy = my;
     bot.x += (mx / len) * 208 * dt;
     bot.y += (my / len) * 208 * dt;
     bot.walkPhase += dt * 14;
   } else {
+    bot.mvx = 0; bot.mvy = 0;
     bot.walkPhase = 0;
   }
 
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
+  // Исправлена логика атаки ботов
   if (d < 720 && hasLOS(bot, target)) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
@@ -854,7 +854,7 @@ function update(dt) {
   const mwx = mouse.x - W/2 + player.x;
   const mwy = mouse.y - H/2 + player.y;
   
-  if (!player.ultActive) {
+  if (!player.ultActive && player.alive) {
      player.aim = Math.atan2(mwy - player.y, mwx - player.x);
   }
 
@@ -869,18 +869,27 @@ function update(dt) {
     }
   } else if (player.ultActive) {
     player.ultTime -= dt;
+    
+    if (player.type === 'Vitya') {
+       // Лазер управляется мышкой
+       player.aim = Math.atan2(mwy - player.y, mwx - player.x);
+       
+       player.ultTick = (player.ultTick || 0) + dt;
+       if (player.ultTick > 0.1) {
+         player.ultTick = 0;
+         const enemies = getAllEnemies(player);
+         for (const e of enemies) {
+           if (Math.hypot(e.x - player.x, e.y - player.y) < 800) {
+             damage(e, 5, player);
+           }
+         }
+       }
+    } else {
+       // Для Лёхи ульта просто заканчивается (бомба уже улетела)
+    }
+
     if (player.ultTime <= 0) { player.ultActive = false; }
     
-    player.ultTick = (player.ultTick || 0) + dt;
-    if (player.ultTick > 0.1) {
-      player.ultTick = 0;
-      const enemies = getAllEnemies(player);
-      for (const e of enemies) {
-        if (Math.hypot(e.x - player.x, e.y - player.y) < 800) {
-          damage(e, 5, player);
-        }
-      }
-    }
   } else {
     let mx = 0, my = 0;
     if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
@@ -902,8 +911,8 @@ function update(dt) {
     }
   }
 
-  if (mouse.down) tryAttack(player);
-  if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive) activateUlt(player);
+  if (mouse.down && player.alive) tryAttack(player);
+  if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive && player.alive) activateUlt(player);
 
   player.attackCd = Math.max(0, player.attackCd - dt);
   player.swing = Math.max(0, player.swing - dt);
@@ -943,7 +952,6 @@ function update(dt) {
     
     if (b.type === 'big_bomb' && !b.exploded) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-      // Достигла ли цели
       if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20) {
         b.exploded = true;
         spawnHitParticles(b.x, b.y, '#ff0000', 40);
@@ -953,7 +961,6 @@ function update(dt) {
             damage(e, 50, b.owner);
           }
         }
-        // Разлёт мелких бомб
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
           bullets.push({
@@ -972,7 +979,6 @@ function update(dt) {
     let dead = b.life <= 0;
 
     if (!dead && b.type === 'bomb') {
-      // Бомба замедляется и взрывается
       b.vx *= 0.9;
       b.vy *= 0.9;
       if (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15) {
@@ -1104,7 +1110,7 @@ function drawHero(h){
   ctx.beginPath(); ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
   ctx.fillStyle = 'rgba(0,0,0,0.32)'; ctx.fill();
 
-  if (h.ultActive){
+  if (h.ultActive && h.type === 'Vitya'){
     const p = .5 + .5*Math.sin(t*22);
     ctx.beginPath(); ctx.arc(0, 0, 19 + 10 + p*7, 0, TAU);
     ctx.strokeStyle = 'rgba(120,225,255,' + (.35 + .45*p) + ')';
@@ -1137,7 +1143,7 @@ function drawHero(h){
     ctx.lineWidth = 2; ctx.stroke();
   }
 
-  if (h.ultActive){
+  if (h.ultActive && h.type === 'Vitya'){
     ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU);
     ctx.fillStyle = '#eaffff'; ctx.fill();
   }
@@ -1147,7 +1153,7 @@ function drawHero(h){
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
   ctx.rotate(swingOff);
   let reloadOff = 0;
-  if (isMe && player.reloading > 0) reloadOff = Math.sin((player.reloading / player.reloadTime) * Math.PI) * 0.6;
+  if (h.reloading > 0) reloadOff = Math.sin((h.reloading / h.reloadTime) * Math.PI) * 0.6;
   ctx.rotate(reloadOff);
 
   ctx.strokeStyle = h.color; ctx.lineWidth = 4.5;
@@ -1229,30 +1235,33 @@ function drawBullets(){
 
 function drawLasers(){
   const t = performance.now() / 1000;
-  if (player.ultActive && player.type === 'Vitya') {
-    let maxLen = 1100;
-    const sx = player.x, sy = player.y;
-    const ex0 = sx + Math.cos(player.aim) * 1100;
-    const ey0 = sy + Math.sin(player.aim) * 1100;
-    for (const r of rocks){
-      const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r);
-      if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100);
-    }
-    const ex = sx + Math.cos(player.aim) * maxLen;
-    const ey = sy + Math.sin(player.aim) * maxLen;
+  
+  for (const h of [player, ...bots]) {
+    if (h.ultActive && h.type === 'Vitya' && h.alive) {
+      let maxLen = 1100;
+      const sx = h.x, sy = h.y;
+      const ex0 = sx + Math.cos(h.aim) * 1100;
+      const ey0 = sy + Math.sin(h.aim) * 1100;
+      for (const r of rocks){
+        const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r);
+        if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100);
+      }
+      const ex = sx + Math.cos(h.aim) * maxLen;
+      const ey = sy + Math.sin(h.aim) * maxLen;
 
-    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-    ctx.strokeStyle = 'rgba(60,170,255,0.16)'; ctx.lineWidth = 42; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-    ctx.strokeStyle = 'rgba(90,212,255,0.30)'; ctx.lineWidth = 23; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-    ctx.strokeStyle = 'rgba(185,245,255,0.85)'; ctx.lineWidth = 10; ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
-    ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU);
-    ctx.fillStyle = 'rgba(160,238,255,0.35)'; ctx.fill();
-    ctx.restore();
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = 'rgba(60,170,255,0.16)'; ctx.lineWidth = 42; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = 'rgba(90,212,255,0.30)'; ctx.lineWidth = 23; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = 'rgba(185,245,255,0.85)'; ctx.lineWidth = 10; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
+      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU);
+      ctx.fillStyle = 'rgba(160,238,255,0.35)'; ctx.fill();
+      ctx.restore();
+    }
   }
 }
 
@@ -1288,17 +1297,16 @@ function drawAmmoBar(){
   for (let i = 0; i < player.maxAmmo; i++){
     const ax = bx + 6 + i * (step - 4);
     ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3);
-    // Цвета патронов одинаковые для всех
-    ctx.fillStyle = i < player.ammo ? '#7ff0ff' : 'rgba(255,255,255,0.1)'; 
+    ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; 
     ctx.fill();
     ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; ctx.stroke();
   }
   
   if (player.reloading > 0){
     const frac = 1 - player.reloading / player.reloadTime;
-    ctx.fillStyle = 'rgba(127,240,255,0.8)';
+    ctx.fillStyle = 'rgba(255,153,0,0.8)';
     roundRect(ctx, bx, by + bh + 5, bw * frac, 4, 2); ctx.fill();
-    ctx.fillStyle = '#7ff0ff';
+    ctx.fillStyle = '#ffaa33';
     ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center';
     ctx.fillText('ПЕРЕЗАРЯДКА...', W/2, by - 10);
   }
@@ -1311,7 +1319,6 @@ function drawUltBar(){
   roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 9); ctx.fill();
   const frac = clamp(player.ult / 100, 0, 1);
   
-  // Цвета ульты одинаковые (голубые)
   if (player.ult >= 100) ctx.fillStyle = '#7ff0ff';
   else {
     const g = ctx.createLinearGradient(bx, 0, bx + bw, 0);
