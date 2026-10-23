@@ -113,7 +113,6 @@
   .stat-track{height:9px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden}
   .stat-fill{height:100%; border-radius:5px; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)}
   
-  /* Серая кнопка выбора для обычной редкости */
   #hero-modal-select{margin-top:10px; padding:14px 0; font-size:16px; font-weight:800; letter-spacing:2px; color:#0a1420; background:linear-gradient(180deg,#e0e5ec,#B0B8C4); border:none; border-radius:12px; cursor:pointer; box-shadow:0 4px 0 #7a8494; transition:transform .1s;}
   #hero-modal-select:hover{transform:translateY(-2px)}
   #hero-modal-select:active{transform:translateY(2px); box-shadow:none}
@@ -825,7 +824,7 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // Исправлена атака ботов
+  // Исправленная атака ботов
   if (d < 720 && hasLOS(bot, target)) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
@@ -873,7 +872,6 @@ function update(dt) {
     player.ultTime -= dt;
     
     if (player.type === 'Vitya') {
-       // Управляемый лазер
        player.aim = Math.atan2(mwy - player.y, mwx - player.x);
        
        player.ultTick = (player.ultTick || 0) + dt;
@@ -952,21 +950,31 @@ function update(dt) {
     
     if (b.type === 'big_bomb' && !b.exploded) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-      if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20) {
+      
+      let hitEnemy = false;
+      const enemies = getAllEnemies(b.owner);
+      for (const e of enemies) {
+        if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
+           hitEnemy = true;
+           break;
+        }
+      }
+
+      if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20 || hitEnemy) {
         b.exploded = true;
         spawnHitParticles(b.x, b.y, '#ff0000', 40);
-        const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
           if (Math.hypot(e.x - b.x, e.y - b.y) < 150) {
             damage(e, 50, b.owner);
           }
         }
+        // УВЕЛИЧЕН РАЗЛЕТ МАЛЕНЬКИХ БОМБ
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
           bullets.push({
             x: b.x, y: b.y,
-            vx: Math.cos(ang) * 300, vy: Math.sin(ang) * 300,
-            r: 7, dmg: 10, life: 0.6, type: 'bomb', poison: true, exploded: false,
+            vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, // 600 вместо 300
+            r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, // 1.2 вместо 0.6
             owner: b.owner, color: '#ff5a5a'
           });
         }
@@ -1205,7 +1213,6 @@ function drawHero(h){
   ctx.fillStyle = isMe ? '#a9e8ff' : 'rgba(222,234,246,0.82)';
   ctx.fillText(h.name, h.x, ammoY - 8);
 
-  // ВОЗВРАЩЕНА НАДПИСЬ ПЕРЕЗАРЯДКА НАД ГОЛОВОЙ
   if (h.reloading > 0 && h.alive) {
     ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900';
     ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18);
