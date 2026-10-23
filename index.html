@@ -688,7 +688,7 @@ function tryAttack(h) {
       tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 600; // УВЕЛИЧЕНА ДАЛЬНОСТЬ
+      const MAX_RANGE = 600;
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -702,7 +702,7 @@ function tryAttack(h) {
 
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, // УВЕЛИЧЕНА СКОРОСТЬ
+      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800,
       r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
@@ -824,8 +824,8 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // Исправленная атака ботов
-  if (d < 720 && hasLOS(bot, target)) {
+  // ИСПРАВЛЕННАЯ АТАКА (убран hasLOS, теперь боты не тупят за камнями)
+  if (d < 720) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
     } else {
@@ -968,13 +968,12 @@ function update(dt) {
             damage(e, 50, b.owner);
           }
         }
-        // УВЕЛИЧЕН РАЗЛЕТ МАЛЕНЬКИХ БОМБ
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
           bullets.push({
             x: b.x, y: b.y,
-            vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, // 600 вместо 300
-            r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, // 1.2 вместо 0.6
+            vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600,
+            r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false,
             owner: b.owner, color: '#ff5a5a'
           });
         }
