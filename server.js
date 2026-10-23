@@ -61,10 +61,7 @@ io.on('connection', (socket) => {
     socket.on('move', (data) => {
         const p = players[socket.id];
         if (p && p.alive) {
-            p.x = data.x;
-            p.y = data.y;
-            p.aim = data.aim;
-            p.walkPhase = data.walkPhase;
+            p.x = data.x; p.y = data.y; p.aim = data.aim; p.walkPhase = data.walkPhase;
             socket.broadcast.volatile.emit('playerMoved', { id: socket.id, x: data.x, y: data.y, aim: data.aim, walkPhase: data.walkPhase });
         }
     });
@@ -73,26 +70,19 @@ io.on('connection', (socket) => {
         socket.broadcast.volatile.emit('newBullet', { owner: socket.id, bullet: bulletData });
     });
 
-    // Сервер просто пересылает урон
     socket.on('hitPlayer', (data) => {
         const target = players[data.target];
         if (target && target.alive) {
             target.hp -= data.damage;
-            if (!players[socket.id].ultActive) {
-                players[socket.id].ult = Math.min(100, players[socket.id].ult + data.damage * 0.5);
-            }
+            if (!players[socket.id].ultActive) players[socket.id].ult = Math.min(100, players[socket.id].ult + data.damage * 0.5);
             if (target.hp <= 0) {
-                target.hp = 0;
-                target.alive = false;
-                target.respawnTimer = 3;
-                target.ultActive = false;
+                target.hp = 0; target.alive = false; target.respawnTimer = 3; target.ultActive = false;
                 if (players[socket.id]) players[socket.id].score++;
             }
             io.emit('updateHealth', players);
         }
     });
 
-    // Сервер пересылает включение ульты
     socket.on('ult', (data) => {
         const p = players[socket.id];
         if (p) {
@@ -109,5 +99,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 10000;
 server.listen(PORT, () => {
-    console.log(`Легкий сервер запущен на порту ${PORT}`);
+    console.log(`Сервер запущен на порту ${PORT}`);
 });
