@@ -226,7 +226,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 2 ИЗ 3</div>
+      <div id="fighters-count">БОЙЦОВ: 2 ИЗ 2</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -286,7 +286,7 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Человек.<br><br>
-        Лёха — мастер взрывчатки и отравлений. Его грязные трусы разносят заразу по всей арене. Каждый третий снаряд отравляет врагов.<br>
+        Печально известный лидер Синдиката "Трусы", для него вся эта война Технократов и Охлократов, всего лишь способ заявить миру, что он всё ещё здесь..., ну и наверно реклама для его бренда трусов...<br>
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
       <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
@@ -693,7 +693,7 @@ function tryAttack(h) {
       ty = mouse.y - H/2 + h.y;
       // Ограничиваем дальность броска (чтобы не кидал через всю карту)
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 450; // Дальность Лёхи
+      const MAX_RANGE = 650; // Дальность Лёхи
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
