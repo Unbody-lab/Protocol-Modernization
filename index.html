@@ -53,14 +53,26 @@
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
   .fighters-btn-icon{width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); display:flex; align-items:center; justify-content:center; font-size:28px; color:rgba(127,240,255,0.9); box-shadow: inset 0 0 15px rgba(63,169,245,0.2);}
 
-  .announce-banner {position: absolute; bottom: 100px; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
+  /* Стили для баннеров анонсов */
+  .announce-banner {position: absolute; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-img {width: 120px; height: 100%; background-image: url('img/Lesha.jpg'); background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
+  .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
   .announce-img::after {content: ''; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.2); font-size: 11px; font-weight: 800; letter-spacing: 1px;}
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
   .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
+
+  /* Позиции для баннеров */
+  #banner-lesha { bottom: 240px; left: 40px; }
+  #banner-fialka { bottom: 100px; left: 40px; }
+  
+  /* Кастомные цвета для Фиалки */
+  #banner-fialka { border-color: #b05ce0; box-shadow: 0 10px 30px rgba(176, 92, 224, 0.2); }
+  #banner-fialka:hover { border-color: #e0aef5; box-shadow: 0 15px 40px rgba(176, 92, 224, 0.4); }
+  #banner-fialka .announce-tag { color: #b05ce0; }
+  #banner-fialka .announce-timer { color: #e0aef5; background: rgba(176, 92, 224, 0.15); border-color: rgba(176, 92, 224, 0.4); }
+  #banner-fialka .announce-img { border-right-color: #b05ce0; }
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:16px 22px 22px;}
   .tab-btn{display:flex; flex-direction:column; align-items:center; gap:4px; width:120px; padding:12px 8px; cursor:pointer; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.35); border-radius:12px; color:#b8cde0; font-size:12px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px);}
@@ -196,12 +208,23 @@
       </div>
     </div>
     
-    <div class="announce-banner" onclick="openFightersModal()">
-      <div class="announce-img"></div>
+    <!-- Баннер Лёхи -->
+    <div class="announce-banner" id="banner-lesha" onclick="openFightersModal()">
+      <div class="announce-img" style="background-image: url('img/Lesha.jpg');"></div>
       <div class="announce-info">
         <div class="announce-tag">Обновление 0.2</div>
         <div class="announce-name">Лёха</div>
         <div class="announce-timer">Уже в игре</div>
+      </div>
+    </div>
+
+    <!-- Баннер Фиалки -->
+    <div class="announce-banner" id="banner-fialka" onclick="showDev('ГЕРОЙ ФИАЛКА')">
+      <div class="announce-img" style="background-image: url('img/Fialka.jpg');"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Скоро</div>
+        <div class="announce-name">Фиалка</div>
+        <div class="announce-timer" id="fialka-timer">через 1 день 4 часа</div>
       </div>
     </div>
 
@@ -328,6 +351,10 @@
     <button class="modal-close" onclick="closeNewsModal()">✕</button>
     <h2>НОВОСТИ</h2>
     <div class="news-content">
+      <div class="news-block" style="border-left-color: #b05ce0;">
+        <div class="news-date" style="color: #b05ce0;">АНОНС НОВОГО ГЕРОЯ</div>
+        <div class="news-text"><b>Встречайте — Фиалка!</b><br>Новый загадочный боец присоединится к битве уже через 1 день и 4 часа. Следите за таймером в лобби.</div>
+      </div>
       <div class="news-block" style="border-left-color: #ffb450;">
         <div class="news-date" style="color: #ffb450;">ОБНОВЛЕНИЕ 0.2</div>
         <div class="news-text"><b>Новый боец — Лёха!</b><br>Кидается трусами и травит врагов. Добавлен режим "Тренировка".<br><br><i>Также мы добавили музыку в лобби и в бой.</i></div>
@@ -376,6 +403,44 @@ const bgMusicBattle = document.getElementById('bg-music-battle');
 let gameRunning = false;
 let currentMode = 'Тренировка';
 let selectedHero = 'Vitya';
+
+/* --- Таймер Фиалки --- */
+let fialkaReleaseTime = localStorage.getItem('fialka_release_time');
+if (!fialkaReleaseTime) {
+  // 1 день (24 часа) + 4 часа = 28 часов
+  fialkaReleaseTime = Date.now() + 28 * 60 * 60 * 1000; 
+  localStorage.setItem('fialka_release_time', fialkaReleaseTime);
+} else {
+  fialkaReleaseTime = parseInt(fialkaReleaseTime, 10);
+}
+
+function updateFialkaTimer() {
+  const now = Date.now();
+  const diff = Math.max(0, fialkaReleaseTime - now);
+  
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  const el = document.getElementById('fialka-timer');
+  if (el) {
+    if (diff <= 0) {
+      el.textContent = 'Уже в игре';
+      el.style.color = '#4fd6a0';
+      el.style.borderColor = 'rgba(79,214,160,0.4)';
+      el.style.backgroundColor = 'rgba(79,214,160,0.15)';
+    } else {
+      let timeStr = 'через ';
+      if (d > 0) timeStr += d + ' д ';
+      if (h > 0) timeStr += h + ' ч ';
+      if (m > 0 || (d === 0 && h === 0)) timeStr += m + ' мин';
+      el.textContent = timeStr.trim();
+    }
+  }
+}
+setInterval(updateFialkaTimer, 10000);
+updateFialkaTimer();
+
 
 function playLobbyMusic() {
   bgMusicBattle.pause();
@@ -688,7 +753,7 @@ function tryAttack(h) {
       tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 750; // УВЕЛИЧЕНА ДАЛЬНОСТЬ
+      const MAX_RANGE = 750;
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -702,7 +767,7 @@ function tryAttack(h) {
 
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 1100, vy: Math.sin(h.aim) * 1100, // УВЕЛИЧЕНА СКОРОСТЬ
+      vx: Math.cos(h.aim) * 1100, vy: Math.sin(h.aim) * 1100,
       r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
@@ -880,7 +945,6 @@ function update(dt) {
          player.ultTick = 0;
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
-           // Проверка, находится ли враг на луче
            if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) {
              damage(e, 5, player);
            }
@@ -996,7 +1060,7 @@ function update(dt) {
         
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
-          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) { // УВЕЛИЧЕН РАДИУС ВЗРЫВА
+          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) {
             damage(e, b.dmg, b.owner, b.poison);
           }
         }
