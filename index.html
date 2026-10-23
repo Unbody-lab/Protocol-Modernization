@@ -778,21 +778,20 @@ function activateUlt() {
   socket.emit('ult', { active: true });
 }
 
-function update(dt) {
-  if (!myId || gameOver || !gameRunning) return;
-
-  player.aim = Math.atan2(mouse.y - H/2 + player.y, mouse.x - W/2 + player.x);
-
   if (player.ultActive) {
     player.ultTime -= dt;
     if (player.ultTime <= 0) { player.ultActive = false; socket.emit('ult', { active: false }); }
     
-    // Наносим урон лазером
-    for (let id in serverPlayers) {
-      if (id === myId) continue;
-      const p = serverPlayers[id];
-      if (Math.hypot(p.x - player.x, p.y - player.y) < 800) {
-        socket.emit('hitPlayer', { target: id, damage: 58 * dt });
+    // Безопасная отправка урона (раз в 0.1 сек, а не 60 раз в секунду)
+    player.ultTick = (player.ultTick || 0) + dt;
+    if (player.ultTick > 0.1) {
+      player.ultTick = 0;
+      for (let id in serverPlayers) {
+        if (id === myId) continue;
+        const p = serverPlayers[id];
+        if (Math.hypot(p.x - player.x, p.y - player.y) < 800) {
+          socket.emit('hitPlayer', { target: id, damage: 5 }); // Фиксированный урон
+        }
       }
     }
   } else {
