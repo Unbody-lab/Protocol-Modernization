@@ -53,6 +53,7 @@
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
   .fighters-btn-icon{width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); display:flex; align-items:center; justify-content:center; font-size:28px; color:rgba(127,240,255,0.9); box-shadow: inset 0 0 15px rgba(63,169,245,0.2);}
 
+  /* Обновленный баннер анонса */
   .announce-banner {position: absolute; bottom: 100px; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
   .announce-img {width: 120px; height: 100%; background-image: url('img/Lesha.jpg'); background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
@@ -60,7 +61,7 @@
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
-  .announce-timer {font-size: 13px; font-weight: 800; color: #ff7b7b; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(255,80,80,0.3);}
+  .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:16px 22px 22px;}
   .tab-btn{display:flex; flex-direction:column; align-items:center; gap:4px; width:120px; padding:12px 8px; cursor:pointer; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.35); border-radius:12px; color:#b8cde0; font-size:12px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px);}
@@ -69,6 +70,7 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
+  /* Модалки */
   #fighters-modal, #hero-modal, #teaser-modal, #mode-modal, #news-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
   #fighters-modal.show, #hero-modal.show, #teaser-modal.show, #mode-modal.show, #news-modal.show {display:flex}
   
@@ -86,18 +88,21 @@
   
   #fighters-grid{display:flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding: 6px 4px 20px 4px;}
   .fighter-card{position: relative; display:flex; flex-direction:column; justify-content:flex-end; width: 220px; height: 300px; flex-shrink: 0; border-radius: 16px; cursor:pointer; background:rgba(255,255,255,0.03); border: 3px solid rgba(90,140,180,0.25); transition:all .15s; overflow: hidden;}
-  .fighter-card:hover{border-color:rgba(200,210,220,0.6); transform:translateY(-4px);}
-  .fighter-card.selected{border-color:#B0B8C4; box-shadow: 0 0 25px rgba(176, 184, 196, 0.4);}
+  
+  /* Общие стили рамки (Серая редкость) */
+  .fighter-card { border-color: #B0B8C4; }
+  .fighter-card:hover{ transform:translateY(-4px); box-shadow: 0 0 20px rgba(176, 184, 196, 0.3); }
+  
+  /* Выделение выбранного */
+  .fighter-card.selected { border-color: #7ff0ff; box-shadow: 0 0 25px rgba(127, 240, 255, 0.5); background: rgba(63,169,245,0.15); }
+  .fighter-card.selected .fighter-card-name { color: #7ff0ff; text-shadow: 0 0 10px rgba(127,240,255,0.5); }
+
   .fighter-card-icon{position: absolute; inset: 0; background:rgba(63,169,245,0.15); background-image:url('img/Vitya.jpg'); background-size:cover; background-position:center; z-index: 1;}
   .fighter-card::after {content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.3) 45%, transparent 100%); pointer-events: none;}
   .fighter-card-name{position: relative; z-index: 3; font-size:20px; font-weight:900; color:#fff; text-align: center; padding: 16px 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);}
   
-  /* Лёха разблокирован */
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
-  .fighter-card.lesha { border-color: #ffb450; }
-  .fighter-card.lesha:hover { box-shadow: 0 0 25px rgba(255,180,80,0.4); }
-  
-  .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; align-items: center; justify-content: center;}
+  .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(90,140,180,0.25); align-items: center; justify-content: center;}
   .fighter-card.empty .fighter-card-icon {background: none; display: flex; align-items: center; justify-content: center; font-size: 48px; color: rgba(255,255,255,0.1); font-weight: 800;}
   .fighter-card.empty::after { display: none; }
   .fighter-card.empty .fighter-card-name { color: rgba(255,255,255,0.3); padding: 6px; }
@@ -165,7 +170,6 @@
 </head>
 <body>
   
-<!-- Аудио (замените пути на свои) -->
 <audio id="bg-music-lobby" loop>
   <source src="sounds/lobby.mp3" type="audio/mpeg">
 </audio>
@@ -198,14 +202,24 @@
         <div class="side-label">БОЙЦЫ</div>
       </div>
     </div>
-    <!-- Баннер убран, так как Лёха теперь доступен -->
+    
+    <!-- Обновленный баннер анонса -->
+    <div class="announce-banner" onclick="openFightersModal()">
+      <div class="announce-img"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Обновление 0.2</div>
+        <div class="announce-name">Лёха</div>
+        <div class="announce-timer">Уже в игре</div>
+      </div>
+    </div>
+
     <div id="lobby-hero-display">
       <div id="lobby-hero-display-inner"></div>
       <div id="lobby-hero-name-big">Витя</div>
     </div>
     <div id="lobby-center">
       <button id="play-battle-btn" onclick="startGame()">В БОЙ</button>
-      <div id="lobby-mode-label">Режим: PVP-Битва</div>
+      <div id="lobby-mode-label">Режим: Тренировка</div>
     </div>
   </div>
   <div id="lobby-bottom">
@@ -224,11 +238,13 @@
       <div id="fighters-count">БОЙЦОВ: 2 ИЗ 2</div>
     </div>
     <div id="fighters-grid">
-      <div class="fighter-card selected" onclick="openHeroDetails('Vitya')">
+      <!-- Витя -->
+      <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Витя</div>
       </div>
-      <div class="fighter-card lesha" onclick="openHeroDetails('Lesha')">
+      <!-- Лёха -->
+      <div class="fighter-card lesha" id="card-lesha" onclick="openHeroDetails('Lesha')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
       </div>
@@ -257,7 +273,7 @@
       <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (выстрел / удар)</span><span>16 / 46</span></div><div class="stat-track"><div class="stat-fill" style="width:60%"></div></div></div>
       <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>208</span></div><div class="stat-track"><div class="stat-fill" style="width:75%"></div></div></div>
       <div class="stat-block"><div class="stat-head"><span>🔫 Патроны</span><span>5 (перезарядка 1.6с)</span></div><div class="stat-track"><div class="stat-fill" style="width:80%"></div></div></div>
-      <button id="hero-modal-select" onclick="selectHeroAndClose()">ВЫБРАТЬ</button>
+      <button id="hero-modal-select" onclick="selectHeroAndClose('Vitya')">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
@@ -294,22 +310,20 @@
     <button class="modal-close" onclick="closeModeModal()">✕</button>
     <h2>ВЫБОР РЕЖИМА</h2>
     <div class="mode-grid">
-      <div class="mode-option selected" onclick="selectMode('PVP-Битва', this)">
-        <div class="mode-option-icon"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">PVP-Битва</div>
-          <div class="mode-option-desc">Все против всех на карте «Горный техникум»</div>
-        </div>
-        <div class="mode-option-check">✓</div>
-      </div>
-      <!-- Режим тренировки -->
-      <div class="mode-option" onclick="selectMode('Тренировка', this)">
+      <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
         <div class="mode-option-icon" style="background-image:none; background-color:#3fa9f5; display:flex; align-items:center; justify-content:center; font-size:48px;">🤖</div>
         <div class="mode-option-info">
           <div class="mode-option-name">Тренировка</div>
-          <div class="mode-option-desc">Играйте против ботов, чтобы протестировать героев</div>
+          <div class="mode-option-desc">Играйте против ботов (офлайн)</div>
         </div>
         <div class="mode-option-check">✓</div>
+      </div>
+      <div class="mode-option" onclick="showDev('PVP-Битва')">
+        <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
+        <div class="mode-option-info">
+          <div class="mode-option-name">PVP-Битва</div>
+          <div class="mode-option-desc">Все против всех (в разработке)</div>
+        </div>
       </div>
     </div>
   </div>
@@ -351,7 +365,7 @@
 'use strict';
 
 /* ============================================================
-   УПРАВЛЕНИЕ ЭКРАНАМИ И МОДАЛКАМИ
+   УПРАВЛЕНИЕ ЭКРАНАМИ
 ============================================================ */
 const startScreen = document.getElementById('start-screen');
 const lobbyScreen = document.getElementById('lobby-screen');
@@ -365,48 +379,68 @@ const gameEl      = document.getElementById('game');
 const hintEl      = document.getElementById('hint');
 const modeLabel   = document.getElementById('lobby-mode-label');
 const newsModal   = document.getElementById('news-modal');
-const teaserModal = document.getElementById('teaser-modal');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
 
 let gameRunning = false;
-let currentMode = 'PVP-Битва';
+let currentMode = 'Тренировка'; // По умолчанию тренировка
 let selectedHero = 'Vitya';
 
 /* Музыка */
 function playLobbyMusic() {
   bgMusicBattle.pause();
   bgMusicLobby.volume = 0.5;
-  bgMusicLobby.play().catch(e => console.log('Музыка не загружена', e));
+  bgMusicLobby.play().catch(e => console.log('Музыка лобби не загружена', e));
 }
 function playBattleMusic() {
   bgMusicLobby.pause();
   bgMusicBattle.volume = 0.5;
-  bgMusicBattle.play().catch(e => console.log('Музыка не загружена', e));
+  bgMusicBattle.play().catch(e => console.log('Боевая музыка не загружена', e));
 }
 
-window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); };
+window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
+
 window.openHeroDetails = function(hero){ 
   if (hero === 'Vitya') heroModal.classList.add('show');
   if (hero === 'Lesha') heroModalLesha.style.display = 'flex';
 };
 window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
 window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
-window.selectHeroAndClose = function(){ selectedHero = 'Vitya'; closeHeroDetails(); closeFightersModal(); updateLobbyDisplay(); };
-window.selectLeshaAndClose = function(){ selectedHero = 'Lesha'; closeLeshaDetails(); closeFightersModal(); updateLobbyDisplay(); };
 
-function updateLobbyDisplay() {
+window.selectHeroAndClose = function(hero){ 
+  selectedHero = hero; 
+  closeHeroDetails(); 
+  closeFightersModal(); 
+  updateLobbySelection(); 
+};
+window.selectLeshaAndClose = function(){ 
+  selectedHero = 'Lesha'; 
+  closeLeshaDetails(); 
+  closeFightersModal(); 
+  updateLobbySelection(); 
+};
+
+function updateLobbySelection() {
   const disp = document.getElementById('lobby-hero-display-inner');
   const name = document.getElementById('lobby-hero-name-big');
+  const cardVitya = document.getElementById('card-vitya');
+  const cardLesha = document.getElementById('card-lesha');
+
+  // Сброс выделений
+  if (cardVitya) cardVitya.classList.remove('selected');
+  if (cardLesha) cardLesha.classList.remove('selected');
+
   if (selectedHero === 'Vitya') {
     disp.style.backgroundImage = "url('img/Vitya.jpg')";
     name.textContent = 'Витя';
+    if (cardVitya) cardVitya.classList.add('selected');
   } else {
     disp.style.backgroundImage = "url('img/Lesha.jpg')";
     name.textContent = 'Лёха';
+    if (cardLesha) cardLesha.classList.add('selected');
   }
 }
 
@@ -432,17 +466,8 @@ window.startGame = function(){
   gameRunning = true;
   playBattleMusic();
   
-  if (currentMode === 'Тренировка') {
-    startTraining();
-  } else {
-    // Сетевая игра (если сервер доступен)
-    if (socket.connected) {
-      resetGame(false);
-    } else {
-      alert('Нет соединения с сервером. Запускаю Тренировку.');
-      startTraining();
-    }
-  }
+  // Запускаем локальную тренировку
+  startTraining();
 };
 
 window.backToLobby = function(){
@@ -451,6 +476,7 @@ window.backToLobby = function(){
   hintEl.style.display = 'none';
   gameRunning = false;
   playLobbyMusic();
+  updateLobbySelection();
 };
 
 addEventListener('keydown', e => {
@@ -466,9 +492,8 @@ addEventListener('keydown', e => {
 
 
 /* ============================================================
-   ЛОГИКА ИГРЫ
+   ЛОГИКА ИГРЫ (ЛОКАЛЬНАЯ ТРЕНИРОВКА)
 ============================================================ */
-const socket = io({ transports: ['websocket'] });
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let W = window.innerWidth, H = window.innerHeight;
@@ -491,18 +516,13 @@ const WORLD_W = 2600, WORLD_H = 2000;
 const MAX_AMMO_VITYA = 5, RELOAD_VITYA = 1.6;
 const MAX_AMMO_LESHA = 3, RELOAD_LESHA = 2.0;
 
-let myId = null;
-let serverPlayers = {};
-let bots = []; // Для режима тренировки
+let bots = []; 
 let rocks = [];
 let bullets = [];
 let particles = [];
 let gameOver = false;
-let winnerName = '';
 let decor = [];
 const cam = { x: 0, y: 0 };
-
-let isTraining = false;
 
 const player = {
   x: 500, y: 500, r: 19, hp: 100, maxHp: 100,
@@ -518,9 +538,7 @@ function createHero(id, type, isBot) {
   const spawn = findSpawnPoint();
   const isVitya = type === 'Vitya';
   return {
-    id: id,
-    type: type,
-    isPlayer: !isBot,
+    id: id, type: type, isPlayer: !isBot,
     x: spawn.x, y: spawn.y, r: 19,
     hp: 100, maxHp: 100,
     aim: Math.random()*TAU,
@@ -536,8 +554,7 @@ function createHero(id, type, isBot) {
     colorLight: isVitya ? '#a8e0ff' : '#ffb99b',
     poison: 0, poisonTick: 0,
     botTimer: 0, botJitter: 0,
-    shootCount: 0, // Для отслеживания 3-го снаряда
-    grenadeTimer: 0
+    shootCount: 0, grenadeTimer: 0
   };
 }
 
@@ -579,20 +596,17 @@ function genWorld(){
 }
 
 function startTraining(){
-  isTraining = true;
   gameOver = false;
   bots = [];
   bullets = [];
   particles = [];
   genWorld();
 
-  // Настраиваем игрока
   const pData = createHero('player', selectedHero, false);
   Object.assign(player, pData);
   player.isPlayer = true;
   player.name = 'Вы';
 
-  // Создаем 4 ботов со случайными героями
   for (let i = 0; i < 4; i++){
     const bType = Math.random() < 0.5 ? 'Vitya' : 'Lesha';
     const bot = createHero('bot_'+i, bType, true);
@@ -602,54 +616,6 @@ function startTraining(){
   cam.x = Math.max(0, Math.min(WORLD_W - W, player.x - W/2));
   cam.y = Math.max(0, Math.min(WORLD_H - H, player.y - H/2));
 }
-
-function resetGame(isNet){
-  isTraining = false;
-  if (!isNet) {
-    startTraining(); 
-    return;
-  }
-  genWorld();
-  bullets = []; particles = [];
-  gameOver = false; winnerName = '';
-  
-  // Для сетевой игры логика сервера, но локально мы просто ждем init
-}
-
-// --- СЕТЕВЫЕ СОБЫТИЯ ---
-socket.on('init', (data) => {
-  if (isTraining) return;
-  myId = data.myId;
-  serverPlayers = data.players;
-  rocks = data.rocks;
-  if (serverPlayers[myId]) {
-    player.x = serverPlayers[myId].x;
-    player.y = serverPlayers[myId].y;
-    player.name = serverPlayers[myId].name;
-  }
-});
-socket.on('newPlayer', (p) => { if (!isTraining) serverPlayers[p.id] = p; });
-socket.on('playerMoved', (data) => {
-  if (!isTraining && serverPlayers[data.id]) {
-    serverPlayers[data.id].x = data.x;
-    serverPlayers[data.id].y = data.y;
-    serverPlayers[data.id].aim = data.aim;
-    serverPlayers[data.id].walkPhase = data.walkPhase;
-  }
-});
-socket.on('playerDisconnected', (id) => { if (!isTraining) delete serverPlayers[id]; });
-socket.on('updateHealth', (players) => {
-  if (!isTraining) {
-    serverPlayers = players;
-    if (players[myId]) player.hp = players[myId].hp;
-  }
-});
-socket.on('newBullet', (data) => {
-  if (!isTraining) bullets.push({ ...data.bullet, owner: data.owner, color: '#ff7a4d' });
-});
-socket.on('playerUlt', (data) => {
-  if (!isTraining && serverPlayers[data.id]) serverPlayers[data.id].ultActive = data.active;
-});
 
 const keys = {};
 const mouse = { x: W/2, y: H/2, down: false, rightDown: false };
@@ -682,25 +648,14 @@ function spawnHitParticles(x, y, color, n){
   }
 }
 
-// Получить всех врагов
 function getAllEnemies() {
-  let enemies = [];
-  if (isTraining) {
-    enemies = [...bots];
-  } else {
-    for (let id in serverPlayers) {
-      if (id !== myId && serverPlayers[id].alive) {
-        enemies.push({ ...serverPlayers[id], id: id, isBot: false });
-      }
-    }
-  }
-  return enemies;
+  return bots.filter(b => b.alive);
 }
 
 function tryAttack(h) {
   if (h.attackCd > 0 || !h.alive || h.ultActive) return;
 
-  const enemies = isTraining ? (h.isPlayer ? bots : [player, ...bots.filter(b => b !== h)]) : getAllEnemies();
+  const enemies = h.isPlayer ? getAllEnemies() : [player, ...bots.filter(b => b !== h)];
   let target = null, best = Infinity;
   
   for (const e of enemies) {
@@ -709,7 +664,6 @@ function tryAttack(h) {
     if (d < 78 && d < best) { best = d; target = e; }
   }
 
-  // === БЛИЖНИЙ БОЙ ===
   if (target && h.type === 'Vitya') {
     h.attackCd = .6; h.swing = .25;
     h.aim = Math.atan2(target.y - h.y, target.x - h.x);
@@ -721,7 +675,6 @@ function tryAttack(h) {
     return;
   }
 
-  // === ДАЛЬНИЙ БОЙ ===
   if (h.ammo <= 0) {
     if (h.reloading <= 0) h.reloading = h.reloadTime;
     return;
@@ -736,27 +689,22 @@ function tryAttack(h) {
       vx: Math.cos(a)*900, vy: Math.sin(a)*900,
       r: 7, dmg: 16, life: 0.9, type: 'bullet'
     };
-    if (!isTraining) socket.emit('shoot', bullet);
-    bullets.push({ ...bullet, owner: h.id || myId, color: h.color });
+    bullets.push({ ...bullet, owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
   } else {
-    // Лёха кидает бомбу
     h.shootCount++;
-    const isPoison = (h.shootCount % 3 === 0); // Каждый 3-й снаряд отравлен
+    const isPoison = (h.shootCount % 3 === 0); 
     
-    // Симуляция полета бомбы (с задержкой)
-    const dist = 300; // Дальность броска
+    const dist = 300;
     const tx = h.x + Math.cos(h.aim) * dist;
     const ty = h.y + Math.sin(h.aim) * dist;
     
     const bullet = {
-      x: h.x, y: h.y,
-      tx: tx, ty: ty,
+      x: h.x, y: h.y, tx: tx, ty: ty,
       vx: Math.cos(h.aim) * 400, vy: Math.sin(h.aim) * 400,
       r: 10, dmg: 20, life: 0.75, type: 'bomb', poison: isPoison, exploded: false
     };
-    
-    bullets.push({ ...bullet, owner: h.id || myId, color: h.color });
+    bullets.push({ ...bullet, owner: h, color: h.color });
   }
 
   if (h.ammo <= 0 && h.reloading <= 0) h.reloading = h.reloadTime;
@@ -767,7 +715,6 @@ function activateUlt(h) {
   h.ult = 0; h.ultActive = true; h.ultTime = 3.0;
   
   if (h.type === 'Lesha') {
-    // Ульта Лёхи: Большая бомба
     const bullet = {
       x: h.x, y: h.y,
       tx: h.x + Math.cos(h.aim) * 400,
@@ -775,10 +722,8 @@ function activateUlt(h) {
       vx: Math.cos(h.aim) * 500, vy: Math.sin(h.aim) * 500,
       r: 25, dmg: 50, life: 0.8, type: 'big_bomb', exploded: false
     };
-    bullets.push({ ...bullet, owner: h.id || myId, color: '#ff0000' });
+    bullets.push({ ...bullet, owner: h, color: '#ff0000' });
   }
-  
-  if (!isTraining) socket.emit('ult', { active: true });
 }
 
 function damage(target, amount, source, isPoison) {
@@ -788,7 +733,7 @@ function damage(target, amount, source, isPoison) {
   target.hitFlash = 0.18;
   
   if (isPoison) {
-    target.poison = Math.max(target.poison, 3.0); // 3 секунды яда
+    target.poison = Math.max(target.poison, 3.0);
   }
 
   if (source && source !== target && !source.ultActive) {
@@ -820,7 +765,6 @@ function updateBot(bot, dt) {
     return;
   }
 
-  // Выбор цели (ближайший живой враг)
   let target = player;
   let best = Math.hypot(bot.x - player.x, bot.y - player.y);
   for (const b of bots) {
@@ -831,7 +775,6 @@ function updateBot(bot, dt) {
 
   if (!target || !target.alive) return;
 
-  // Прицеливание
   bot.botTimer -= dt;
   if (bot.botTimer <= 0) {
     bot.botTimer = 0.13 + Math.random() * 0.22;
@@ -843,7 +786,6 @@ function updateBot(bot, dt) {
   while (da < -Math.PI) da += TAU;
   bot.aim += da * Math.min(1, dt * 10);
 
-  // Движение
   const dx = target.x - bot.x, dy = target.y - bot.y;
   const d = Math.hypot(dx, dy) || 1;
   const nx = dx / d, ny = dy / d;
@@ -876,7 +818,6 @@ function updateBot(bot, dt) {
   bot.x = clamp(bot.x, 20, WORLD_W - 20);
   bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  // Стрельба
   if (d < 720 && hasLOS(bot, target)) {
     if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
       activateUlt(bot);
@@ -885,7 +826,6 @@ function updateBot(bot, dt) {
     }
   }
 
-  // Перезарядка
   if (bot.reloading > 0) {
     bot.reloading -= dt;
     if (bot.reloading <= 0) {
@@ -905,7 +845,6 @@ function hasLOS(a, b) {
 function update(dt) {
   if (gameOver || !gameRunning) return;
 
-  // Обновление игрока
   const mwx = mouse.x - W/2 + player.x;
   const mwy = mouse.y - H/2 + player.y;
   player.aim = Math.atan2(mwy - player.y, mwx - player.x);
@@ -921,7 +860,7 @@ function update(dt) {
     }
   } else if (player.ultActive) {
     player.ultTime -= dt;
-    if (player.ultTime <= 0) { player.ultActive = false; if (!isTraining) socket.emit('ult', { active: false }); }
+    if (player.ultTime <= 0) { player.ultActive = false; }
     
     player.ultTick = (player.ultTick || 0) + dt;
     if (player.ultTick > 0.1) {
@@ -930,7 +869,6 @@ function update(dt) {
       for (const e of enemies) {
         if (Math.hypot(e.x - player.x, e.y - player.y) < 800) {
           damage(e, 5, player);
-          if (!isTraining && e.id) socket.emit('hitPlayer', { target: e.id, damage: 5 });
         }
       }
     }
@@ -950,14 +888,6 @@ function update(dt) {
       player.y += (my/len) * 208 * dt;
       player.x = clamp(player.x, 20, WORLD_W - 20);
       player.y = clamp(player.y, 20, WORLD_H - 20);
-      
-      if (!isTraining) {
-        player.moveTick += dt;
-        if (player.moveTick > 0.066) {
-          player.moveTick = 0;
-          socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
-        }
-      }
     } else {
       player.walkPhase = 0;
     }
@@ -974,56 +904,45 @@ function update(dt) {
     if (player.reloading <= 0) { player.reloading = 0; player.ammo = player.maxAmmo; }
   }
 
-  // Яд игрока
   if (player.poison > 0) {
     player.poison -= dt;
     player.poisonTick = (player.poisonTick || 0) + dt;
     if (player.poisonTick > 0.5) {
       player.poisonTick = 0;
-      player.hp -= 3; // 3 урона каждые 0.5 сек
+      player.hp -= 3; 
       spawnHitParticles(player.x, player.y, '#5cff5c', 3);
-      if (player.hp <= 0) damage(player, 0, null); // Смерть от яда
+      if (player.hp <= 0) damage(player, 0, null);
     }
   }
 
-  // Обновление ботов
-  if (isTraining) {
-    for (const bot of bots) {
-      updateBot(bot, dt);
-      // Яд ботов
-      if (bot.poison > 0) {
-        bot.poison -= dt;
-        bot.poisonTick = (bot.poisonTick || 0) + dt;
-        if (bot.poisonTick > 0.5) {
-          bot.poisonTick = 0;
-          bot.hp -= 3;
-          spawnHitParticles(bot.x, bot.y, '#5cff5c', 3);
-          if (bot.hp <= 0) damage(bot, 0, null);
-        }
+  for (const bot of bots) {
+    updateBot(bot, dt);
+    if (bot.poison > 0) {
+      bot.poison -= dt;
+      bot.poisonTick = (bot.poisonTick || 0) + dt;
+      if (bot.poisonTick > 0.5) {
+        bot.poisonTick = 0;
+        bot.hp -= 3;
+        spawnHitParticles(bot.x, bot.y, '#5cff5c', 3);
+        if (bot.hp <= 0) damage(bot, 0, null);
       }
     }
   }
 
-  // Обновление пуль
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
     
     if (b.type === 'big_bomb' && !b.exploded) {
-      // Полет большой бомбы
       b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
       if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20) {
-        // Взрыв!
         b.exploded = true;
         spawnHitParticles(b.x, b.y, '#ff0000', 40);
-        // Наносим урон и создаем мелкие бомбы
         const enemies = getAllEnemies();
         for (const e of enemies) {
           if (Math.hypot(e.x - b.x, e.y - b.y) < 150) {
-            damage(e, 50, { isPlayer: false, ultActive: true }); // Урон без ульты
-            if (!isTraining && e.id) socket.emit('hitPlayer', { target: e.id, damage: 50 });
+            damage(e, 50, b.owner);
           }
         }
-        // Мелкие бомбы
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
           bullets.push({
@@ -1042,21 +961,16 @@ function update(dt) {
     let dead = b.life <= 0;
 
     if (!dead && b.type === 'bomb') {
-      // Бомба замедляется
       b.vx *= 0.95;
       b.vy *= 0.95;
       if (Math.hypot(b.vx, b.vy) < 50 || b.life < 0.2) {
-        // Взрыв бомбы
         dead = true;
         spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
         
-        // Урон по площади
-        const enemies = getAllEnemies();
+        const enemies = (b.owner === player) ? getAllEnemies() : [player, ...bots.filter(bot => bot !== b.owner)];
         for (const e of enemies) {
-          if (e === b.owner) continue;
           if (Math.hypot(e.x - b.x, e.y - b.y) < 80) {
             damage(e, b.dmg, b.owner, b.poison);
-            if (!isTraining && e.id) socket.emit('hitPlayer', { target: e.id, damage: b.dmg, isPoison: b.poison });
           }
         }
       }
@@ -1074,17 +988,15 @@ function update(dt) {
     }
 
     if (!dead) {
-      const enemies = getAllEnemies();
+      const enemies = (b.owner === player) ? getAllEnemies() : [player, ...bots.filter(bot => bot !== b.owner)];
       for (const e of enemies) {
-        if (e === b.owner || !e.alive) continue;
+        if (!e.alive) continue;
         if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
           if (b.type === 'bomb') {
             spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
             damage(e, b.dmg, b.owner, b.poison);
-            if (!isTraining && e.id) socket.emit('hitPlayer', { target: e.id, damage: b.dmg, isPoison: b.poison });
           } else {
             damage(e, b.dmg, b.owner);
-            if (!isTraining && e.id) socket.emit('hitPlayer', { target: e.id, damage: b.dmg });
           }
           spawnHitParticles(b.x, b.y, b.color, 9);
           dead = true; break;
@@ -1095,7 +1007,6 @@ function update(dt) {
     if (dead) bullets.splice(i, 1);
   }
 
-  // Частицы
   for (let i = particles.length - 1; i >= 0; i--){
     const p = particles[i];
     p.x += p.vx * dt; p.y += p.vy * dt;
@@ -1104,7 +1015,6 @@ function update(dt) {
     if (p.life <= 0) particles.splice(i, 1);
   }
 
-  // Камера
   let tx = player.x - W/2, ty = player.y - H/2;
   tx = Math.max(0, Math.min(WORLD_W - W, tx));
   ty = Math.max(0, Math.min(WORLD_H - H, ty));
@@ -1209,7 +1119,6 @@ function drawHero(h){
   ctx.fillStyle = h.colorLight; ctx.fill();
   ctx.lineWidth = 2; ctx.stroke();
 
-  // Если отравлен
   if (h.poison > 0) {
     ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU);
     ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')';
@@ -1240,11 +1149,10 @@ function drawHero(h){
     ctx.fillStyle = '#1a1f26';
     ctx.beginPath(); ctx.arc(36, 0, 3, 0, TAU); ctx.fill();
   } else {
-    // Лёха держит бомбу
     ctx.fillStyle = '#333'; 
     ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill();
     ctx.fillStyle = '#5cff5c'; 
-    ctx.beginPath(); ctx.arc(18, -6, 3, 0, TAU); ctx.fill(); // Фитиль
+    ctx.beginPath(); ctx.arc(18, -6, 3, 0, TAU); ctx.fill();
   }
   ctx.restore();
 
@@ -1281,13 +1189,7 @@ function drawHero(h){
 }
 
 function drawHeroes(){
-  if (isTraining) {
-    for (const bot of bots) if (bot.alive) drawHero(bot);
-  } else {
-    for (let id in serverPlayers) {
-      if (id !== myId && serverPlayers[id].alive) drawHero(serverPlayers[id]);
-    }
-  }
+  for (const bot of bots) if (bot.alive) drawHero(bot);
   if (player.alive) drawHero(player);
 }
 
@@ -1416,13 +1318,7 @@ function drawUltBar(){
 }
 
 function drawScoreboard(){
-  let list = [];
-  if (isTraining) {
-    list = [player, ...bots].sort((a, b) => b.score - a.score);
-  } else {
-    list = Object.values(serverPlayers).sort((a, b) => b.score - a.score);
-  }
-
+  const list = [player, ...bots].sort((a, b) => b.score - a.score);
   const x = W - 196, y = 14;
   const rowH = 25;
   const total = 34 + rowH * list.length;
@@ -1433,7 +1329,7 @@ function drawScoreboard(){
   
   ctx.textAlign = 'left'; ctx.font = 'bold 11px system-ui, sans-serif';
   ctx.fillStyle = 'rgba(140,180,215,0.9)';
-  ctx.fillText(isTraining ? 'ТРЕНИРОВКА' : 'ГОРНЫЙ ТЕХНИКУМ · ДО 8', x + 14, y + 20);
+  ctx.fillText('ТРЕНИРОВКА', x + 14, y + 20);
   
   ctx.font = 'bold 13px system-ui, sans-serif';
   list.forEach((h, i) => {
@@ -1442,7 +1338,7 @@ function drawScoreboard(){
     ctx.fillStyle = h.color; ctx.fill();
     ctx.textAlign = 'left';
     
-    const isMe = isTraining ? h === player : h.id === myId;
+    const isMe = h === player;
     ctx.fillStyle = isMe ? '#ffffff' : 'rgba(210,225,240,0.82)';
     ctx.fillText(h.name, x + 32, ry);
     ctx.textAlign = 'right';
@@ -1466,7 +1362,7 @@ function drawVersionBadge(){
 }
 
 function render() {
-  if (!myId && !isTraining) return;
+  if (!gameRunning) return;
   ctx.clearRect(0, 0, W, H);
   ctx.save();
   ctx.translate(-cam.x, -cam.y);
