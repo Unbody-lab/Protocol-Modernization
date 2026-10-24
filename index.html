@@ -53,10 +53,13 @@
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
   .fighters-btn-icon{width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); display:flex; align-items:center; justify-content:center; font-size:28px; color:rgba(127,240,255,0.9); box-shadow: inset 0 0 15px rgba(63,169,245,0.2);}
 
-  .announce-banner {position: absolute; bottom: 100px; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
+  .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-img {width: 120px; height: 100%; background-image: url('img/Lesha.jpg'); background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-img::after {content: ''; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.2); font-size: 11px; font-weight: 800; letter-spacing: 1px;}
+  .announce-banner.bottom { bottom: 100px; }
+  .announce-banner.top { bottom: 230px; }
+  .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
+  .announce-banner.bottom .announce-img { background-image: url('img/Lesha.jpg'); }
+  .announce-banner.top .announce-img { background-image: url('img/Fialka.jpg'); }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
@@ -99,7 +102,7 @@
   .fighter-card.empty::after { display: none; }
   .fighter-card.empty .fighter-card-name { color: rgba(255,255,255,0.3); padding: 6px; }
 
-  #hero-modal-left{display:flex; flex-direction:column; gap:16px; flex-shrink:0; align-items:center}
+  #hero-modal-left{display:flex; flex-direction:column; gap:16px; flex-shrink:0; align-items:center; position:relative;}
   #hero-modal-icon{width:200px; height:200px; border-radius:20px; background:rgba(63,169,245,0.15); border:3px solid rgba(127,240,255,0.5); display:flex; align-items:center; justify-content:center; font-size:13px; color:rgba(140,180,215,0.7); text-align:center; line-height:1.4; background-image:url('img/Vitya.jpg'); background-size:cover; background-position:center;}
   #hero-modal-right{flex:1; display:flex; flex-direction:column; gap:14px; min-width:0}
   #hero-modal-name{font-size:34px; font-weight:900; color:#fff; text-shadow:0 2px 10px rgba(0,0,0,0.5)}
@@ -124,6 +127,20 @@
   #teaser-name { color: #fff; font-size: 36px; font-weight: 900; margin-top: -8px; }
   #teaser-timer {color: #ff7b7b; font-size: 20px; font-weight: 800; background: rgba(0,0,0,0.4); padding: 8px 24px; border-radius: 12px; border: 1px solid rgba(255,80,80,0.4);}
   #teaser-desc { color: rgba(200,220,240,0.85); font-size: 14px; line-height: 1.5; }
+
+  /* Облако с фразой */
+  .speech-bubble {
+    position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+    background: #fff; color: #000; padding: 10px 16px; border-radius: 12px;
+    font-size: 13px; font-weight: 700; white-space: nowrap; z-index: 10;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; border: 2px solid #333;
+  }
+  .speech-bubble.show { opacity: 1; }
+  .speech-bubble::after {
+    content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+    border-width: 8px 8px 0; border-style: solid; border-color: #fff transparent transparent transparent;
+  }
 
   #mode-modal-card { width:min(860px, 95vw); }
   .mode-grid { display: flex; flex-wrap: nowrap; gap: 16px; overflow-x: auto; padding-bottom: 10px; }
@@ -196,7 +213,18 @@
       </div>
     </div>
     
-    <div class="announce-banner" onclick="openFightersModal()">
+    <!-- Анонс Фиалки -->
+    <div class="announce-banner top" onclick="showDev('ФИАЛКА')">
+      <div class="announce-img"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Обновление 0.3</div>
+        <div class="announce-name">Фиалка</div>
+        <div class="announce-timer" id="teaser-timer-fialka">через 1 д 4 ч</div>
+      </div>
+    </div>
+
+    <!-- Анонс Лёхи -->
+    <div class="announce-banner bottom" onclick="openFightersModal()">
       <div class="announce-img"></div>
       <div class="announce-info">
         <div class="announce-tag">Обновление 0.2</div>
@@ -227,7 +255,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 2 ИЗ 2</div>
+      <div id="fighters-count">БОЙЦОВ: 2 ИЗ 3</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -238,18 +266,20 @@
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
       </div>
-      <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
+      <div class="fighter-card empty" onclick="showDev('ФИАЛКА')">
         <div class="fighter-card-icon">?</div>
-        <div class="fighter-card-name">Скоро</div>
+        <div class="fighter-card-name">Фиалка (Скоро)</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Модалка Вити -->
 <div id="hero-modal">
   <div id="hero-modal-card">
     <button class="modal-close" onclick="closeHeroDetails()">✕</button>
     <div id="hero-modal-left">
+      <div class="speech-bubble" id="bubble-vitya"></div>
       <div id="hero-modal-icon"></div>
     </div>
     <div id="hero-modal-right">
@@ -272,10 +302,12 @@
   </div>
 </div>
 
+<!-- Модалка Лёхи -->
 <div id="hero-modal-lesha" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,180,80,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeLeshaDetails()">✕</button>
     <div id="hero-modal-left">
+      <div class="speech-bubble" id="bubble-lesha"></div>
       <div id="hero-modal-icon" style="background-image:url('img/Lesha.jpg'); border-color: #ffb450;"></div>
     </div>
     <div id="hero-modal-right">
@@ -286,7 +318,7 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Человек.<br><br>
-        Печально известный лидер Синдиката "Трусы", вся война Технократов и Охлократов для нег овсего лишь способ заявить миру, что он всё ещё здесь..., ну и прорекламировать свой бренд трусов...<br>
+        Печально известный лидер Синдиката "Трусы", вся война Технократов и Охлократов для него всего лишь способ заявить миру, что он всё ещё здесь..., ну и прорекламировать свой бренд трусов...<br>
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
       <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
@@ -330,7 +362,7 @@
     <div class="news-content">
       <div class="news-block" style="border-left-color: #ffb450;">
         <div class="news-date" style="color: #ffb450;">ОБНОВЛЕНИЕ 0.2</div>
-        <div class="news-text"><b>Новый боец — Лёха!</b><br>Кидается трусами и травит врагов. Добавлен режим "Тренировка".<br><br><i>Также мы добавили музыку в лобби и в бой.</i></div>
+        <div class="news-text"><b>Новый боец — Лёха!</b><br>Кидается трусами и травит врагов. Добавлен режим "Тренировка".<br><br><i>Скоро в игре появится новый персонаж — Фиалка!</i></div>
       </div>
       <div class="news-block">
         <div class="news-date">ОБНОВЛЕНИЕ PRE-ALPHA 0.1</div>
@@ -377,6 +409,55 @@ let gameRunning = false;
 let currentMode = 'Тренировка';
 let selectedHero = 'Vitya';
 
+// --- СИСТЕМА РЕПЛИК ---
+const phrases = {
+  Vitya: [
+    "Я не толстый, я накачанный!",
+    "Мой вес — моё преимущество!",
+    "Охлакраты навсегда!",
+    "Свобода для жирного рода!",
+    "Меня не дразнить!",
+    "Лазер из груди — это круто!",
+    "Я верный боец Госпожи Свободы!",
+    "Ещё один бой, ещё один обед!"
+  ],
+  Lesha: [
+    "Трусы — это бренд!",
+    "Вся война — просто реклама!",
+    "Вы всё ещё здесь?",
+    "Синдикат Трусы рулит!",
+    "Покупайте мои трусы!",
+    "Я здесь, чтобы заявить о себе!",
+    "Бомбы — это весело!",
+    "Я лидер, а вы — так..."
+  ]
+};
+
+let audio1 = new Audio('sounds/vitya_voice.mp3');
+let audio2 = new Audio('sounds/lesha_voice.mp3');
+
+function showRandomPhrase(heroType) {
+  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : 'bubble-lesha');
+  const arr = phrases[heroType];
+  const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
+  
+  bubble.textContent = randomPhrase;
+  bubble.classList.add('show');
+  
+  // Проигрываем звук, если он есть
+  if (heroType === 'Vitya') {
+    audio1.volume = 1;
+    audio1.play().catch(()=>{});
+  } else {
+    audio2.volume = 1;
+    audio2.play().catch(()=>{});
+  }
+
+  setTimeout(() => {
+    bubble.classList.remove('show');
+  }, 3000);
+}
+
 function playLobbyMusic() {
   bgMusicBattle.pause();
   bgMusicLobby.volume = 0.5;
@@ -388,13 +469,43 @@ function playBattleMusic() {
   bgMusicBattle.play().catch(e => console.log('Боевая музыка не загружена', e));
 }
 
+// --- ТАЙМЕРЫ АНОНСОВ ---
+let releaseTimeFialka = localStorage.getItem('fialka_release_time');
+if (!releaseTimeFialka) {
+  releaseTimeFialka = Date.now() + (28 * 60 * 60 * 1000); // 1 день 4 часа
+  localStorage.setItem('fialka_release_time', releaseTimeFialka);
+} else {
+  releaseTimeFialka = parseInt(releaseTimeFialka, 10);
+}
+
+function updateTimers() {
+  const now = Date.now();
+  const diff = Math.max(0, releaseTimeFialka - now);
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const el = document.getElementById('teaser-timer-fialka');
+  if (el) {
+    if (diff <= 0) el.textContent = "Уже в игре!";
+    else el.textContent = `через ${d} д ${h} ч ${m} мин`;
+  }
+}
+setInterval(updateTimers, 1000);
+updateTimers();
+
 window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
 
 window.openHeroDetails = function(hero){ 
-  if (hero === 'Vitya') heroModal.classList.add('show');
-  if (hero === 'Lesha') heroModalLesha.style.display = 'flex';
+  if (hero === 'Vitya') {
+    heroModal.classList.add('show');
+    setTimeout(() => showRandomPhrase('Vitya'), 300);
+  }
+  if (hero === 'Lesha') {
+    heroModalLesha.style.display = 'flex';
+    setTimeout(() => showRandomPhrase('Lesha'), 300);
+  }
 };
 window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
 window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
@@ -503,11 +614,13 @@ const MAX_AMMO_VITYA = 5, RELOAD_VITYA = 1.6;
 const MAX_AMMO_LESHA = 3, RELOAD_LESHA = 2.0;
 
 let bots = []; 
-let rocks = [];
+let rocks = []; // Используется как коллизии для мебели
+let furniture = []; // Визуал
 let bullets = [];
 let particles = [];
+let killFeed = []; // Лог убийств
+let matchSplashTimer = 0; // Таймер заставки
 let gameOver = false;
-let decor = [];
 const cam = { x: 0, y: 0 };
 
 const player = {
@@ -559,27 +672,45 @@ function findSpawnPoint(){
 }
 
 function genWorld(){
-  const rnd = (a,b) => a + Math.random()*(b-a);
   rocks = [];
-  for (let i = 0; i < 62; i++){
-    for (let att = 0; att < 60; att++){
-      const r = 34 + rnd(0, 66);
-      const x = 130 + rnd(0, WORLD_W-260);
-      const y = 130 + rnd(0, WORLD_H-260);
-      let ok = true;
-      for (const o of rocks){
-        if (Math.hypot(o.x-x, o.y-y) < o.r + r + 62){ ok = false; break; }
+  furniture = [];
+  
+  // Создаем сетку из парт и стульев
+  for (let row = 0; row < 5; row++) {
+    for (let col = 0; col < 6; col++) {
+      const x = 400 + col * 350 + (row % 2 === 0 ? 0 : 40);
+      const y = 400 + row * 300;
+      
+      // Парта (коллизия)
+      rocks.push({x: x, y: y, r: 35, type: 'desk'});
+      furniture.push({x: x, y: y, type: 'desk'});
+      
+      // Стул (коллизия)
+      rocks.push({x: x, y: y + 45, r: 20, type: 'chair'});
+      furniture.push({x: x, y: y + 45, type: 'chair'});
+      
+      // Книги на парте (декор)
+      if (Math.random() < 0.5) {
+        furniture.push({x: x + (Math.random()*20-10), y: y - (Math.random()*15), type: 'books'});
       }
-      if (ok){ rocks.push({x, y, r}); break; }
     }
   }
-  decor = [];
-  for (let i = 0; i < 520; i++){
-    decor.push({
-      x: rnd(0, WORLD_W), y: rnd(0, WORLD_H),
-      r: 12 + rnd(0, 56), t: rnd() < .5 ? 0 : 1, a: rnd(0, Math.PI)
-    });
+  
+  // Шкафы по краям
+  for (let i = 0; i < 6; i++) {
+    const x = 100;
+    const y = 300 + i * 300;
+    rocks.push({x, y, r: 30, type: 'cabinet'});
+    furniture.push({x, y, type: 'cabinet'});
   }
+  
+  // Доска
+  rocks.push({x: WORLD_W/2, y: 100, r: 50, type: 'board'});
+  furniture.push({x: WORLD_W/2, y: 100, type: 'board'});
+  
+  // Голограммы (просто декор, без коллизии)
+  furniture.push({x: 800, y: 600, type: 'holo'});
+  furniture.push({x: 1800, y: 1400, type: 'holo'});
 }
 
 function startTraining(){
@@ -587,6 +718,8 @@ function startTraining(){
   bots = [];
   bullets = [];
   particles = [];
+  killFeed = [];
+  matchSplashTimer = 2.0; // 2 секунды заставки
   genWorld();
 
   const pData = createHero('player', selectedHero, false);
@@ -640,6 +773,12 @@ function getAllEnemies(hero) {
   return [player, ...bots.filter(b => b !== hero)];
 }
 
+function addKillFeed(killer, victim) {
+  const text = `${killer.name} убил ${victim.name}`;
+  killFeed.push({ text, life: 4.0, max: 4.0 });
+  if (killFeed.length > 4) killFeed.shift();
+}
+
 function tryAttack(h) {
   if (h.attackCd > 0 || !h.alive || h.ultActive) return;
 
@@ -688,7 +827,7 @@ function tryAttack(h) {
       tx = mouse.x - W/2 + h.x; 
       ty = mouse.y - H/2 + h.y;
       const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 750; // УВЕЛИЧЕНА ДАЛЬНОСТЬ
+      const MAX_RANGE = 750;
       if (distToClick > MAX_RANGE) {
         const ang = Math.atan2(ty - h.y, tx - h.x);
         tx = h.x + Math.cos(ang) * MAX_RANGE;
@@ -702,7 +841,7 @@ function tryAttack(h) {
 
     const bullet = {
       x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 1100, vy: Math.sin(h.aim) * 1100, // УВЕЛИЧЕНА СКОРОСТЬ
+      vx: Math.cos(h.aim) * 1100, vy: Math.sin(h.aim) * 1100,
       r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
@@ -749,7 +888,10 @@ function damage(target, amount, source, isPoison) {
     target.ultTime = 0;
     target.poison = 0;
     spawnHitParticles(target.x, target.y, target.color, 28);
-    if (source && source !== target) source.score++;
+    if (source && source !== target) {
+        source.score++;
+        addKillFeed(source, target);
+    }
   }
 }
 
@@ -853,6 +995,11 @@ function hasLOS(a, b) {
 function update(dt) {
   if (gameOver || !gameRunning) return;
 
+  if (matchSplashTimer > 0) {
+    matchSplashTimer -= dt;
+    return; // Пауза для заставки
+  }
+
   const mwx = mouse.x - W/2 + player.x;
   const mwy = mouse.y - H/2 + player.y;
   
@@ -880,7 +1027,6 @@ function update(dt) {
          player.ultTick = 0;
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
-           // Проверка, находится ли враг на луче
            if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) {
              damage(e, 5, player);
            }
@@ -996,7 +1142,7 @@ function update(dt) {
         
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
-          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) { // УВЕЛИЧЕН РАДИУС ВЗРЫВА
+          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) {
             damage(e, b.dmg, b.owner, b.poison);
           }
         }
@@ -1040,6 +1186,11 @@ function update(dt) {
     p.vx *= Math.pow(.02, dt); p.vy *= Math.pow(.02, dt);
     p.life -= dt;
     if (p.life <= 0) particles.splice(i, 1);
+  }
+
+  for (let i = killFeed.length - 1; i >= 0; i--) {
+    killFeed[i].life -= dt;
+    if (killFeed[i].life <= 0) killFeed.splice(i, 1);
   }
 
   let tx = player.x - W/2, ty = player.y - H/2;
@@ -1091,31 +1242,79 @@ function pointSegDist(px,py,x1,y1,x2,y2){
 }
 
 function drawGround(){
-  ctx.fillStyle = '#2f3a46';
+  // Пол техникума (плитка)
+  ctx.fillStyle = '#2b3138';
   ctx.fillRect(0, 0, WORLD_W, WORLD_H);
-  for (const d of decor){
-    ctx.beginPath();
-    ctx.fillStyle = d.t === 0 ? 'rgba(196,222,244,0.055)' : 'rgba(0,0,0,0.10)';
-    ctx.ellipse(d.x, d.y, d.r, d.r * .72, d.a, 0, TAU);
-    ctx.fill();
+  
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 2;
+  for (let x = 0; x < WORLD_W; x += 100) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
   }
-  ctx.strokeStyle = 'rgba(10,14,20,0.55)';
-  ctx.lineWidth = 26;
-  ctx.strokeRect(13, 13, WORLD_W - 26, WORLD_H - 26);
+  for (let y = 0; y < WORLD_H; y += 100) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
+  }
+  
+  ctx.strokeStyle = 'rgba(10,14,20,0.8)';
+  ctx.lineWidth = 30;
+  ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
 }
 
-function drawRocks(){
-  for (const r of rocks){
-    ctx.beginPath();
-    ctx.ellipse(r.x + 7, r.y + 11, r.r*.95, r.r*.78, 0, 0, TAU);
-    ctx.fillStyle = 'rgba(0,0,0,0.30)'; ctx.fill();
-    const g = ctx.createRadialGradient(r.x - r.r*.35, r.y - r.r*.42, r.r*.12, r.x, r.y, r.r);
-    g.addColorStop(0, '#98a4b3'); g.addColorStop(.55, '#616c7a'); g.addColorStop(1, '#39424e');
-    ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, TAU);
-    ctx.fillStyle = g; ctx.fill();
-    ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(18,24,32,0.85)'; ctx.stroke();
-    ctx.beginPath(); ctx.arc(r.x - r.r*.22, r.y - r.r*.36, r.r*.48, 0, TAU);
-    ctx.fillStyle = 'rgba(232,246,255,0.14)'; ctx.fill();
+function drawFurniture(){
+  for (const f of furniture) {
+    if (f.type === 'desk') {
+      // Парта
+      ctx.fillStyle = '#5a3d2b';
+      roundRect(ctx, f.x - 35, f.y - 25, 70, 50, 5); ctx.fill();
+      ctx.strokeStyle = '#3a2517'; ctx.lineWidth = 3; ctx.stroke();
+      // Ножки
+      ctx.fillStyle = '#2b1a10';
+      ctx.fillRect(f.x - 30, f.y + 15, 8, 20);
+      ctx.fillRect(f.x + 22, f.y + 15, 8, 20);
+    } else if (f.type === 'chair') {
+      // Стул
+      ctx.fillStyle = '#4a5568';
+      roundRect(ctx, f.x - 18, f.y - 15, 36, 30, 4); ctx.fill();
+      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2; ctx.stroke();
+      // Спинка
+      ctx.fillStyle = '#4a5568';
+      roundRect(ctx, f.x - 18, f.y - 25, 36, 10, 3); ctx.fill();
+      ctx.stroke();
+    } else if (f.type === 'cabinet') {
+      // Шкаф
+      ctx.fillStyle = '#4e5a68';
+      ctx.fillRect(f.x - 25, f.y - 45, 50, 90);
+      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(f.x - 25, f.y - 45, 50, 90);
+      // Ручки
+      ctx.fillStyle = '#ffd700';
+      ctx.fillRect(f.x + 15, f.y - 10, 5, 20);
+      ctx.fillRect(f.x + 15, f.y + 15, 5, 20);
+    } else if (f.type === 'board') {
+      // Доска
+      ctx.fillStyle = '#1a4a2e'; // Зеленый
+      roundRect(ctx, f.x - 120, f.y - 50, 240, 100, 8); ctx.fill();
+      ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
+      // Мел
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(f.x - 80, f.y - 20, 40, 4);
+      ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
+    } else if (f.type === 'books') {
+      // Книги
+      ctx.fillStyle = '#ff4d4d';
+      ctx.fillRect(f.x - 10, f.y - 5, 20, 5);
+      ctx.fillStyle = '#4dff4d';
+      ctx.fillRect(f.x - 8, f.y - 10, 16, 5);
+    } else if (f.type === 'holo') {
+      // Голограмма
+      const t = performance.now() / 1000;
+      ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
+      ctx.beginPath();
+      ctx.arc(f.x, f.y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
   }
 }
 
@@ -1394,6 +1593,29 @@ function drawScoreboard(){
   ctx.textAlign = 'left';
 }
 
+function drawKillFeed() {
+  let startY = H / 2 - 100;
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 16px system-ui, sans-serif';
+  
+  for (let i = 0; i < killFeed.length; i++) {
+    const kf = killFeed[i];
+    const alpha = Math.min(1, kf.life / 1.0);
+    ctx.globalAlpha = alpha;
+    
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    const textWidth = ctx.measureText(kf.text).width;
+    roundRect(ctx, W/2 - textWidth/2 - 10, startY - 20, textWidth + 20, 30, 8);
+    ctx.fill();
+    
+    ctx.fillStyle = '#ff7b7b';
+    ctx.fillText(kf.text, W/2, startY);
+    
+    startY += 35;
+  }
+  ctx.globalAlpha = 1;
+}
+
 function drawVersionBadge(){
   const x = 14, y = 14, w = 118, h = 30;
   ctx.fillStyle = 'rgba(8,14,22,0.75)';
@@ -1414,7 +1636,7 @@ function render() {
   ctx.translate(-cam.x, -cam.y);
 
   drawGround();
-  drawRocks();
+  drawFurniture();
   drawHeroes();
   drawBullets();
   drawLasers();
@@ -1427,12 +1649,27 @@ function render() {
   drawUltBar();
   drawAmmoBar();
   drawScoreboard();
+  drawKillFeed();
   
   if (!player.alive && !gameOver) {
     ctx.textAlign = 'center';
     ctx.fillStyle = 'rgba(140,195,230,0.95)';
     ctx.font = 'bold 28px system-ui, sans-serif';
     ctx.fillText('ВОЗРОЖДЕНИЕ ЧЕРЕЗ ' + Math.ceil(player.respawn), W/2, H/2 - 30);
+  }
+
+  if (matchSplashTimer > 0) {
+    ctx.fillStyle = 'rgba(4,8,14,0.85)';
+    ctx.fillRect(0, 0, W, H);
+    
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#7ff0ff';
+    ctx.font = 'bold 64px system-ui, sans-serif';
+    ctx.fillText(currentMode, W/2, H/2 - 30);
+    
+    ctx.fillStyle = '#dbe9f7';
+    ctx.font = 'bold 32px system-ui, sans-serif';
+    ctx.fillText('Карта: Горный техникум', W/2, H/2 + 30);
   }
 }
 
