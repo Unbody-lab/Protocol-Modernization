@@ -56,11 +56,13 @@
   /* Баннеры анонсов */
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.top { bottom: 280px; } /* Лёха сверху */
-  .announce-banner.bottom { bottom: 150px; } /* Фиалка снизу */
+  .announce-banner.top { bottom: 220px; } /* Лёха (опущен ниже) */
+  .announce-banner.bottom { bottom: 90px; } /* Фиалка (опущен ниже) */
+  
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
   .announce-banner.top .announce-img { background-image: url('img/Lesha.jpg'); }
-  .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); }
+  .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); } /* Убедитесь, что файл называется именно так */
+  
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
