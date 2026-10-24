@@ -53,13 +53,14 @@
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
   .fighters-btn-icon{width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); display:flex; align-items:center; justify-content:center; font-size:28px; color:rgba(127,240,255,0.9); box-shadow: inset 0 0 15px rgba(63,169,245,0.2);}
 
+  /* Баннеры анонсов */
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.bottom { bottom: 100px; }
-  .announce-banner.top { bottom: 230px; }
+  .announce-banner.top { bottom: 280px; } /* Лёха сверху */
+  .announce-banner.bottom { bottom: 150px; } /* Фиалка снизу */
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-banner.bottom .announce-img { background-image: url('img/Lesha.jpg'); }
-  .announce-banner.top .announce-img { background-image: url('img/Fialka.jpg'); }
+  .announce-banner.top .announce-img { background-image: url('img/Lesha.jpg'); }
+  .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
@@ -97,6 +98,8 @@
   .fighter-card-name{position: relative; z-index: 3; font-size:20px; font-weight:900; color:#fff; text-align: center; padding: 16px 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);}
   
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
+  
+  /* Стили для закрытой Фиалки */
   .fighter-card.fialka {cursor: not-allowed; border-color: #5a6a7a;}
   .fighter-card.fialka .fighter-card-icon {background-image: url('img/Fialka.jpg'); background-color: #1b232d; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;}
   .fighter-card.fialka .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8);}
@@ -136,10 +139,10 @@
   #teaser-timer {color: #ff7b7b; font-size: 20px; font-weight: 800; background: rgba(0,0,0,0.4); padding: 8px 24px; border-radius: 12px; border: 1px solid rgba(255,80,80,0.4);}
   #teaser-desc { color: rgba(200,220,240,0.85); font-size: 14px; line-height: 1.5; }
 
-  /* Облако с фразой (ВНУТРИ карточки) */
+  /* Облако с фразой */
   .speech-bubble {
     position: absolute;
-    top: 10px; /* Сдвинуто вниз, чтобы не вылезать за верх */
+    top: 10px;
     left: 100%;
     margin-left: 15px;
     background: #fff; color: #000; padding: 10px 16px; border-radius: 12px;
@@ -224,21 +227,23 @@
       </div>
     </div>
     
-    <div class="announce-banner top" onclick="showDev('ФИАЛКА')">
-      <div class="announce-img"></div>
-      <div class="announce-info">
-        <div class="announce-tag">Обновление 0.3</div>
-        <div class="announce-name">Фиалка</div>
-        <div class="announce-timer" id="teaser-timer-fialka">через 1 д 4 ч</div>
-      </div>
-    </div>
-
-    <div class="announce-banner bottom" onclick="openFightersModal()">
+    <!-- Анонс Лёхи (сверху) -->
+    <div class="announce-banner top" onclick="openFightersModal()">
       <div class="announce-img"></div>
       <div class="announce-info">
         <div class="announce-tag">Обновление 0.2</div>
         <div class="announce-name">Лёха</div>
         <div class="announce-timer">Уже в игре</div>
+      </div>
+    </div>
+
+    <!-- Анонс Фиалки (снизу) -->
+    <div class="announce-banner bottom" onclick="showDev('ФИАЛКА')">
+      <div class="announce-img"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Обновление 0.3</div>
+        <div class="announce-name">Фиалка</div>
+        <div class="announce-timer" id="teaser-timer-fialka">через 1 д 4 ч</div>
       </div>
     </div>
 
@@ -290,7 +295,6 @@
   </div>
 </div>
 
-<!-- Модалка Вити -->
 <div id="hero-modal">
   <div id="hero-modal-card">
     <button class="modal-close" onclick="closeHeroDetails()">✕</button>
@@ -318,7 +322,6 @@
   </div>
 </div>
 
-<!-- Модалка Лёхи -->
 <div id="hero-modal-lesha" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,180,80,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeLeshaDetails()">✕</button>
@@ -460,7 +463,6 @@ function showRandomPhrase(heroType) {
   bubble.textContent = randomPhrase;
   bubble.classList.add('show');
   
-  // Проигрываем звук, если он есть
   if (heroType === 'Vitya') {
     audio1.volume = 1;
     audio1.play().catch(()=>{});
