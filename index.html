@@ -59,8 +59,8 @@
   #play-battle-btn:active{transform:translateY(6px); box-shadow:0 2px 0 #b87a00, 0 4px 12px rgba(255,180,80,0.4)}
   #lobby-mode-label{font-size:13px; color:rgba(160,195,225,0.85); letter-spacing:.5px; background:rgba(20,30,42,0.75); padding:6px 16px; border-radius:8px; border:1px solid rgba(90,140,180,0.35);}
 
-  .side-panel{position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; align-items:center; gap:12px;}
-  #left-panel { left: 40px; }
+  /* Кнопка БОЙЦЫ (опущена вниз) */
+  .side-panel{position:absolute; top: 100px; left: 40px; display:flex; flex-direction:column; align-items:center; gap:12px;}
   #right-panel { right: 40px; }
   .side-btn{display:flex; flex-direction:column; align-items:center; gap:8px; padding:18px 24px; border-radius:16px; cursor:pointer; background:rgba(20,30,42,0.8); border:2px solid rgba(90,140,180,0.5); transition:all .2s; backdrop-filter:blur(6px); min-width: 130px;}
   .side-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.7); transform:translateY(-4px) scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.4);}
@@ -219,6 +219,9 @@
   .news-text { font-size: 14px; color: #cfe3f5; line-height: 1.5; }
   .news-badge { display: inline-flex; align-items: center; justify-content: center; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 8px; vertical-align: middle; animation: pulse 2s infinite;}
 
+  /* Заголовок новостей */
+  #news-modal .profile-card h2 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+
   .dev-overlay{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.9); backdrop-filter:blur(8px);}
   .dev-overlay.show{display:flex}
   .dev-box{text-align:center; padding:44px 56px; background:rgba(20,30,42,0.95); border:2px solid rgba(255,180,80,0.45); border-radius:20px; box-shadow:0 24px 70px rgba(0,0,0,0.7);}
@@ -264,6 +267,7 @@
     <div class="top-btn" onclick="showDev('ПРИГЛАСИТЬ ДРУЗЕЙ')"><span class="icon">✉️</span> Пригласить</div>
   </div>
   <div id="lobby-content">
+    <!-- Кнопка БОЙЦЫ (теперь выше баннеров) -->
     <div id="left-panel" class="side-panel">
       <div class="side-btn" onclick="openFightersModal()">
         <div class="fighters-btn-icon">👥</div>
@@ -1455,15 +1459,15 @@ function drawHero(h){
     ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
     ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
   } else {
-    // Лёха: деловые штаны (темно-серые) и туфли (черные)
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 6; ctx.lineCap = 'round'; // Штаны
-    ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke();
+    // Лёха: деловые штаны (темно-серые) и туфли (черные). Стройнее (x ближе к 0)
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; // Штаны
+    ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke();
     
     // Туфли
     ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 6, 3, 0, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 6, 3, 0, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
   }
 
   // Руки
@@ -1475,45 +1479,46 @@ function drawHero(h){
   } else {
     // Лёха: пиджак (рукава)
     ctx.strokeStyle = '#1e293b'; 
-    ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke();
   }
 
   // Тело (Торс)
   const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
   if (isVitya) {
-    // Витя: Красная майка и бронежилет
+    // Витя: Красная майка и пузо
     g.addColorStop(0, '#f87171'); // Светло-красный (майка)
     g.addColorStop(1, '#b91c1c'); // Темно-красный (майка)
-    ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU);
+    // Живот (пузо)
+    ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU);
     ctx.fillStyle = g; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke();
     
-    // Бронежилет (темно-зеленый)
-    ctx.fillStyle = '#3f6212';
-    roundRect(ctx, -10, -8, 20, 16, 4); ctx.fill();
-    ctx.lineWidth = 1.5; ctx.strokeStyle = '#1a2e05'; ctx.stroke();
+    // Черный бронежилет
+    ctx.fillStyle = '#1f2937';
+    roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill();
+    ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke();
     
     // Ремни бронежилета
-    ctx.fillStyle = '#4d7c0f';
-    ctx.fillRect(-4, -8, 2, 16);
-    ctx.fillRect(2, -8, 2, 16);
+    ctx.fillStyle = '#374151';
+    ctx.fillRect(-5, -10, 2, 18);
+    ctx.fillRect(3, -10, 2, 18);
   } else {
-    // Лёха: Белая рубашка и деловой пиджак
+    // Лёха: Белая рубашка и деловой пиджак. Стройнее (уже)
     g.addColorStop(0, '#f8fafc'); // Белая рубашка
     g.addColorStop(1, '#cbd5e1');
-    ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU);
+    ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU);
     ctx.fillStyle = g; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke();
     
     // Пиджак (темно-синий) — по бокам
     ctx.fillStyle = '#1e293b';
-    ctx.beginPath(); ctx.moveTo(-11, -10); ctx.lineTo(-5, 10); ctx.lineTo(-11, 12); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(11, -10); ctx.lineTo(5, 10); ctx.lineTo(11, 12); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(9, -10); ctx.lineTo(4, 10); ctx.lineTo(9, 12); ctx.closePath(); ctx.fill();
     
     // Галстук
     ctx.fillStyle = '#ef4444';
-    ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-3, 0); ctx.lineTo(0, 4); ctx.lineTo(3, 0); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill();
   }
 
   // Голова
@@ -1574,12 +1579,18 @@ function drawHero(h){
     ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; // Рукав пиджака
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke();
     
-    // Бомба в виде трусов (стилизованно)
-    ctx.fillStyle = '#ff7a4d';
-    ctx.beginPath(); ctx.arc(18, 0, 7, 0, TAU); ctx.fill();
+    // Бомба (черная) с трусами
+    ctx.fillStyle = '#111'; // Черная бомба
+    ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill();
     ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
+    
+    // Красные трусы на бомбе
+    ctx.fillStyle = '#ef4444';
+    roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill();
+    
+    // Зеленый фитиль
     ctx.fillStyle = '#5cff5c';
-    ctx.beginPath(); ctx.arc(18, -5, 3, 0, TAU); ctx.fill(); // Фитиль
+    ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); 
   }
   ctx.restore();
 
@@ -1633,9 +1644,13 @@ function drawBullets(){
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU);
       ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke();
     } else if (b.type === 'bomb') {
+      // Черная бомба с трусами
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
-      ctx.fillStyle = b.poison ? '#5cff5c' : '#ffaa33'; ctx.fill();
+      ctx.fillStyle = '#111'; ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
+      // Трусы
+      ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444';
+      roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill();
     } else {
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU);
       ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill();
