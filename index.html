@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protocol: Modernization — PRE-ALPHA 0.2.5</title>
+<title>Protocol: Modernization — PRE-ALPHA 0.3</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
@@ -70,10 +70,9 @@
   /* Баннеры анонсов */
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.top { bottom: 230px; } /* Лёха */
+  .announce-banner.top { bottom: 230px; } /* Оставим пустым, так как Лёху убрали */
   .announce-banner.bottom { bottom: 100px; } /* Фиалка */
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-banner.top .announce-img { background-image: url('img/Lesha.jpg'); }
   .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
@@ -112,15 +111,8 @@
   .fighter-card-name{position: relative; z-index: 3; font-size:20px; font-weight:900; color:#fff; text-align: center; padding: 16px 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);}
   
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
+  .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
   
-  .fighter-card.fialka {cursor: not-allowed; border-color: #5a6a7a;}
-  .fighter-card.fialka .fighter-card-icon {background-image: url('img/Fialka.jpg'); background-color: #1b232d; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;}
-  .fighter-card.fialka .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8);}
-  .fighter-card.fialka .fighter-card-icon::after {content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.6); z-index: 0;}
-  .fighter-card.fialka::after {background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%);}
-  .fighter-card.fialka .fighter-card-name {color: #8ea6bd;}
-  .fighter-card.fialka .lock-timer {position: relative; z-index: 3; font-size: 12px; font-weight: 700; color: #ffb450; text-align: center; padding-bottom: 8px; text-transform: uppercase;}
-
   .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(90,140,180,0.25); align-items: center; justify-content: center;}
   .fighter-card.empty .fighter-card-icon {background: none; display: flex; align-items: center; justify-content: center; font-size: 48px; color: rgba(255,255,255,0.1); font-weight: 800;}
   .fighter-card.empty::after { display: none; }
@@ -252,7 +244,7 @@
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
-  <div id="start-version">PRE-ALPHA 0.2.5</div>
+  <div id="start-version">PRE-ALPHA 0.3</div>
 </div>
 
 <div id="lobby-screen" class="screen hidden">
@@ -267,7 +259,7 @@
     <div class="top-btn" onclick="showDev('ПРИГЛАСИТЬ ДРУЗЕЙ')"><span class="icon">✉️</span> Пригласить</div>
   </div>
   <div id="lobby-content">
-    <!-- Кнопка БОЙЦЫ (теперь выше баннеров) -->
+    <!-- Кнопка БОЙЦЫ -->
     <div id="left-panel" class="side-panel">
       <div class="side-btn" onclick="openFightersModal()">
         <div class="fighters-btn-icon">👥</div>
@@ -275,23 +267,13 @@
       </div>
     </div>
     
-    <!-- Анонс Лёхи (сверху) -->
-    <div class="announce-banner top" onclick="openFightersModal()">
-      <div class="announce-img"></div>
-      <div class="announce-info">
-        <div class="announce-tag">Обновление 0.2</div>
-        <div class="announce-name">Лёха</div>
-        <div class="announce-timer">Уже в игре</div>
-      </div>
-    </div>
-
-    <!-- Анонс Фиалки (снизу) -->
-    <div class="announce-banner bottom" onclick="openFialkaInfo()">
-      <div class="announce-img"></div>
+    <!-- Анонс Лёхи убран, оставлен только анонс Фиалки (но теперь она тоже в игре, так что можно сделать просто "Новый боец") -->
+    <div class="announce-banner bottom" onclick="openFightersModal()">
+      <div class="announce-img" style="background-image: url('img/Fialka.jpg');"></div>
       <div class="announce-info">
         <div class="announce-tag">Обновление 0.3</div>
         <div class="announce-name">Фиалка</div>
-        <div class="announce-timer" id="teaser-timer-fialka">через 1 д 4 ч</div>
+        <div class="announce-timer">Уже в игре</div>
       </div>
     </div>
 
@@ -317,7 +299,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 2 ИЗ 3</div>
+      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 3</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -328,11 +310,9 @@
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
       </div>
-      
-      <div class="fighter-card fialka" onclick="openFialkaInfo()">
+      <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Фиалка</div>
-        <div class="lock-timer" id="card-fialka-timer">Скоро</div>
       </div>
 
       <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
@@ -343,6 +323,7 @@
   </div>
 </div>
 
+<!-- Модалка Вити -->
 <div id="hero-modal">
   <div id="hero-modal-card">
     <button class="modal-close" onclick="closeHeroDetails()">✕</button>
@@ -370,6 +351,7 @@
   </div>
 </div>
 
+<!-- Модалка Лёхи -->
 <div id="hero-modal-lesha" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,180,80,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeLeshaDetails()">✕</button>
@@ -397,23 +379,30 @@
   </div>
 </div>
 
-<!-- Модалка Фиалки (Информация) -->
-<div id="fialka-info-modal">
-  <div id="fialka-info-card">
-    <button class="modal-close" onclick="closeFialkaInfo()">✕</button>
-    <h2 style="color: #fff; font-size: 32px; margin-bottom: 20px;">Грядущее обновление 0.3</h2>
-    
-    <!-- Картинка Фиалки -->
-    <div style="width: 100%; height: 250px; background-image: url('img/Fialka.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; margin-bottom: 20px; border-radius: 16px; border: 2px solid #ffb450;"></div>
-    
-    <h3 style="color: #ffb450; font-size: 28px; margin-bottom: 10px;">Новый боец: Фиалка</h3>
-    <p style="color: rgba(200,220,240,0.9); font-size: 16px; line-height: 1.6; max-width: 500px; margin: 0 auto 24px auto;">
-      Любовь к природе и ненависть к бездушным технологиям, Фиалка с радостью выбьет из Технократов всё дерьмо! 
-      <br><br>
-      Уже совсем скоро вы узнаете, что она готовит!
-    </p>
-    <div id="teaser-timer-big" style="color: #ff7b7b; font-size: 24px; font-weight: 800; background: rgba(0,0,0,0.5); padding: 14px 34px; border-radius: 14px; border: 1px solid rgba(255,80,80,0.4); display: inline-block;">
-      До выхода: 1 день 4 часа
+<!-- Модалка Фиалки -->
+<div id="hero-modal-fialka" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
+  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(63,169,245,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
+    <button class="modal-close" onclick="closeFialkaDetails()">✕</button>
+    <div id="hero-modal-left">
+      <div class="speech-bubble" id="bubble-fialka"></div>
+      <div id="hero-modal-icon" style="background-image:url('img/Fialka.jpg'); border-color: #3fa9f5;"></div>
+    </div>
+    <div id="hero-modal-right">
+      <div id="hero-modal-name">Фиалка</div>
+      <div class="tag-row">
+        <span class="tag tag-class" style="color:#3fa9f5; border-color:rgba(63,169,245,0.35)">КЛАСС: ТЕХНОМАНТ</span>
+        <span class="tag tag-rarity" style="color:#B0B8C4; border-color:rgba(176, 184, 196, 0.35)">РЕДКОСТЬ: ОБЫЧНЫЙ</span>
+      </div>
+      <div id="hero-modal-desc">
+        <b>Вид:</b> Робот.<br><br>
+        Таинственная воительница из клана Технократов. Управляет электричеством, чтобы поражать сразу несколько целей.<br>
+        <b>Ульта:</b> Притягивает противника косой и парализует его.
+      </div>
+      <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)"></div></div></div>
+      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (цепная молния)</span><span>20</span></div><div class="stat-track"><div class="stat-fill" style="width:65%; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)"></div></div></div>
+      <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>208</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)"></div></div></div>
+      <div class="stat-block"><div class="stat-head"><span>⚡ Патроны</span><span>4 (перезарядка 1.8с)</span></div><div class="stat-track"><div class="stat-fill" style="width:70%; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)"></div></div></div>
+      <button id="hero-modal-select" onclick="selectFialkaAndClose()" style="background:linear-gradient(180deg,#3fa9f5,#1e6a9e); box-shadow:0 4px 0 #123f5e;">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
@@ -450,13 +439,13 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
-      <!-- Анонс Фиалки -->
-      <div class="news-block" style="border-left-color: #ffb450;" onclick="openFialkaInfo()">
+      <!-- Обновление 0.3 -->
+      <div class="news-block" style="border-left-color: #3fa9f5;" onclick="openHeroDetails('Fialka')">
         <div class="news-img" style="background-image: url('img/Fialka.jpg');"></div>
         <div class="news-info">
-          <div class="news-date" style="color: #ffb450;">АНОНС ОБНОВЛЕНИЯ 0.3 <span class="news-badge">!</span></div>
-          <div class="news-title">Новый боец: Фиалка</div>
-          <div class="news-text">Любовь к природе и ненависть к бездушным технологиям, Фиалка с радостью выбьет из Технократов всё дерьмо! Уже совсем скоро вы узнаете, что она готовит!</div>
+          <div class="news-date" style="color: #3fa9f5;">ОБНОВЛЕНИЕ 0.3 <span class="news-badge">!</span></div>
+          <div class="news-title">Новый боец: Фиалка!</div>
+          <div class="news-text">Таинственная воительница-робот с цепной молнией. Узнайте, на что она способна!</div>
         </div>
       </div>
       
@@ -502,6 +491,7 @@ const lobbyScreen = document.getElementById('lobby-screen');
 const fightersModal = document.getElementById('fighters-modal');
 const heroModal   = document.getElementById('hero-modal');
 const heroModalLesha = document.getElementById('hero-modal-lesha');
+const heroModalFialka = document.getElementById('hero-modal-fialka');
 const modeModal   = document.getElementById('mode-modal');
 const devOverlay  = document.getElementById('dev-overlay');
 const devTitle    = document.getElementById('dev-title');
@@ -509,7 +499,6 @@ const gameEl      = document.getElementById('game');
 const hintEl      = document.getElementById('hint');
 const modeLabel   = document.getElementById('lobby-mode-label');
 const newsModal   = document.getElementById('news-modal');
-const fialkaInfoModal = document.getElementById('fialka-info-modal');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
@@ -521,32 +510,47 @@ let selectedHero = 'Vitya';
 // --- СИСТЕМА РЕПЛИК ---
 const phrases = {
   Vitya: [
-    "Будущее за жиром!",
+    "Я не толстый, я накачанный!",
     "Мой вес — моё преимущество!",
-    "Раздавим фанатов Веблена, Бэлла и Турена",
-    "Разобьём этих спичек!",
-    "Долой липосакцию!",
-    "Я выжгу тебя своим жиром",
-    "Столовые мира будут моими!",
-    "Эти жестянки станут, отличными кострюлями для моих супов"
+    "Охлакраты навсегда!",
+    "Свобода для жирного рода!",
+    "Меня не дразнить!",
+    "Лазер из груди — это круто!",
+    "Я верный боец Госпожи Свободы!",
+    "Ещё один бой, ещё один обед!"
   ],
   Lesha: [
     "Трусы — это бренд!",
-    "Всем кто служит Господину 'Порядку', трусы со скидкой 30%",
-    "Неважно кто победит, трусы будут обосраны у всех!",
-    "Трусы со скидкой 25 %, всем кто служит Госпоже 'Свободе'",
-    "Мой Синдикат найдёт вас в два счёта",
-    "Мир будет покупать мои трусы!",
-    "Вонючая смерть!",
+    "Вся война — просто реклама!",
+    "Вы всё ещё здесь?",
+    "Синдикат Трусы рулит!",
+    "Покупайте мои трусы!",
+    "Я здесь, чтобы заявить о себе!",
+    "Бомбы — это весело!",
     "Я лидер, а вы — так..."
+  ],
+  Fialka: [
+    "Электричество — моя стихия.",
+    "Технократы не сдаются.",
+    "Мои системы в норме.",
+    "Шоковая терапия.",
+    "Ты притянут к ответу.",
+    "Коса остра, разум холоден.",
+    "Ошибка 404: пощада не найдена.",
+    "Сопротивление бесполезно."
   ]
 };
 
 let audio1 = new Audio('sounds/vitya_voice.mp3');
 let audio2 = new Audio('sounds/lesha_voice.mp3');
+let audio3 = new Audio('sounds/fialka_voice.mp3');
 
 function showRandomPhrase(heroType) {
-  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : 'bubble-lesha');
+  let bubbleId = 'bubble-vitya';
+  if (heroType === 'Lesha') bubbleId = 'bubble-lesha';
+  if (heroType === 'Fialka') bubbleId = 'bubble-fialka';
+  
+  const bubble = document.getElementById(bubbleId);
   const arr = phrases[heroType];
   const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
   
@@ -556,9 +560,12 @@ function showRandomPhrase(heroType) {
   if (heroType === 'Vitya') {
     audio1.volume = 1;
     audio1.play().catch(()=>{});
-  } else {
+  } else if (heroType === 'Lesha') {
     audio2.volume = 1;
     audio2.play().catch(()=>{});
+  } else {
+    audio3.volume = 1;
+    audio3.play().catch(()=>{});
   }
 
   setTimeout(() => {
@@ -577,44 +584,6 @@ function playBattleMusic() {
   bgMusicBattle.play().catch(e => console.log('Боевая музыка не загружена', e));
 }
 
-// --- ТАЙМЕРЫ АНОНСОВ ---
-let releaseTimeFialka = localStorage.getItem('fialka_release_time');
-if (!releaseTimeFialka) {
-  releaseTimeFialka = Date.now() + (28 * 60 * 60 * 1000); // 1 день 4 часа
-  localStorage.setItem('fialka_release_time', releaseTimeFialka);
-} else {
-  releaseTimeFialka = parseInt(releaseTimeFialka, 10);
-}
-
-function updateTimers() {
-  const now = Date.now();
-  const diff = Math.max(0, releaseTimeFialka - now);
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  
-  const el = document.getElementById('teaser-timer-fialka');
-  const cardTimer = document.getElementById('card-fialka-timer');
-  const bigTimer = document.getElementById('teaser-timer-big');
-  
-  const timeStr = `${d} д ${h} ч ${m} мин`;
-  
-  if (el) {
-    if (diff <= 0) el.textContent = "Уже в игре!";
-    else el.textContent = `через ${timeStr}`;
-  }
-  if (cardTimer) {
-    if (diff <= 0) cardTimer.textContent = "Доступен";
-    else cardTimer.textContent = `Скоро: ${d}д ${h}ч`;
-  }
-  if (bigTimer) {
-    if (diff <= 0) bigTimer.textContent = "Доступна в игре!";
-    else bigTimer.textContent = `До выхода: ${timeStr}`;
-  }
-}
-setInterval(updateTimers, 1000);
-updateTimers();
-
 window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
@@ -628,12 +597,14 @@ window.openHeroDetails = function(hero){
     heroModalLesha.style.display = 'flex';
     setTimeout(() => showRandomPhrase('Lesha'), 300);
   }
+  if (hero === 'Fialka') {
+    heroModalFialka.style.display = 'flex';
+    setTimeout(() => showRandomPhrase('Fialka'), 300);
+  }
 };
 window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
 window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
-
-window.openFialkaInfo = function(){ fialkaInfoModal.classList.add('show'); };
-window.closeFialkaInfo = function(){ fialkaInfoModal.classList.remove('show'); };
+window.closeFialkaDetails = function(){ heroModalFialka.style.display = 'none'; };
 
 window.selectHeroAndClose = function(hero){ 
   selectedHero = hero; 
@@ -647,24 +618,36 @@ window.selectLeshaAndClose = function(){
   closeFightersModal(); 
   updateLobbySelection(); 
 };
+window.selectFialkaAndClose = function(){ 
+  selectedHero = 'Fialka'; 
+  closeFialkaDetails(); 
+  closeFightersModal(); 
+  updateLobbySelection(); 
+};
 
 function updateLobbySelection() {
   const disp = document.getElementById('lobby-hero-display-inner');
   const name = document.getElementById('lobby-hero-name-big');
   const cardVitya = document.getElementById('card-vitya');
   const cardLesha = document.getElementById('card-lesha');
+  const cardFialka = document.getElementById('card-fialka');
 
   if (cardVitya) cardVitya.classList.remove('selected');
   if (cardLesha) cardLesha.classList.remove('selected');
+  if (cardFialka) cardFialka.classList.remove('selected');
 
   if (selectedHero === 'Vitya') {
     disp.style.backgroundImage = "url('img/Vitya.jpg')";
     name.textContent = 'Витя';
     if (cardVitya) cardVitya.classList.add('selected');
-  } else {
+  } else if (selectedHero === 'Lesha') {
     disp.style.backgroundImage = "url('img/Lesha.jpg')";
     name.textContent = 'Лёха';
     if (cardLesha) cardLesha.classList.add('selected');
+  } else {
+    disp.style.backgroundImage = "url('img/Fialka.jpg')";
+    name.textContent = 'Фиалка';
+    if (cardFialka) cardFialka.classList.add('selected');
   }
 }
 
@@ -706,7 +689,7 @@ addEventListener('keydown', e => {
     if (gameRunning) backToLobby();
     else if (heroModal.classList.contains('show')) closeHeroDetails();
     else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
-    else if (fialkaInfoModal.classList.contains('show')) closeFialkaInfo();
+    else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
     else if (fightersModal.classList.contains('show')) closeFightersModal();
     else if (modeModal.classList.contains('show')) closeModeModal();
     else if (newsModal.classList.contains('show')) closeNewsModal();
@@ -738,6 +721,7 @@ const clamp = (v,a,b) => v < a ? a : (v > b ? b : v);
 const WORLD_W = 2600, WORLD_H = 2000;
 const MAX_AMMO_VITYA = 5, RELOAD_VITYA = 1.6;
 const MAX_AMMO_LESHA = 3, RELOAD_LESHA = 2.0;
+const MAX_AMMO_FIALKA = 4, RELOAD_FIALKA = 1.8;
 
 let bots = []; 
 let rocks = []; 
@@ -756,12 +740,27 @@ const player = {
   ammo: MAX_AMMO_VITYA, reloading: 0, walkPhase: 0,
   name: 'Вы', color: '#3fa9f5', colorLight: '#a8e0ff',
   isPlayer: true, moveTick: 0, mvx: 0, mvy: 0,
-  type: 'Vitya', poison: 0
+  type: 'Vitya', poison: 0, stun: 0
 };
 
 function createHero(id, type, isBot) {
   const spawn = findSpawnPoint();
-  const isVitya = type === 'Vitya';
+  let maxAmmo = MAX_AMMO_VITYA;
+  let reloadTime = RELOAD_VITYA;
+  let color = '#3fa9f5';
+  let colorLight = '#a8e0ff';
+  let name = 'Витя-бот';
+
+  if (type === 'Lesha') {
+    maxAmmo = MAX_AMMO_LESHA; reloadTime = RELOAD_LESHA;
+    color = '#ff7a4d'; colorLight = '#ffb99b';
+    name = 'Лёха-бот';
+  } else if (type === 'Fialka') {
+    maxAmmo = MAX_AMMO_FIALKA; reloadTime = RELOAD_FIALKA;
+    color = '#3fa9f5'; colorLight = '#a8e0ff';
+    name = 'Фиалка-бот';
+  }
+
   return {
     id: id, type: type, isPlayer: !isBot,
     x: spawn.x, y: spawn.y, r: 19,
@@ -770,14 +769,11 @@ function createHero(id, type, isBot) {
     attackCd: 0, swing: 0,
     ult: 0, ultActive: false, ultTime: 0, beamLen: 0,
     alive: true, respawn: 0, score: 0, hitFlash: 0,
-    ammo: isVitya ? MAX_AMMO_VITYA : MAX_AMMO_LESHA,
-    maxAmmo: isVitya ? MAX_AMMO_VITYA : MAX_AMMO_LESHA,
-    reloadTime: isVitya ? RELOAD_VITYA : RELOAD_LESHA,
+    ammo: maxAmmo, maxAmmo: maxAmmo, reloadTime: reloadTime,
     reloading: 0, walkPhase: 0,
-    name: isBot ? (isVitya ? 'Витя-бот' : 'Лёха-бот') : 'Вы',
-    color: isVitya ? '#3fa9f5' : '#ff7a4d',
-    colorLight: isVitya ? '#a8e0ff' : '#ffb99b',
-    poison: 0, poisonTick: 0,
+    name: isBot ? name : 'Вы',
+    color: color, colorLight: colorLight,
+    poison: 0, poisonTick: 0, stun: 0,
     botTimer: 0, botJitter: 0,
     shootCount: 0, grenadeTimer: 0,
     kbx: 0, kby: 0
@@ -847,7 +843,8 @@ function startTraining(){
   player.name = 'Вы';
 
   for (let i = 0; i < 4; i++){
-    const bType = Math.random() < 0.5 ? 'Vitya' : 'Lesha';
+    const types = ['Vitya', 'Lesha', 'Fialka'];
+    const bType = types[Math.floor(Math.random() * types.length)];
     const bot = createHero('bot_'+i, bType, true);
     bots.push(bot);
   }
@@ -926,7 +923,7 @@ function tryAttack(h) {
     return;
   }
   
-  h.ammo--; h.attackCd = h.type === 'Vitya' ? .4 : .7;
+  h.ammo--; h.attackCd = h.type === 'Vitya' ? .4 : (h.type === 'Lesha' ? .7 : .6);
   
   if (h.type === 'Vitya') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
@@ -937,7 +934,7 @@ function tryAttack(h) {
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
-  } else {
+  } else if (h.type === 'Lesha') {
     h.shootCount++;
     const isPoison = (h.shootCount % 3 === 0); 
     
@@ -964,6 +961,16 @@ function tryAttack(h) {
       r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
+  } else if (h.type === 'Fialka') {
+    // Фиалка: Электроснаряд
+    const a = h.aim;
+    const bullet = {
+      x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30,
+      vx: Math.cos(a)*1000, vy: Math.sin(a)*1000,
+      r: 6, dmg: 20, life: 0.8, type: 'electric_bullet', chain: true
+    };
+    bullets.push({ ...bullet, owner: h, color: '#7ff0ff' });
+    spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#7ff0ff', 6);
   }
 
   if (h.ammo <= 0 && h.reloading <= 0) h.reloading = h.reloadTime;
@@ -971,7 +978,7 @@ function tryAttack(h) {
 
 function activateUlt(h) {
   if (h.ult < 100 || h.ultActive || !h.alive) return;
-  h.ult = 0; h.ultActive = true; h.ultTime = 3.0;
+  h.ult = 0; h.ultActive = true; h.ultTime = 1.5; // Ульта длится меньше, так как это рывок/притяжение
   
   if (h.type === 'Lesha') {
     const tx = h.x + Math.cos(h.aim) * 500;
@@ -982,6 +989,32 @@ function activateUlt(h) {
       r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
+  } else if (h.type === 'Fialka') {
+    // Ульта Фиалки: Притягивает и парализует
+    const enemies = getAllEnemies(h);
+    let target = null, best = Infinity;
+    for (const e of enemies) {
+      if (!e.alive) continue;
+      // Ищем в конусе перед собой
+      const angToE = Math.atan2(e.y - h.y, e.x - h.x);
+      let angDiff = Math.abs(angToE - h.aim);
+      if (angDiff > Math.PI) angDiff = TAU - angDiff;
+      
+      if (angDiff < Math.PI / 2 && Math.hypot(h.x - e.x, h.y - e.y) < 500) {
+        if (Math.hypot(h.x - e.x, h.y - e.y) < best) {
+          best = Math.hypot(h.x - e.x, h.y - e.y);
+          target = e;
+        }
+      }
+    }
+    
+    if (target) {
+      // Притягиваем
+      target.kbx = (h.x - target.x) * 3;
+      target.kby = (h.y - target.y) * 3;
+      target.stun = 1.5; // Паралич
+      spawnHitParticles(target.x, target.y, '#7ff0ff', 20);
+    }
   }
 }
 
@@ -1006,6 +1039,7 @@ function damage(target, amount, source, isPoison) {
     target.ultActive = false;
     target.ultTime = 0;
     target.poison = 0;
+    target.stun = 0;
     spawnHitParticles(target.x, target.y, target.color, 28);
     if (source && source !== target) {
         source.score++;
@@ -1023,7 +1057,13 @@ function updateBot(bot, dt) {
       bot.hp = bot.maxHp; bot.alive = true;
       bot.ammo = bot.maxAmmo; bot.reloading = 0;
       bot.poison = 0;
+      bot.stun = 0;
     }
+    return;
+  }
+
+  if (bot.stun > 0) {
+    bot.stun -= dt;
     return;
   }
 
@@ -1134,7 +1174,10 @@ function update(dt) {
       player.hp = player.maxHp; player.alive = true;
       player.ammo = player.maxAmmo; player.reloading = 0;
       player.poison = 0;
+      player.stun = 0;
     }
+  } else if (player.stun > 0) {
+    player.stun -= dt;
   } else if (player.ultActive) {
     player.ultTime -= dt;
     
@@ -1176,8 +1219,8 @@ function update(dt) {
     }
   }
 
-  if (mouse.down && player.alive) tryAttack(player);
-  if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive && player.alive) activateUlt(player);
+  if (mouse.down && player.alive && player.stun <= 0) tryAttack(player);
+  if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive && player.alive && player.stun <= 0) activateUlt(player);
 
   player.attackCd = Math.max(0, player.attackCd - dt);
   player.swing = Math.max(0, player.swing - dt);
@@ -1246,6 +1289,52 @@ function update(dt) {
         }
         bullets.splice(i, 1);
       }
+      continue;
+    }
+
+    if (b.type === 'electric_bullet') {
+      b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
+      let dead = b.life <= 0;
+      
+      if (!dead) {
+        for (const r of rocks) {
+          if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
+            spawnHitParticles(b.x, b.y, '#7ff0ff', 6);
+            dead = true; break;
+          }
+        }
+      }
+
+      if (!dead) {
+        const enemies = getAllEnemies(b.owner);
+        for (const e of enemies) {
+          if (!e.alive) continue;
+          if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
+            damage(e, b.dmg, b.owner);
+            spawnHitParticles(e.x, e.y, '#7ff0ff', 15);
+            dead = true;
+            
+            // Цепная молния
+            if (b.chain) {
+              let closest = null;
+              let minDist = 200; // Радиус цепи
+              for (const e2 of enemies) {
+                if (e2 === e || !e2.alive) continue;
+                const d = Math.hypot(e2.x - e.x, e2.y - e.y);
+                if (d < minDist) { minDist = d; closest = e2; }
+              }
+              if (closest) {
+                damage(closest, b.dmg * 0.7, b.owner);
+                spawnHitParticles(closest.x, closest.y, '#7ff0ff', 15);
+                // Рисуем молнию между ними
+                particles.push({ x: e.x, y: e.y, vx: (closest.x - e.x)*10, vy: (closest.y - e.y)*10, life: 0.2, max: 0.2, color: '#7ff0ff', r: 3 });
+              }
+            }
+            break;
+          }
+        }
+      }
+      if (dead) bullets.splice(i, 1);
       continue;
     }
 
@@ -1430,6 +1519,8 @@ function drawHero(h){
   const t = performance.now() / 1000;
   const isMe = h === player;
   const isVitya = h.type === 'Vitya';
+  const isLesha = h.type === 'Lesha';
+  const isFialka = h.type === 'Fialka';
 
   ctx.save(); ctx.translate(h.x, h.y);
   
@@ -1449,97 +1540,120 @@ function drawHero(h){
 
   // Ноги
   if (isVitya) {
-    // Витя: джинсы (синие) и кеды (белые)
-    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; // Джинсы
+    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke();
-    
-    // Кеды
     ctx.fillStyle = '#e5e7eb';
     ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
     ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-  } else {
-    // Лёха: деловые штаны (темно-серые) и туфли (черные). Стройнее (x ближе к 0)
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; // Штаны
+  } else if (isLesha) {
+    ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round';
     ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke();
-    
-    // Туфли
     ctx.fillStyle = '#111';
     ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
     ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
+  } else if (isFialka) {
+    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke();
+    ctx.fillStyle = '#6b7280';
+    ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 6, 4, 0, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 6, 4, 0, 0, TAU); ctx.fill();
   }
 
   // Руки
   ctx.lineWidth = 4.5;
   if (isVitya) {
-    // Витя: красная майка (руки открыты)
-    ctx.strokeStyle = '#fca5a5'; // Кожа
+    ctx.strokeStyle = '#fca5a5';
     ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke();
-  } else {
-    // Лёха: пиджак (рукава)
+  } else if (isLesha) {
     ctx.strokeStyle = '#1e293b'; 
     ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke();
+  } else if (isFialka) {
+    ctx.strokeStyle = '#1e3a8a'; 
+    ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke();
   }
 
   // Тело (Торс)
   const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
   if (isVitya) {
-    // Витя: Красная майка и пузо
-    g.addColorStop(0, '#f87171'); // Светло-красный (майка)
-    g.addColorStop(1, '#b91c1c'); // Темно-красный (майка)
-    // Живот (пузо)
+    g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c');
     ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU);
     ctx.fillStyle = g; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke();
     
-    // Черный бронежилет
     ctx.fillStyle = '#1f2937';
     roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill();
     ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke();
     
-    // Ремни бронежилета
     ctx.fillStyle = '#374151';
     ctx.fillRect(-5, -10, 2, 18);
     ctx.fillRect(3, -10, 2, 18);
-  } else {
-    // Лёха: Белая рубашка и деловой пиджак. Стройнее (уже)
-    g.addColorStop(0, '#f8fafc'); // Белая рубашка
-    g.addColorStop(1, '#cbd5e1');
+  } else if (isLesha) {
+    g.addColorStop(0, '#f8fafc'); g.addColorStop(1, '#cbd5e1');
     ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU);
     ctx.fillStyle = g; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke();
     
-    // Пиджак (темно-синий) — по бокам
     ctx.fillStyle = '#1e293b';
     ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill();
     ctx.beginPath(); ctx.moveTo(9, -10); ctx.lineTo(4, 10); ctx.lineTo(9, 12); ctx.closePath(); ctx.fill();
     
-    // Галстук
     ctx.fillStyle = '#ef4444';
     ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill();
+  } else if (isFialka) {
+    // Фиалка: Робот, синяя броня
+    g.addColorStop(0, '#60a5fa'); g.addColorStop(1, '#1d4ed8');
+    ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU);
+    ctx.fillStyle = g; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke();
+    
+    // Детали брони
+    ctx.fillStyle = '#93c5fd';
+    ctx.fillRect(-6, -8, 12, 4);
   }
 
   // Голова
-  ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
-  ctx.fillStyle = '#fcd34d'; // Кожа
-  ctx.fill();
-  ctx.lineWidth = 2; ctx.strokeStyle = '#b45309'; ctx.stroke();
-
-  // Волосы
-  if (isVitya) {
-    // Витя: Коричневые, слегка растрепанные
-    ctx.fillStyle = '#78350f';
-    ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    ctx.beginPath(); ctx.arc(-4, -18, 5, 0, TAU); ctx.fill();
+  if (!isFialka) {
+    ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
+    ctx.fillStyle = '#fcd34d'; // Кожа
+    ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#b45309'; ctx.stroke();
+    
+    if (isVitya) {
+      ctx.fillStyle = '#78350f';
+      ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
+      ctx.beginPath(); ctx.arc(-4, -18, 5, 0, TAU); ctx.fill();
+    } else if (isLesha) {
+      ctx.fillStyle = '#451a03';
+      ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = '#fcd34d';
+      ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill();
+    }
   } else {
-    // Лёха: Аккуратно зачесанные коричневые
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    // Пробор
-    ctx.fillStyle = '#fcd34d';
-    ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill();
+    // Голова Фиалки (робот)
+    ctx.beginPath(); ctx.arc(0, -14, 10, 0, TAU);
+    ctx.fillStyle = '#e5e7eb'; // Серебристый металл
+    ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#4b5563'; ctx.stroke();
+    
+    // Волосы (серебристая коса)
+    ctx.fillStyle = '#d1d5db';
+    ctx.beginPath(); ctx.arc(0, -16, 10, Math.PI, 0); ctx.fill();
+    // Коса (сзади)
+    ctx.beginPath(); ctx.ellipse(0, -8, 4, 12, 0, 0, TAU); ctx.fill();
+    
+    // Футуристичные очки
+    ctx.fillStyle = '#0ea5e9';
+    roundRect(ctx, -8, -15, 16, 6, 2); ctx.fill();
+    ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1; ctx.stroke();
+    
+    // Глаза (свечение)
+    ctx.fillStyle = '#7ff0ff';
+    ctx.beginPath(); ctx.arc(-4, -12, 2, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(4, -12, 2, 0, TAU); ctx.fill();
   }
 
   if (h.poison > 0) {
@@ -1563,34 +1677,38 @@ function drawHero(h){
   ctx.rotate(reloadOff);
 
   if (isVitya) {
-    // Витя: Пистолет
-    ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5; // Рука
+    ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke();
-    
-    // Пистолет
     ctx.fillStyle = '#1f2937';
     roundRect(ctx, 10, -4, 16, 8, 2); ctx.fill();
     ctx.fillStyle = '#374151';
-    roundRect(ctx, 8, -2, 6, 10, 1); ctx.fill(); // Рукоятка
+    roundRect(ctx, 8, -2, 6, 10, 1); ctx.fill();
     ctx.fillStyle = '#6b7280';
-    ctx.beginPath(); ctx.arc(26, 0, 2, 0, TAU); ctx.fill(); // Дуло
-  } else {
-    // Лёха: Бомба (трусы)
-    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; // Рукав пиджака
+    ctx.beginPath(); ctx.arc(26, 0, 2, 0, TAU); ctx.fill();
+  } else if (isLesha) {
+    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke();
-    
-    // Бомба (черная) с трусами
-    ctx.fillStyle = '#111'; // Черная бомба
+    ctx.fillStyle = '#111'; 
     ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill();
     ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-    
-    // Красные трусы на бомбе
     ctx.fillStyle = '#ef4444';
     roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill();
-    
-    // Зеленый фитиль
-    ctx.fillStyle = '#5cff5c';
+    ctx.fillStyle = '#5cff5c'; 
     ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); 
+  } else if (isFialka) {
+    // Электродробовик
+    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 4.5;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke();
+    
+    ctx.fillStyle = '#374151';
+    roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill();
+    ctx.strokeStyle = '#111827'; ctx.lineWidth = 1; ctx.stroke();
+    
+    ctx.fillStyle = '#7ff0ff'; // Энергия
+    roundRect(ctx, 14, -3, 12, 6, 1); ctx.fill();
+    
+    ctx.fillStyle = '#111827'; // Дуло
+    ctx.beginPath(); ctx.arc(30, 0, 4, 0, TAU); ctx.fill();
   }
   ctx.restore();
 
@@ -1625,6 +1743,11 @@ function drawHero(h){
   ctx.fillStyle = isMe ? '#a9e8ff' : 'rgba(222,234,246,0.82)';
   ctx.fillText(h.name, h.x, ammoY - 8);
 
+  if (h.stun > 0) {
+    ctx.font = 'bold 12px system-ui, sans-serif'; ctx.fillStyle = '#ffd700';
+    ctx.fillText('⚡ ПАРАЛИЧ', h.x, by - 20);
+  }
+
   if (h.reloading > 0 && h.alive) {
     ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900';
     ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18);
@@ -1644,13 +1767,18 @@ function drawBullets(){
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU);
       ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke();
     } else if (b.type === 'bomb') {
-      // Черная бомба с трусами
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
       ctx.fillStyle = '#111'; ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-      // Трусы
       ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444';
       roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill();
+    } else if (b.type === 'electric_bullet') {
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2, 0, TAU);
+      ctx.fillStyle = 'rgba(127, 240, 255, 0.3)'; ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
+      ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU);
+      ctx.fillStyle = '#3fa9f5'; ctx.fill();
     } else {
       ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU);
       ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill();
@@ -1834,7 +1962,7 @@ function drawVersionBadge(){
   ctx.fillStyle = 'rgba(140,180,215,0.9)';
   ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
   ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff';
-  ctx.fillText('PRE-ALPHA 0.2.5', x + 10, y + 24);
+  ctx.fillText('PRE-ALPHA 0.3', x + 10, y + 24);
 }
 
 function render() {
