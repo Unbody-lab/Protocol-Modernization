@@ -10,6 +10,59 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
   canvas{display:block;cursor:crosshair}
   
+  /* ============ ЭКРАН ЗАГРУЗКИ ============ */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: url('img/Loading_BG.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  #loading-screen::after {
+    content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
+  }
+  #loading-screen.hidden {
+    opacity: 0; visibility: hidden;
+  }
+  .loading-content {
+    position: relative; z-index: 10; text-align: center;
+    padding: 40px; background: rgba(14,22,32,0.85); border-radius: 24px;
+    border: 2px solid rgba(90,140,180,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    max-width: 600px; width: 90%;
+  }
+  .studio-logo {
+    font-size: 32px; font-weight: 900; letter-spacing: 3px;
+    color: #7ff0ff; text-shadow: 0 0 20px rgba(127,240,255,0.4);
+    margin-bottom: 8px;
+  }
+  .studio-sub {
+    font-size: 12px; color: rgba(160,200,230,0.7); letter-spacing: 5px;
+    text-transform: uppercase; margin-bottom: 30px;
+  }
+  .loading-tip-box {
+    background: rgba(0,0,0,0.4); border-left: 4px solid #ffb450;
+    padding: 20px; border-radius: 12px; margin-bottom: 30px;
+    text-align: left; min-height: 120px;
+  }
+  .tip-label {
+    font-size: 11px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
+    margin-bottom: 8px; text-transform: uppercase;
+  }
+  .tip-text {
+    font-size: 15px; color: #dbe9f7; line-height: 1.5;
+  }
+  .loading-bar-container {
+    width: 100%; height: 10px; background: rgba(255,255,255,0.1);
+    border-radius: 5px; overflow: hidden; margin-bottom: 10px;
+  }
+  .loading-bar {
+    height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff);
+    border-radius: 5px; transition: width 0.1s linear;
+  }
+  .loading-status {
+    font-size: 13px; color: rgba(160,200,230,0.8); letter-spacing: 1px;
+  }
+
+  /* ============ ОБЩИЕ ЭКРАНЫ ============ */
   .screen{position:fixed; inset:0; display:flex; flex-direction:column; z-index:10; transition:opacity .3s ease, visibility .3s;}
   .screen.hidden{opacity:0; visibility:hidden; pointer-events:none}
   .screen-bg{position:absolute; inset:0; z-index:-1; background: linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);}
@@ -209,6 +262,24 @@
 </head>
 <body>
   
+<!-- ============ ЭКРАН ЗАГРУЗКИ ============ -->
+<div id="loading-screen">
+  <div class="loading-content">
+    <div class="studio-logo">AKB-Unost Studio</div>
+    <div class="studio-sub">представляет</div>
+    
+    <div class="loading-tip-box">
+      <div class="tip-label" id="tip-label">СОВЕТ</div>
+      <div class="tip-text" id="tip-text">Загрузка...</div>
+    </div>
+    
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <div class="loading-status" id="loading-status">0%</div>
+  </div>
+</div>
+
 <audio id="bg-music-lobby" loop>
   <source src="sounds/lobby.mp3" type="audio/mpeg">
 </audio>
@@ -219,7 +290,7 @@
 <canvas id="game"></canvas>
 <div id="hint">WASD — движение &nbsp;·&nbsp; ЛКМ — атака &nbsp;·&nbsp; ПРОБЕЛ / ПКМ — ульта &nbsp;·&nbsp; ESC — лобби</div>
 
-<div id="start-screen" class="screen">
+<div id="start-screen" class="screen hidden">
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
@@ -468,6 +539,46 @@
 <script>
 (function(){
 'use strict';
+
+// --- ЭКРАН ЗАГРУЗКИ ---
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
+const loadingStatus = document.getElementById('loading-status');
+const tipLabel = document.getElementById('tip-label');
+const tipText = document.getElementById('tip-text');
+
+const tips = [
+  { type: "СОВЕТ", text: "Используйте укрытия. Витя наносит большой урон в ближнем бою, но уязвим на дистанции." },
+  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов. Используйте её, чтобы вытащить врага из-за укрытия." },
+  { type: "ЛОР", text: "Проект «Модернизация» разделил мир на Технократов и Охлакратов. Витя сражается за право жирных людей на существование." },
+  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект: обычная, отравленная и тройная отравленная. Каждая третья бомба разлетается на осколки." },
+  { type: "СОВЕТ", text: "Следите за патронами. Перезарядка занимает время, в которое вы уязвимы." },
+  { type: "ЛОР", text: "Синдикат «Трусы» — это не просто бренд одежды, это политическая сила, которую возглавляет Лёха." },
+  { type: "ФАКТ", text: "Витя и Лёха когда-то были друзьями, но война развела их по разные стороны." },
+  { type: "СОВЕТ", text: "Цепная молния Фиалки может поразить до 4 врагов подряд, если они стоят близко друг к другу." }
+];
+
+let currentTip = tips[Math.floor(Math.random() * tips.length)];
+tipLabel.textContent = currentTip.type;
+tipText.textContent = currentTip.text;
+
+let progress = 0;
+let loadInterval = setInterval(() => {
+  progress += Math.random() * 15;
+  if (progress > 100) progress = 100;
+  
+  loadingBar.style.width = progress + '%';
+  loadingStatus.textContent = Math.floor(progress) + '%';
+  
+  if (progress >= 100) {
+    clearInterval(loadInterval);
+    setTimeout(() => {
+      loadingScreen.classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+    }, 500);
+  }
+}, 150);
+
 
 const startScreen = document.getElementById('start-screen');
 const lobbyScreen = document.getElementById('lobby-screen');
@@ -974,7 +1085,7 @@ function tryAttack(h) {
 
 function activateUlt(h) {
   if (h.ult < 100 || h.ultActive || !h.alive) return;
-  h.ult = 0; h.ultActive = true; h.ultTime = 0.5; // 0.5 сек на вылет косы
+  h.ult = 0; h.ultActive = true; h.ultTime = 0.5; 
   
   if (h.type === 'Lesha') {
     const tx = h.x + Math.cos(h.aim) * 500;
@@ -987,14 +1098,12 @@ function activateUlt(h) {
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
     h.ultTime = 1.0; 
   } else if (h.type === 'Fialka') {
-    // Ульта-крюк
     h.ultActive = true;
-    h.ultTime = 1.0; // время полета крюка
+    h.ultTime = 1.0; 
     h.hookTarget = null;
     
-    // Ищем ближайшего врага на линии прицела
     const enemies = getAllEnemies(h);
-    let bestDist = 500; // Максимальная дальность крюка
+    let bestDist = 500; 
     let targetEnemy = null;
     
     for (const e of enemies) {
@@ -1005,7 +1114,6 @@ function activateUlt(h) {
       let angleDiff = Math.abs(h.aim - angleToEnemy);
       if (angleDiff > Math.PI) angleDiff = TAU - angleDiff;
       
-      // Если враг в пределах 30 градусов от прицела
       if (angleDiff < 0.5) {
         bestDist = distToEnemy;
         targetEnemy = e;
@@ -1017,7 +1125,6 @@ function activateUlt(h) {
       h.hookX = targetEnemy.x;
       h.hookY = targetEnemy.y;
     } else {
-      // Если никого нет, крюк просто вылетает вперед и исчезает
       h.hookX = h.x + Math.cos(h.aim) * 500;
       h.hookY = h.y + Math.sin(h.aim) * 500;
     }
@@ -1200,7 +1307,6 @@ function update(dt) {
          }
        }
     } else if (player.type === 'Lesha') {
-       // Лёха может двигаться при ульте
        let mx = 0, my = 0;
        if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
        if (keys['KeyA'] || keys['ArrowLeft'])  mx -= 1;
@@ -1219,22 +1325,18 @@ function update(dt) {
           player.walkPhase = 0;
        }
     } else if (player.type === 'Fialka') {
-       // Ульта Фиалки - притягивание
        if (player.hookTarget && player.hookTarget.alive) {
-          // Тянем врага к себе
           const ang = Math.atan2(player.y - player.hookTarget.y, player.x - player.hookTarget.x);
           const pullSpeed = 600;
           player.hookTarget.x += Math.cos(ang) * pullSpeed * dt;
           player.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
           
-          // Обновляем позицию крюка для отрисовки
           player.hookX = player.hookTarget.x;
           player.hookY = player.hookTarget.y;
           
-          // Если враг близко, парализуем
           if (Math.hypot(player.x - player.hookTarget.x, player.y - player.hookTarget.y) < 40) {
              player.hookTarget.stun = 2.0;
-             player.hookTarget = null; // Отпускаем
+             player.hookTarget = null; 
           }
        }
     }
@@ -1864,7 +1966,6 @@ function drawLasers(){
     }
     
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
-        // Рисуем косу (гарпун)
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(h.x, h.y);
@@ -1875,7 +1976,6 @@ function drawLasers(){
         ctx.shadowBlur = 15;
         ctx.stroke();
         
-        // Лезвие косы
         const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x);
         ctx.translate(h.hookX, h.hookY);
         ctx.rotate(angleToHook);
