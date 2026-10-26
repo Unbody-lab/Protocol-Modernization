@@ -110,7 +110,6 @@
   .tag-class{color:#ffb450; background:rgba(255,180,80,0.12); border:1px solid rgba(255,180,80,0.35)}
   .tag-rarity{color:#B0B8C4; background:rgba(176, 184, 196, 0.12); border:1px solid rgba(176, 184, 196, 0.35)}
   
-  /* Эпическая редкость (фиолетовая) */
   .tag-epic {color:#c084fc; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.35)}
 
   #hero-modal-desc{font-size:14.5px; line-height:1.6; color:rgba(200,220,240,0.92); background:rgba(255,255,255,0.03); padding:14px; border-radius:10px; border-left:3px solid rgba(127,240,255,0.5);}
@@ -246,7 +245,6 @@
       </div>
     </div>
     
-    <!-- Анонс Фиалки -->
     <div class="announce-banner" onclick="openFialkaInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
@@ -1178,7 +1176,6 @@ function update(dt) {
          }
        }
     } else {
-       // Лёха и Фиалка могут двигаться при ульте
        let mx = 0, my = 0;
        if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
        if (keys['KeyA'] || keys['ArrowLeft'])  mx -= 1;
@@ -1317,7 +1314,7 @@ function update(dt) {
             b.chained.push(e);
             dead = true;
             
-            // Цепная молния
+            // Цепная молния - ВИЗУАЛЬНЫЙ ЭФФЕКТ
             let lastTarget = e;
             let chainCount = 0;
             while (chainCount < 3) {
@@ -1331,6 +1328,23 @@ function update(dt) {
               if (nextTarget) {
                 damage(nextTarget, 12, b.owner);
                 spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
+                
+                // Рисуем молнию
+                ctx.save();
+                ctx.strokeStyle = '#c084fc';
+                ctx.lineWidth = 3;
+                ctx.shadowColor = '#c084fc';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.moveTo(lastTarget.x, lastTarget.y);
+                // Ломаная линия для эффекта молнии
+                const midX = (lastTarget.x + nextTarget.x) / 2;
+                const midY = (lastTarget.y + nextTarget.y) / 2;
+                ctx.lineTo(midX + (Math.random()*40-20), midY + (Math.random()*40-20));
+                ctx.lineTo(nextTarget.x, nextTarget.y);
+                ctx.stroke();
+                ctx.restore();
+
                 b.chained.push(nextTarget);
                 lastTarget = nextTarget;
                 chainCount++;
@@ -1617,20 +1631,17 @@ function drawHero(h){
     ctx.fillStyle = '#ef4444';
     ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill();
   } else {
-    // Фиалка: Синяя броня
     g.addColorStop(0, '#3b82f6'); 
     g.addColorStop(1, '#1e40af');
     ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU);
     ctx.fillStyle = g; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke();
     
-    // Броня
     ctx.fillStyle = '#60a5fa';
     roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill();
     ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke();
   }
 
-  // Голова
   ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
   ctx.fillStyle = isFialka ? '#e2e8f0' : '#fcd34d';
   ctx.fill();
@@ -1646,16 +1657,19 @@ function drawHero(h){
     ctx.fillStyle = '#fcd34d';
     ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill();
   } else {
-    // Фиалка: Серебристые волосы, коса, футуристичные очки
+    // Фиалка: Серебристые волосы, коса
     ctx.fillStyle = '#cbd5e1';
     ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    // Коса
     ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke();
-    // Очки
+    
+    // Очки (разделенные на две линзы)
     ctx.fillStyle = '#3b82f6';
-    roundRect(ctx, -8, -16, 16, 6, 2); ctx.fill();
-    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); // Левая линза
+    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();  // Правая линза
+    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke();
+    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke();
   }
 
   if (h.poison > 0) {
@@ -1703,7 +1717,6 @@ function drawHero(h){
     ctx.fillStyle = '#1e293b';
     roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill();
     ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5; ctx.stroke();
-    // Электрические дуги
     ctx.strokeStyle = '#93c5fd';
     ctx.beginPath(); ctx.moveTo(14, -4); ctx.lineTo(18, 4); ctx.lineTo(22, -4); ctx.stroke();
   }
@@ -1813,14 +1826,42 @@ function drawLasers(){
     }
     
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
-        // Визуальный эффект притяжения
+        // Визуальный эффект косы (линия)
         const range = 400;
-        ctx.beginPath(); ctx.arc(h.x, h.y, range, 0, TAU);
-        ctx.strokeStyle = 'rgba(192, 132, 252, ' + (0.5 + 0.5*Math.sin(t*10)) + ')';
-        ctx.lineWidth = 3; ctx.stroke();
+        const sweepAngle = t * 4; 
         
-        ctx.fillStyle = 'rgba(192, 132, 252, 0.1)';
+        ctx.save();
+        ctx.translate(h.x, h.y);
+        ctx.rotate(sweepAngle);
+        
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(range, -10);
+        ctx.lineTo(range, 10);
+        ctx.closePath();
+        
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.4)';
         ctx.fill();
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        
+        // Эффект притяжения
+        for (const e of getAllEnemies(h)) {
+            const d = Math.hypot(e.x - h.x, e.y - h.y);
+            if (d < range) {
+                ctx.beginPath();
+                ctx.moveTo(e.x - h.x, e.y - h.y);
+                ctx.lineTo(0, 0);
+                ctx.strokeStyle = 'rgba(192, 132, 252, ' + (1 - d/range) + ')';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+        }
+        
+        ctx.restore();
     }
   }
 }
