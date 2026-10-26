@@ -434,7 +434,6 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
-      <!-- Обновление 0.3 -->
       <div class="news-block" style="border-left-color: #c084fc;" onclick="openFialkaInfo()">
         <div class="news-img" style="background-image: url('img/Fialka.jpg');"></div>
         <div class="news-info">
@@ -444,7 +443,6 @@
         </div>
       </div>
 
-      <!-- Обновление 0.2.5 -->
       <div class="news-block" style="border-left-color: #7ff0ff;">
         <div class="news-img" style="background-image: url('img/Vitya.jpg');"></div>
         <div class="news-info">
@@ -767,7 +765,9 @@ function createHero(id, type, isBot) {
     botTimer: 0, botJitter: 0,
     shootCount: 0, grenadeTimer: 0,
     kbx: 0, kby: 0,
-    stun: 0
+    stun: 0,
+    hookTarget: null,
+    hookX: 0, hookY: 0
   };
 }
 
@@ -974,7 +974,7 @@ function tryAttack(h) {
 
 function activateUlt(h) {
   if (h.ult < 100 || h.ultActive || !h.alive) return;
-  h.ult = 0; h.ultActive = true; h.ultTime = 2.0;
+  h.ult = 0; h.ultActive = true; h.ultTime = 0.5; // 0.5 сек на вылет косы
   
   if (h.type === 'Lesha') {
     const tx = h.x + Math.cos(h.aim) * 500;
@@ -985,17 +985,41 @@ function activateUlt(h) {
       r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
+    h.ultTime = 1.0; 
   } else if (h.type === 'Fialka') {
+    // Ульта-крюк
+    h.ultActive = true;
+    h.ultTime = 1.0; // время полета крюка
+    h.hookTarget = null;
+    
+    // Ищем ближайшего врага на линии прицела
     const enemies = getAllEnemies(h);
+    let bestDist = 500; // Максимальная дальность крюка
+    let targetEnemy = null;
+    
     for (const e of enemies) {
-      const d = Math.hypot(e.x - h.x, e.y - h.y);
-      if (d < 400) {
-        e.stun = 2.0;
-        const ang = Math.atan2(h.y - e.y, h.x - e.x);
-        e.kbx = Math.cos(ang) * 600;
-        e.kby = Math.sin(ang) * 600;
-        spawnHitParticles(e.x, e.y, '#c084fc', 15);
+      const distToEnemy = Math.hypot(e.x - h.x, e.y - h.y);
+      if (distToEnemy > bestDist) continue;
+      
+      const angleToEnemy = Math.atan2(e.y - h.y, e.x - h.x);
+      let angleDiff = Math.abs(h.aim - angleToEnemy);
+      if (angleDiff > Math.PI) angleDiff = TAU - angleDiff;
+      
+      // Если враг в пределах 30 градусов от прицела
+      if (angleDiff < 0.5) {
+        bestDist = distToEnemy;
+        targetEnemy = e;
       }
+    }
+    
+    if (targetEnemy) {
+      h.hookTarget = targetEnemy;
+      h.hookX = targetEnemy.x;
+      h.hookY = targetEnemy.y;
+    } else {
+      // Если никого нет, крюк просто вылетает вперед и исчезает
+      h.hookX = h.x + Math.cos(h.aim) * 500;
+      h.hookY = h.y + Math.sin(h.aim) * 500;
     }
   }
 }
@@ -1175,7 +1199,8 @@ function update(dt) {
            }
          }
        }
-    } else {
+    } else if (player.type === 'Lesha') {
+       // Лёха может двигаться при ульте
        let mx = 0, my = 0;
        if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
        if (keys['KeyA'] || keys['ArrowLeft'])  mx -= 1;
@@ -1192,6 +1217,25 @@ function update(dt) {
           player.y = clamp(player.y, 20, WORLD_H - 20);
        } else {
           player.walkPhase = 0;
+       }
+    } else if (player.type === 'Fialka') {
+       // Ульта Фиалки - притягивание
+       if (player.hookTarget && player.hookTarget.alive) {
+          // Тянем врага к себе
+          const ang = Math.atan2(player.y - player.hookTarget.y, player.x - player.hookTarget.x);
+          const pullSpeed = 600;
+          player.hookTarget.x += Math.cos(ang) * pullSpeed * dt;
+          player.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
+          
+          // Обновляем позицию крюка для отрисовки
+          player.hookX = player.hookTarget.x;
+          player.hookY = player.hookTarget.y;
+          
+          // Если враг близко, парализуем
+          if (Math.hypot(player.x - player.hookTarget.x, player.y - player.hookTarget.y) < 40) {
+             player.hookTarget.stun = 2.0;
+             player.hookTarget = null; // Отпускаем
+          }
        }
     }
 
@@ -1314,7 +1358,6 @@ function update(dt) {
             b.chained.push(e);
             dead = true;
             
-            // Цепная молния - ВИЗУАЛЬНЫЙ ЭФФЕКТ
             let lastTarget = e;
             let chainCount = 0;
             while (chainCount < 3) {
@@ -1329,7 +1372,6 @@ function update(dt) {
                 damage(nextTarget, 12, b.owner);
                 spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
                 
-                // Рисуем молнию
                 ctx.save();
                 ctx.strokeStyle = '#c084fc';
                 ctx.lineWidth = 3;
@@ -1337,7 +1379,6 @@ function update(dt) {
                 ctx.shadowBlur = 15;
                 ctx.beginPath();
                 ctx.moveTo(lastTarget.x, lastTarget.y);
-                // Ломаная линия для эффекта молнии
                 const midX = (lastTarget.x + nextTarget.x) / 2;
                 const midY = (lastTarget.y + nextTarget.y) / 2;
                 ctx.lineTo(midX + (Math.random()*40-20), midY + (Math.random()*40-20));
@@ -1657,16 +1698,14 @@ function drawHero(h){
     ctx.fillStyle = '#fcd34d';
     ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill();
   } else {
-    // Фиалка: Серебристые волосы, коса
     ctx.fillStyle = '#cbd5e1';
     ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
     ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3;
     ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke();
     
-    // Очки (разделенные на две линзы)
     ctx.fillStyle = '#3b82f6';
-    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); // Левая линза
-    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();  // Правая линза
+    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();
     ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5;
     ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke();
     ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke();
@@ -1711,7 +1750,6 @@ function drawHero(h){
     ctx.fillStyle = '#5cff5c';
     ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); 
   } else {
-    // Фиалка: Электродробовик
     ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke();
     ctx.fillStyle = '#1e293b';
@@ -1826,40 +1864,26 @@ function drawLasers(){
     }
     
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
-        // Визуальный эффект косы (линия)
-        const range = 400;
-        const sweepAngle = t * 4; 
-        
+        // Рисуем косу (гарпун)
         ctx.save();
-        ctx.translate(h.x, h.y);
-        ctx.rotate(sweepAngle);
-        
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(range, -10);
-        ctx.lineTo(range, 10);
-        ctx.closePath();
-        
-        ctx.fillStyle = 'rgba(192, 132, 252, 0.4)';
-        ctx.fill();
+        ctx.moveTo(h.x, h.y);
+        ctx.lineTo(h.hookX, h.hookY);
         ctx.strokeStyle = '#c084fc';
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = '#c084fc';
+        ctx.shadowBlur = 15;
         ctx.stroke();
         
-        // Эффект притяжения
-        for (const e of getAllEnemies(h)) {
-            const d = Math.hypot(e.x - h.x, e.y - h.y);
-            if (d < range) {
-                ctx.beginPath();
-                ctx.moveTo(e.x - h.x, e.y - h.y);
-                ctx.lineTo(0, 0);
-                ctx.strokeStyle = 'rgba(192, 132, 252, ' + (1 - d/range) + ')';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([5, 5]);
-                ctx.stroke();
-                ctx.setLineDash([]);
-            }
-        }
+        // Лезвие косы
+        const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x);
+        ctx.translate(h.hookX, h.hookY);
+        ctx.rotate(angleToHook);
+        ctx.beginPath();
+        ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2);
+        ctx.strokeStyle = '#d8b4fe';
+        ctx.lineWidth = 6;
+        ctx.stroke();
         
         ctx.restore();
     }
