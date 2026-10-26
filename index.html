@@ -10,6 +10,33 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
   canvas{display:block;cursor:crosshair}
   
+  /* ============ ЗАСТАВКА СТУДИИ ============ */
+  #studio-splash {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #0a0e14;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #studio-splash.hidden { opacity: 0; visibility: hidden; }
+  .studio-splash-logo {
+    font-size: 56px; font-weight: 900; letter-spacing: 6px;
+    color: #ffffff; text-shadow: 0 0 40px rgba(127,240,255,0.5);
+    animation: scaleUp 2s ease-out;
+  }
+  .studio-splash-sub {
+    font-size: 16px; color: #7ff0ff; letter-spacing: 12px;
+    margin-top: 10px; text-transform: uppercase; font-weight: 700;
+    animation: fadeIn 2s ease-out;
+  }
+  @keyframes scaleUp {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
   /* ============ ЭКРАН ЗАГРУЗКИ ============ */
   #loading-screen {
     position: fixed; inset: 0; z-index: 9999;
@@ -20,23 +47,12 @@
   #loading-screen::after {
     content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
   }
-  #loading-screen.hidden {
-    opacity: 0; visibility: hidden;
-  }
+  #loading-screen.hidden { opacity: 0; visibility: hidden; }
   .loading-content {
     position: relative; z-index: 10; text-align: center;
     padding: 40px; background: rgba(14,22,32,0.85); border-radius: 24px;
     border: 2px solid rgba(90,140,180,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     max-width: 600px; width: 90%;
-  }
-  .studio-logo {
-    font-size: 32px; font-weight: 900; letter-spacing: 3px;
-    color: #7ff0ff; text-shadow: 0 0 20px rgba(127,240,255,0.4);
-    margin-bottom: 8px;
-  }
-  .studio-sub {
-    font-size: 12px; color: rgba(160,200,230,0.7); letter-spacing: 5px;
-    text-transform: uppercase; margin-bottom: 30px;
   }
   .loading-tip-box {
     background: rgba(0,0,0,0.4); border-left: 4px solid #ffb450;
@@ -262,12 +278,15 @@
 </head>
 <body>
   
+<!-- ============ ЗАСТАВКА СТУДИИ ============ -->
+<div id="studio-splash">
+  <div class="studio-splash-logo">AKB-Unost Studio</div>
+  <div class="studio-splash-sub">представляет</div>
+</div>
+
 <!-- ============ ЭКРАН ЗАГРУЗКИ ============ -->
-<div id="loading-screen">
+<div id="loading-screen" class="hidden">
   <div class="loading-content">
-    <div class="studio-logo">AKB-Unost Studio</div>
-    <div class="studio-sub">представляет</div>
-    
     <div class="loading-tip-box">
       <div class="tip-label" id="tip-label">СОВЕТ</div>
       <div class="tip-text" id="tip-text">Загрузка...</div>
@@ -540,7 +559,8 @@
 (function(){
 'use strict';
 
-// --- ЭКРАН ЗАГРУЗКИ ---
+// --- ЛОГИКА ЭКРАНОВ ЗАГРУЗКИ ---
+const studioSplash = document.getElementById('studio-splash');
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
 const loadingStatus = document.getElementById('loading-status');
@@ -562,22 +582,34 @@ let currentTip = tips[Math.floor(Math.random() * tips.length)];
 tipLabel.textContent = currentTip.type;
 tipText.textContent = currentTip.text;
 
-let progress = 0;
-let loadInterval = setInterval(() => {
-  progress += Math.random() * 15;
-  if (progress > 100) progress = 100;
+// 1. Показываем заставку студии
+setTimeout(() => {
+  studioSplash.classList.add('hidden');
   
-  loadingBar.style.width = progress + '%';
-  loadingStatus.textContent = Math.floor(progress) + '%';
-  
-  if (progress >= 100) {
-    clearInterval(loadInterval);
-    setTimeout(() => {
-      loadingScreen.classList.add('hidden');
-      document.getElementById('start-screen').classList.remove('hidden');
-    }, 500);
-  }
-}, 150);
+  // 2. Через 0.8 сек (после исчезновения заставки) показываем экран загрузки
+  setTimeout(() => {
+    loadingScreen.classList.remove('hidden');
+    
+    // 3. Запускаем полосу загрузки
+    let progress = 0;
+    let loadInterval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 100) progress = 100;
+      
+      loadingBar.style.width = progress + '%';
+      loadingStatus.textContent = Math.floor(progress) + '%';
+      
+      if (progress >= 100) {
+        clearInterval(loadInterval);
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          document.getElementById('start-screen').classList.remove('hidden');
+        }, 500);
+      }
+    }, 150);
+    
+  }, 800);
+}, 2500); // Заставка висит 2.5 секунды
 
 
 const startScreen = document.getElementById('start-screen');
