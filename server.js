@@ -9,12 +9,11 @@ const io = new Server(server);
 
 app.use(express.static(__dirname));
 
-// --- Настройки мира ---
 const WORLD_W = 2600, WORLD_H = 2000;
 let players = {};
 let rocks = [];
+let bullets = [];
 
-// Генерация карты (такая же, как в клиенте)
 function genWorld() {
     const rnd = (a, b) => a + Math.random() * (b - a);
     rocks = [];
@@ -33,7 +32,6 @@ function genWorld() {
 }
 genWorld();
 
-// Поиск свободного места для спавна
 function findSpawnPoint() {
     for (let i = 0; i < 400; i++) {
         const x = 150 + Math.random() * (WORLD_W - 300);
@@ -47,94 +45,61 @@ function findSpawnPoint() {
     return { x: WORLD_W / 2, y: WORLD_H / 2 };
 }
 
-// --- ФИЗИКА ПУЛЬ НА СЕРВЕРЕ (ДЛЯ УЛЬТЫ ЛЁХИ) ---
-let serverBullets = [];
-
+// Физика пуль на сервере
 setInterval(() => {
     const dt = 1/60;
-    for (let i = serverBullets.length - 1; i >= 0; i--) {
-        const b = serverBullets[i];
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        const b = bullets[i];
         b.x += b.vx * dt;
         b.y += b.vy * dt;
         b.life -= dt;
 
-        let exploded = false;
+        let dead = b.life <= 0;
 
-        // Столкновение большой бомбы с врагом
-        if (b.type === 'big_bomb') {
+        if (!dead) {
+            for (const r of rocks) {
+                if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
+                    dead = true; break;
+                }
+            }
+        }
+
+        if (!dead) {
             for (let id in players) {
                 const p = players[id];
                 if (!p.alive || id === b.owner) continue;
                 if (Math.hypot(b.x - p.x, b.y - p.y) < 19 + b.r) {
-                    exploded = true;
-                    break;
-                }
-            }
-        }
-
-        // Столкновение с камнями
-        if (!exploded) {
-            for (const r of rocks) {
-                if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
-                    exploded = true;
-                    break;
-                }
-            }
-        }
-
-        if (exploded || b.life <= 0) {
-            // Если взорвалась большая бомба
-            if (b.type === 'big_bomb') {
-                io.emit('bombExploded', { x: b.x, y: b.y, owner: b.owner });
-                
-                // Наносим урон всем в радиусе
-                for (let id in players) {
-                    const p = players[id];
-                    if (p.alive && id !== b.owner && Math.hypot(b.x - p.x, b.y - p.y) < 150) {
-                        p.hp -= 50;
-                        if (players[b.owner]) players[b.owner].ult = Math.min(100, players[b.owner].ult + 25);
-                        if (p.hp <= 0) {
-                            p.hp = 0; p.alive = false; p.respawnTimer = 3;
-                            if (players[b.owner]) players[b.owner].score++;
-                        }
+                    p.hp -= b.dmg;
+                    if (players[b.owner]) players[b.owner].ult = Math.min(100, players[b.owner].ult + b.dmg * 0.5);
+                    if (p.hp <= 0) {
+                        p.hp = 0; p.alive = false; p.respawnTimer = 3;
+                        if (players[b.owner]) players[b.owner].score++;
                     }
-                }
-                io.emit('updateHealth', players);
-
-                // Создаем осколки
-                for (let j = 0; j < 8; j++) {
-                    const ang = (j / 8) * Math.PI * 2;
-                    serverBullets.push({
-                        x: b.x, y: b.y,
-                        vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600,
-                        r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, owner: b.owner
-                    });
+                    io.emit('updateHealth', players);
+                    dead = true; break;
                 }
             }
-            serverBullets.splice(i, 1);
         }
+
+        if (dead) bullets.splice(i, 1);
     }
 }, 1000 / 60);
 
 io.on('connection', (socket) => {
     const spawn = findSpawnPoint();
     
-    // Создаем игрока (по умолчанию Витя)
     players[socket.id] = {
         id: socket.id,
         x: spawn.x, y: spawn.y,
-        hp: 100, maxHp: 100, score: 0, aim: 0, alive: true, respawnTimer: 0, 
-        ult: 0, ultActive: false, ultTime: 0, walkPhase: 0,
+        hp: 100, maxHp: 100, score: 0, aim: 0, alive: true, respawnTimer: 0,
+        ult: 0, ultActive: false, walkPhase: 0,
         name: 'Игрок ' + Math.floor(Math.random() * 90 + 10),
-        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-        colorLight: `hsl(${Math.random() * 360}, 100%, 80%)`,
-        type: 'Vitya' 
+        type: 'Vitya'
     };
 
     socket.emit('init', { players, rocks, myId: socket.id });
     socket.broadcast.emit('newPlayer', players[socket.id]);
 
-    // Выбор персонажа
     socket.on('selectHero', (heroType) => {
         if (players[socket.id]) {
             players[socket.id].type = heroType;
@@ -142,7 +107,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Движение
     socket.on('move', (data) => {
         const p = players[socket.id];
         if (p && p.alive) {
@@ -151,16 +115,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Стрельба
     socket.on('shoot', (bulletData) => {
         socket.broadcast.volatile.emit('newBullet', { owner: socket.id, bullet: bulletData });
-        // Добавляем пулю на сервер для физики (если это бомба)
-        if (bulletData.type === 'bomb' || bulletData.type === 'big_bomb') {
-            serverBullets.push({ ...bulletData, owner: socket.id });
-        }
+        bullets.push({ ...bulletData, owner: socket.id });
     });
 
-    // Урон
     socket.on('hitPlayer', (data) => {
         const target = players[data.target];
         if (target && target.alive) {
@@ -176,7 +135,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Ульта
     socket.on('ult', (data) => {
         const p = players[socket.id];
         if (p) {
@@ -185,15 +143,13 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Отключение
     socket.on('disconnect', () => {
         delete players[socket.id];
         io.emit('playerDisconnected', socket.id);
     });
 });
 
-// Порт для Render
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}`);
 });
