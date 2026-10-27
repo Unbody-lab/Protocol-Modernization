@@ -5,14 +5,18 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+// Увеличиваем лимиты для сокетов
+const io = new Server(server, {
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    maxHttpBufferSize: 1e6
+});
 
 app.use(express.static(__dirname));
 
 const WORLD_W = 2600, WORLD_H = 2000;
 let players = {};
 let rocks = [];
-let bullets = [];
 
 function genWorld() {
     const rnd = (a, b) => a + Math.random() * (b - a);
@@ -45,46 +49,6 @@ function findSpawnPoint() {
     return { x: WORLD_W / 2, y: WORLD_H / 2 };
 }
 
-// Физика пуль на сервере
-setInterval(() => {
-    const dt = 1/60;
-    for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        b.x += b.vx * dt;
-        b.y += b.vy * dt;
-        b.life -= dt;
-
-        let dead = b.life <= 0;
-
-        if (!dead) {
-            for (const r of rocks) {
-                if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
-                    dead = true; break;
-                }
-            }
-        }
-
-        if (!dead) {
-            for (let id in players) {
-                const p = players[id];
-                if (!p.alive || id === b.owner) continue;
-                if (Math.hypot(b.x - p.x, b.y - p.y) < 19 + b.r) {
-                    p.hp -= b.dmg;
-                    if (players[b.owner]) players[b.owner].ult = Math.min(100, players[b.owner].ult + b.dmg * 0.5);
-                    if (p.hp <= 0) {
-                        p.hp = 0; p.alive = false; p.respawnTimer = 3;
-                        if (players[b.owner]) players[b.owner].score++;
-                    }
-                    io.emit('updateHealth', players);
-                    dead = true; break;
-                }
-            }
-        }
-
-        if (dead) bullets.splice(i, 1);
-    }
-}, 1000 / 60);
-
 io.on('connection', (socket) => {
     const spawn = findSpawnPoint();
     
@@ -107,7 +71,13 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ОПТИМИЗАЦИЯ: Отправляем координаты реже (20 раз в секунду вместо 60)
+    let lastMoveSend = 0;
     socket.on('move', (data) => {
+        const now = Date.now();
+        if (now - lastMoveSend < 50) return; // Троттлинг до 20 FPS
+        lastMoveSend = now;
+
         const p = players[socket.id];
         if (p && p.alive) {
             p.x = data.x; p.y = data.y; p.aim = data.aim; p.walkPhase = data.walkPhase;
@@ -115,9 +85,9 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ОПТИМИЗАЦИЯ: Сервер сам не летит пулей, а проверяет только попадания
     socket.on('shoot', (bulletData) => {
         socket.broadcast.volatile.emit('newBullet', { owner: socket.id, bullet: bulletData });
-        bullets.push({ ...bulletData, owner: socket.id });
     });
 
     socket.on('hitPlayer', (data) => {
@@ -140,6 +110,17 @@ io.on('connection', (socket) => {
         if (p) {
             p.ultActive = data.active;
             socket.broadcast.emit('playerUlt', { id: socket.id, active: data.active });
+        }
+    });
+
+    // Обработка респавна
+    socket.on('respawnRequest', () => {
+        const p = players[socket.id];
+        if (p && !p.alive) {
+            const spawn = findSpawnPoint();
+            p.x = spawn.x; p.y = spawn.y;
+            p.hp = p.maxHp; p.alive = true;
+            io.emit('updateHealth', players);
         }
     });
 
