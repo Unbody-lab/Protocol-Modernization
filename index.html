@@ -229,7 +229,7 @@
 <canvas id="game"></canvas>
 <div id="hint">WASD — движение &nbsp;·&nbsp; ЛКМ — атака &nbsp;·&nbsp; ПРОБЕЛ / ПКМ — ульта &nbsp;·&nbsp; ESC — лобби</div>
 
-<div id="start-screen" class="screen">
+<div id="start-screen" class="screen hidden">
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
@@ -1385,7 +1385,7 @@ function update(dt) {
       player.hp = player.maxHp; player.alive = true;
       player.ammo = player.maxAmmo; player.reloading = 0;
       player.poison = 0; player.stun = 0;
-      if (currentMode === 'PVP-Битва') socket.emit('respawnRequest');
+      if (currentMode === 'PVP-Битва') socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
     }
   } else if (player.stun > 0) {
     player.stun -= dt;
@@ -1801,6 +1801,8 @@ function drawFurniture(){
 }
 
 function drawHero(h){
+  if (!h || !h.alive || isNaN(h.x) || isNaN(h.y)) return;
+
   const t = performance.now() / 1000;
   const isMe = h === player;
   const isVitya = h.type === 'Vitya';
@@ -1863,7 +1865,7 @@ function drawHero(h){
     ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke();
   }
 
-  const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
+  const g = ctx.createRadialGradient(-19*.35, -19*.4, 19*.12, 0, 0, 19*1.1);
   
   if (isVitya) {
     g.addColorStop(0, '#f87171'); 
