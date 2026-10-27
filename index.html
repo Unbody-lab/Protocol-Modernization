@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protocol: Modernization — PRE-ALPHA 0.4 (2.5D)</title>
+<title>Protocol: Modernization — PRE-ALPHA 0.3</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
@@ -50,6 +50,7 @@
   }
   #loading-screen.hidden { opacity: 0; visibility: hidden; }
   
+  /* Увеличенный и опущенный блок загрузки */
   .loading-content {
     position: relative; z-index: 10; text-align: center;
     padding: 50px; background: rgba(14,22,32,0.85); border-radius: 24px;
@@ -325,7 +326,7 @@
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
-  <div id="start-version">PRE-ALPHA 0.4</div>
+  <div id="start-version">PRE-ALPHA 0.3</div>
 </div>
 
 <div id="lobby-screen" class="screen hidden">
@@ -938,7 +939,7 @@ addEventListener('keydown', e => {
 
 
 /* ============================================================
-   ЛОГИКА ИГРЫ (2.5D)
+   ЛОГИКА ИГРЫ
 ============================================================ */
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -962,9 +963,6 @@ const WORLD_W = 2600, WORLD_H = 2000;
 const MAX_AMMO_VITYA = 5, RELOAD_VITYA = 1.6;
 const MAX_AMMO_LESHA = 3, RELOAD_LESHA = 2.0;
 const MAX_AMMO_FIALKA = 4, RELOAD_FIALKA = 1.8;
-
-// Для 2.5D эффекта (изометрия)
-const ISO_SCALE_Y = 0.7; // Сплющивание по вертикали для эффекта перспективы
 
 let bots = []; 
 let rocks = []; 
@@ -1787,7 +1785,7 @@ function update(dt) {
   cam.y += (ty - cam.y) * Math.min(1, dt * 13);
 }
 
-// --- РЕНДЕР (2.5D) ---
+// --- РЕНДЕР ---
 function roundRect(c,x,y,w,h,r){
   if (w < 0) { x += w; w = -w; }
   r = Math.min(r, w/2, h/2);
@@ -1848,61 +1846,49 @@ function drawGround(){
 
 function drawFurniture(){
   for (const f of furniture) {
-    // 2.5D эффект: рисуем "тень" и поднимаем объект по Y
-    ctx.save();
-    ctx.translate(f.x, f.y);
-    // Масштабируем по Y для эффекта перспективы
-    ctx.scale(1, ISO_SCALE_Y); 
-    
     if (f.type === 'desk') {
       ctx.fillStyle = '#5a3d2b';
-      roundRect(ctx, -35, -25, 70, 50, 5); ctx.fill();
+      roundRect(ctx, f.x - 35, f.y - 25, 70, 50, 5); ctx.fill();
       ctx.strokeStyle = '#3a2517'; ctx.lineWidth = 3; ctx.stroke();
-      
-      // Подставка (3D)
       ctx.fillStyle = '#2b1a10';
-      ctx.fillRect(-30, 15, 8, 20);
-      ctx.fillRect(22, 15, 8, 20);
+      ctx.fillRect(f.x - 30, f.y + 15, 8, 20);
+      ctx.fillRect(f.x + 22, f.y + 15, 8, 20);
     } else if (f.type === 'chair') {
       ctx.fillStyle = '#4a5568';
-      roundRect(ctx, -18, -15, 36, 30, 4); ctx.fill();
+      roundRect(ctx, f.x - 18, f.y - 15, 36, 30, 4); ctx.fill();
       ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2; ctx.stroke();
-      
       ctx.fillStyle = '#4a5568';
-      roundRect(ctx, -18, -25, 36, 10, 3); ctx.fill();
+      roundRect(ctx, f.x - 18, f.y - 25, 36, 10, 3); ctx.fill();
       ctx.stroke();
     } else if (f.type === 'cabinet') {
       ctx.fillStyle = '#4e5a68';
-      ctx.fillRect(-25, -45, 50, 90);
-      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(-25, -45, 50, 90);
-      
+      ctx.fillRect(f.x - 25, f.y - 45, 50, 90);
+      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(f.x - 25, f.y - 45, 50, 90);
       ctx.fillStyle = '#ffd700';
-      ctx.fillRect(15, -10, 5, 20);
-      ctx.fillRect(15, 15, 5, 20);
+      ctx.fillRect(f.x + 15, f.y - 10, 5, 20);
+      ctx.fillRect(f.x + 15, f.y + 15, 5, 20);
     } else if (f.type === 'board') {
       ctx.fillStyle = '#1a4a2e'; 
-      roundRect(ctx, -120, -50, 240, 100, 8); ctx.fill();
+      roundRect(ctx, f.x - 120, f.y - 50, 240, 100, 8); ctx.fill();
       ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
-      
       ctx.fillStyle = '#fff';
-      ctx.fillRect(-80, -20, 40, 4);
-      ctx.fillRect(40, 10, 30, 4);
+      ctx.fillRect(f.x - 80, f.y - 20, 40, 4);
+      ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
     } else if (f.type === 'books') {
       ctx.fillStyle = '#ff4d4d';
-      ctx.fillRect(-10, -5, 20, 5);
+      ctx.fillRect(f.x - 10, f.y - 5, 20, 5);
       ctx.fillStyle = '#4dff4d';
-      ctx.fillRect(-8, -10, 16, 5);
+      ctx.fillRect(f.x - 8, f.y - 10, 16, 5);
     } else if (f.type === 'holo') {
       const t = performance.now() / 1000;
       ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
       ctx.beginPath();
-      ctx.arc(0, Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
+      ctx.arc(f.x, f.y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
       ctx.fill();
       ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
       ctx.lineWidth = 2;
       ctx.stroke();
     }
-    ctx.restore();
   }
 }
 
@@ -1913,20 +1899,11 @@ function drawHero(h){
   const isLesha = h.type === 'Lesha';
   const isFialka = h.type === 'Fialka';
 
-  // 2.5D эффект: масштабируем тень отдельно, а тело рисуем поверх
-  ctx.save();
-  ctx.translate(h.x, h.y);
+  ctx.save(); ctx.translate(h.x, h.y);
   
-  // Тень
-  ctx.beginPath(); 
-  ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
-  ctx.fillStyle = 'rgba(0,0,0,0.5)'; 
-  ctx.fill();
-  
-  // Масштабирование по Y для эффекта глубины (как будто камера сверху)
-  ctx.scale(1, ISO_SCALE_Y);
-  
-  // Аура ульты (рисуется под персонажем)
+  ctx.beginPath(); ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
+  ctx.fillStyle = 'rgba(0,0,0,0.32)'; ctx.fill();
+
   if (h.ultActive && isVitya){
     const p = .5 + .5*Math.sin(t*22);
     ctx.beginPath(); ctx.arc(0, 0, 19 + 10 + p*7, 0, TAU);
@@ -1940,7 +1917,6 @@ function drawHero(h){
     ctx.lineWidth = 3; ctx.stroke();
   }
 
-  // Ноги
   const walk = Math.sin(h.walkPhase || 0) * 4;
   const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
 
@@ -1967,7 +1943,6 @@ function drawHero(h){
     ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
   }
 
-  // Руки
   ctx.lineWidth = 4.5;
   if (isVitya) {
     ctx.strokeStyle = '#fca5a5';
@@ -1980,7 +1955,6 @@ function drawHero(h){
     ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke();
   }
 
-  // Торс
   const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
   if (isVitya) {
@@ -2022,13 +1996,11 @@ function drawHero(h){
     ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke();
   }
 
-  // Голова
   ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
   ctx.fillStyle = isFialka ? '#e2e8f0' : '#fcd34d';
   ctx.fill();
   ctx.lineWidth = 2; ctx.strokeStyle = isFialka ? '#94a3b8' : '#b45309'; ctx.stroke();
 
-  // Причёска и детали
   if (isVitya) {
     ctx.fillStyle = '#78350f';
     ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
@@ -2063,7 +2035,6 @@ function drawHero(h){
     ctx.fillStyle = '#eaffff'; ctx.fill();
   }
 
-  // Оружие
   ctx.save(); ctx.translate(8, -4); ctx.rotate(h.aim || 0);
   let swingOff = 0;
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
@@ -2110,9 +2081,8 @@ function drawHero(h){
     ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.stroke();
   }
 
-  ctx.restore(); // Восстанавливаем масштаб
+  ctx.restore();
 
-  // UI над головой (рисуем без искажения Y)
   const bw = 54, bh = 8;
   const bx = h.x - bw/2, by = h.y - 19 - 34;
   ctx.fillStyle = 'rgba(8,12,18,0.75)';
@@ -2147,38 +2117,32 @@ function drawHeroes(){
 
 function drawBullets(){
   for (const b of bullets) {
-    // Для пуль и бомб тоже применяем сплющивание, чтобы они лежали на земле
-    ctx.save();
-    ctx.translate(b.x, b.y);
-    ctx.scale(1, ISO_SCALE_Y);
-    
     if (b.type === 'big_bomb') {
-      ctx.beginPath(); ctx.arc(0, 0, b.r, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
       ctx.fillStyle = '#ff3333'; ctx.fill();
-      ctx.beginPath(); ctx.arc(0, 0, b.r*1.5, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU);
       ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke();
     } else if (b.type === 'bomb') {
-      ctx.beginPath(); ctx.arc(0, 0, b.r, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
       ctx.fillStyle = '#111'; ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
       ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444';
-      roundRect(ctx, -5, -5, 10, 8, 2); ctx.fill();
+      roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill();
     } else if (b.type === 'chain_bolt') {
-      ctx.beginPath(); ctx.arc(0, 0, b.r, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
       ctx.fillStyle = '#c084fc'; ctx.fill();
       ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10;
-      ctx.beginPath(); ctx.arc(0, 0, b.r*0.5, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU);
       ctx.fillStyle = '#fff'; ctx.fill();
       ctx.shadowBlur = 0;
     } else {
-      ctx.beginPath(); ctx.arc(0, 0, b.r*2.4, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU);
       ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(0, 0, b.r, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
       ctx.fillStyle = '#e6f7ff'; ctx.fill();
-      ctx.beginPath(); ctx.arc(0, 0, b.r*.5, 0, TAU);
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU);
       ctx.fillStyle = b.color; ctx.fill();
     }
-    ctx.restore();
   }
 }
 
@@ -2377,7 +2341,7 @@ function drawVersionBadge(){
   ctx.fillStyle = 'rgba(140,180,215,0.9)';
   ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
   ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff';
-  ctx.fillText('PRE-ALPHA 0.4', x + 10, y + 24);
+  ctx.fillText('PRE-ALPHA 0.3', x + 10, y + 24);
 }
 
 function render() {
