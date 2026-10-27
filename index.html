@@ -582,15 +582,12 @@ let currentTip = tips[Math.floor(Math.random() * tips.length)];
 tipLabel.textContent = currentTip.type;
 tipText.textContent = currentTip.text;
 
-// 1. Показываем заставку студии
 setTimeout(() => {
   studioSplash.classList.add('hidden');
   
-  // 2. Через 0.8 сек (после исчезновения заставки) показываем экран загрузки
   setTimeout(() => {
     loadingScreen.classList.remove('hidden');
     
-    // 3. Запускаем полосу загрузки
     let progress = 0;
     let loadInterval = setInterval(() => {
       progress += Math.random() * 15;
@@ -609,7 +606,7 @@ setTimeout(() => {
     }, 150);
     
   }, 800);
-}, 2500); // Заставка висит 2.5 секунды
+}, 2500);
 
 
 const startScreen = document.getElementById('start-screen');
@@ -1221,6 +1218,71 @@ function updateBot(bot, dt) {
     return;
   }
 
+  // УЛЬТА БОТА
+  if (bot.ultActive) {
+    bot.ultTime -= dt;
+    
+    if (bot.type === 'Vitya') {
+      // Лазер у бота
+      const enemies = getAllEnemies(bot);
+      bot.ultTick = (bot.ultTick || 0) + dt;
+      if (bot.ultTick > 0.1) {
+        bot.ultTick = 0;
+        for (const e of enemies) {
+          if (pointSegDist(e.x, e.y, bot.x, bot.y, bot.x + Math.cos(bot.aim)*1100, bot.y + Math.sin(bot.aim)*1100) < e.r + 11) {
+            damage(e, 5, bot);
+          }
+        }
+      }
+    } else if (bot.type === 'Lesha') {
+      // Лёха может двигаться
+      const enemies = getAllEnemies(bot);
+      let target = null, best = Infinity;
+      for (const e of enemies) {
+        if (!e.alive) continue;
+        const d = Math.hypot(bot.x - e.x, bot.y - e.y);
+        if (d < best) { best = d; target = e; }
+      }
+      if (target) {
+        const dx = target.x - bot.x, dy = target.y - bot.y;
+        const d = Math.hypot(dx, dy) || 1;
+        const nx = dx / d, ny = dy / d;
+        let mx = 0, my = 0;
+        if (d > 220 + 60) { mx = nx; my = ny; }
+        else if (d < 220 - 80) { mx = -nx; my = -ny; }
+        else { mx = -ny; my = nx; }
+        
+        const len = Math.hypot(mx, my);
+        if (len > 0.001) {
+          bot.mvx = mx; bot.mvy = my;
+          bot.x += (mx / len) * 208 * dt;
+          bot.y += (my / len) * 208 * dt;
+          bot.walkPhase += dt * 14;
+        }
+      }
+    } else if (bot.type === 'Fialka') {
+      // Притягивание косой
+      if (bot.hookTarget && bot.hookTarget.alive) {
+        const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x);
+        const pullSpeed = 600;
+        bot.hookTarget.x += Math.cos(ang) * pullSpeed * dt;
+        bot.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
+        
+        bot.hookX = bot.hookTarget.x;
+        bot.hookY = bot.hookTarget.y;
+        
+        if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) {
+          bot.hookTarget.stun = 2.0;
+          bot.hookTarget = null;
+        }
+      }
+    }
+    
+    if (bot.ultTime <= 0) bot.ultActive = false;
+    return; // Бот не атакует и не двигается (кроме Лёхи) во время ульты
+  }
+
+  // Обычное поведение
   const enemies = getAllEnemies(bot);
   let target = null, best = Infinity;
   for (const e of enemies) {
