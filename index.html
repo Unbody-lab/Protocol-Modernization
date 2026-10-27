@@ -1385,7 +1385,7 @@ function update(dt) {
       player.hp = player.maxHp; player.alive = true;
       player.ammo = player.maxAmmo; player.reloading = 0;
       player.poison = 0; player.stun = 0;
-      if (currentMode === 'PVP-Битва') socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
+      if (currentMode === 'PVP-Битва') socket.emit('respawnRequest');
     }
   } else if (player.stun > 0) {
     player.stun -= dt;
