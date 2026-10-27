@@ -10,6 +10,78 @@
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
   canvas{display:block;cursor:crosshair}
   
+  /* ============ ЗАСТАВКА СТУДИИ ============ */
+  #studio-splash {
+    position: fixed; inset: 0; z-index: 10000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #0a0e14;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #studio-splash.hidden { opacity: 0; visibility: hidden; }
+  .studio-splash-logo {
+    font-size: 56px; font-weight: 900; letter-spacing: 6px;
+    color: #ffffff; text-shadow: 0 0 40px rgba(127,240,255,0.5);
+    animation: scaleUp 2s ease-out;
+  }
+  .studio-splash-sub {
+    font-size: 16px; color: #7ff0ff; letter-spacing: 12px;
+    margin-top: 10px; text-transform: uppercase; font-weight: 700;
+    animation: fadeIn 2s ease-out;
+  }
+  @keyframes scaleUp {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /* ============ ЭКРАН ЗАГРУЗКИ ============ */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    background: url('img/Loading_BG.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+    padding-bottom: 50px;
+  }
+  #loading-screen::after {
+    content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
+  }
+  #loading-screen.hidden { opacity: 0; visibility: hidden; }
+  
+  /* Увеличенный и опущенный блок загрузки */
+  .loading-content {
+    position: relative; z-index: 10; text-align: center;
+    padding: 50px; background: rgba(14,22,32,0.85); border-radius: 24px;
+    border: 2px solid rgba(90,140,180,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    max-width: 1000px; width: 90%; margin-top: 150px;
+  }
+  .loading-tip-box {
+    background: rgba(0,0,0,0.4); border-left: 4px solid #ffb450;
+    padding: 40px; border-radius: 12px; margin-bottom: 40px;
+    text-align: left; min-height: 220px;
+  }
+  .tip-label {
+    font-size: 16px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
+    margin-bottom: 14px; text-transform: uppercase;
+  }
+  .tip-text {
+    font-size: 24px; color: #dbe9f7; line-height: 1.6;
+  }
+  .loading-bar-container {
+    width: 100%; height: 16px; background: rgba(255,255,255,0.1);
+    border-radius: 8px; overflow: hidden; margin-bottom: 15px;
+  }
+  .loading-bar {
+    height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff);
+    border-radius: 8px; transition: width 0.1s linear;
+  }
+  .loading-status {
+    font-size: 18px; color: rgba(160,200,230,0.8); letter-spacing: 1px; font-weight: bold;
+  }
+
+  /* ============ ОБЩИЕ ЭКРАНЫ ============ */
   .screen{position:fixed; inset:0; display:flex; flex-direction:column; z-index:10; transition:opacity .3s ease, visibility .3s;}
   .screen.hidden{opacity:0; visibility:hidden; pointer-events:none}
   .screen-bg{position:absolute; inset:0; z-index:-1; background: linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);}
@@ -219,6 +291,27 @@
 </head>
 <body>
   
+<!-- ============ ЗАСТАВКА СТУДИИ ============ -->
+<div id="studio-splash">
+  <div class="studio-splash-logo">AKB-Unost Studio</div>
+  <div class="studio-splash-sub">представляет</div>
+</div>
+
+<!-- ============ ЭКРАН ЗАГРУЗКИ ============ -->
+<div id="loading-screen" class="hidden">
+  <div class="loading-content">
+    <div class="loading-tip-box">
+      <div class="tip-label" id="tip-label">СОВЕТ</div>
+      <div class="tip-text" id="tip-text">Загрузка...</div>
+    </div>
+    
+    <div class="loading-bar-container">
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+    <div class="loading-status" id="loading-status">0%</div>
+  </div>
+</div>
+
 <audio id="bg-music-lobby" loop>
   <source src="sounds/lobby.mp3" type="audio/mpeg">
 </audio>
@@ -255,6 +348,7 @@
       </div>
     </div>
     
+    <!-- Анонс Василька (сверху) -->
     <div class="announce-banner top" onclick="openVasilekInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
@@ -264,6 +358,7 @@
       </div>
     </div>
 
+    <!-- Анонс Фиалки (снизу) -->
     <div class="announce-banner bottom" onclick="openFialkaInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
@@ -461,7 +556,7 @@
         <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
         <div class="mode-option-info">
           <div class="mode-option-name">PVP-Битва</div>
-          <div class="mode-option-desc">Все против всех (с реальными игроками)</div>
+          <div class="mode-option-desc">Все против всех (с ботами, если нет игроков)</div>
         </div>
         <div class="mode-option-check">✓</div>
       </div>
@@ -534,10 +629,59 @@
   </div>
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
 <script>
 (function(){
 'use strict';
+
+// --- ЛОГИКА ЭКРАНОВ ЗАГРУЗКИ ---
+const studioSplash = document.getElementById('studio-splash');
+const loadingScreen = document.getElementById('loading-screen');
+const loadingBar = document.getElementById('loading-bar');
+const loadingStatus = document.getElementById('loading-status');
+const tipLabel = document.getElementById('tip-label');
+const tipText = document.getElementById('tip-text');
+
+const tips = [
+  { type: "СОВЕТ", text: "Используйте укрытия. Витя наносит большой урон в ближнем бою, но уязвим на дистанции." },
+  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов. Используйте её, чтобы вытащить врага из-за укрытия." },
+  { type: "ЛОР", text: "Проект «Модернизация» разделил мир на Технократов и Охлакратов. Витя сражается за право жирных людей на существование." },
+  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект: обычная, отравленная и тройная отравленная. Каждая третья бомба разлетается на осколки." },
+  { type: "СОВЕТ", text: "Следите за патронами. Перезарядка занимает время, в которое вы уязвимы." },
+  { type: "ЛОР", text: "Синдикат «Трусы» — это не просто бренд одежды, это политическая сила, которую возглавляет Лёха." },
+  { type: "ФАКТ", text: "Витя и Лёха когда-то были друзьями, но война развела их по разные стороны." },
+  { type: "СОВЕТ", text: "Цепная молния Фиалки может поразить до 4 врагов подряд, если они стоят близко друг к другу." }
+];
+
+let currentTip = tips[Math.floor(Math.random() * tips.length)];
+tipLabel.textContent = currentTip.type;
+tipText.textContent = currentTip.text;
+
+setTimeout(() => {
+  studioSplash.classList.add('hidden');
+  
+  setTimeout(() => {
+    loadingScreen.classList.remove('hidden');
+    
+    let progress = 0;
+    let loadInterval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 100) progress = 100;
+      
+      loadingBar.style.width = progress + '%';
+      loadingStatus.textContent = Math.floor(progress) + '%';
+      
+      if (progress >= 100) {
+        clearInterval(loadInterval);
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          document.getElementById('start-screen').classList.remove('hidden');
+        }, 500);
+      }
+    }, 150);
+    
+  }, 800);
+}, 2500);
+
 
 const startScreen = document.getElementById('start-screen');
 const lobbyScreen = document.getElementById('lobby-screen');
@@ -564,9 +708,36 @@ let selectedHero = 'Vitya';
 
 // --- СИСТЕМА РЕПЛИК ---
 const phrases = {
-  Vitya: [ "Я не толстый, я накачанный!", "Мой вес — моё преимущество!", "Охлакраты навсегда!", "Свобода для жирного рода!", "Меня не дразнить!", "Лазер из груди — это круто!", "Я верный боец Госпожи Свободы!", "Ещё один бой, ещё один обед!" ],
-  Lesha: [ "Трусы — это бренд!", "Вся война — просто реклама!", "Вы всё ещё здесь?", "Синдикат Трусы рулит!", "Покупайте мои трусы!", "Я здесь, чтобы заявить о себе!", "Бомбы — это весело!", "Я лидер, а вы — так..." ],
-  Fialka: [ "Напряжение растет!", "Я — Технократ!", "Мои системы в норме.", "Электричество — моя стихия.", "Сопротивление бесполезно.", "Ты притянут к ответу.", "Цепная реакция началась.", "Паралич — это только начало." ]
+  Vitya: [
+    "Я не толстый, я накачанный!",
+    "Мой вес — моё преимущество!",
+    "Охлакраты навсегда!",
+    "Свобода для жирного рода!",
+    "Меня не дразнить!",
+    "Лазер из груди — это круто!",
+    "Я верный боец Госпожи Свободы!",
+    "Ещё один бой, ещё один обед!"
+  ],
+  Lesha: [
+    "Трусы — это бренд!",
+    "Вся война — просто реклама!",
+    "Вы всё ещё здесь?",
+    "Синдикат Трусы рулит!",
+    "Покупайте мои трусы!",
+    "Я здесь, чтобы заявить о себе!",
+    "Бомбы — это весело!",
+    "Я лидер, а вы — так..."
+  ],
+  Fialka: [
+    "Напряжение растет!",
+    "Я — Технократ!",
+    "Мои системы в норме.",
+    "Электричество — моя стихия.",
+    "Сопротивление бесполезно.",
+    "Ты притянут к ответу.",
+    "Цепная реакция началась.",
+    "Паралич — это только начало."
+  ]
 };
 
 let audio1 = new Audio('sounds/vitya_voice.mp3');
@@ -581,11 +752,20 @@ function showRandomPhrase(heroType) {
   bubble.textContent = randomPhrase;
   bubble.classList.add('show');
   
-  if (heroType === 'Vitya') { audio1.volume = 1; audio1.play().catch(()=>{}); }
-  else if (heroType === 'Lesha') { audio2.volume = 1; audio2.play().catch(()=>{}); }
-  else { audio3.volume = 1; audio3.play().catch(()=>{}); }
+  if (heroType === 'Vitya') {
+    audio1.volume = 1;
+    audio1.play().catch(()=>{});
+  } else if (heroType === 'Lesha') {
+    audio2.volume = 1;
+    audio2.play().catch(()=>{});
+  } else {
+    audio3.volume = 1;
+    audio3.play().catch(()=>{});
+  }
 
-  setTimeout(() => { bubble.classList.remove('show'); }, 3000);
+  setTimeout(() => {
+    bubble.classList.remove('show');
+  }, 3000);
 }
 
 function playLobbyMusic() {
@@ -731,12 +911,7 @@ window.startGame = function(){
   hintEl.style.display = 'block';
   gameRunning = true;
   playBattleMusic();
-  
-  if (currentMode === 'Тренировка') {
-    startTraining();
-  } else {
-    startPVP();
-  }
+  startTraining();
 };
 
 window.backToLobby = function(){
@@ -798,10 +973,6 @@ let killFeed = [];
 let matchSplashTimer = 0; 
 let gameOver = false;
 const cam = { x: 0, y: 0 };
-
-let serverPlayers = {};
-let myId = null;
-const socket = io({ transports: ['websocket'] });
 
 const player = {
   x: 500, y: 500, r: 19, hp: 100, maxHp: 100,
@@ -930,55 +1101,6 @@ function startTraining(){
   cam.y = Math.max(0, Math.min(WORLD_H - H, player.y - H/2));
 }
 
-function startPVP() {
-  gameOver = false;
-  bots = [];
-  bullets = [];
-  particles = [];
-  killFeed = [];
-  matchSplashTimer = 2.0;
-  
-  socket.emit('selectHero', selectedHero);
-}
-
-// --- СЕТЕВЫЕ СОБЫТИЯ ---
-socket.on('init', (data) => {
-  myId = data.myId;
-  serverPlayers = data.players;
-  if (serverPlayers[myId]) {
-    player.x = serverPlayers[myId].x;
-    player.y = serverPlayers[myId].y;
-    player.name = serverPlayers[myId].name;
-    player.type = serverPlayers[myId].type;
-  }
-  genWorld();
-});
-
-socket.on('newPlayer', (p) => { serverPlayers[p.id] = p; });
-socket.on('playerMoved', (data) => {
-  if (serverPlayers[data.id]) {
-    serverPlayers[data.id].x = data.x;
-    serverPlayers[data.id].y = data.y;
-    serverPlayers[data.id].aim = data.aim;
-    serverPlayers[data.id].walkPhase = data.walkPhase;
-  }
-});
-socket.on('playerDisconnected', (id) => { delete serverPlayers[id]; });
-socket.on('updateHealth', (players) => {
-  serverPlayers = players;
-  if (players[myId]) player.hp = players[myId].hp;
-});
-socket.on('newBullet', (data) => {
-  bullets.push({ ...data.bullet, owner: data.owner, color: '#ff7a4d' });
-});
-socket.on('playerUlt', (data) => {
-  if (serverPlayers[data.id]) serverPlayers[data.id].ultActive = data.active;
-});
-socket.on('updatePlayerType', (data) => {
-  if (serverPlayers[data.id]) serverPlayers[data.id].type = data.type;
-});
-
-
 const keys = {};
 const mouse = { x: W/2, y: H/2, down: false, rightDown: false };
 
@@ -1011,13 +1133,8 @@ function spawnHitParticles(x, y, color, n){
 }
 
 function getAllEnemies(hero) {
-  if (currentMode === 'Тренировка') {
-    if (hero === player) return bots.filter(b => b.alive);
-    return [player, ...bots.filter(b => b !== hero)];
-  } else {
-    if (hero === player) return Object.values(serverPlayers).filter(p => p.id !== myId && p.alive);
-    return [];
-  }
+  if (hero === player) return bots.filter(b => b.alive);
+  return [player, ...bots.filter(b => b !== hero)];
 }
 
 function addKillFeed(killer, victim) {
@@ -1041,15 +1158,11 @@ function tryAttack(h) {
   if (target && h.type === 'Vitya') {
     h.attackCd = .6; h.swing = .25;
     h.aim = Math.atan2(target.y - h.y, target.x - h.x);
-    if (currentMode === 'Тренировка') {
-      damage(target, 46, h);
-      const ang = Math.atan2(target.y - h.y, target.x - h.x);
-      target.kbx = Math.cos(ang) * 340;
-      target.kby = Math.sin(ang) * 340;
-      spawnHitParticles(target.x, target.y, '#ffd88a', 12);
-    } else {
-      socket.emit('hitPlayer', { target: target.id, damage: 46 });
-    }
+    damage(target, 46, h);
+    const ang = Math.atan2(target.y - h.y, target.x - h.x);
+    target.kbx = Math.cos(ang) * 340;
+    target.kby = Math.sin(ang) * 340;
+    spawnHitParticles(target.x, target.y, '#ffd88a', 12);
     return;
   }
 
@@ -1068,7 +1181,6 @@ function tryAttack(h) {
       r: 7, dmg: 16, life: 0.9, type: 'bullet'
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
-    if (currentMode === 'PVP-Битва') socket.emit('shoot', bullet);
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
   } else if (h.type === 'Lesha') {
     h.shootCount++;
@@ -1102,7 +1214,6 @@ function tryAttack(h) {
         r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
       };
       bullets.push({ ...bullet, owner: h, color: h.color });
-      if (currentMode === 'PVP-Битва') socket.emit('shoot', bullet);
     }
   } else if (h.type === 'Fialka') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
@@ -1112,7 +1223,6 @@ function tryAttack(h) {
       r: 8, dmg: 18, life: 0.9, type: 'chain_bolt', chained: []
     };
     bullets.push({ ...bullet, owner: h, color: h.color });
-    if (currentMode === 'PVP-Битва') socket.emit('shoot', bullet);
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8b4fe', 4);
   }
 
@@ -1123,8 +1233,6 @@ function activateUlt(h) {
   if (h.ult < 100 || h.ultActive || !h.alive) return;
   h.ult = 0; h.ultActive = true; h.ultTime = 0.5; 
   
-  if (currentMode === 'PVP-Битва') socket.emit('ult', { active: true });
-  
   if (h.type === 'Lesha') {
     const tx = h.x + Math.cos(h.aim) * 500;
     const ty = h.y + Math.sin(h.aim) * 500;
@@ -1134,7 +1242,6 @@ function activateUlt(h) {
       r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
     };
     bullets.push({ ...bullet, owner: h, color: '#ff0000' });
-    if (currentMode === 'PVP-Битва') socket.emit('shoot', bullet);
     h.ultTime = 1.0; 
   } else if (h.type === 'Fialka') {
     h.ultActive = true;
@@ -1228,10 +1335,12 @@ function updateBot(bot, dt) {
     return;
   }
 
+  // УЛЬТА БОТА
   if (bot.ultActive) {
     bot.ultTime -= dt;
     
     if (bot.type === 'Vitya') {
+      // Лазер у бота
       const enemies = getAllEnemies(bot);
       bot.ultTick = (bot.ultTick || 0) + dt;
       if (bot.ultTick > 0.1) {
@@ -1243,6 +1352,7 @@ function updateBot(bot, dt) {
         }
       }
     } else if (bot.type === 'Lesha') {
+      // Лёха может двигаться
       const enemies = getAllEnemies(bot);
       let target = null, best = Infinity;
       for (const e of enemies) {
@@ -1268,6 +1378,7 @@ function updateBot(bot, dt) {
         }
       }
     } else if (bot.type === 'Fialka') {
+      // Притягивание косой
       if (bot.hookTarget && bot.hookTarget.alive) {
         const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x);
         const pullSpeed = 600;
@@ -1285,9 +1396,10 @@ function updateBot(bot, dt) {
     }
     
     if (bot.ultTime <= 0) bot.ultActive = false;
-    return; 
+    return; // Бот не атакует и не двигается (кроме Лёхи) во время ульты
   }
 
+  // Обычное поведение
   const enemies = getAllEnemies(bot);
   let target = null, best = Infinity;
   for (const e of enemies) {
@@ -1385,7 +1497,6 @@ function update(dt) {
       player.hp = player.maxHp; player.alive = true;
       player.ammo = player.maxAmmo; player.reloading = 0;
       player.poison = 0; player.stun = 0;
-      if (currentMode === 'PVP-Битва') socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
     }
   } else if (player.stun > 0) {
     player.stun -= dt;
@@ -1402,8 +1513,7 @@ function update(dt) {
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
            if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) {
-             if (currentMode === 'Тренировка') damage(e, 5, player);
-             else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: 5 });
+             damage(e, 5, player);
            }
          }
        }
@@ -1463,14 +1573,6 @@ function update(dt) {
     } else {
       player.walkPhase = 0;
     }
-
-    if (currentMode === 'PVP-Битва') {
-      player.moveTick += dt;
-      if (player.moveTick > 0.066) {
-        player.moveTick = 0;
-        socket.emit('move', { x: player.x, y: player.y, aim: player.aim, walkPhase: player.walkPhase });
-      }
-    }
   }
 
   if (mouse.down && player.alive && player.stun <= 0) tryAttack(player);
@@ -1495,18 +1597,16 @@ function update(dt) {
     }
   }
 
-  if (currentMode === 'Тренировка') {
-    for (const bot of bots) {
-      updateBot(bot, dt);
-      if (bot.poison > 0) {
-        bot.poison -= dt;
-        bot.poisonTick = (bot.poisonTick || 0) + dt;
-        if (bot.poisonTick > 0.5) {
-          bot.poisonTick = 0;
-          bot.hp -= 3;
-          spawnHitParticles(bot.x, bot.y, '#5cff5c', 3);
-          if (bot.hp <= 0) damage(bot, 0, null);
-        }
+  for (const bot of bots) {
+    updateBot(bot, dt);
+    if (bot.poison > 0) {
+      bot.poison -= dt;
+      bot.poisonTick = (bot.poisonTick || 0) + dt;
+      if (bot.poisonTick > 0.5) {
+        bot.poisonTick = 0;
+        bot.hp -= 3;
+        spawnHitParticles(bot.x, bot.y, '#5cff5c', 3);
+        if (bot.hp <= 0) damage(bot, 0, null);
       }
     }
   }
@@ -1531,8 +1631,7 @@ function update(dt) {
         spawnHitParticles(b.x, b.y, '#ff0000', 40);
         for (const e of enemies) {
           if (Math.hypot(e.x - b.x, e.y - b.y) < 150) {
-            if (currentMode === 'Тренировка') damage(e, 50, b.owner);
-            else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: 50 });
+            damage(e, 50, b.owner);
           }
         }
         for (let j = 0; j < 8; j++) {
@@ -1567,9 +1666,7 @@ function update(dt) {
         for (const e of enemies) {
           if (!e.alive) continue;
           if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-            if (currentMode === 'Тренировка') damage(e, b.dmg, b.owner);
-            else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: b.dmg });
-            
+            damage(e, b.dmg, b.owner);
             spawnHitParticles(b.x, b.y, '#c084fc', 9);
             b.chained.push(e);
             dead = true;
@@ -1585,9 +1682,7 @@ function update(dt) {
                 if (d < minDist) { minDist = d; nextTarget = e2; }
               }
               if (nextTarget) {
-                if (currentMode === 'Тренировка') damage(nextTarget, 12, b.owner);
-                else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: nextTarget.id, damage: 12 });
-                
+                damage(nextTarget, 12, b.owner);
                 spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
                 
                 ctx.save();
@@ -1633,8 +1728,7 @@ function update(dt) {
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
           if (Math.hypot(e.x - b.x, e.y - b.y) < 95) {
-            if (currentMode === 'Тренировка') damage(e, b.dmg, b.owner, b.poison);
-            else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: b.dmg });
+            damage(e, b.dmg, b.owner, b.poison);
           }
         }
       }
@@ -1658,11 +1752,9 @@ function update(dt) {
         if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
           if (b.type === 'bomb') {
             spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
-            if (currentMode === 'Тренировка') damage(e, b.dmg, b.owner, b.poison);
-            else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: b.dmg });
+            damage(e, b.dmg, b.owner, b.poison);
           } else {
-            if (currentMode === 'Тренировка') damage(e, b.dmg, b.owner);
-            else if (currentMode === 'PVP-Битва') socket.emit('hitPlayer', { target: e.id, damage: b.dmg });
+            damage(e, b.dmg, b.owner);
           }
           spawnHitParticles(b.x, b.y, b.color, 9);
           dead = true; break;
@@ -1801,8 +1893,6 @@ function drawFurniture(){
 }
 
 function drawHero(h){
-  if (!h || !h.alive || isNaN(h.x) || isNaN(h.y)) return;
-
   const t = performance.now() / 1000;
   const isMe = h === player;
   const isVitya = h.type === 'Vitya';
@@ -1865,7 +1955,7 @@ function drawHero(h){
     ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke();
   }
 
-  const g = ctx.createRadialGradient(-19*.35, -19*.4, 19*.12, 0, 0, 19*1.1);
+  const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
   if (isVitya) {
     g.addColorStop(0, '#f87171'); 
@@ -2021,16 +2111,7 @@ function drawHero(h){
 }
 
 function drawHeroes(){
-  if (currentMode === 'Тренировка') {
-    for (const bot of bots) if (bot.alive) drawHero(bot);
-  } else {
-    for (let id in serverPlayers) {
-      if (id === myId) continue;
-      if (serverPlayers[id].alive) {
-        drawHero(serverPlayers[id]);
-      }
-    }
-  }
+  for (const bot of bots) if (bot.alive) drawHero(bot);
   if (player.alive) drawHero(player);
 }
 
@@ -2068,7 +2149,7 @@ function drawBullets(){
 function drawLasers(){
   const t = performance.now() / 1000;
   
-  for (const h of [player, ...bots, ...Object.values(serverPlayers)]) {
+  for (const h of [player, ...bots]) {
     if (h.ultActive && h.type === 'Vitya' && h.alive) {
       let maxLen = 1100;
       const sx = h.x, sy = h.y;
@@ -2197,7 +2278,7 @@ function drawUltBar(){
 }
 
 function drawScoreboard(){
-  const list = (currentMode === 'Тренировка' ? [player, ...bots] : [player, ...Object.values(serverPlayers).filter(p => p.id !== myId)]).sort((a, b) => b.score - a.score);
+  const list = [player, ...bots].sort((a, b) => b.score - a.score);
   const x = W - 196, y = 14;
   const rowH = 25;
   const total = 34 + rowH * list.length;
