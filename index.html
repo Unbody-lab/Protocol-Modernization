@@ -41,7 +41,7 @@
   #loading-screen {
     position: fixed; inset: 0; z-index: 9999;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    background: url('img/Loading_BG.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
+    background: url('img/Loading.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
     transition: opacity 0.5s ease, visibility 0.5s ease;
     padding-bottom: 80px;
   }
@@ -564,7 +564,7 @@
     <div class="mode-grid">
       <!-- Тренировка -->
       <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
-        <div class="mode-option-icon" style="background-image:none; background-color:#3fa9f5; display:flex; align-items:center; justify-content:center; font-size:48px;">🤖</div>
+       <div class="mode-option-icon" style="background-image:url('img/Training.jpg');"></div>
         <div class="mode-option-info">
           <div class="mode-option-name">Тренировка</div>
           <div class="mode-option-desc">Играйте против ботов (офлайн)</div>
@@ -584,7 +584,7 @@
 
       <!-- Останется только один (В разработке) -->
       <div class="mode-option disabled" onclick="showDev('РЕЖИМ: ОСТАНЕТСЯ ТОЛЬКО ОДИН')">
-        <div class="mode-option-icon" style="background-image:url('img/BR.jpg');"></div>
+        <div class="mode-option-icon" style="background-image:url('img/The_Last_One.jpg');"></div>
         <div class="mode-option-info">
           <div class="mode-option-name">Останется только один</div>
           <div class="mode-option-desc" style="color: #ffb450;">В разработке</div>
