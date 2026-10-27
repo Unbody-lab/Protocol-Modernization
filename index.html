@@ -40,9 +40,10 @@
   /* ============ ЭКРАН ЗАГРУЗКИ ============ */
   #loading-screen {
     position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
     background: url('img/Loading_BG.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
     transition: opacity 0.5s ease, visibility 0.5s ease;
+    padding-bottom: 50px;
   }
   #loading-screen::after {
     content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
@@ -54,30 +55,30 @@
     position: relative; z-index: 10; text-align: center;
     padding: 50px; background: rgba(14,22,32,0.85); border-radius: 24px;
     border: 2px solid rgba(90,140,180,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    max-width: 800px; width: 90%; margin-top: 150px;
+    max-width: 1000px; width: 90%; margin-top: 150px;
   }
   .loading-tip-box {
     background: rgba(0,0,0,0.4); border-left: 4px solid #ffb450;
-    padding: 30px; border-radius: 12px; margin-bottom: 40px;
-    text-align: left; min-height: 180px;
+    padding: 40px; border-radius: 12px; margin-bottom: 40px;
+    text-align: left; min-height: 220px;
   }
   .tip-label {
-    font-size: 14px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
-    margin-bottom: 12px; text-transform: uppercase;
+    font-size: 16px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
+    margin-bottom: 14px; text-transform: uppercase;
   }
   .tip-text {
-    font-size: 20px; color: #dbe9f7; line-height: 1.6;
+    font-size: 24px; color: #dbe9f7; line-height: 1.6;
   }
   .loading-bar-container {
-    width: 100%; height: 14px; background: rgba(255,255,255,0.1);
-    border-radius: 7px; overflow: hidden; margin-bottom: 15px;
+    width: 100%; height: 16px; background: rgba(255,255,255,0.1);
+    border-radius: 8px; overflow: hidden; margin-bottom: 15px;
   }
   .loading-bar {
     height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff);
-    border-radius: 7px; transition: width 0.1s linear;
+    border-radius: 8px; transition: width 0.1s linear;
   }
   .loading-status {
-    font-size: 16px; color: rgba(160,200,230,0.8); letter-spacing: 1px; font-weight: bold;
+    font-size: 18px; color: rgba(160,200,230,0.8); letter-spacing: 1px; font-weight: bold;
   }
 
   /* ============ ОБЩИЕ ЭКРАНЫ ============ */
@@ -127,7 +128,11 @@
 
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5; bottom: 100px;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative; background-image: url('img/Fialka.jpg');}
+  .announce-banner.top { bottom: 230px; }
+  .announce-banner.bottom { bottom: 100px; }
+  .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
+  .announce-banner.top .announce-img { background-image: url('img/Vasilek.jpg'); }
+  .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
@@ -140,12 +145,12 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
-  #fighters-modal, #hero-modal, #teaser-modal, #mode-modal, #news-modal, #fialka-info-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
-  #fighters-modal.show, #hero-modal.show, #teaser-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show {display:flex}
+  #fighters-modal, #hero-modal, #teaser-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
+  #fighters-modal.show, #hero-modal.show, #teaser-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show {display:flex}
   
-  #fighters-card, #hero-modal-card, #teaser-card, #mode-modal-card, .profile-card, #fialka-info-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;}
+  #fighters-card, #hero-modal-card, #teaser-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;}
   #hero-modal-card { flex-direction: row; gap: 26px; }
-  #teaser-card, #fialka-info-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
+  #teaser-card, #fialka-info-card, #vasilek-info-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
   .profile-card { width:min(450px, 95vw); text-align: center; }
 
   .modal-close{position:absolute; top:14px; right:16px; width:36px; height:36px; border-radius:50%; background:rgba(255,80,80,0.2); border:1px solid rgba(255,80,80,0.5); color:#ff7b7b; font-size:20px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; z-index: 100;}
@@ -166,6 +171,7 @@
   
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
+  .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
   
   .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(90,140,180,0.25); align-items: center; justify-content: center;}
   .fighter-card.empty .fighter-card-icon {background: none; display: flex; align-items: center; justify-content: center; font-size: 48px; color: rgba(255,255,255,0.1); font-weight: 800;}
@@ -193,7 +199,7 @@
   #hero-modal-select:hover{transform:translateY(-2px)}
   #hero-modal-select:active{transform:translateY(2px); box-shadow:none}
 
-  #teaser-icon {width: 160px; height: 160px; border-radius: 20px; background-image: url('img/Fialka.jpg'); background-color: #1b232d; background-size: cover; background-position: center; border: 3px solid #c084fc; display: flex; align-items: center; justify-content: center; font-size: 64px; opacity: 0.9; box-shadow: inset 0 0 30px rgba(192,132,252,0.2); position: relative;}
+  #teaser-icon {width: 160px; height: 160px; border-radius: 20px; background-image: url('img/Vasilek.jpg'); background-color: #1b232d; background-size: cover; background-position: center; border: 3px solid #c084fc; display: flex; align-items: center; justify-content: center; font-size: 64px; opacity: 0.9; box-shadow: inset 0 0 30px rgba(192,132,252,0.2); position: relative;}
   #teaser-title { color: #c084fc; font-size: 14px; font-weight: 900; letter-spacing: 2px; }
   #teaser-name { color: #fff; font-size: 36px; font-weight: 900; margin-top: -8px; }
 
@@ -211,12 +217,12 @@
     border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent;
   }
 
-  #mode-modal-card { width:min(860px, 95vw); }
-  .mode-grid { display: flex; flex-wrap: nowrap; gap: 16px; overflow-x: auto; padding-bottom: 10px; }
+  #mode-modal-card { width:min(1000px, 95vw); }
+  .mode-grid { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
   .mode-option { position: relative; width: 240px; height: 300px; flex-shrink: 0; border-radius: 16px; cursor:pointer; transition:all .15s; background:rgba(63,169,245,0.08); border:3px solid rgba(90,140,180,0.3); overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
   .mode-option:hover { transform: translateY(-4px); border-color: rgba(127,240,255,0.6); }
   .mode-option.selected { border-color: #7ff0ff; box-shadow: 0 0 20px rgba(127,240,255,0.3); }
-  .mode-option-icon { position: absolute; inset: 0; z-index: 1; background:rgba(127,240,255,0.12); background-image:url('img/PVP.jpg'); background-size:cover; background-position:center; }
+  .mode-option-icon { position: absolute; inset: 0; z-index: 1; background:rgba(127,240,255,0.12); background-size:cover; background-position:center; }
   .mode-option:hover .mode-option-icon { transform: scale(1.05); transition: transform 0.3s; }
   .mode-option::after { content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.4) 50%, transparent 100%); pointer-events: none; }
   .mode-option-info { position: relative; z-index: 3; padding: 16px; display: flex; flex-direction: column; gap: 4px; }
@@ -224,6 +230,11 @@
   .mode-option-desc { font-size:12.5px; color:rgba(200,220,240,0.9); line-height:1.3; }
   .mode-option-check { position: absolute; top: 12px; right: 12px; z-index: 3; width:32px; height:32px; border-radius:50%; border:2px solid rgba(127,240,255,0.6); background: rgba(10,15,22,0.6); display:flex; align-items:center; justify-content:center; font-size:16px; color:#7ff0ff; font-weight: bold; opacity: 0; transition: all .2s; }
   .mode-option.selected .mode-option-check { opacity: 1; background:rgba(127,240,255,0.2); }
+  
+  .mode-option.disabled { opacity: 0.6; cursor: not-allowed; border-style: dashed; }
+  .mode-option.disabled::after { background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%); }
+  .mode-option.disabled .mode-option-name { color: #8ea6bd; }
+  .mode-option.disabled .mode-option-desc { color: #ffb450; font-weight: bold; }
   
   .news-content { text-align: left; max-height: 500px; overflow-y: auto; padding-right: 10px; }
   .news-block { 
@@ -337,12 +348,23 @@
       </div>
     </div>
     
-    <div class="announce-banner" onclick="openFialkaInfo()">
+    <!-- Анонс Василька (сверху) -->
+    <div class="announce-banner top" onclick="openVasilekInfo()">
+      <div class="announce-img"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Обновление 0.4</div>
+        <div class="announce-name">Василёк</div>
+        <div class="announce-timer" id="teaser-timer-vasilek">через 2 дня</div>
+      </div>
+    </div>
+
+    <!-- Анонс Фиалки (снизу) -->
+    <div class="announce-banner bottom" onclick="openFialkaInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
         <div class="announce-tag">Обновление 0.3</div>
         <div class="announce-name">Фиалка</div>
-        <div class="announce-timer" id="teaser-timer-fialka">Уже в игре!</div>
+        <div class="announce-timer">Уже в игре!</div>
       </div>
     </div>
 
@@ -368,7 +390,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 3</div>
+      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -383,9 +405,10 @@
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Фиалка</div>
       </div>
-      <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
-        <div class="fighter-card-icon">?</div>
-        <div class="fighter-card-name">Скоро</div>
+      <div class="fighter-card vasilek" id="card-vasilek" onclick="openVasilekInfo()">
+        <div class="fighter-card-icon"></div>
+        <div class="fighter-card-name">Василёк</div>
+        <div class="lock-timer" id="card-vasilek-timer">Скоро</div>
       </div>
     </div>
   </div>
@@ -474,7 +497,7 @@
   </div>
 </div>
 
-<!-- Модалка Фиалки (Информация) -->
+<!-- Модалка Информации о Фиалке -->
 <div id="fialka-info-modal">
   <div id="fialka-info-card">
     <button class="modal-close" onclick="closeFialkaInfo()">✕</button>
@@ -494,11 +517,31 @@
   </div>
 </div>
 
+<!-- Модалка Информации о Васильке -->
+<div id="vasilek-info-modal">
+  <div id="vasilek-info-card">
+    <button class="modal-close" onclick="closeVasilekInfo()">✕</button>
+    <h2 style="color: #fff; font-size: 32px; margin-bottom: 20px;">Обновление 0.4</h2>
+    
+    <div style="width: 100%; height: 250px; background-image: url('img/Vasilek.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; margin-bottom: 20px; border-radius: 16px; border: 2px solid #c084fc;"></div>
+    
+    <h3 style="color: #c084fc; font-size: 28px; margin-bottom: 10px;">Новый боец: Василёк</h3>
+    <p style="color: rgba(200,220,240,0.9); font-size: 16px; line-height: 1.6; max-width: 500px; margin: 0 auto 24px auto;">
+      Таинственный боец поддержки. Его способности позволяют исцелять союзников и накладывать щиты. Готовьтесь к его появлению!
+    </p>
+    <div id="teaser-timer-vasilek-big" style="color: #ff7b7b; font-size: 24px; font-weight: 800; background: rgba(0,0,0,0.5); padding: 14px 34px; border-radius: 14px; border: 1px solid rgba(255,80,80,0.4); display: inline-block;">
+      До выхода: 2 дня
+    </div>
+  </div>
+</div>
+
+<!-- Меню режимов -->
 <div id="mode-modal">
   <div id="mode-modal-card">
     <button class="modal-close" onclick="closeModeModal()">✕</button>
     <h2>ВЫБОР РЕЖИМА</h2>
     <div class="mode-grid">
+      <!-- Тренировка -->
       <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
         <div class="mode-option-icon" style="background-image:none; background-color:#3fa9f5; display:flex; align-items:center; justify-content:center; font-size:48px;">🤖</div>
         <div class="mode-option-info">
@@ -507,6 +550,8 @@
         </div>
         <div class="mode-option-check">✓</div>
       </div>
+      
+      <!-- PVP -->
       <div class="mode-option" onclick="selectMode('PVP-Битва', this)">
         <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
         <div class="mode-option-info">
@@ -514,6 +559,15 @@
           <div class="mode-option-desc">Все против всех (с ботами, если нет игроков)</div>
         </div>
         <div class="mode-option-check">✓</div>
+      </div>
+
+      <!-- Останется только один (В разработке) -->
+      <div class="mode-option disabled" onclick="showDev('РЕЖИМ: ОСТАНЕТСЯ ТОЛЬКО ОДИН')">
+        <div class="mode-option-icon" style="background-image:url('img/BR.jpg');"></div>
+        <div class="mode-option-info">
+          <div class="mode-option-name">Останется только один</div>
+          <div class="mode-option-desc" style="color: #ffb450;">В разработке</div>
+        </div>
       </div>
     </div>
   </div>
@@ -526,10 +580,19 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
+      <div class="news-block" style="border-left-color: #c084fc;" onclick="openVasilekInfo()">
+        <div class="news-img" style="background-image: url('img/Vasilek.jpg');"></div>
+        <div class="news-info">
+          <div class="news-date" style="color: #c084fc;">АНОНС ОБНОВЛЕНИЯ 0.4 <span class="news-badge">!</span></div>
+          <div class="news-title">Новый боец: Василёк</div>
+          <div class="news-text">Слухи о новом бойце поддержки с уникальными щитами и исцелением.</div>
+        </div>
+      </div>
+
       <div class="news-block" style="border-left-color: #c084fc;" onclick="openFialkaInfo()">
         <div class="news-img" style="background-image: url('img/Fialka.jpg');"></div>
         <div class="news-info">
-          <div class="news-date" style="color: #c084fc;">ОБНОВЛЕНИЕ 0.3 <span class="news-badge">!</span></div>
+          <div class="news-date" style="color: #c084fc;">ОБНОВЛЕНИЕ 0.3</div>
           <div class="news-title">Новый боец: Фиалка</div>
           <div class="news-text">Эпический убийца с цепной молнией и притягивающей косой. А также переработаны атаки Лёхи.</div>
         </div>
@@ -634,6 +697,7 @@ const hintEl      = document.getElementById('hint');
 const modeLabel   = document.getElementById('lobby-mode-label');
 const newsModal   = document.getElementById('news-modal');
 const fialkaInfoModal = document.getElementById('fialka-info-modal');
+const vasilekInfoModal = document.getElementById('vasilek-info-modal');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
@@ -715,6 +779,44 @@ function playBattleMusic() {
   bgMusicBattle.play().catch(e => console.log('Боевая музыка не загружена', e));
 }
 
+// --- ТАЙМЕРЫ АНОНСОВ ---
+let releaseTimeVasilek = localStorage.getItem('vasilek_release_time');
+if (!releaseTimeVasilek) {
+  releaseTimeVasilek = Date.now() + (48 * 60 * 60 * 1000); // 2 дня
+  localStorage.setItem('vasilek_release_time', releaseTimeVasilek);
+} else {
+  releaseTimeVasilek = parseInt(releaseTimeVasilek, 10);
+}
+
+function updateTimers() {
+  const now = Date.now();
+  const diff = Math.max(0, releaseTimeVasilek - now);
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  
+  const el = document.getElementById('teaser-timer-vasilek');
+  const cardTimer = document.getElementById('card-vasilek-timer');
+  const bigTimer = document.getElementById('teaser-timer-vasilek-big');
+  
+  const timeStr = `${d} д ${h} ч ${m} мин`;
+  
+  if (el) {
+    if (diff <= 0) el.textContent = "Уже в игре!";
+    else el.textContent = `через ${timeStr}`;
+  }
+  if (cardTimer) {
+    if (diff <= 0) cardTimer.textContent = "Доступен";
+    else cardTimer.textContent = `Скоро: ${d}д ${h}ч`;
+  }
+  if (bigTimer) {
+    if (diff <= 0) bigTimer.textContent = "Доступен в игре!";
+    else bigTimer.textContent = `До выхода: ${timeStr}`;
+  }
+}
+setInterval(updateTimers, 1000);
+updateTimers();
+
 window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
@@ -739,6 +841,9 @@ window.closeFialkaDetails = function(){ heroModalFialka.style.display = 'none'; 
 
 window.openFialkaInfo = function(){ fialkaInfoModal.classList.add('show'); };
 window.closeFialkaInfo = function(){ fialkaInfoModal.classList.remove('show'); };
+
+window.openVasilekInfo = function(){ vasilekInfoModal.classList.add('show'); };
+window.closeVasilekInfo = function(){ vasilekInfoModal.classList.remove('show'); };
 
 window.selectHeroAndClose = function(hero){ 
   selectedHero = hero; 
@@ -825,6 +930,7 @@ addEventListener('keydown', e => {
     else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
     else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
     else if (fialkaInfoModal.classList.contains('show')) closeFialkaInfo();
+    else if (vasilekInfoModal.classList.contains('show')) closeVasilekInfo();
     else if (fightersModal.classList.contains('show')) closeFightersModal();
     else if (modeModal.classList.contains('show')) closeModeModal();
     else if (newsModal.classList.contains('show')) closeNewsModal();
