@@ -5,11 +5,8 @@ const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
-// Увеличиваем лимиты для сокетов
 const io = new Server(server, {
-    pingTimeout: 60000,
-    pingInterval: 25000,
-    maxHttpBufferSize: 1e6
+    cors: { origin: "*" }
 });
 
 app.use(express.static(__dirname));
@@ -55,7 +52,7 @@ io.on('connection', (socket) => {
     players[socket.id] = {
         id: socket.id,
         x: spawn.x, y: spawn.y,
-        hp: 100, maxHp: 100, score: 0, aim: 0, alive: true, respawnTimer: 0,
+        hp: 100, maxHp: 100, score: 0, aim: 0, alive: true,
         ult: 0, ultActive: false, walkPhase: 0,
         name: 'Игрок ' + Math.floor(Math.random() * 90 + 10),
         type: 'Vitya'
@@ -71,13 +68,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ОПТИМИЗАЦИЯ: Отправляем координаты реже (20 раз в секунду вместо 60)
-    let lastMoveSend = 0;
     socket.on('move', (data) => {
-        const now = Date.now();
-        if (now - lastMoveSend < 50) return; // Троттлинг до 20 FPS
-        lastMoveSend = now;
-
         const p = players[socket.id];
         if (p && p.alive) {
             p.x = data.x; p.y = data.y; p.aim = data.aim; p.walkPhase = data.walkPhase;
@@ -85,7 +76,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ОПТИМИЗАЦИЯ: Сервер сам не летит пулей, а проверяет только попадания
     socket.on('shoot', (bulletData) => {
         socket.broadcast.volatile.emit('newBullet', { owner: socket.id, bullet: bulletData });
     });
@@ -98,7 +88,7 @@ io.on('connection', (socket) => {
                 players[socket.id].ult = Math.min(100, players[socket.id].ult + data.damage * 0.5);
             }
             if (target.hp <= 0) {
-                target.hp = 0; target.alive = false; target.respawnTimer = 3; target.ultActive = false;
+                target.hp = 0; target.alive = false; target.ultActive = false;
                 if (players[socket.id]) players[socket.id].score++;
             }
             io.emit('updateHealth', players);
@@ -113,7 +103,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Обработка респавна
     socket.on('respawnRequest', () => {
         const p = players[socket.id];
         if (p && !p.alive) {
