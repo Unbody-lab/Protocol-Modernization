@@ -48,34 +48,36 @@
     content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
   }
   #loading-screen.hidden { opacity: 0; visibility: hidden; }
+  
+  /* Увеличенный и опущенный блок загрузки */
   .loading-content {
     position: relative; z-index: 10; text-align: center;
-    padding: 40px; background: rgba(14,22,32,0.85); border-radius: 24px;
+    padding: 50px; background: rgba(14,22,32,0.85); border-radius: 24px;
     border: 2px solid rgba(90,140,180,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-    max-width: 600px; width: 90%;
+    max-width: 800px; width: 90%; margin-top: 150px;
   }
   .loading-tip-box {
     background: rgba(0,0,0,0.4); border-left: 4px solid #ffb450;
-    padding: 20px; border-radius: 12px; margin-bottom: 30px;
-    text-align: left; min-height: 120px;
+    padding: 30px; border-radius: 12px; margin-bottom: 40px;
+    text-align: left; min-height: 180px;
   }
   .tip-label {
-    font-size: 11px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
-    margin-bottom: 8px; text-transform: uppercase;
+    font-size: 14px; color: #ffb450; font-weight: 900; letter-spacing: 1px;
+    margin-bottom: 12px; text-transform: uppercase;
   }
   .tip-text {
-    font-size: 15px; color: #dbe9f7; line-height: 1.5;
+    font-size: 20px; color: #dbe9f7; line-height: 1.6;
   }
   .loading-bar-container {
-    width: 100%; height: 10px; background: rgba(255,255,255,0.1);
-    border-radius: 5px; overflow: hidden; margin-bottom: 10px;
+    width: 100%; height: 14px; background: rgba(255,255,255,0.1);
+    border-radius: 7px; overflow: hidden; margin-bottom: 15px;
   }
   .loading-bar {
     height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff);
-    border-radius: 5px; transition: width 0.1s linear;
+    border-radius: 7px; transition: width 0.1s linear;
   }
   .loading-status {
-    font-size: 13px; color: rgba(160,200,230,0.8); letter-spacing: 1px;
+    font-size: 16px; color: rgba(160,200,230,0.8); letter-spacing: 1px; font-weight: bold;
   }
 
   /* ============ ОБЩИЕ ЭКРАНЫ ============ */
@@ -454,12 +456,12 @@
     <div id="hero-modal-right">
       <div id="hero-modal-name">Фиалка</div>
       <div class="tag-row">
-        <span class="tag tag-class" style="color:#c084fc; border-color:rgba(192,132,252,0.35)">КЛАСС: ТЕХНОКРАТ</span>
+        <span class="tag tag-class" style="color:#c084fc; border-color:rgba(192,132,252,0.35)">КЛАСС: УБИЙЦА</span>
         <span class="tag tag-epic">РЕДКОСТЬ: ЭПИЧЕСКИЙ</span>
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Робот.<br><br>
-        Таинственная воительница из клана Технократов. У неё длинные серебристые волосы, заплетенные в косу, и футуристичные очки. Она контролирует электричество.<br>
+        Одна из первых моделей роботов исследователей класса: GNOC (Универсальный навигатор и классификатор объектов), в отличие от своих собратьев, обожает природу и органику, именно по этой причине она присоединилась к Охлократам, чтобы не позволить Бездушным технократам превратить всех в машины.<br><br>
         <b>Атака:</b> Электроснаряд, который перескакивает цепной молнией на других врагов.<br>
         <b>Ульта:</b> Притягивает противника косой и парализует его.
       </div>
@@ -482,7 +484,7 @@
     
     <h3 style="color: #c084fc; font-size: 28px; margin-bottom: 10px;">Новый боец: Фиалка</h3>
     <p style="color: rgba(200,220,240,0.9); font-size: 16px; line-height: 1.6; max-width: 500px; margin: 0 auto 24px auto;">
-      Эпический боец из клана Технократов. Использует электричество для цепных атак и контроля поля боя.
+      Эпический убийца из клана Охлократов. Использует электричество для цепных атак и притягивания врагов.
       <br><br>
       Уже доступна в игре!
     </p>
@@ -529,7 +531,7 @@
         <div class="news-info">
           <div class="news-date" style="color: #c084fc;">ОБНОВЛЕНИЕ 0.3 <span class="news-badge">!</span></div>
           <div class="news-title">Новый боец: Фиалка</div>
-          <div class="news-text">Эпический Технократ с цепной молнией и притягивающей косой. А также переработаны атаки Лёхи.</div>
+          <div class="news-text">Эпический убийца с цепной молнией и притягивающей косой. А также переработаны атаки Лёхи.</div>
         </div>
       </div>
 
@@ -539,6 +541,15 @@
           <div class="news-date">ОБНОВЛЕНИЕ 0.2.5</div>
           <div class="news-title">Переработка внешнего вида и новостей</div>
           <div class="news-text">Витя переоделся в красную майку и джинсы, а Лёха надел деловой костюм. Обновлён интерфейс новостей.</div>
+        </div>
+      </div>
+
+      <div class="news-block" style="border-left-color: #ffb450;">
+        <div class="news-img" style="background-image: url('img/Lesha.jpg');"></div>
+        <div class="news-info">
+          <div class="news-date" style="color: #ffb450;">ОБНОВЛЕНИЕ 0.2</div>
+          <div class="news-title">Добавлен Лёха</div>
+          <div class="news-text">Новый боец-гранадер. Его бомбы оставляют за собой ядовитый след, а ульта разлетается на мелкие осколки.</div>
         </div>
       </div>
       
