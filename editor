@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редактор карт — Protocol: Modernization</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
+  
+  #editor-canvas{display:block;cursor:crosshair}
+  
+  /* Боковая панель */
+  #sidebar {
+    position: fixed; top: 0; right: 0; width: 320px; height: 100%;
+    background: rgba(14,22,32,0.97); border-left: 2px solid rgba(90,140,180,0.4);
+    display: flex; flex-direction: column; padding: 20px; gap: 15px;
+    z-index: 10; box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;
+  }
+  
+  #sidebar h2 { color: #7ff0ff; font-size: 20px; text-align: center; margin-bottom: 10px; }
+  #sidebar h3 { color: #fff; font-size: 14px; margin-top: 10px; margin-bottom: 5px; border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 5px;}
+  
+  .tool-btn {
+    padding: 12px; background: rgba(63,169,245,0.1); border: 2px solid rgba(127,240,255,0.4);
+    color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: left;
+    transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+  }
+  .tool-btn:hover { background: rgba(63,169,245,0.3); border-color: #7ff0ff; }
+  .tool-btn.active { background: #3fa9f5; color: #000; border-color: #7ff0ff; }
+  
+  .control-group { display: flex; flex-direction: column; gap: 5px; }
+  .control-group label { color: #b8cde0; font-size: 13px; }
+  .control-group input[type="range"] { width: 100%; cursor: pointer; }
+  
+  #json-output {
+    width: 100%; height: 150px; background: #0a0e14; color: #7ff0ff;
+    border: 1px solid rgba(90,140,180,0.4); border-radius: 8px;
+    padding: 10px; font-family: monospace; font-size: 12px; resize: none;
+    outline: none;
+  }
+  
+  .action-btn {
+    padding: 12px; background: #ffb450; color: #000; border: none;
+    border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 16px;
+    transition: transform 0.1s;
+  }
+  .action-btn:hover { transform: translateY(-2px); background: #ffd700; }
+  .action-btn:active { transform: translateY(2px); }
+
+  .action-btn.danger { background: #ff4d4d; color: #fff; }
+  .action-btn.danger:hover { background: #ff7b7b; }
+
+  /* Верхняя панель с координатами */
+  #top-bar {
+    position: fixed; top: 10px; left: 10px; z-index: 10;
+    background: rgba(14,22,32,0.85); border: 1px solid rgba(90,140,180,0.4);
+    padding: 8px 16px; border-radius: 8px; color: #7ff0ff;
+    font-family: monospace; font-size: 14px; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="top-bar">X: 0, Y: 0</div>
+<canvas id="editor-canvas"></canvas>
+
+<div id="sidebar">
+  <h2>Редактор карт</h2>
+  
+  <h3>Инструменты</h3>
+  <div class="tool-btn active" onclick="setTool('desk')">
+    <span>📝</span> Парта
+  </div>
+  <div class="tool-btn" onclick="setTool('chair')">
+    <span>🪑</span> Стул
+  </div>
+  <div class="tool-btn" onclick="setTool('cabinet')">
+    <span>🗄️</span> Шкаф
+  </div>
+  <div class="tool-btn" onclick="setTool('board')">
+    <span>🟩</span> Доска
+  </div>
+  <div class="tool-btn" onclick="setTool('rock')">
+    <span>🪨</span> Камень (скала)
+  </div>
+  <div class="tool-btn" onclick="setTool('holo')">
+    <span>🔵</span> Голограмма
+  </div>
+  <div class="tool-btn danger" onclick="setTool('erase')">
+    <span>❌</span> Стереть
+  </div>
+
+  <h3>Размер / Радиус</h3>
+  <div class="control-group">
+    <label>Размер: <span id="size-val">35</span></label>
+    <input type="range" id="size-slider" min="10" max="200" value="35" oninput="document.getElementById('size-val').innerText = this.value">
+  </div>
+
+  <h3>Действия</h3>
+  <button class="action-btn" onclick="generateJSON()">Сгенерировать JSON</button>
+  <button class="action-btn danger" onclick="clearMap()">Очистить карту</button>
+
+  <h3>Результат (JSON)</h3>
+  <textarea id="json-output" readonly placeholder="Нажмите 'Сгенерировать JSON'"></textarea>
+</div>
+
+<script>
+// --- НАСТРОЙКИ МИРА ---
+const WORLD_W = 2600, WORLD_H = 2000;
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+const canvas = document.getElementById('editor-canvas');
+const ctx = canvas.getContext('2d');
+let W = window.innerWidth, H = window.innerHeight;
+
+// Камера
+const cam = { x: 0, y: 0, zoom: 1 };
+let isDragging = false;
+let lastMouseX = 0, lastMouseY = 0;
+
+// Данные карты
+let furniture = []; // Для декора (парты, шкафы и т.д.)
+let rocks = [];     // Для коллизий (камни, парты, шкафы)
+
+let currentTool = 'desk';
+
+function resize() {
+  W = window.innerWidth - 320; // Учитываем ширину панели
+  H = window.innerHeight;
+  canvas.width = Math.floor(W * DPR);
+  canvas.height = Math.floor(H * DPR);
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+window.addEventListener('resize', resize);
+resize();
+
+// Начальная камера
+cam.x = -WORLD_W/2 + W/2;
+cam.y = -WORLD_H/2 + H/2;
+
+// --- ИНСТРУМЕНТЫ ---
+window.setTool = function(tool) {
+  currentTool = tool;
+  document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+};
+
+window.clearMap = function() {
+  if (confirm('Вы уверены, что хотите очистить карту?')) {
+    furniture = [];
+    rocks = [];
+  }
+};
+
+window.generateJSON = function() {
+  const data = {
+    furniture: furniture,
+    rocks: rocks
+  };
+  document.getElementById('json-output').value = JSON.stringify(data, null, 2);
+};
+
+// --- ВВОД ---
+canvas.addEventListener('mousedown', (e) => {
+  if (e.button === 1 || e.button === 2) { // Средняя или правая кнопка - перемещение
+    isDragging = true;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+    return;
+  }
+  
+  if (e.button === 0) { // Левая кнопка - рисование
+    const rect = canvas.getBoundingClientRect();
+    const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
+    const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
+    
+    const size = parseInt(document.getElementById('size-slider').value);
+
+    if (currentTool === 'erase') {
+      // Удаление ближайшего объекта
+      for (let i = furniture.length - 1; i >= 0; i--) {
+        if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
+          furniture.splice(i, 1);
+        }
+      }
+      for (let i = rocks.length - 1; i >= 0; i--) {
+        if (Math.hypot(rocks[i].x - mwx, rocks[i].y - mwy) < rocks[i].r + 20) {
+          rocks.splice(i, 1);
+        }
+      }
+    } else {
+      // Добавление
+      if (currentTool === 'rock') {
+        rocks.push({ x: mwx, y: mwy, r: size, type: 'rock' });
+      } else {
+        furniture.push({ x: mwx, y: mwy, type: currentTool, r: size });
+        // Для парт и шкафов добавляем коллизию
+        if (currentTool === 'desk' || currentTool === 'cabinet') {
+           rocks.push({ x: mwx, y: mwy, r: size, type: currentTool });
+        }
+      }
+    }
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+window.addEventListener('mousemove', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
+  const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
+  
+  document.getElementById('top-bar').innerText = `X: ${Math.round(mwx)}, Y: ${Math.round(mwy)}`;
+
+  if (isDragging) {
+    cam.x += e.clientX - lastMouseX;
+    cam.y += e.clientY - lastMouseY;
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+  }
+});
+
+canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+// Зум
+canvas.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const zoomSpeed = 0.1;
+  const oldZoom = cam.zoom;
+  
+  if (e.deltaY < 0) cam.zoom += zoomSpeed;
+  else cam.zoom -= zoomSpeed;
+  
+  cam.zoom = Math.max(0.2, Math.min(3, cam.zoom));
+  
+  // Зум к курсору
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  
+  cam.x = mouseX - (mouseX - cam.x) * (cam.zoom / oldZoom);
+  cam.y = mouseY - (mouseY - cam.y) * (cam.zoom / oldZoom);
+}, { passive: false });
+
+// --- ОТРИСОВКА ---
+function roundRect(c,x,y,w,h,r){
+  if (w < 0) { x += w; w = -w; }
+  r = Math.min(r, w/2, h/2);
+  c.beginPath();
+  c.moveTo(x+r, y); c.lineTo(x+w-r, y);
+  c.quadraticCurveTo(x+w, y, x+w, y+r);
+  c.lineTo(x+w, y+h-r);
+  c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  c.lineTo(x+r, y+h);
+  c.quadraticCurveTo(x, y+h, x, y+h-r);
+  c.lineTo(x, y+r);
+  c.quadraticCurveTo(x, y, x+r, y);
+  c.closePath();
+}
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.translate(cam.x, cam.y);
+  ctx.scale(cam.zoom, cam.zoom);
+
+  // Фон (сетка)
+  ctx.fillStyle = '#2b3138';
+  ctx.fillRect(0, 0, WORLD_W, WORLD_H);
+  
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 2;
+  for (let x = 0; x < WORLD_W; x += 100) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
+  }
+  for (let y = 0; y < WORLD_H; y += 100) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
+  }
+
+  // Границы
+  ctx.strokeStyle = 'rgba(10,14,20,0.8)';
+  ctx.lineWidth = 30;
+  ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
+
+  // Отрисовка мебели
+  for (const f of furniture) {
+    if (f.type === 'desk') {
+      ctx.fillStyle = '#5a3d2b';
+      roundRect(ctx, f.x - 35, f.y - 25, 70, 50, 5); ctx.fill();
+      ctx.strokeStyle = '#3a2517'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = '#2b1a10';
+      ctx.fillRect(f.x - 30, f.y + 15, 8, 20);
+      ctx.fillRect(f.x + 22, f.y + 15, 8, 20);
+    } else if (f.type === 'chair') {
+      ctx.fillStyle = '#4a5568';
+      roundRect(ctx, f.x - 18, f.y - 15, 36, 30, 4); ctx.fill();
+      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#4a5568';
+      roundRect(ctx, f.x - 18, f.y - 25, 36, 10, 3); ctx.fill();
+      ctx.stroke();
+    } else if (f.type === 'cabinet') {
+      ctx.fillStyle = '#4e5a68';
+      ctx.fillRect(f.x - 25, f.y - 45, 50, 90);
+      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(f.x - 25, f.y - 45, 50, 90);
+      ctx.fillStyle = '#ffd700';
+      ctx.fillRect(f.x + 15, f.y - 10, 5, 20);
+      ctx.fillRect(f.x + 15, f.y + 15, 5, 20);
+    } else if (f.type === 'board') {
+      ctx.fillStyle = '#1a4a2e'; 
+      roundRect(ctx, f.x - 120, f.y - 50, 240, 100, 8); ctx.fill();
+      ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(f.x - 80, f.y - 20, 40, 4);
+      ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
+    } else if (f.type === 'holo') {
+      const t = performance.now() / 1000;
+      ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
+      ctx.beginPath();
+      ctx.arc(f.x, f.y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  // Отрисовка камней
+  for (const r of rocks) {
+    if (r.type === 'rock') {
+      ctx.beginPath();
+      ctx.ellipse(r.x + 7, r.y + 11, r.r*.95, r.r*.78, 0, 0, TAU);
+      ctx.fillStyle = 'rgba(0,0,0,0.30)'; ctx.fill();
+      const g = ctx.createRadialGradient(r.x - r.r*.35, r.y - r.r*.42, r.r*.12, r.x, r.y, r.r);
+      g.addColorStop(0, '#98a4b3'); g.addColorStop(.55, '#616c7a'); g.addColorStop(1, '#39424e');
+      ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, TAU);
+      ctx.fillStyle = g; ctx.fill();
+      ctx.lineWidth = 3; ctx.strokeStyle = 'rgba(18,24,32,0.85)'; ctx.stroke();
+    }
+  }
+  
+  // Подсветка коллизий (для отладки)
+  ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+  ctx.lineWidth = 1;
+  for (const r of rocks) {
+    if (r.type !== 'rock') {
+      ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, TAU); ctx.stroke();
+    }
+  }
+
+  // Границы мира
+  ctx.strokeStyle = '#ff4d4d';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(0, 0, WORLD_W, WORLD_H);
+
+  ctx.restore();
+  requestAnimationFrame(render);
+}
+
+const TAU = Math.PI * 2;
+requestAnimationFrame(render);
+
+</script>
+</body>
+</html>
