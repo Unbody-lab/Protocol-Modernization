@@ -223,7 +223,7 @@
 
   /* Трофейная дорога */
   #road-card { width: min(1200px, 95vw); border-color: #ffd700; padding: 0; overflow: hidden; }
-  .road-bg-image { width: 100%; height: 250px; background: url('img/Road_BG.jpg') center/cover; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;}
+  .road-bg-image { width: 100%; height: 250px; background: url('img/Road.jpg') center/cover; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;}
   .road-title { font-size: 32px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.5); margin-bottom: 10px; }
   .road-progress-bar { width: 100%; height: 24px; background: rgba(0,0,0,0.7); border-radius: 12px; border: 2px solid #ffd700; position: relative; overflow: hidden;}
   .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s; box-shadow: 0 0 15px #ffd700;}
@@ -380,7 +380,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count" id="ui-fighters-count">БОЙЦОВ: 3 ИЗ 5</div>
+      <div id="fighters-count" id="ui-fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -602,12 +602,12 @@
     
     <div class="road-track">
       <div class="road-node" id="node-10">
-        <div class="road-node-icon" style="background-image:url('img/Icon_Duli.png');"></div>
+        <div class="road-node-icon" style="background-image:url('img/Icon_Duli.jpg');"></div>
         <div class="road-node-name">100 Дулей</div>
         <div class="road-node-cost">10 Сфер</div>
       </div>
       <div class="road-node" id="node-25">
-        <div class="road-node-icon" style="background-image:url('img/Chest_Techno.png');"></div>
+        <div class="road-node-icon" style="background-image:url('img/Chest_Techno.jpg');"></div>
         <div class="road-node-name">Техносундук</div>
         <div class="road-node-cost">25 Сфер</div>
       </div>
@@ -634,19 +634,19 @@
     
     <div class="shop-grid">
       <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Chest_Techno.png');"></div>
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Techno.jpg');"></div>
         <div class="shop-item-name">Техносундук</div>
         <div class="shop-item-price">50 Осколков</div>
         <button onclick="buyChest('techno', 50)">КУПИТЬ</button>
       </div>
       <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Chest_Octo.png');"></div>
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Octo.jpg');"></div>
         <div class="shop-item-name">Октосундук</div>
         <div class="shop-item-price">150 Осколков</div>
         <button onclick="buyChest('octo', 150)">КУПИТЬ</button>
       </div>
       <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Chest_Ultra.png');"></div>
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Ultra.jpg');"></div>
         <div class="shop-item-name">Ультрасундук</div>
         <div class="shop-item-price">300 Осколков</div>
         <button onclick="buyChest('ultra', 300)">КУПИТЬ</button>
