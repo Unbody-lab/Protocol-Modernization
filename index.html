@@ -9,7 +9,7 @@
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
     font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
   canvas{display:block;cursor:crosshair}
-  
+
   /* ============ ЗАСТАВКА СТУДИИ ============ */
   #studio-splash {
     position: fixed; inset: 0; z-index: 10000;
@@ -72,7 +72,7 @@
   #lobby-top{display:flex; align-items:center; padding:16px 24px; gap:16px; position:relative; z-index:2;}
   #lobby-title{font-size:22px; font-weight:800; letter-spacing:2px; color:#7ff0ff; text-shadow:0 0 16px rgba(127,240,255,0.4)}
   #lobby-top .spacer{flex:1}
-  
+
   /* Валюты в лобби */
   .currency-panel { display: flex; gap: 12px; margin-right: 20px; }
   .currency-item { display: flex; align-items: center; gap: 6px; background: rgba(20,30,42,0.85); border: 2px solid rgba(90,140,180,0.4); padding: 6px 14px; border-radius: 12px; color: #fff; font-weight: 900; font-size: 15px; }
@@ -82,19 +82,58 @@
 
   .top-btn{display:flex; align-items:center; gap:8px; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.4); color:#cfe3f5; padding:9px 18px; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px); position:relative;}
   .top-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.6); color:#fff}
-  
+
+  /* ====== ДОРОГА СЛАВЫ — ВЕРХНЯЯ ПАНЕЛЬ ====== */
+  #road-top-panel {
+    position: relative; z-index: 3;
+    margin: 0 24px 12px 24px;
+    background: linear-gradient(90deg, rgba(14,22,32,0.92), rgba(40,30,10,0.85));
+    border: 2px solid rgba(255,215,0,0.45);
+    border-radius: 14px;
+    padding: 10px 18px;
+    display: flex; align-items: center; gap: 16px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.45);
+  }
+  #road-top-panel .road-panel-title {
+    font-size: 13px; font-weight: 900; letter-spacing: 1.5px; color: #ffd700;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  #road-top-panel .road-panel-progress-wrap {
+    flex: 1; height: 16px; background: rgba(0,0,0,0.6);
+    border-radius: 8px; border: 1.5px solid rgba(255,215,0,0.5);
+    position: relative; overflow: hidden; min-width: 120px;
+  }
+  #road-top-panel .road-panel-fill {
+    height: 100%; width: 0%; background: linear-gradient(90deg,#ffb450,#ffd700);
+    transition: width .4s; box-shadow: 0 0 12px #ffd700;
+  }
+  #road-top-panel .road-panel-text {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;
+  }
+  #road-top-panel .road-panel-nodes { display: flex; gap: 8px; }
+  .road-mini-node {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.06); border: 2px solid rgba(255,215,0,0.35);
+    border-radius: 10px; padding: 4px 10px; font-size: 11px; font-weight: 800; color: #fff;
+    white-space: nowrap; transition: all .2s;
+  }
+  .road-mini-node.unlocked { border-color: #4fd6a0; background: rgba(79,214,160,0.15); box-shadow: 0 0 12px rgba(79,214,160,0.35); }
+  .road-mini-node .mini-icon { width: 20px; height: 20px; background-size: cover; background-position: center; border-radius: 4px; }
+
   #lobby-content{position:relative; z-index:2; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 40px; min-height:0;}
-  #lobby-hero-display{position:relative; width:320px; height:380px; margin-bottom:20px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;}
+  #lobby-hero-display{position:relative; width:320px; height:340px; margin-bottom:16px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;}
   #lobby-hero-display-inner{width:100%; height:100%; background:url('img/Vitya.jpg') center bottom/contain no-repeat; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6)); margin-bottom: 10px;}
   #lobby-hero-name-big{font-size:28px; font-weight:900; color:#fff; text-shadow:0 3px 14px rgba(0,0,0,0.8), 0 0 20px rgba(127,240,255,0.3); letter-spacing:2px; white-space:nowrap;}
 
-  #lobby-center{display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom: 20px;}
+  #lobby-center{display:flex; flex-direction:column; align-items:center; gap:12px; margin-bottom: 14px;}
   #play-battle-btn{width:240px; padding:22px 0; font-size:26px; font-weight:900; letter-spacing:3px; color:#0a1420; background:linear-gradient(180deg,#ffd700 0%,#ffb450 100%); border:none; border-radius:18px; cursor:pointer; box-shadow:0 8px 0 #b87a00, 0 14px 34px rgba(255,180,80,0.5); transition:transform .1s, box-shadow .1s; text-shadow:0 1px 0 rgba(255,255,255,0.4);}
   #play-battle-btn:hover{transform:translateY(-2px); box-shadow:0 10px 0 #b87a00, 0 18px 40px rgba(255,180,80,0.65)}
   #play-battle-btn:active{transform:translateY(6px); box-shadow:0 2px 0 #b87a00, 0 4px 12px rgba(255,180,80,0.4)}
   #lobby-mode-label{font-size:13px; color:rgba(160,195,225,0.85); letter-spacing:.5px; background:rgba(20,30,42,0.75); padding:6px 16px; border-radius:8px; border:1px solid rgba(90,140,180,0.35);}
 
-  .side-panel{position:absolute; top: 100px; left: 40px; display:flex; flex-direction:column; align-items:center; gap:12px;}
+  .side-panel{position:absolute; top: 100px; left: 40px; display:flex; flex-direction:column; align-items:center; gap:12px; z-index: 4;}
   .side-btn{display:flex; flex-direction:column; align-items:center; gap:8px; padding:18px 24px; border-radius:16px; cursor:pointer; background:rgba(20,30,42,0.8); border:2px solid rgba(90,140,180,0.5); transition:all .2s; backdrop-filter:blur(6px); min-width: 130px;}
   .side-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.7); transform:translateY(-4px) scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.4);}
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
@@ -117,7 +156,7 @@
   .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
   .announce-banner.vote .announce-timer { color: #d8b4fe; background: rgba(192,132,252,0.15); border-color: rgba(192,132,252,0.4); }
 
-  #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:16px 22px 22px;}
+  #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:12px 22px 18px;}
   .tab-btn{display:flex; flex-direction:column; align-items:center; gap:4px; width:120px; padding:12px 8px; cursor:pointer; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.35); border-radius:12px; color:#b8cde0; font-size:12px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px);}
   .tab-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.6); color:#fff}
   .tab-btn.active{background:rgba(63,169,245,0.25); border-color:rgba(127,240,255,0.7); color:#7ff0ff}
@@ -125,10 +164,10 @@
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
   /* Модалки */
-  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #vote-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
-  #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show, #vote-modal.show {display:flex}
+  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #vote-modal, #upgrade-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
+  #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show, #vote-modal.show, #upgrade-modal.show {display:flex}
   
-  #fighters-card, #hero-modal-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card, #road-card, #shop-card, #community-card, #vote-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
+  #fighters-card, #hero-modal-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card, #road-card, #shop-card, #community-card, #vote-card, #upgrade-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
   #hero-modal-card { flex-direction: row; gap: 26px; }
   #fialka-info-card, #vasilek-info-card, #community-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
   .profile-card { width:min(450px, 95vw); text-align: center; }
@@ -148,10 +187,17 @@
   .fighter-card-icon{position: absolute; inset: 0; background:rgba(63,169,245,0.15); background-image:url('img/Vitya.jpg'); background-size:cover; background-position:center; z-index: 1;}
   .fighter-card::after {content: ''; position: absolute; inset: 0; z-index: 2; background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.3) 45%, transparent 100%); pointer-events: none;}
   .fighter-card-name{position: relative; z-index: 3; font-size:20px; font-weight:900; color:#fff; text-align: center; padding: 16px 4px; text-shadow: 0 2px 6px rgba(0,0,0,0.9);}
-  
+
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
   .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
+
+  .fighter-card .fighter-card-level {
+    position: absolute; top: 10px; left: 10px; z-index: 4;
+    background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700;
+    color: #ffd700; font-size: 12px; font-weight: 900;
+    padding: 3px 8px; border-radius: 8px;
+  }
 
   /* Закрытый Лёха */
   .fighter-card.lesha.locked {cursor: not-allowed; border-color: #5a6a7a;}
@@ -188,6 +234,19 @@
   #hero-modal-select:hover{transform:translateY(-2px)}
   #hero-modal-select:active{transform:translateY(2px); box-shadow:none}
 
+  /* ====== КНОПКА УЛУЧШЕНИЯ В КАРТОЧКЕ ГЕРОЯ ====== */
+  .upgrade-row { display: flex; gap: 10px; margin-top: 6px; }
+  .btn-upgrade {
+    flex: 1; padding: 12px 0; font-size: 14px; font-weight: 900; letter-spacing: 1px;
+    color: #0a1420; background: linear-gradient(180deg,#ffd700,#ffb450);
+    border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 0 #b87a00;
+    transition: transform .1s, box-shadow .1s;
+  }
+  .btn-upgrade:hover { transform: translateY(-2px); }
+  .btn-upgrade:active { transform: translateY(2px); box-shadow: none; }
+  .btn-upgrade:disabled { background: #4a5568; color: #8ea6bd; box-shadow: 0 4px 0 #2d3748; cursor: not-allowed; }
+  .upgrade-cost { font-size: 12px; color: #ffd700; font-weight: 800; text-align: center; margin-top: 4px; }
+
   .speech-bubble { position: absolute; top: 10px; left: 100%; margin-left: 15px; background: #fff; color: #000; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; max-width: 250px; width: max-content; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.3s; border: 2px solid #333; line-height: 1.3;}
   .speech-bubble.show { opacity: 1; }
   .speech-bubble::after { content: ''; position: absolute; top: 20px; left: -10px; border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
@@ -221,16 +280,40 @@
   .news-text { font-size: 14px; color: #cfe3f5; line-height: 1.5; }
   .news-badge { display: inline-flex; align-items: center; justify-content: center; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 8px; vertical-align: middle; animation: pulse 2s infinite;}
 
-  /* Трофейная дорога */
+  /* ====== МАГАЗИН — БОЛЬШОЙ БЛОК ====== */
+  #shop-card { width: min(1280px, 96vw); border-color: #ffb450; padding: 26px 30px; }
+  .shop-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 2px solid rgba(255,180,80,0.3); padding-bottom: 16px; margin-bottom: 20px;
+  }
+  .shop-header h2 { color: #ffd700; font-size: 30px; font-weight: 900; letter-spacing: 2px; }
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
+  .shop-item {
+    background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(0,0,0,0.25));
+    border: 2px solid rgba(90,140,180,0.5);
+    border-radius: 18px; padding: 22px 16px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    transition: all .2s;
+  }
+  .shop-item:hover { border-color: #ffd700; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(255,180,80,0.25); }
+  .shop-item-icon { width: 130px; height: 130px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 6px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
+  .shop-item-name { font-size: 21px; font-weight: 900; color: #fff; }
+  .shop-item-desc { font-size: 13px; color: #a9c2d8; line-height: 1.35; min-height: 34px; }
+  .shop-item-price { font-size: 18px; font-weight: bold; color: #ff9b6b; display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+  .shop-item button { width: 100%; padding: 13px; background: linear-gradient(180deg,#3fa9f5,#1e6a9e); color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; transition: transform 0.1s, background .2s; box-shadow: 0 4px 0 #124d75; }
+  .shop-item button:hover { transform: translateY(-2px); background: linear-gradient(180deg,#7ff0ff,#3fa9f5); color: #0a1420; }
+  .shop-item button:active { transform: translateY(2px); box-shadow: none; }
+
+  /* Трофейная дорога (модалка по клику на верхнюю панель) */
   #road-card { width: min(1200px, 95vw); border-color: #ffd700; padding: 0; overflow: hidden; }
-  .road-bg-image { width: 100%; height: 250px; background: url('img/1_Season.jpg') center/cover; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;}
-  .road-title { font-size: 32px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.5); margin-bottom: 10px; }
+  .road-bg-image { width: 100%; height: 220px; background: url('img/1_Season.jpg') center/cover; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;}
+  .road-title { font-size: 30px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.5); margin-bottom: 10px; }
   .road-progress-bar { width: 100%; height: 24px; background: rgba(0,0,0,0.7); border-radius: 12px; border: 2px solid #ffd700; position: relative; overflow: hidden;}
   .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s; box-shadow: 0 0 15px #ffd700;}
   .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;}
   
   .road-track { display: flex; align-items: center; gap: 0; padding: 40px 20px; overflow-x: auto; background: rgba(10,15,22,0.9); }
-  .road-node { position: relative; width: 100px; height: 100px; flex-shrink: 0; border-radius: 16px; background: rgba(255,255,255,0.1); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px;}
+  .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(255,255,255,0.1); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px;}
   .road-node::after { content: ''; position: absolute; top: 50%; left: 100%; width: 60px; height: 4px; background: rgba(255,255,255,0.2); z-index: -1; }
   .road-node:last-child::after { display: none; }
   .road-node.unlocked { border-color: #4fd6a0; background: rgba(79,214,160,0.2); box-shadow: 0 0 20px rgba(79,214,160,0.4);}
@@ -238,15 +321,6 @@
   .road-node-icon { width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px;}
   .road-node-name { font-size: 11px; font-weight: 900; color: #fff; line-height: 1.1;}
   .road-node-cost { font-size: 11px; color: #ffd700; margin-top: 2px; font-weight: bold;}
-
-  /* Магазин */
-  .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;}
-  .shop-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.4); border-radius: 16px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;}
-  .shop-item-icon { width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 10px; }
-  .shop-item-name { font-size: 18px; font-weight: 900; color: #fff; }
-  .shop-item-price { font-size: 16px; font-weight: bold; color: #ff7b7b; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-  .shop-item button { width: 100%; padding: 10px; background: #3fa9f5; color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; transition: transform 0.1s; }
-  .shop-item button:hover { transform: translateY(-2px); background: #7ff0ff; color: #000; }
 
   /* Голосование */
   .vote-grid { display: flex; gap: 20px; justify-content: center; padding: 20px 0; }
@@ -258,6 +332,7 @@
   .vote-card-info { position: relative; z-index: 3; padding: 16px; text-align: center; width: 100%;}
   .vote-card-name { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px;}
   .vote-card-count { font-size: 14px; font-weight: bold; color: #7ff0ff;}
+  .vote-total { text-align: center; color: #c084fc; font-size: 14px; margin-top: 8px; font-weight: 700; }
 
   /* Сообщество */
   .comm-btn { display: block; width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; font-size: 18px; font-weight: 900; text-decoration: none; color: #fff; text-align: center; transition: transform 0.1s; }
@@ -277,6 +352,26 @@
   #game{visibility:hidden; width:100%; height:100%;}
   #game.active{visibility:visible}
   #hint{display:none; position:absolute; bottom:20px; width:100%; text-align:center; color:#8ea6bd; z-index:100; font-weight:bold; text-shadow: 0 2px 4px black;}
+
+  /* Модалка улучшения */
+  #upgrade-card { width: min(600px, 95vw); border-color: #ffd700; }
+  .upgrade-hero-head { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+  .upgrade-hero-img { width: 120px; height: 120px; border-radius: 16px; background-size: cover; background-position: center; border: 3px solid #ffd700; }
+  .upgrade-hero-info h2 { color: #fff; font-size: 26px; font-weight: 900; }
+  .upgrade-hero-info p { color: #7ff0ff; font-size: 15px; font-weight: 700; margin-top: 4px; }
+  .upgrade-stats { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
+  .upgrade-stat-row { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px 14px; border: 1px solid rgba(90,140,180,0.3); }
+  .upgrade-stat-row .lbl { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; color: #a9c2d8; margin-bottom: 6px; }
+  .upgrade-stat-row .lbl .val { color: #7ff0ff; }
+  .upgrade-stat-row .bar { height: 10px; background: rgba(0,0,0,0.4); border-radius: 5px; overflow: hidden; }
+  .upgrade-stat-row .bar .fill { height: 100%; background: linear-gradient(90deg,#3fa9f5,#7ff0ff); border-radius: 5px; transition: width .3s; }
+  .upgrade-actions { display: flex; gap: 12px; }
+  .upgrade-actions button { flex: 1; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: 900; cursor: pointer; border: none; transition: transform .1s; }
+  .upgrade-actions .btn-buy { background: linear-gradient(180deg,#ffd700,#ffb450); color: #0a1420; box-shadow: 0 4px 0 #b87a00; }
+  .upgrade-actions .btn-buy:hover { transform: translateY(-2px); }
+  .upgrade-actions .btn-buy:disabled { background: #4a5568; color: #8ea6bd; box-shadow: 0 4px 0 #2d3748; cursor: not-allowed; }
+  .upgrade-actions .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
+  .upgrade-actions .btn-cancel:hover { background: rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
@@ -326,6 +421,26 @@
       <div class="notif-badge">!</div>
     </div>
     <div class="top-btn" onclick="openCommunityModal()"><span class="icon">🌐</span> Сообщество</div>
+  </div>
+
+  <!-- ДОРОГА СЛАВЫ — ВЕРХНЯЯ ПАНЕЛЬ -->
+  <div id="road-top-panel" onclick="openRoadModal()" style="cursor:pointer">
+    <div class="road-panel-title">🏆 Дорога Славы</div>
+    <div class="road-panel-progress-wrap">
+      <div class="road-panel-fill" id="road-panel-fill"></div>
+      <div class="road-panel-text" id="road-panel-text">0 / 50 сфер</div>
+    </div>
+    <div class="road-panel-nodes">
+      <div class="road-mini-node" id="mini-node-10">
+        <div class="mini-icon" style="background-image:url('img/Dul.jpg')"></div> 10
+      </div>
+      <div class="road-mini-node" id="mini-node-25">
+        <div class="mini-icon" style="background-image:url('img/Techo_Box.jpg')"></div> 25
+      </div>
+      <div class="road-mini-node" id="mini-node-50">
+        <div class="mini-icon" style="background-image:url('img/Lesha.jpg')"></div> 50
+      </div>
+    </div>
   </div>
   
   <div id="lobby-content">
@@ -380,28 +495,32 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count" id="ui-fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
+      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
+        <div class="fighter-card-level" id="lvl-vitya">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Витя</div>
       </div>
       
       <!-- Лёха открывается на 50 сфер -->
       <div class="fighter-card lesha locked" id="card-lesha" onclick="checkLeshaUnlock()">
+        <div class="fighter-card-level" id="lvl-lesha">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
         <div class="lock-timer" id="lock-lesha-text">Нужно 50 сфер</div>
       </div>
 
       <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
+        <div class="fighter-card-level" id="lvl-fialka">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Фиалка</div>
       </div>
 
       <!-- Василёк -->
       <div class="fighter-card vasilek" id="card-vasilek" onclick="openHeroDetails('Vasilek')">
+        <div class="fighter-card-level" id="lvl-vasilek">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Василёк</div>
       </div>
@@ -435,7 +554,23 @@
         Витя с детства выделялся на фоне других своим огромным весом, его часто дразнили за это, именно поэтому с началом проекта "Модернизация", он присоединился к Охлакратам, чтобы недопустить стирание жирного рода с лица земли.<br>
         <b>Ульта:</b> встаёт на месте и атакует лазером из груди.
       </div>
-      <button id="hero-modal-select" onclick="selectHeroAndClose('Vitya')">ВЫБРАТЬ</button>
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон (выстрел)</span><span id="stat-vitya-dmg">16</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:40%" id="stat-vitya-dmg-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Скорость</span><span id="stat-vitya-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-vitya-spd-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Здоровье</span><span id="stat-vitya-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-vitya-hp-bar"></div></div>
+      </div>
+      <div class="upgrade-row">
+        <button id="hero-modal-select" onclick="selectHeroAndClose('Vitya')">ВЫБРАТЬ</button>
+        <button class="btn-upgrade" onclick="openUpgrade('Vitya')">УЛУЧШИТЬ</button>
+      </div>
+      <div class="upgrade-cost" id="upg-cost-vitya">Улучшение ур. 2: 100 осколков</div>
     </div>
   </div>
 </div>
@@ -459,7 +594,23 @@
         Печально известный лидер Синдиката "Трусы", вся война Технократов и Охлократов для него всего лишь способ заявить миру, что он всё ещё здесь..., ну и прорекламировать свой бренд трусов...<br>
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
-      <button id="hero-modal-select" onclick="selectLeshaAndClose()" style="background:linear-gradient(180deg,#ffb450,#ff7a4d); box-shadow:0 4px 0 #b87a00;">ВЫБРАТЬ</button>
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон (бомба)</span><span id="stat-lesha-dmg">25</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:55%" id="stat-lesha-dmg-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Скорость</span><span id="stat-lesha-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-lesha-spd-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Здоровье</span><span id="stat-lesha-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-lesha-hp-bar"></div></div>
+      </div>
+      <div class="upgrade-row">
+        <button id="hero-modal-select" onclick="selectLeshaAndClose()" style="background:linear-gradient(180deg,#ffb450,#ff7a4d); box-shadow:0 4px 0 #b87a00;">ВЫБРАТЬ</button>
+        <button class="btn-upgrade" onclick="openUpgrade('Lesha')">УЛУЧШИТЬ</button>
+      </div>
+      <div class="upgrade-cost" id="upg-cost-lesha">Улучшение ур. 2: 100 осколков</div>
     </div>
   </div>
 </div>
@@ -484,7 +635,23 @@
         <b>Атака:</b> Цепная молния.<br>
         <b>Ульта:</b> Притягивает противника косой и парализует его.
       </div>
-      <button id="hero-modal-select" onclick="selectFialkaAndClose()" style="background:linear-gradient(180deg,#c084fc,#a855f7); box-shadow:0 4px 0 #7e22ce;">ВЫБРАТЬ</button>
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон (молния)</span><span id="stat-fialka-dmg">18</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:45%" id="stat-fialka-dmg-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Скорость</span><span id="stat-fialka-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:65%" id="stat-fialka-spd-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Здоровье</span><span id="stat-fialka-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:45%" id="stat-fialka-hp-bar"></div></div>
+      </div>
+      <div class="upgrade-row">
+        <button id="hero-modal-select" onclick="selectFialkaAndClose()" style="background:linear-gradient(180deg,#c084fc,#a855f7); box-shadow:0 4px 0 #7e22ce;">ВЫБРАТЬ</button>
+        <button class="btn-upgrade" onclick="openUpgrade('Fialka')">УЛУЧШИТЬ</button>
+      </div>
+      <div class="upgrade-cost" id="upg-cost-fialka">Улучшение ур. 2: 150 осколков</div>
     </div>
   </div>
 </div>
@@ -508,7 +675,42 @@
         Розовый робот с аккуратно уложенными волосами. Вооружён автоматом, стреляет очередью. При контакте пули разбиваются на осколки.<br>
         <b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.
       </div>
-      <button id="hero-modal-select" onclick="selectVasilekAndClose()" style="background:linear-gradient(180deg,#ff7b7b,#ff4d4d); box-shadow:0 4px 0 #b32d2d;">ВЫБРАТЬ</button>
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">6</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:35%" id="stat-vasilek-dmg-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Скорость</span><span id="stat-vasilek-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-vasilek-spd-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Здоровье</span><span id="stat-vasilek-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:55%" id="stat-vasilek-hp-bar"></div></div>
+      </div>
+      <div class="upgrade-row">
+        <button id="hero-modal-select" onclick="selectVasilekAndClose()" style="background:linear-gradient(180deg,#ff7b7b,#ff4d4d); box-shadow:0 4px 0 #b32d2d;">ВЫБРАТЬ</button>
+        <button class="btn-upgrade" onclick="openUpgrade('Vasilek')">УЛУЧШИТЬ</button>
+      </div>
+      <div class="upgrade-cost" id="upg-cost-vasilek">Улучшение ур. 2: 150 осколков</div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА УЛУЧШЕНИЯ -->
+<div id="upgrade-modal">
+  <div id="upgrade-card">
+    <button class="modal-close" onclick="closeUpgrade()">✕</button>
+    <div class="upgrade-hero-head">
+      <div class="upgrade-hero-img" id="upg-hero-img"></div>
+      <div class="upgrade-hero-info">
+        <h2 id="upg-hero-name">Витя</h2>
+        <p id="upg-hero-level">Уровень 1 → 2</p>
+      </div>
+    </div>
+    <div class="upgrade-stats" id="upg-stats"></div>
+    <div class="upgrade-actions">
+      <button class="btn-buy" id="upg-buy-btn" onclick="confirmUpgrade()">УЛУЧШИТЬ ЗА 100</button>
+      <button class="btn-cancel" onclick="closeUpgrade()">ОТМЕНА</button>
     </div>
   </div>
 </div>
@@ -521,7 +723,6 @@
     <p style="color: #ccc; text-align: center; margin-bottom: 20px;">Выберите, кого вы хотите видеть в следующем обновлении!</p>
     
     <div class="vote-grid">
-      <!-- Артём -->
       <div class="vote-card" onclick="voteFor('artem', this)">
         <div class="vote-card-icon" style="background-image: url('img/Artem.jpg');"></div>
         <div class="vote-card-info">
@@ -529,7 +730,6 @@
           <div class="vote-card-count" id="vote-count-artem">0 голосов</div>
         </div>
       </div>
-      <!-- Бензопила -->
       <div class="vote-card" onclick="voteFor('benzopila', this)">
         <div class="vote-card-icon" style="background-image: url('img/Benzopila.jpg');"></div>
         <div class="vote-card-info">
@@ -537,7 +737,6 @@
           <div class="vote-card-count" id="vote-count-benzopila">0 голосов</div>
         </div>
       </div>
-      <!-- Дмитрий -->
       <div class="vote-card" onclick="voteFor('dmitry', this)">
         <div class="vote-card-icon" style="background-image: url('img/Dmitriy.jpg');"></div>
         <div class="vote-card-info">
@@ -546,6 +745,7 @@
         </div>
       </div>
     </div>
+    <div class="vote-total" id="vote-total">Всего голосов: 0</div>
   </div>
 </div>
 
@@ -555,7 +755,6 @@
     <button class="modal-close" onclick="closeModeModal()">✕</button>
     <h2>ВЫБОР РЕЖИМА</h2>
     <div class="mode-grid">
-      <!-- Тренировка -->
       <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
        <div class="mode-option-icon" style="background-image:url('img/Training.jpg');"></div>
         <div class="mode-option-info">
@@ -565,7 +764,6 @@
         <div class="mode-option-check">✓</div>
       </div>
       
-      <!-- PVP на время -->
       <div class="mode-option" onclick="selectMode('PVP-Битва', this)">
         <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
         <div class="mode-option-info">
@@ -575,7 +773,6 @@
         <div class="mode-option-check">✓</div>
       </div>
 
-      <!-- Королевская битва -->
       <div class="mode-option" onclick="selectMode('Останется только один', this)">
         <div class="mode-option-icon" style="background-image:url('img/The_Last_One.jpg');"></div>
         <div class="mode-option-info">
@@ -624,8 +821,8 @@
 <div id="shop-modal">
   <div id="shop-card">
     <button class="modal-close" onclick="closeShopModal()">✕</button>
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 15px;">
-      <h2 style="color: #fff;">МАГАЗИН</h2>
+    <div class="shop-header">
+      <h2>МАГАЗИН</h2>
       <div class="currency-panel">
         <div class="currency-item"><div class="curr-icon curr-duli"></div> <span id="shop-ui-duli">0</span></div>
         <div class="currency-item"><div class="curr-icon curr-oskolki"></div> <span id="shop-ui-oskolki">0</span></div>
@@ -636,20 +833,37 @@
       <div class="shop-item">
         <div class="shop-item-icon" style="background-image: url('img/Techo_Box.jpg');"></div>
         <div class="shop-item-name">Техносундук</div>
+        <div class="shop-item-desc">50 Дулей и шанс на сферы</div>
         <div class="shop-item-price">50 Осколков</div>
         <button onclick="buyChest('techno', 50)">КУПИТЬ</button>
       </div>
       <div class="shop-item">
         <div class="shop-item-icon" style="background-image: url('img/Ohlo_Box.jpg');"></div>
         <div class="shop-item-name">Охлосундук</div>
+        <div class="shop-item-desc">150 Дулей и 1 сфера</div>
         <div class="shop-item-price">150 Осколков</div>
         <button onclick="buyChest('octo', 150)">КУПИТЬ</button>
       </div>
       <div class="shop-item">
         <div class="shop-item-icon" style="background-image: url('img/Ultra_Box.jpg');"></div>
         <div class="shop-item-name">Ультрасундук</div>
+        <div class="shop-item-desc">300 Дулей и 5 сфер</div>
         <div class="shop-item-price">300 Осколков</div>
         <button onclick="buyChest('ultra', 300)">КУПИТЬ</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-icon" style="background-image: url('img/Dul.jpg');"></div>
+        <div class="shop-item-name">100 Дулей</div>
+        <div class="shop-item-desc">Просто дули для покупок</div>
+        <div class="shop-item-price">30 Осколков</div>
+        <button onclick="buyChest('duli100', 30)">КУПИТЬ</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-icon" style="background-image: url('img/Poop.jpg');"></div>
+        <div class="shop-item-name">50 Осколков</div>
+        <div class="shop-item-desc">Осколки для сундуков</div>
+        <div class="shop-item-price">100 Дулей</div>
+        <button onclick="buyChest('oskolki50', 0, 100)">КУПИТЬ</button>
       </div>
     </div>
   </div>
@@ -718,23 +932,75 @@
 (function(){
 'use strict';
 
-// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СИСТЕМА СОХРАНЕНИЙ ---
-let playerData = JSON.parse(localStorage.getItem('gameData_04')) || {
+// --- ДАННЫЕ ИГРОКА (СОХРАНЕНИЕ) ---
+const DEFAULT_DATA = {
   duli: 0,
-  oskolki: 500, // Дадим немного для теста
+  oskolki: 500,
   sferi: 0,
   votes: { artem: 0, benzopila: 0, dmitry: 0 },
   hasVoted: false,
   leshaUnlocked: false,
+  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1 },
   claimedRoad10: false,
   claimedRoad25: false
 };
 
+let playerData;
+try {
+  playerData = JSON.parse(localStorage.getItem('gameData_04'));
+  if (!playerData || typeof playerData !== 'object') playerData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+  // гарантируем наличие полей
+  for (const k in DEFAULT_DATA) if (!(k in playerData)) playerData[k] = DEFAULT_DATA[k];
+  for (const k in DEFAULT_DATA.heroLevels) if (!(k in playerData.heroLevels)) playerData.heroLevels[k] = 1;
+} catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+
+// ====== БАЗОВЫЕ ХАРАКТЕРИСТИКИ БОЙЦОВ ======
+const HERO_BASE = {
+  Vitya:   { dmg: 16, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
+  Lesha:   { dmg: 25, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
+  Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
+  Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 }
+};
+const MAX_HERO_LEVEL = 5;
+
+function getHeroStats(type) {
+  const base = HERO_BASE[type];
+  const lvl = playerData.heroLevels[type] || 1;
+  const mult = 1 + (lvl - 1) * 0.12; // +12% за уровень
+  return {
+    dmg: Math.round(base.dmg * mult * 10) / 10,
+    spd: Math.round(base.spd * (1 + (lvl - 1) * 0.03)),
+    hp: Math.round(base.hp * (1 + (lvl - 1) * 0.08)),
+    lvl: lvl
+  };
+}
+
+function getUpgradeCost(type) {
+  const base = HERO_BASE[type].cost;
+  const lvl = playerData.heroLevels[type] || 1;
+  return Math.round(base * Math.pow(1.5, lvl - 1));
+}
+
+// ====== ГОЛОСОВАНИЕ — ОБЩИЙ ФАЙЛ (заглушка для localStorage) ======
+const VOTE_STORAGE_KEY = 'global_votes_04';
+function getGlobalVotes() {
+  try {
+    const v = JSON.parse(localStorage.getItem(VOTE_STORAGE_KEY));
+    if (v && typeof v === 'object' && 'artem' in v) return v;
+  } catch(e) {}
+  return { artem: 12, benzopila: 8, dmitry: 5 }; // стартовые значения для наглядности
+}
+function saveGlobalVotes(v) {
+  localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(v));
+}
+
+// ====== СОХРАНЕНИЕ ======
 function saveData() {
   localStorage.setItem('gameData_04', JSON.stringify(playerData));
   updateUI();
 }
 
+// ====== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ======
 function updateUI() {
   document.getElementById('ui-duli').textContent = playerData.duli;
   document.getElementById('ui-oskolki').textContent = playerData.oskolki;
@@ -742,17 +1008,29 @@ function updateUI() {
   document.getElementById('shop-ui-oskolki').textContent = playerData.oskolki;
   
   const prog = Math.min(100, (playerData.sferi / 50) * 100);
+  document.getElementById('road-panel-fill').style.width = prog + '%';
+  document.getElementById('road-panel-text').textContent = Math.min(50, playerData.sferi) + ' / 50 сфер';
   document.getElementById('road-ui-progress').style.width = prog + '%';
   document.getElementById('road-ui-progress-text').textContent = Math.min(50, playerData.sferi) + ' / 50';
 
-  // Голосование
-  document.getElementById('vote-count-artem').textContent = playerData.votes.artem + ' голосов';
-  document.getElementById('vote-count-benzopila').textContent = playerData.votes.benzopila + ' голосов';
-  document.getElementById('vote-count-dmitry').textContent = playerData.votes.dmitry + ' голосов';
+  // Мини-ноды в верхней панели
+  document.getElementById('mini-node-10').classList.toggle('unlocked', playerData.sferi >= 10);
+  document.getElementById('mini-node-25').classList.toggle('unlocked', playerData.sferi >= 25);
+  document.getElementById('mini-node-50').classList.toggle('unlocked', playerData.sferi >= 50);
+
+  // Голосование — общие голоса
+  const gv = getGlobalVotes();
+  document.getElementById('vote-count-artem').textContent = gv.artem + ' голосов';
+  document.getElementById('vote-count-benzopila').textContent = gv.benzopila + ' голосов';
+  document.getElementById('vote-count-dmitry').textContent = gv.dmitry + ' голосов';
+  document.getElementById('vote-total').textContent = 'Всего голосов: ' + (gv.artem + gv.benzopila + gv.dmitry);
   
   if (playerData.hasVoted) {
     document.getElementById('ui-vote-status').textContent = 'Вы проголосовали!';
     document.getElementById('ui-vote-status').style.color = '#4fd6a0';
+  } else {
+    document.getElementById('ui-vote-status').textContent = 'Участвовать';
+    document.getElementById('ui-vote-status').style.color = '';
   }
 
   // Разблокировка Лёхи
@@ -773,43 +1051,84 @@ function updateUI() {
     }
   }
 
-  // Дорога славы
-  if (playerData.sferi >= 10 && !playerData.claimedRoad10) {
-    document.getElementById('node-10').classList.add('unlocked');
+  // Дорога славы — модалка
+  document.getElementById('node-10').classList.toggle('unlocked', playerData.sferi >= 10);
+  document.getElementById('node-25').classList.toggle('unlocked', playerData.sferi >= 25);
+  document.getElementById('node-50').classList.toggle('unlocked', playerData.sferi >= 50);
+
+  // Уровни на карточках
+  for (const t of ['Vitya','Lesha','Fialka','Vasilek']) {
+    const el = document.getElementById('lvl-' + t.toLowerCase());
+    if (el) el.textContent = 'Ур. ' + (playerData.heroLevels[t] || 1);
   }
-  if (playerData.sferi >= 25 && !playerData.claimedRoad25) {
-    document.getElementById('node-25').classList.add('unlocked');
-  }
-  if (playerData.sferi >= 50) {
-    document.getElementById('node-50').classList.add('unlocked');
+
+  // Обновление статов в карточках героев
+  updateHeroStatDisplays();
+}
+
+function updateHeroStatDisplays() {
+  const map = { Vitya: 'vitya', Lesha: 'lesha', Fialka: 'fialka', Vasilek: 'vasilek' };
+  for (const t in map) {
+    const id = map[t];
+    const s = getHeroStats(t);
+    const dmgEl = document.getElementById('stat-' + id + '-dmg');
+    const spdEl = document.getElementById('stat-' + id + '-spd');
+    const hpEl = document.getElementById('stat-' + id + '-hp');
+    const dmgBar = document.getElementById('stat-' + id + '-dmg-bar');
+    const spdBar = document.getElementById('stat-' + id + '-spd-bar');
+    const hpBar = document.getElementById('stat-' + id + '-hp-bar');
+    if (dmgEl) dmgEl.textContent = s.dmg;
+    if (spdEl) spdEl.textContent = s.spd;
+    if (hpEl) hpEl.textContent = s.hp;
+    if (dmgBar) dmgBar.style.width = Math.min(100, (s.dmg / 30) * 100) + '%';
+    if (spdBar) spdBar.style.width = Math.min(100, (s.spd / 260) * 100) + '%';
+    if (hpBar) hpBar.style.width = Math.min(100, (s.hp / 160) * 100) + '%';
+
+    const costEl = document.getElementById('upg-cost-' + id);
+    if (costEl) {
+      const lvl = playerData.heroLevels[t] || 1;
+      if (lvl >= MAX_HERO_LEVEL) costEl.textContent = 'Максимальный уровень!';
+      else costEl.textContent = 'Улучшение ур. ' + (lvl + 1) + ': ' + getUpgradeCost(t) + ' осколков';
+    }
   }
 }
 
+// ====== ГОЛОСОВАНИЕ ======
 window.voteFor = function(hero, el) {
   if (playerData.hasVoted) return alert('Вы уже проголосовали!');
-  
-  // Визуальное выделение
+  if (!confirm('Подтвердите голос за ' + (hero==='artem'?'Артёма':hero==='benzopila'?'Машину-Бензопилу':'Дмитрия') + '?')) return;
+
+  const gv = getGlobalVotes();
+  gv[hero] = (gv[hero] || 0) + 1;
+  saveGlobalVotes(gv);
+
   document.querySelectorAll('.vote-card').forEach(c => c.classList.remove('selected'));
   if (el) el.classList.add('selected');
 
-  playerData.votes[hero]++;
   playerData.hasVoted = true;
   saveData();
   alert('Спасибо за ваш голос!');
 };
 
-window.buyChest = function(type, price) {
-  if (playerData.oskolki >= price) {
-    playerData.oskolki -= price;
-    let reward = '';
-    if (type === 'techno') { playerData.duli += 50; reward = '50 Дулей'; }
-    if (type === 'octo') { playerData.duli += 150; reward = '150 Дулей'; }
-    if (type === 'ultra') { playerData.duli += 300; playerData.sferi += 5; reward = '300 Дулей и 5 Сфер!'; }
-    saveData();
-    alert('Вы открыли сундук и получили: ' + reward);
-  } else {
-    alert('Недостаточно Осколков!');
-  }
+// ====== МАГАЗИН ======
+window.buyChest = function(type, priceOskolki, priceDuli) {
+  priceOskolki = priceOskolki || 0;
+  priceDuli = priceDuli || 0;
+  if (playerData.oskolki < priceOskolki) return alert('Недостаточно Осколков!');
+  if (playerData.duli < priceDuli) return alert('Недостаточно Дулей!');
+  
+  playerData.oskolki -= priceOskolki;
+  playerData.duli -= priceDuli;
+  
+  let reward = '';
+  if (type === 'techno') { playerData.duli += 50; playerData.sferi += 1; reward = '50 Дулей и 1 Сфера!'; }
+  if (type === 'octo') { playerData.duli += 150; playerData.sferi += 2; reward = '150 Дулей и 2 Сферы!'; }
+  if (type === 'ultra') { playerData.duli += 300; playerData.sferi += 5; reward = '300 Дулей и 5 Сфер!'; }
+  if (type === 'duli100') { playerData.duli += 100; reward = '100 Дулей!'; }
+  if (type === 'oskolki50') { playerData.oskolki += 50; reward = '50 Осколков!'; }
+  
+  saveData();
+  alert('Вы открыли сундук и получили: ' + reward);
 };
 
 window.checkLeshaUnlock = function() {
@@ -817,7 +1136,76 @@ window.checkLeshaUnlock = function() {
   else alert('Лёха откроется, когда вы наберёте 50 Сфер Влияния на Дороге Славы!');
 };
 
-// --- ЛОГИКА ЭКРАНОВ ЗАГРУЗКИ ---
+// ====== УЛУЧШЕНИЕ ГЕРОЕВ ======
+let upgradeTargetType = null;
+
+window.openUpgrade = function(type) {
+  upgradeTargetType = type;
+  const lvl = playerData.heroLevels[type] || 1;
+  const s = getHeroStats(type);
+  const nextCost = getUpgradeCost(type);
+  const isMax = lvl >= MAX_HERO_LEVEL;
+
+  const modal = document.getElementById('upgrade-modal');
+  document.getElementById('upg-hero-img').style.backgroundImage = `url('img/${type}.jpg')`;
+  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : 'Василёк';
+  document.getElementById('upg-hero-level').textContent = isMax ? `Уровень ${lvl} — МАКСИМУМ` : `Уровень ${lvl} → ${lvl + 1}`;
+
+  const statsEl = document.getElementById('upg-stats');
+  const nextMult = 1 + (lvl) * 0.12;
+  const base = HERO_BASE[type];
+  const nextDmg = Math.round(base.dmg * nextMult * 10) / 10;
+  const nextSpd = Math.round(base.spd * (1 + (lvl) * 0.03));
+  const nextHp = Math.round(base.hp * (1 + (lvl) * 0.08));
+
+  statsEl.innerHTML = `
+    <div class="upgrade-stat-row">
+      <div class="lbl"><span>Урон</span><span class="val">${s.dmg} → ${isMax ? s.dmg : nextDmg}</span></div>
+      <div class="bar"><div class="fill" style="width:${Math.min(100, (s.dmg/30)*100)}%"></div></div>
+    </div>
+    <div class="upgrade-stat-row">
+      <div class="lbl"><span>Скорость</span><span class="val">${s.spd} → ${isMax ? s.spd : nextSpd}</span></div>
+      <div class="bar"><div class="fill" style="width:${Math.min(100, (s.spd/260)*100)}%"></div></div>
+    </div>
+    <div class="upgrade-stat-row">
+      <div class="lbl"><span>Здоровье</span><span class="val">${s.hp} → ${isMax ? s.hp : nextHp}</span></div>
+      <div class="bar"><div class="fill" style="width:${Math.min(100, (s.hp/160)*100)}%"></div></div>
+    </div>
+  `;
+
+  const buyBtn = document.getElementById('upg-buy-btn');
+  if (isMax) {
+    buyBtn.disabled = true;
+    buyBtn.textContent = 'МАКСИМАЛЬНЫЙ УРОВЕНЬ';
+  } else {
+    buyBtn.disabled = playerData.oskolki < nextCost;
+    buyBtn.textContent = `УЛУЧШИТЬ ЗА ${nextCost}`;
+  }
+
+  modal.classList.add('show');
+};
+
+window.closeUpgrade = function() {
+  document.getElementById('upgrade-modal').classList.remove('show');
+  upgradeTargetType = null;
+};
+
+window.confirmUpgrade = function() {
+  if (!upgradeTargetType) return;
+  const type = upgradeTargetType;
+  const lvl = playerData.heroLevels[type] || 1;
+  if (lvl >= MAX_HERO_LEVEL) return;
+  const cost = getUpgradeCost(type);
+  if (playerData.oskolki < cost) return alert('Недостаточно осколков!');
+  
+  playerData.oskolki -= cost;
+  playerData.heroLevels[type] = lvl + 1;
+  saveData();
+  closeUpgrade();
+  alert(`${type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : 'Василёк'} улучшен до уровня ${lvl + 1}!`);
+};
+
+// ====== ЗАГРУЗКА ======
 const studioSplash = document.getElementById('studio-splash');
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
@@ -861,7 +1249,6 @@ setTimeout(() => {
   }, 800);
 }, 2500);
 
-
 const startScreen = document.getElementById('start-screen');
 const lobbyScreen = document.getElementById('lobby-screen');
 const fightersModal = document.getElementById('fighters-modal');
@@ -877,7 +1264,6 @@ const shopModal   = document.getElementById('shop-modal');
 const communityModal = document.getElementById('community-modal');
 const voteModal   = document.getElementById('vote-modal');
 
-// Модалки героев
 const heroModal   = document.getElementById('hero-modal');
 const heroModalLesha = document.getElementById('hero-modal-lesha');
 const heroModalFialka = document.getElementById('hero-modal-fialka');
@@ -890,7 +1276,7 @@ let gameRunning = false;
 let currentMode = 'Тренировка';
 let selectedHero = 'Vitya';
 
-// --- СИСТЕМА РЕПЛИК ---
+// --- РЕПЛИКИ ---
 const phrases = {
   Vitya: ["Я не толстый, я накачанный!", "Мой вес — моё преимущество!", "Охлакраты навсегда!", "Свобода для жирного рода!", "Меня не дразнить!", "Лазер из груди — это круто!", "Я верный боец Госпожи Свободы!", "Ещё один бой, ещё один обед!"],
   Lesha: ["Трусы — это бренд!", "Вся война — просто реклама!", "Вы всё ещё здесь?", "Синдикат Трусы рулит!", "Покупайте мои трусы!", "Я здесь, чтобы заявить о себе!", "Бомбы — это весело!", "Я лидер, а вы — так..."],
@@ -905,6 +1291,7 @@ let audio4 = new Audio('sounds/vasilek_voice.mp3');
 
 function showRandomPhrase(heroType) {
   const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : 'bubble-vasilek')));
+  if (!bubble) return;
   const arr = phrases[heroType];
   const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
   bubble.textContent = randomPhrase;
@@ -1002,6 +1389,7 @@ addEventListener('keydown', e => {
     else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
     else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
     else if (heroModalVasilek.style.display === 'flex') closeVasilekDetails();
+    else if (document.getElementById('upgrade-modal').classList.contains('show')) closeUpgrade();
     else if (fightersModal.classList.contains('show')) closeFightersModal();
     else if (modeModal.classList.contains('show')) closeModeModal();
     else if (newsModal.classList.contains('show')) closeNewsModal();
@@ -1012,9 +1400,8 @@ addEventListener('keydown', e => {
   }
 });
 
-
 /* ============================================================
-   ЛОГИКА ИГРЫ
+   ИГРОВАЯ ЛОГИКА
 ============================================================ */
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -1051,6 +1438,7 @@ let gameOver = false;
 let gameTimeLeft = 0;
 let matchKills = 0;
 const cam = { x: 0, y: 0 };
+let winnerName = '';
 
 const player = {
   x: 500, y: 500, r: 19, hp: 100, maxHp: 100,
@@ -1067,6 +1455,7 @@ function createHero(id, type, isBot) {
   const isVitya = type === 'Vitya';
   const isLesha = type === 'Lesha';
   const isFialka = type === 'Fialka';
+  const stats = getHeroStats(type);
   
   let maxAmmo = MAX_AMMO_VITYA, reloadTime = RELOAD_VITYA, color = '#3fa9f5', colorLight = '#a8e0ff';
   
@@ -1077,7 +1466,7 @@ function createHero(id, type, isBot) {
   return {
     id: id, type: type, isPlayer: !isBot,
     x: spawn.x, y: spawn.y, r: 19,
-    hp: 100, maxHp: 100, aim: Math.random()*TAU,
+    hp: stats.hp, maxHp: stats.hp, aim: Math.random()*TAU,
     attackCd: 0, swing: 0, ult: 0, ultActive: false, ultTime: 0, beamLen: 0,
     alive: true, respawn: 0, score: 0, hitFlash: 0,
     ammo: maxAmmo, maxAmmo: maxAmmo, reloadTime: reloadTime,
@@ -1086,7 +1475,8 @@ function createHero(id, type, isBot) {
     color: color, colorLight: colorLight,
     poison: 0, poisonTick: 0, botTimer: 0, botJitter: 0,
     shootCount: 0, grenadeTimer: 0, kbx: 0, kby: 0, stun: 0,
-    hookTarget: null, hookX: 0, hookY: 0, healZone: null
+    hookTarget: null, hookX: 0, hookY: 0, healZone: null,
+    dmg: stats.dmg, spd: stats.spd
   };
 }
 
@@ -1127,6 +1517,7 @@ function genWorld(){
 
 function startBattle(){
   gameOver = false;
+  winnerName = '';
   bots = []; bullets = []; particles = []; killFeed = [];
   matchSplashTimer = 3.0; 
   genWorld();
@@ -1138,22 +1529,22 @@ function startBattle(){
   matchKills = 0;
 
   if (currentMode === 'Тренировка') {
-    gameTimeLeft = 0; // Бесконечно
+    gameTimeLeft = 0;
     for (let i = 0; i < 4; i++){
       const rnd = Math.random();
       const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
       bots.push(createHero('bot_'+i, bType, true));
     }
   } else if (currentMode === 'PVP-Битва') {
-    gameTimeLeft = 300; // 5 минут
+    gameTimeLeft = 300;
     for (let i = 0; i < 5; i++){
       const rnd = Math.random();
       const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
       bots.push(createHero('bot_'+i, bType, true));
     }
   } else if (currentMode === 'Останется только один') {
-    gameTimeLeft = 0; // До победы
-    for (let i = 0; i < 9; i++){ // 9 ботов + игрок = 10
+    gameTimeLeft = 0;
+    for (let i = 0; i < 9; i++){
       const rnd = Math.random();
       const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
       bots.push(createHero('bot_'+i, bType, true));
@@ -1217,7 +1608,7 @@ function tryAttack(h) {
   if (target && h.type === 'Vitya') {
     h.attackCd = .6; h.swing = .25;
     h.aim = Math.atan2(target.y - h.y, target.x - h.x);
-    damage(target, 46, h);
+    damage(target, 46 * (h.dmg / 16), h);
     const ang = Math.atan2(target.y - h.y, target.x - h.x);
     target.kbx = Math.cos(ang) * 340; target.kby = Math.sin(ang) * 340;
     spawnHitParticles(target.x, target.y, '#ffd88a', 12);
@@ -1233,7 +1624,7 @@ function tryAttack(h) {
   
   if (h.type === 'Vitya') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
-    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*900, vy: Math.sin(a)*900, r: 7, dmg: 16, life: 0.9, type: 'bullet', owner: h, color: h.color });
+    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*900, vy: Math.sin(a)*900, r: 7, dmg: h.dmg, life: 0.9, type: 'bullet', owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
   } else if (h.type === 'Lesha') {
     h.shootCount++;
@@ -1249,18 +1640,18 @@ function tryAttack(h) {
     const spread = isTriple ? [-0.2, 0, 0.2] : [0];
     for (let angOffset of spread) {
       const a = h.aim + angOffset;
-      bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100, r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false, owner: h, color: h.color });
+      bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100, r: 10, dmg: h.dmg, life: 1.0, type: 'bomb', poison: isPoison, exploded: false, owner: h, color: h.color });
     }
   } else if (h.type === 'Fialka') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
-    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*800, vy: Math.sin(a)*800, r: 8, dmg: 18, life: 0.9, type: 'chain_bolt', chained: [], owner: h, color: h.color });
+    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*800, vy: Math.sin(a)*800, r: 8, dmg: h.dmg, life: 0.9, type: 'chain_bolt', chained: [], owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8b4fe', 4);
   } else if (h.type === 'Vasilek') {
     h.attackCd = 0.5;
     for (let i = 0; i < 4; i++) {
       const spread = (i - 1.5) * 0.1;
       const a = h.aim + spread;
-      bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: 6, life: 0.8, type: 'shard_bullet', owner: h, color: '#ff99cc' });
+      bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: h.dmg, life: 0.8, type: 'shard_bullet', owner: h, color: '#ff99cc' });
     }
     spawnHitParticles(h.x + Math.cos(h.aim)*32, h.y + Math.sin(h.aim)*32, '#ff99cc', 6);
   }
@@ -1331,7 +1722,6 @@ function updateBot(bot, dt) {
 
   if (bot.stun > 0) { bot.stun -= dt; bot.mvx = 0; bot.mvy = 0; return; }
 
-  // УЛЬТА БОТА
   if (bot.ultActive) {
     bot.ultTime -= dt;
     if (bot.type === 'Vitya') {
@@ -1351,7 +1741,7 @@ function updateBot(bot, dt) {
         const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
         if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
         const len = Math.hypot(mx, my);
-        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * 208 * dt; bot.y += (my / len) * 208 * dt; bot.walkPhase += dt * 14; }
+        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
       }
     } else if (bot.type === 'Fialka') {
       if (bot.hookTarget && bot.hookTarget.alive) {
@@ -1391,7 +1781,7 @@ function updateBot(bot, dt) {
     if (rd < safe && rd > 0.01) { mx += (rx / rd) * 1.6; my += (ry / rd) * 1.6; }
   }
   const len = Math.hypot(mx, my);
-  if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * 208 * dt; bot.y += (my / len) * 208 * dt; bot.walkPhase += dt * 14; } else { bot.mvx = 0; bot.mvy = 0; bot.walkPhase = 0; }
+  if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; } else { bot.mvx = 0; bot.mvy = 0; bot.walkPhase = 0; }
   bot.x = clamp(bot.x, 20, WORLD_W - 20); bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
   if (d < 720) {
@@ -1400,37 +1790,68 @@ function updateBot(bot, dt) {
   }
 }
 
+// ====== ФУНКЦИЯ ЗАВЕРШЕНИЯ БОЯ С НАГРАДАМИ ======
+function finishBattle(isWin, reason) {
+  gameOver = true;
+  gameRunning = false;
+  winnerName = isWin ? 'Вы' : (reason === 'time' ? 'По очкам' : 'Боты');
+
+  let sferiDelta = 0, duliDelta = 0;
+  let resultText = '';
+
+  if (currentMode === 'Тренировка') {
+    if (isWin) { sferiDelta = 3; duliDelta = 30; resultText = 'Победа в тренировке!'; }
+    else { sferiDelta = -1; duliDelta = 10; resultText = 'Поражение в тренировке...'; }
+  } else if (currentMode === 'PVP-Битва') {
+    if (isWin) { sferiDelta = 8; duliDelta = 100; resultText = 'Победа в PVP-Битве!'; }
+    else { sferiDelta = -2; duliDelta = 25; resultText = 'Поражение в PVP-Битве...'; }
+  } else if (currentMode === 'Останется только один') {
+    if (isWin) { sferiDelta = 15; duliDelta = 150; resultText = 'Королевская победа!'; }
+    else { sferiDelta = -3; duliDelta = 20; resultText = 'Вас одолели...'; }
+  }
+
+  playerData.sferi = Math.max(0, playerData.sferi + sferiDelta);
+  playerData.duli = Math.max(0, playerData.duli + duliDelta);
+  saveData();
+
+  // Показать экран результата, затем через 3.5 сек вернуть в лобби
+  setTimeout(() => {
+    alert(`${resultText}\n\nСферы: ${sferiDelta > 0 ? '+' : ''}${sferiDelta}\nДули: +${duliDelta}`);
+    backToLobby();
+  }, 600);
+}
+
 function update(dt) {
   if (gameOver || !gameRunning) return;
 
   if (matchSplashTimer > 0) { matchSplashTimer -= dt; return; }
 
-  // Таймеры режимов
   if (currentMode === 'PVP-Битва') {
     gameTimeLeft -= dt;
     if (gameTimeLeft <= 0) {
-      gameOver = true;
       const sorted = [player, ...bots].sort((a,b) => b.score - a.score);
-      winnerName = sorted[0].name;
-      playerData.sferi += 5;
-      playerData.duli += 50;
-      saveData();
+      const isWin = sorted[0] === player;
+      finishBattle(isWin, 'time');
       return;
     }
   } else if (currentMode === 'Останется только один') {
     const aliveBots = bots.filter(b => b.alive).length;
     if (!player.alive) {
-      gameOver = true;
-      winnerName = 'Боты';
-      playerData.sferi += 2;
-      saveData();
+      finishBattle(false, 'dead');
       return;
     } else if (aliveBots === 0 && player.alive) {
-      gameOver = true;
-      winnerName = player.name;
-      playerData.sferi += 15;
-      playerData.duli += 150;
-      saveData();
+      finishBattle(true, 'win');
+      return;
+    }
+  } else if (currentMode === 'Тренировка') {
+    // Поражение — если игрок умер и ботов больше нет живых? Нет, в тренировке бесконечно.
+    // Но если игрок умер, а ботов ноль — тоже победа
+    const aliveBots = bots.filter(b => b.alive).length;
+    if (!player.alive && aliveBots === 0) {
+      finishBattle(false, 'dead');
+      return;
+    } else if (aliveBots === 0 && player.alive) {
+      finishBattle(true, 'win');
       return;
     }
   }
@@ -1456,7 +1877,7 @@ function update(dt) {
        if (player.ultTick > 0.1) {
          player.ultTick = 0;
          const enemies = getAllEnemies(player);
-         for (const e of enemies) { if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) damage(e, 5, player); }
+         for (const e of enemies) { if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) damage(e, 5 * (player.dmg/16), player); }
        }
     } else if (player.type === 'Lesha') {
        let mx = 0, my = 0;
@@ -1465,7 +1886,7 @@ function update(dt) {
        player.mvx = mx; player.mvy = my;
        if (mx !== 0 || my !== 0) {
           player.walkPhase += dt * 14; const len = Math.hypot(mx, my);
-          player.x += (mx/len) * 208 * dt; player.y += (my/len) * 208 * dt;
+          player.x += (mx/len) * player.spd * dt; player.y += (my/len) * player.spd * dt;
           player.x = clamp(player.x, 20, WORLD_W - 20); player.y = clamp(player.y, 20, WORLD_H - 20);
        } else player.walkPhase = 0;
     } else if (player.type === 'Fialka') {
@@ -1479,7 +1900,7 @@ function update(dt) {
        if (player.healZone) {
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
-           if (Math.hypot(e.x - player.healZone.x, e.y - player.healZone.y) < player.healZone.r) damage(e, 15 * dt, player);
+           if (Math.hypot(e.x - player.healZone.x, e.y - player.healZone.y) < player.healZone.r) damage(e, 15 * dt * (player.dmg/6), player);
          }
          if (Math.hypot(player.x - player.healZone.x, player.y - player.healZone.y) < player.healZone.r) player.hp = Math.min(player.maxHp, player.hp + 20 * dt);
        }
@@ -1494,7 +1915,7 @@ function update(dt) {
     player.mvx = mx; player.mvy = my;
     if (mx !== 0 || my !== 0) {
       player.walkPhase += dt * 14; const len = Math.hypot(mx, my);
-      player.x += (mx/len) * 208 * dt; player.y += (my/len) * 208 * dt;
+      player.x += (mx/len) * player.spd * dt; player.y += (my/len) * player.spd * dt;
       player.x = clamp(player.x, 20, WORLD_W - 20); player.y = clamp(player.y, 20, WORLD_H - 20);
     } else player.walkPhase = 0;
   }
@@ -1527,7 +1948,7 @@ function update(dt) {
       for (const e of enemies) { if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) { hitEnemy = true; break; } }
       if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20 || hitEnemy) {
         b.exploded = true; spawnHitParticles(b.x, b.y, '#ff0000', 40);
-        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 150) damage(e, 50, b.owner); }
+        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 150) damage(e, 50 * (b.owner.dmg/25), b.owner); }
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
           bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, owner: b.owner, color: '#ff5a5a' });
@@ -1554,12 +1975,7 @@ function update(dt) {
                 const d = Math.hypot(e2.x - lastTarget.x, e2.y - lastTarget.y); if (d < minDist) { minDist = d; nextTarget = e2; }
               }
               if (nextTarget) {
-                damage(nextTarget, 12, b.owner); spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
-                ctx.save(); ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 3; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15;
-                ctx.beginPath(); ctx.moveTo(lastTarget.x, lastTarget.y);
-                const midX = (lastTarget.x + nextTarget.x) / 2; const midY = (lastTarget.y + nextTarget.y) / 2;
-                ctx.lineTo(midX + (Math.random()*40-20), midY + (Math.random()*40-20)); ctx.lineTo(nextTarget.x, nextTarget.y);
-                ctx.stroke(); ctx.restore();
+                damage(nextTarget, 12 * (b.owner.dmg/18), b.owner); spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
                 b.chained.push(nextTarget); lastTarget = nextTarget; chainCount++;
               } else break;
             }
@@ -1734,7 +2150,6 @@ function drawHero(h){
   if (h.poison > 0) { ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU); ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')'; ctx.lineWidth = 2; ctx.stroke(); }
   if (h.ultActive && isVitya){ ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU); ctx.fillStyle = '#eaffff'; ctx.fill(); }
 
-  // РУКИ/ОРУЖИЕ
   ctx.save(); ctx.translate(8, -4); ctx.rotate(h.aim || 0);
   let swingOff = 0;
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
@@ -1921,10 +2336,10 @@ function render() {
     ctx.fillText(win ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ', W/2, H/2 - 30);
     ctx.fillStyle = '#dbe9f7';
     ctx.font = 'bold 24px system-ui, sans-serif';
-    ctx.fillText((win ? 'Вы' : winnerName) + ' побеждает в Горном техникуме!', W/2, H/2 + 24);
+    ctx.fillText(win ? 'Вы побеждаете в Горном техникуме!' : (winnerName + ' побеждает...'), W/2, H/2 + 24);
     ctx.fillStyle = 'rgba(170,200,225,0.85)';
     ctx.font = '18px system-ui, sans-serif';
-    ctx.fillText('Награда: Сферы и Дули. Нажмите ESC для выхода.', W/2, H/2 + 76);
+    ctx.fillText('Возврат в лобби...', W/2, H/2 + 76);
     ctx.textAlign = 'left';
   }
 }
