@@ -988,7 +988,7 @@ function getGlobalVotes() {
     const v = JSON.parse(localStorage.getItem(VOTE_STORAGE_KEY));
     if (v && typeof v === 'object' && 'artem' in v) return v;
   } catch(e) {}
-  return { artem: 12, benzopila: 8, dmitry: 5 }; // стартовые значения для наглядности
+  return { artem: 0, benzopila: 0, dmitry: 0 }; // стартовые значения для наглядности
 }
 function saveGlobalVotes(v) {
   localStorage.setItem(VOTE_STORAGE_KEY, JSON.stringify(v));
