@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protocol: Modernization — PRE-ALPHA 0.3</title>
+<title>Protocol: Modernization — PRE-ALPHA 0.4</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
@@ -28,14 +28,8 @@
     margin-top: 10px; text-transform: uppercase; font-weight: 700;
     animation: fadeIn 2s ease-out;
   }
-  @keyframes scaleUp {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
+  @keyframes scaleUp { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
 
   /* ============ ЭКРАН ЗАГРУЗКИ ============ */
   #loading-screen {
@@ -45,44 +39,17 @@
     transition: opacity 0.5s ease, visibility 0.5s ease;
     padding-bottom: 80px;
   }
-  #loading-screen::after {
-    content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7);
-  }
+  #loading-screen::after { content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7); }
   #loading-screen.hidden { opacity: 0; visibility: hidden; }
   
-  .loading-container {
-    position: relative; z-index: 10;
-    width: 80%; max-width: 1200px;
-    display: flex; flex-direction: column; align-items: center;
-  }
+  .loading-container { position: relative; z-index: 10; width: 80%; max-width: 1200px; display: flex; flex-direction: column; align-items: center; }
+  .loading-bar-container { width: 100%; height: 16px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 20px; border: 2px solid rgba(90,140,180,0.3); }
+  .loading-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff); border-radius: 8px; transition: width 0.1s linear; }
+  .loading-status { font-size: 20px; color: rgba(160,200,230,0.9); letter-spacing: 2px; font-weight: bold; margin-bottom: 30px; }
 
-  .loading-bar-container {
-    width: 100%; height: 16px; background: rgba(255,255,255,0.1);
-    border-radius: 8px; overflow: hidden; margin-bottom: 20px;
-    border: 2px solid rgba(90,140,180,0.3);
-  }
-  .loading-bar {
-    height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff);
-    border-radius: 8px; transition: width 0.1s linear;
-  }
-  .loading-status {
-    font-size: 20px; color: rgba(160,200,230,0.9); letter-spacing: 2px; font-weight: bold;
-    margin-bottom: 30px;
-  }
-
-  .loading-tip-box {
-    background: rgba(14,22,32,0.85); border-left: 6px solid #ffb450;
-    padding: 30px; border-radius: 16px; width: 100%;
-    text-align: left; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
-    backdrop-filter: blur(10px);
-  }
-  .tip-label {
-    font-size: 16px; color: #ffb450; font-weight: 900; letter-spacing: 2px;
-    margin-bottom: 12px; text-transform: uppercase;
-  }
-  .tip-text {
-    font-size: 26px; color: #dbe9f7; line-height: 1.5;
-  }
+  .loading-tip-box { background: rgba(14,22,32,0.85); border-left: 6px solid #ffb450; padding: 30px; border-radius: 16px; width: 100%; text-align: left; box-shadow: 0 10px 40px rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
+  .tip-label { font-size: 16px; color: #ffb450; font-weight: 900; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
+  .tip-text { font-size: 26px; color: #dbe9f7; line-height: 1.5; }
 
   /* ============ ОБЩИЕ ЭКРАНЫ ============ */
   .screen{position:fixed; inset:0; display:flex; flex-direction:column; z-index:10; transition:opacity .3s ease, visibility .3s;}
@@ -105,13 +72,17 @@
   #lobby-top{display:flex; align-items:center; padding:16px 24px; gap:16px; position:relative; z-index:2;}
   #lobby-title{font-size:22px; font-weight:800; letter-spacing:2px; color:#7ff0ff; text-shadow:0 0 16px rgba(127,240,255,0.4)}
   #lobby-top .spacer{flex:1}
+  
+  /* Валюты в лобби */
+  .currency-panel { display: flex; gap: 12px; margin-right: 20px; }
+  .currency-item { display: flex; align-items: center; gap: 6px; background: rgba(20,30,42,0.85); border: 2px solid rgba(90,140,180,0.4); padding: 6px 14px; border-radius: 12px; color: #fff; font-weight: 900; font-size: 15px; }
+  .curr-icon { width: 24px; height: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
+  .curr-duli { background-image: url('img/Icon_Duli.png'); }
+  .curr-oskolki { background-image: url('img/Icon_Oskolki.png'); }
+
   .top-btn{display:flex; align-items:center; gap:8px; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.4); color:#cfe3f5; padding:9px 18px; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px); position:relative;}
   .top-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.6); color:#fff}
-  .top-btn .icon{font-size:17px}
   
-  .notif-badge {position: absolute; top: -5px; right: -5px; background: #ff4d4d; color: white; font-size: 11px; font-weight: 900; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.5); animation: pulse 2s infinite;}
-  @keyframes pulse {0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); }}
-
   #lobby-content{position:relative; z-index:2; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 40px; min-height:0;}
   #lobby-hero-display{position:relative; width:320px; height:380px; margin-bottom:20px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end;}
   #lobby-hero-display-inner{width:100%; height:100%; background:url('img/Vitya.jpg') center bottom/contain no-repeat; filter:drop-shadow(0 20px 40px rgba(0,0,0,0.6)); margin-bottom: 10px;}
@@ -128,26 +99,18 @@
   .side-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.7); transform:translateY(-4px) scale(1.02); box-shadow:0 10px 20px rgba(0,0,0,0.4);}
   .side-btn .side-label{font-size:15px; font-weight:800; color:#7ff0ff; letter-spacing:1px}
   
-  /* Обновленная кнопка БОЙЦЫ */
-  .fighters-btn-icon{
-    width:64px; height:64px; border-radius:14px;
-    background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4);
-    background-image: url('img/Characters (2).jpg');
-    background-size: cover; background-position: center;
-    box-shadow: inset 0 0 15px rgba(63,169,245,0.2);
-  }
+  .fighters-btn-icon{ width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); background-image: url('img/Characters (2).jpg'); background-size: cover; background-position: center; box-shadow: inset 0 0 15px rgba(63,169,245,0.2); }
 
-  .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5; bottom: 100px;}
-  .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.top { bottom: 230px; }
-  .announce-banner.bottom { bottom: 100px; }
-  .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-banner.top .announce-img { background-image: url('img/Vasilek.jpg'); }
-  .announce-banner.bottom .announce-img { background-image: url('img/Fialka.jpg'); }
-  .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
-  .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
-  .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
-  .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
+  /* Блок голосования */
+  .vote-banner {position: absolute; right: 40px; top: 100px; width: 300px; background: rgba(14,22,32,0.9); border: 2px solid #c084fc; border-radius: 16px; padding: 16px; z-index: 5; box-shadow: 0 10px 30px rgba(192,132,252,0.2); backdrop-filter: blur(10px);}
+  .vote-title { color: #c084fc; font-size: 14px; font-weight: 900; margin-bottom: 12px; text-transform: uppercase; text-align: center;}
+  .vote-option { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; cursor: pointer; padding: 6px; border-radius: 8px; background: rgba(255,255,255,0.05); transition: all 0.2s;}
+  .vote-option:hover { background: rgba(192,132,252,0.2); }
+  .vote-option-icon { width: 40px; height: 40px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid #555;}
+  .vote-option-info { flex: 1; color: #fff; font-size: 14px; font-weight: bold; }
+  .vote-count { color: #7ff0ff; font-size: 12px; font-weight: 900; }
+  .vote-btn { width: 100%; padding: 8px; margin-top: 10px; background: #c084fc; color: #000; font-weight: 900; border: none; border-radius: 8px; cursor: pointer; transition: transform 0.1s;}
+  .vote-btn:hover { transform: translateY(-2px); }
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:16px 22px 22px;}
   .tab-btn{display:flex; flex-direction:column; align-items:center; gap:4px; width:120px; padding:12px 8px; cursor:pointer; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.35); border-radius:12px; color:#b8cde0; font-size:12px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px);}
@@ -156,12 +119,13 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
-  #fighters-modal, #hero-modal, #teaser-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
-  #fighters-modal.show, #hero-modal.show, #teaser-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show {display:flex}
+  /* Модалки */
+  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
+  #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show {display:flex}
   
-  #fighters-card, #hero-modal-card, #teaser-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;}
+  #fighters-card, #hero-modal-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card, #road-card, #shop-card, #community-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
   #hero-modal-card { flex-direction: row; gap: 26px; }
-  #teaser-card, #fialka-info-card, #vasilek-info-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
+  #fialka-info-card, #vasilek-info-card, #community-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
   .profile-card { width:min(450px, 95vw); text-align: center; }
 
   .modal-close{position:absolute; top:14px; right:16px; width:36px; height:36px; border-radius:50%; background:rgba(255,80,80,0.2); border:1px solid rgba(255,80,80,0.5); color:#ff7b7b; font-size:20px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; z-index: 100;}
@@ -182,15 +146,14 @@
   
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
-  
-  /* Закрытый Василёк */
-  .fighter-card.vasilek {cursor: not-allowed; border-color: #5a6a7a;}
-  .fighter-card.vasilek .fighter-card-icon {background-image: url('img/Vasilek.jpg'); background-color: #1b232d; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center;}
-  .fighter-card.vasilek .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8);}
-  .fighter-card.vasilek .fighter-card-icon::after {content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.6); z-index: 0;}
-  .fighter-card.vasilek::after {background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%);}
-  .fighter-card.vasilek .fighter-card-name {color: #8ea6bd;}
-  .fighter-card.vasilek .lock-timer {position: relative; z-index: 3; font-size: 12px; font-weight: 700; color: #ffb450; text-align: center; padding-bottom: 8px; text-transform: uppercase;}
+  .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
+
+  /* Закрытый Лёха (50 сфер) */
+  .fighter-card.lesha.locked {cursor: not-allowed; border-color: #5a6a7a;}
+  .fighter-card.lesha.locked .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8); display: flex; width:100%; height:100%; align-items:center; justify-content:center; background: rgba(10,15,22,0.6);}
+  .fighter-card.lesha.locked::after {background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%);}
+  .fighter-card.lesha.locked .fighter-card-name {color: #8ea6bd;}
+  .fighter-card.lesha.locked .lock-timer {position: relative; z-index: 3; font-size: 12px; font-weight: 700; color: #ffb450; text-align: center; padding-bottom: 8px; text-transform: uppercase;}
 
   .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(90,140,180,0.25); align-items: center; justify-content: center;}
   .fighter-card.empty .fighter-card-icon {background: none; display: flex; align-items: center; justify-content: center; font-size: 48px; color: rgba(255,255,255,0.1); font-weight: 800;}
@@ -207,6 +170,7 @@
   .tag-rarity{color:#B0B8C4; background:rgba(176, 184, 196, 0.12); border:1px solid rgba(176, 184, 196, 0.35)}
   
   .tag-epic {color:#c084fc; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.35)}
+  .tag-crazy {color:#ff4d4d; background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35)}
 
   #hero-modal-desc{font-size:14.5px; line-height:1.6; color:rgba(200,220,240,0.92); background:rgba(255,255,255,0.03); padding:14px; border-radius:10px; border-left:3px solid rgba(127,240,255,0.5);}
   .stat-block{display:flex; flex-direction:column; gap:5px}
@@ -218,23 +182,9 @@
   #hero-modal-select:hover{transform:translateY(-2px)}
   #hero-modal-select:active{transform:translateY(2px); box-shadow:none}
 
-  #teaser-icon {width: 160px; height: 160px; border-radius: 20px; background-image: url('img/Vasilek.jpg'); background-color: #1b232d; background-size: cover; background-position: center; border: 3px solid #c084fc; display: flex; align-items: center; justify-content: center; font-size: 64px; opacity: 0.9; box-shadow: inset 0 0 30px rgba(192,132,252,0.2); position: relative;}
-  #teaser-title { color: #c084fc; font-size: 14px; font-weight: 900; letter-spacing: 2px; }
-  #teaser-name { color: #fff; font-size: 36px; font-weight: 900; margin-top: -8px; }
-
-  .speech-bubble {
-    position: absolute;
-    top: 10px; left: 100%; margin-left: 15px;
-    background: #fff; color: #000; padding: 10px 16px; border-radius: 12px;
-    font-size: 14px; font-weight: 700; max-width: 250px; width: max-content;
-    z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
-    transition: opacity 0.3s; border: 2px solid #333; line-height: 1.3;
-  }
+  .speech-bubble { position: absolute; top: 10px; left: 100%; margin-left: 15px; background: #fff; color: #000; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; max-width: 250px; width: max-content; z-index: 10; box-shadow: 0 4px 15px rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.3s; border: 2px solid #333; line-height: 1.3;}
   .speech-bubble.show { opacity: 1; }
-  .speech-bubble::after {
-    content: ''; position: absolute; top: 20px; left: -10px;
-    border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent;
-  }
+  .speech-bubble::after { content: ''; position: absolute; top: 20px; left: -10px; border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
 
   #mode-modal-card { width:min(1000px, 95vw); }
   .mode-grid { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
@@ -256,43 +206,44 @@
   .mode-option.disabled .mode-option-desc { color: #ffb450; font-weight: bold; }
   
   .news-content { text-align: left; max-height: 500px; overflow-y: auto; padding-right: 10px; }
-  .news-block { 
-    background: rgba(0,0,0,0.3); 
-    padding: 0; 
-    border-radius: 16px; 
-    margin-bottom: 20px; 
-    border: 2px solid rgba(90,140,180,0.4); 
-    display: flex; 
-    overflow: hidden;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .news-block:hover {
-    border-color: #7ff0ff;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(127,240,255,0.2);
-  }
-  .news-img {
-    width: 200px;
-    height: 160px;
-    background-size: cover;
-    background-position: center;
-    border-right: 2px solid rgba(90,140,180,0.4);
-    flex-shrink: 0;
-  }
-  .news-info {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
-  }
+  .news-block { background: rgba(0,0,0,0.3); padding: 0; border-radius: 16px; margin-bottom: 20px; border: 2px solid rgba(90,140,180,0.4); display: flex; overflow: hidden; cursor: pointer; transition: all 0.2s;}
+  .news-block:hover { border-color: #7ff0ff; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(127,240,255,0.2); }
+  .news-img { width: 200px; height: 160px; background-size: cover; background-position: center; border-right: 2px solid rgba(90,140,180,0.4); flex-shrink: 0; }
+  .news-info { padding: 20px; display: flex; flex-direction: column; justify-content: center; flex: 1; }
   .news-date { font-size: 12px; color: #7ff0ff; font-weight: 800; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;}
   .news-title { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 8px;}
   .news-text { font-size: 14px; color: #cfe3f5; line-height: 1.5; }
   .news-badge { display: inline-flex; align-items: center; justify-content: center; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 8px; vertical-align: middle; animation: pulse 2s infinite;}
 
-  #news-modal .profile-card h2 { color: #ffffff !important; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+  /* Трофейная дорога */
+  #road-card { border-color: #ffd700; }
+  .road-header { text-align: center; margin-bottom: 20px; }
+  .road-title { font-size: 32px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); }
+  .road-progress-bar { width: 100%; height: 20px; background: rgba(0,0,0,0.5); border-radius: 10px; border: 2px solid #ffd700; margin-top: 15px; position: relative; overflow: hidden;}
+  .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s;}
+  .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: #000; text-shadow: 0 1px 2px rgba(255,255,255,0.5);}
+  
+  .road-track { display: flex; gap: 20px; padding: 20px 0; overflow-x: auto; }
+  .road-node { position: relative; width: 120px; height: 120px; flex-shrink: 0; border-radius: 20px; background: rgba(255,255,255,0.05); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 10px;}
+  .road-node.unlocked { border-color: #4fd6a0; background: rgba(79,214,160,0.15); box-shadow: 0 0 20px rgba(79,214,160,0.3);}
+  .road-node-icon { width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px;}
+  .road-node-name { font-size: 12px; font-weight: 900; color: #fff; line-height: 1.2;}
+  .road-node-cost { font-size: 11px; color: #ffd700; margin-top: 4px; font-weight: bold;}
+
+  /* Магазин */
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;}
+  .shop-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.4); border-radius: 16px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;}
+  .shop-item-icon { width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 10px; }
+  .shop-item-name { font-size: 18px; font-weight: 900; color: #fff; }
+  .shop-item-price { font-size: 16px; font-weight: bold; color: #ff7b7b; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+  .shop-item button { width: 100%; padding: 10px; background: #3fa9f5; color: #fff; border: none; border-radius: 8px; font-weight: 900; cursor: pointer; transition: transform 0.1s; }
+  .shop-item button:hover { transform: translateY(-2px); background: #7ff0ff; color: #000; }
+
+  /* Сообщество */
+  .comm-btn { display: block; width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; font-size: 18px; font-weight: 900; text-decoration: none; color: #fff; text-align: center; transition: transform 0.1s; }
+  .comm-btn:hover { transform: translateY(-2px); }
+  .comm-tg { background: #229ED9; }
+  .comm-ds { background: #5865F2; }
 
   .dev-overlay{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.9); backdrop-filter:blur(8px);}
   .dev-overlay.show{display:flex}
@@ -310,20 +261,15 @@
 </head>
 <body>
   
-<!-- ============ ЗАСТАВКА СТУДИИ ============ -->
 <div id="studio-splash">
   <div class="studio-splash-logo">AKB-Unost Studio</div>
   <div class="studio-splash-sub">представляет</div>
 </div>
 
-<!-- ============ ЭКРАН ЗАГРУЗКИ ============ -->
 <div id="loading-screen" class="hidden">
   <div class="loading-container">
-    <div class="loading-bar-container">
-      <div class="loading-bar" id="loading-bar"></div>
-    </div>
+    <div class="loading-bar-container"><div class="loading-bar" id="loading-bar"></div></div>
     <div class="loading-status" id="loading-status">0%</div>
-    
     <div class="loading-tip-box">
       <div class="tip-label" id="tip-label">СОВЕТ</div>
       <div class="tip-text" id="tip-text">Загрузка...</div>
@@ -331,12 +277,8 @@
   </div>
 </div>
 
-<audio id="bg-music-lobby" loop>
-  <source src="sounds/lobby.mp3" type="audio/mpeg">
-</audio>
-<audio id="bg-music-battle" loop>
-  <source src="sounds/battle.mp3" type="audio/mpeg">
-</audio>
+<audio id="bg-music-lobby" loop><source src="sounds/lobby.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music-battle" loop><source src="sounds/battle.mp3" type="audio/mpeg"></audio>
 
 <canvas id="game"></canvas>
 <div id="hint">WASD — движение &nbsp;·&nbsp; ЛКМ — атака &nbsp;·&nbsp; ПРОБЕЛ / ПКМ — ульта &nbsp;·&nbsp; ESC — лобби</div>
@@ -345,7 +287,7 @@
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
-  <div id="start-version">PRE-ALPHA 0.3</div>
+  <div id="start-version">PRE-ALPHA 0.4</div>
 </div>
 
 <div id="lobby-screen" class="screen hidden">
@@ -353,12 +295,19 @@
   <div id="lobby-top">
     <div id="lobby-title">ЛОББИ</div>
     <div class="spacer"></div>
+    
+    <div class="currency-panel">
+      <div class="currency-item"><div class="curr-icon curr-duli"></div> <span id="ui-duli">0</span></div>
+      <div class="currency-item"><div class="curr-icon curr-oskolki"></div> <span id="ui-oskolki">0</span></div>
+    </div>
+
     <div class="top-btn" onclick="openNewsModal()">
       <span class="icon">📰</span> Новости
       <div class="notif-badge">!</div>
     </div>
-    <div class="top-btn" onclick="showDev('ПРИГЛАСИТЬ ДРУЗЕЙ')"><span class="icon">✉️</span> Пригласить</div>
+    <div class="top-btn" onclick="openCommunityModal()"><span class="icon">🌐</span> Сообщество</div>
   </div>
+  
   <div id="lobby-content">
     <div id="left-panel" class="side-panel">
       <div class="side-btn" onclick="openFightersModal()">
@@ -367,23 +316,29 @@
       </div>
     </div>
     
-    <!-- Анонс Василька (сверху) -->
-    <div class="announce-banner top" onclick="openVasilekInfo()">
-      <div class="announce-img"></div>
+    <div class="announce-banner top" onclick="openRoadModal()">
+      <div class="announce-img" style="background-image: url('img/Road_Season1.jpg');"></div>
       <div class="announce-info">
-        <div class="announce-tag">Обновление 0.4</div>
-        <div class="announce-name">Василёк</div>
-        <div class="announce-timer" id="teaser-timer-vasilek">через 2 дня</div>
+        <div class="announce-tag">Дорога Славы</div>
+        <div class="announce-name">Сезон 1</div>
+        <div class="announce-timer" id="ui-sferi-road">Сферы: 0</div>
       </div>
     </div>
 
-    <!-- Анонс Фиалки (снизу) -->
-    <div class="announce-banner bottom" onclick="openFialkaInfo()">
-      <div class="announce-img"></div>
-      <div class="announce-info">
-        <div class="announce-tag">Обновление 0.3</div>
-        <div class="announce-name">Фиалка</div>
-        <div class="announce-timer">Уже в игре!</div>
+    <!-- Голосование за героев -->
+    <div class="vote-banner">
+      <div class="vote-title">Голосование: Новый Боец</div>
+      <div class="vote-option" onclick="voteFor('artem')">
+        <div class="vote-option-icon" style="background-image: url('img/Artem.jpg');"></div>
+        <div class="vote-option-info">Артём <br><span class="vote-count" id="vote-artem">0 голосов</span></div>
+      </div>
+      <div class="vote-option" onclick="voteFor('benzopila')">
+        <div class="vote-option-icon" style="background-image: url('img/Benzopila.jpg');"></div>
+        <div class="vote-option-info">Машина-Бензопила <br><span class="vote-count" id="vote-benzopila">0 голосов</span></div>
+      </div>
+      <div class="vote-option" onclick="voteFor('dmitry')">
+        <div class="vote-option-icon" style="background-image: url('img/Dmitry.jpg');"></div>
+        <div class="vote-option-info">Дмитрий <br><span class="vote-count" id="vote-dmitry">0 голосов</span></div>
       </div>
     </div>
 
@@ -400,41 +355,48 @@
     <div class="tab-btn active"><span class="icon">⚔️</span> Лобби</div>
     <div class="tab-btn" onclick="openModeModal()"><span class="icon">🎮</span> Режимы</div>
     <div class="tab-btn" onclick="openFightersModal()"><span class="icon">👥</span> Бойцы</div>
-    <div class="tab-btn" onclick="showDev('МАГАЗИН')"><span class="icon">🛒</span> Магазин <span class="lock">в разработке</span></div>
+    <div class="tab-btn" onclick="openShopModal()"><span class="icon">🛒</span> Магазин</div>
+    <div class="tab-btn" onclick="openRoadModal()"><span class="icon">🏆</span> Дорога Славы</div>
   </div>
 </div>
 
+<!-- МОДАЛКА: БОЙЦЫ -->
 <div id="fighters-modal">
   <div id="fighters-card">
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
+      <div id="fighters-count" id="ui-fighters-count">БОЙЦОВ: 2 ИЗ 4</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Витя</div>
       </div>
-      <div class="fighter-card lesha" id="card-lesha" onclick="openHeroDetails('Lesha')">
+      
+      <!-- Лёха открывается на 50 сфер -->
+      <div class="fighter-card lesha locked" id="card-lesha" onclick="checkLeshaUnlock()">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
+        <div class="lock-timer" id="lock-lesha-text">Нужно 50 сфер</div>
       </div>
+
       <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Фиалка</div>
       </div>
-      
-      <!-- Закрытый Василёк -->
-      <div class="fighter-card vasilek" onclick="openVasilekInfo()">
+
+      <!-- Василёк доступен сразу в 0.4 -->
+      <div class="fighter-card vasilek" id="card-vasilek" onclick="openHeroDetails('Vasilek')">
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Василёк</div>
-        <div class="lock-timer" id="card-vasilek-timer">Скоро</div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- МОДАЛКА: ДЕТАЛИ ГЕРОЕВ -->
+<!-- Витя -->
 <div id="hero-modal">
   <div id="hero-modal-card">
     <button class="modal-close" onclick="closeHeroDetails()">✕</button>
@@ -450,18 +412,15 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Человек.<br><br>
-        Витя с детства выделялся на фоне других своим огромным весом, его часто дразнили за это, именно поэтому с началом проекта "Модернизация", он присоединился к Охлакратам, чтобы недопустить стирание жирного рода с лица земли, с тех пор он остаётся верным бойцом Госпожи "Свободы".<br>
+        Витя с детства выделялся на фоне других своим огромным весом, его часто дразнили за это, именно поэтому с началом проекта "Модернизация", он присоединился к Охлакратам, чтобы недопустить стирание жирного рода с лица земли.<br>
         <b>Ульта:</b> встаёт на месте и атакует лазером из груди.
       </div>
-      <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (выстрел / удар)</span><span>16 / 46</span></div><div class="stat-track"><div class="stat-fill" style="width:60%"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>208</span></div><div class="stat-track"><div class="stat-fill" style="width:75%"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>🔫 Патроны</span><span>5 (перезарядка 1.6с)</span></div><div class="stat-track"><div class="stat-fill" style="width:80%"></div></div></div>
       <button id="hero-modal-select" onclick="selectHeroAndClose('Vitya')">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
 
+<!-- Лёха -->
 <div id="hero-modal-lesha" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,180,80,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeLeshaDetails()">✕</button>
@@ -480,16 +439,12 @@
         Печально известный лидер Синдиката "Трусы", вся война Технократов и Охлократов для него всего лишь способ заявить миру, что он всё ещё здесь..., ну и прорекламировать свой бренд трусов...<br>
         <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
       </div>
-      <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>100</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (бомба)</span><span>25 (+яд)</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>208</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>💣 Патроны</span><span>3 (перезарядка 2.0с)</span></div><div class="stat-track"><div class="stat-fill" style="width:60%; background:linear-gradient(90deg,#ffb450,#ff7a4d)"></div></div></div>
       <button id="hero-modal-select" onclick="selectLeshaAndClose()" style="background:linear-gradient(180deg,#ffb450,#ff7a4d); box-shadow:0 4px 0 #b87a00;">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
 
-<!-- Модалка Фиалки -->
+<!-- Фиалка -->
 <div id="hero-modal-fialka" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(192,132,252,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeFialkaDetails()">✕</button>
@@ -505,58 +460,40 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Робот.<br><br>
-        Одна из первых моделей роботов исследователей класса: GNOC (Универсальный навигатор и классификатор объектов), в отличие от своих собратьев, обожает природу и органику, именно по этой причине она присоединилась к Охлократам, чтобы не позволить Бездушным технократам превратить всех в машины.<br><br>
-        <b>Атака:</b> Электроснаряд, который перескакивает цепной молнией на других врагов.<br>
+        Одна из первых моделей роботов исследователей класса: GNOC (Универсальный навигатор и классификатор объектов), в отличие от своих собратьев, обожает природу и органику, именно по этой причине она присоединилась к Охлократам.<br>
+        <b>Атака:</b> Цепная молния.<br>
         <b>Ульта:</b> Притягивает противника косой и парализует его.
       </div>
-      <div class="stat-block"><div class="stat-head"><span>❤️ Здоровье</span><span>110</span></div><div class="stat-track"><div class="stat-fill" style="width:100%; background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>⚔️ Урон (цепная молния)</span><span>18</span></div><div class="stat-track"><div class="stat-fill" style="width:65%; background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>🏃 Скорость</span><span>200</span></div><div class="stat-track"><div class="stat-fill" style="width:70%; background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div></div>
-      <div class="stat-block"><div class="stat-head"><span>🔫 Патроны</span><span>4 (перезарядка 1.8с)</span></div><div class="stat-track"><div class="stat-fill" style="width:75%; background:linear-gradient(90deg,#a855f7,#d8b4fe)"></div></div></div>
       <button id="hero-modal-select" onclick="selectFialkaAndClose()" style="background:linear-gradient(180deg,#c084fc,#a855f7); box-shadow:0 4px 0 #7e22ce;">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
 
-<!-- Модалка Информации о Фиалке -->
-<div id="fialka-info-modal">
-  <div id="fialka-info-card">
-    <button class="modal-close" onclick="closeFialkaInfo()">✕</button>
-    <h2 style="color: #fff; font-size: 32px; margin-bottom: 20px;">Обновление 0.3</h2>
-    
-    <div style="width: 100%; height: 250px; background-image: url('img/Fialka.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; margin-bottom: 20px; border-radius: 16px; border: 2px solid #c084fc;"></div>
-    
-    <h3 style="color: #c084fc; font-size: 28px; margin-bottom: 10px;">Новый боец: Фиалка</h3>
-    <p style="color: rgba(200,220,240,0.9); font-size: 16px; line-height: 1.6; max-width: 500px; margin: 0 auto 24px auto;">
-      Эпический убийца из клана Охлократов. Использует электричество для цепных атак и притягивания врагов.
-      <br><br>
-      Уже доступна в игре!
-    </p>
-    <div id="teaser-timer-big" style="color: #4fd6a0; font-size: 24px; font-weight: 800; background: rgba(0,0,0,0.5); padding: 14px 34px; border-radius: 14px; border: 1px solid rgba(79,214,160,0.4); display: inline-block;">
-      Доступна!
+<!-- Василёк -->
+<div id="hero-modal-vasilek" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
+  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,77,77,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
+    <button class="modal-close" onclick="closeVasilekDetails()">✕</button>
+    <div id="hero-modal-left">
+      <div class="speech-bubble" id="bubble-vasilek"></div>
+      <div id="hero-modal-icon" style="background-image:url('img/Vasilek.jpg'); border-color: #ff4d4d;"></div>
+    </div>
+    <div id="hero-modal-right">
+      <div id="hero-modal-name">Василёк</div>
+      <div class="tag-row">
+        <span class="tag tag-class" style="color:#ff4d4d; border-color:rgba(255,77,77,0.35)">КЛАСС: ПОДДЕРЖКА</span>
+        <span class="tag tag-crazy">РЕДКОСТЬ: БЕЗУМНАЯ</span>
+      </div>
+      <div id="hero-modal-desc">
+        <b>Вид:</b> Робот.<br><br>
+        Розовый робот с аккуратно уложенными волосами. Вооружён автоматом, стреляет очередью. При контакте пули разбиваются на осколки.<br>
+        <b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.
+      </div>
+      <button id="hero-modal-select" onclick="selectVasilekAndClose()" style="background:linear-gradient(180deg,#ff7b7b,#ff4d4d); box-shadow:0 4px 0 #b32d2d;">ВЫБРАТЬ</button>
     </div>
   </div>
 </div>
 
-<!-- Модалка Информации о Васильке -->
-<div id="vasilek-info-modal">
-  <div id="vasilek-info-card">
-    <button class="modal-close" onclick="closeVasilekInfo()">✕</button>
-    <h2 style="color: #fff; font-size: 32px; margin-bottom: 20px;">Обновление 0.4</h2>
-    
-    <div style="width: 100%; height: 250px; background-image: url('img/Vasilek.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat; margin-bottom: 20px; border-radius: 16px; border: 2px solid #c084fc;"></div>
-    
-    <h3 style="color: #c084fc; font-size: 28px; margin-bottom: 10px;">Новый боец: Василёк</h3>
-    <p style="color: rgba(200,220,240,0.9); font-size: 16px; line-height: 1.6; max-width: 500px; margin: 0 auto 24px auto;">
-      Таинственный боец поддержки. Его способности позволяют исцелять союзников и накладывать щиты. Готовьтесь к его появлению!
-    </p>
-    <div id="teaser-timer-vasilek-big" style="color: #ff7b7b; font-size: 24px; font-weight: 800; background: rgba(0,0,0,0.5); padding: 14px 34px; border-radius: 14px; border: 1px solid rgba(255,80,80,0.4); display: inline-block;">
-      До выхода: 2 дня
-    </div>
-  </div>
-</div>
-
-<!-- Меню режимов -->
+<!-- МОДАЛКА: РЕЖИМЫ -->
 <div id="mode-modal">
   <div id="mode-modal-card">
     <button class="modal-close" onclick="closeModeModal()">✕</button>
@@ -572,25 +509,109 @@
         <div class="mode-option-check">✓</div>
       </div>
       
-      <!-- PVP -->
+      <!-- PVP на время -->
       <div class="mode-option" onclick="selectMode('PVP-Битва', this)">
         <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
         <div class="mode-option-info">
           <div class="mode-option-name">PVP-Битва</div>
-          <div class="mode-option-desc">Все против всех (с ботами, если нет игроков)</div>
+          <div class="mode-option-desc">5 минут. Убейте больше всех!</div>
         </div>
         <div class="mode-option-check">✓</div>
       </div>
 
-      <!-- Останется только один (В разработке) -->
-      <div class="mode-option disabled" onclick="showDev('РЕЖИМ: ОСТАНЕТСЯ ТОЛЬКО ОДИН')">
+      <!-- Королевская битва -->
+      <div class="mode-option" onclick="selectMode('Останется только один', this)">
         <div class="mode-option-icon" style="background-image:url('img/The_Last_One.jpg');"></div>
         <div class="mode-option-info">
           <div class="mode-option-name">Останется только один</div>
-          <div class="mode-option-desc" style="color: #ffb450;">В разработке</div>
+          <div class="mode-option-desc">10 игроков. Выживает сильнейший.</div>
         </div>
+        <div class="mode-option-check">✓</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: ДОРОГА СЛАВЫ -->
+<div id="road-modal">
+  <div id="road-card">
+    <button class="modal-close" onclick="closeRoadModal()">✕</button>
+    <div class="road-header">
+      <div class="road-title">Сезон 1 "Горный техникум"</div>
+      <div style="background:url('img/Road_BG.jpg') center/cover; height: 200px; border-radius: 16px; margin-top: 15px; border: 2px solid #ffd700; position: relative;">
+         <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 5px 20px; border-radius: 20px; color: #fff; font-weight: bold;">Ваш прогресс: <span id="road-ui-sferi">0</span> Сфер</div>
+      </div>
+      <div class="road-progress-bar">
+        <div class="road-progress-fill" id="road-ui-progress"></div>
+        <div class="road-progress-text" id="road-ui-progress-text">0 / 50</div>
+      </div>
+    </div>
+    
+    <h3 style="color: #fff; margin-bottom: 10px;">Награды:</h3>
+    <div class="road-track">
+      <div class="road-node" id="node-10">
+        <div class="road-node-icon" style="background-image:url('img/Icon_Duli.png');"></div>
+        <div class="road-node-name">100 Дулей</div>
+        <div class="road-node-cost">10 Сфер</div>
+      </div>
+      <div class="road-node" id="node-25">
+        <div class="road-node-icon" style="background-image:url('img/Chest_Techno.png');"></div>
+        <div class="road-node-name">Техносундук</div>
+        <div class="road-node-cost">25 Сфер</div>
+      </div>
+      <div class="road-node" id="node-50">
+        <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
+        <div class="road-node-name">Боец: Лёха</div>
+        <div class="road-node-cost">50 Сфер</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: МАГАЗИН -->
+<div id="shop-modal">
+  <div id="shop-card">
+    <button class="modal-close" onclick="closeShopModal()">✕</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 15px;">
+      <h2 style="color: #fff;">МАГАЗИН</h2>
+      <div class="currency-panel">
+        <div class="currency-item"><div class="curr-icon curr-duli"></div> <span id="shop-ui-duli">0</span></div>
+        <div class="currency-item"><div class="curr-icon curr-oskolki"></div> <span id="shop-ui-oskolki">0</span></div>
+      </div>
+    </div>
+    
+    <div class="shop-grid">
+      <div class="shop-item">
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Techno.png');"></div>
+        <div class="shop-item-name">Техносундук</div>
+        <div class="shop-item-price">50 Осколков</div>
+        <button onclick="buyChest('techno', 50)">КУПИТЬ</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Octo.png');"></div>
+        <div class="shop-item-name">Октосундук</div>
+        <div class="shop-item-price">150 Осколков</div>
+        <button onclick="buyChest('octo', 150)">КУПИТЬ</button>
+      </div>
+      <div class="shop-item">
+        <div class="shop-item-icon" style="background-image: url('img/Chest_Ultra.png');"></div>
+        <div class="shop-item-name">Ультрасундук</div>
+        <div class="shop-item-price">300 Осколков</div>
+        <button onclick="buyChest('ultra', 300)">КУПИТЬ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- МОДАЛКА: СООБЩЕСТВО -->
+<div id="community-modal">
+  <div id="community-card">
+    <button class="modal-close" onclick="closeCommunityModal()">✕</button>
+    <h2 style="color: #fff; margin-bottom: 20px;">Наше Сообщество</h2>
+    <p style="color: #ccc; margin-bottom: 20px;">Присоединяйтесь к нам, чтобы первыми узнавать о новостях и обновлениях!</p>
+    
+    <a href="#" target="_blank" class="comm-btn comm-tg">Telegram Канал</a>
+    <a href="#" target="_blank" class="comm-btn comm-ds">Discord Сервер</a>
   </div>
 </div>
 
@@ -601,30 +622,21 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
-      <div class="news-block" style="border-left-color: #c084fc;" onclick="openVasilekInfo()">
+      <div class="news-block" style="border-left-color: #ff4d4d;">
         <div class="news-img" style="background-image: url('img/Vasilek.jpg');"></div>
         <div class="news-info">
-          <div class="news-date" style="color: #c084fc;">АНОНС ОБНОВЛЕНИЯ 0.4 <span class="news-badge">!</span></div>
+          <div class="news-date" style="color: #ff4d4d;">ОБНОВЛЕНИЕ 0.4 <span class="news-badge">!</span></div>
           <div class="news-title">Новый боец: Василёк</div>
-          <div class="news-text">Слухи о новом бойце поддержки с уникальными щитами и исцелением.</div>
+          <div class="news-text">Безумный розовый робот-поддержка с автоматом и лечащим полем. А также добавлены Сундуки и Дорога Славы!</div>
         </div>
       </div>
 
-      <div class="news-block" style="border-left-color: #c084fc;" onclick="openFialkaInfo()">
+      <div class="news-block" style="border-left-color: #c084fc;">
         <div class="news-img" style="background-image: url('img/Fialka.jpg');"></div>
         <div class="news-info">
           <div class="news-date" style="color: #c084fc;">ОБНОВЛЕНИЕ 0.3</div>
           <div class="news-title">Новый боец: Фиалка</div>
-          <div class="news-text">Эпический убийца с цепной молнией и притягивающей косой. А также переработаны атаки Лёхи.</div>
-        </div>
-      </div>
-
-      <div class="news-block" style="border-left-color: #7ff0ff;">
-        <div class="news-img" style="background-image: url('img/Vitya.jpg');"></div>
-        <div class="news-info">
-          <div class="news-date">ОБНОВЛЕНИЕ 0.2.5</div>
-          <div class="news-title">Переработка внешнего вида и новостей</div>
-          <div class="news-text">Витя переоделся в красную майку и джинсы, а Лёха надел деловой костюм. Обновлён интерфейс новостей.</div>
+          <div class="news-text">Эпический убийца с цепной молнией и притягивающей косой.</div>
         </div>
       </div>
 
@@ -633,7 +645,7 @@
         <div class="news-info">
           <div class="news-date" style="color: #ffb450;">ОБНОВЛЕНИЕ 0.2</div>
           <div class="news-title">Добавлен Лёха</div>
-          <div class="news-text">Новый боец-гранадер. Его бомбы оставляют за собой ядовитый след, а ульта разлетается на мелкие осколки.</div>
+          <div class="news-text">Новый боец-гранадер. Его бомбы оставляют за собой ядовитый след.</div>
         </div>
       </div>
       
@@ -654,6 +666,97 @@
 (function(){
 'use strict';
 
+// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СИСТЕМА СОХРАНЕНИЙ ---
+let playerData = JSON.parse(localStorage.getItem('gameData_04')) || {
+  duli: 0,
+  oskolki: 500, // Дадим немного для теста
+  sferi: 0,
+  votes: { artem: 0, benzopila: 0, dmitry: 0 },
+  hasVoted: false,
+  leshaUnlocked: false,
+  claimedRoad10: false,
+  claimedRoad25: false
+};
+
+function saveData() {
+  localStorage.setItem('gameData_04', JSON.stringify(playerData));
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('ui-duli').textContent = playerData.duli;
+  document.getElementById('ui-oskolki').textContent = playerData.oskolki;
+  document.getElementById('shop-ui-duli').textContent = playerData.duli;
+  document.getElementById('shop-ui-oskolki').textContent = playerData.oskolki;
+  document.getElementById('ui-sferi-road').textContent = 'Сферы: ' + playerData.sferi;
+  document.getElementById('road-ui-sferi').textContent = playerData.sferi;
+  
+  const prog = Math.min(100, (playerData.sferi / 50) * 100);
+  document.getElementById('road-ui-progress').style.width = prog + '%';
+  document.getElementById('road-ui-progress-text').textContent = Math.min(50, playerData.sferi) + ' / 50';
+
+  // Голосование
+  document.getElementById('vote-artem').textContent = playerData.votes.artem + ' голосов';
+  document.getElementById('vote-benzopila').textContent = playerData.votes.benzopila + ' голосов';
+  document.getElementById('vote-dmitry').textContent = playerData.votes.dmitry + ' голосов';
+
+  // Разблокировка Лёхи
+  if (playerData.sferi >= 50) {
+    playerData.leshaUnlocked = true;
+    const cardLesha = document.getElementById('card-lesha');
+    if (cardLesha) {
+      cardLesha.classList.remove('locked');
+      cardLesha.querySelector('.lock-timer').style.display = 'none';
+      cardLesha.onclick = () => openHeroDetails('Lesha');
+    }
+  } else {
+    const cardLesha = document.getElementById('card-lesha');
+    if (cardLesha) {
+      cardLesha.classList.add('locked');
+      cardLesha.querySelector('.lock-timer').style.display = 'block';
+      cardLesha.querySelector('.lock-timer').textContent = 'Нужно ' + (50 - playerData.sferi) + ' сфер';
+    }
+  }
+
+  // Дорога славы
+  if (playerData.sferi >= 10 && !playerData.claimedRoad10) {
+    document.getElementById('node-10').classList.add('unlocked');
+  }
+  if (playerData.sferi >= 25 && !playerData.claimedRoad25) {
+    document.getElementById('node-25').classList.add('unlocked');
+  }
+  if (playerData.sferi >= 50) {
+    document.getElementById('node-50').classList.add('unlocked');
+  }
+}
+
+window.voteFor = function(hero) {
+  if (playerData.hasVoted) return alert('Вы уже проголосовали!');
+  playerData.votes[hero]++;
+  playerData.hasVoted = true;
+  saveData();
+  alert('Спасибо за ваш голос!');
+};
+
+window.buyChest = function(type, price) {
+  if (playerData.oskolki >= price) {
+    playerData.oskolki -= price;
+    let reward = '';
+    if (type === 'techno') { playerData.duli += 50; reward = '50 Дулей'; }
+    if (type === 'octo') { playerData.duli += 150; reward = '150 Дулей'; }
+    if (type === 'ultra') { playerData.duli += 300; playerData.sferi += 5; reward = '300 Дулей и 5 Сфер!'; }
+    saveData();
+    alert('Вы открыли сундук и получили: ' + reward);
+  } else {
+    alert('Недостаточно Осколков!');
+  }
+};
+
+window.checkLeshaUnlock = function() {
+  if (playerData.leshaUnlocked) openHeroDetails('Lesha');
+  else alert('Лёха откроется, когда вы наберёте 50 Сфер Влияния на Дороге Славы!');
+};
+
 // --- ЛОГИКА ЭКРАНОВ ЗАГРУЗКИ ---
 const studioSplash = document.getElementById('studio-splash');
 const loadingScreen = document.getElementById('loading-screen');
@@ -663,14 +766,13 @@ const tipLabel = document.getElementById('tip-label');
 const tipText = document.getElementById('tip-text');
 
 const tips = [
-  { type: "СОВЕТ", text: "Используйте укрытия. Витя наносит большой урон в ближнем бою, но уязвим на дистанции." },
-  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов. Используйте её, чтобы вытащить врага из-за укрытия." },
-  { type: "ЛОР", text: "Проект «Модернизация» разделил мир на Технократов и Охлакратов. Витя сражается за право жирных людей на существование." },
-  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект: обычная, отравленная и тройная отравленная. Каждая третья бомба разлетается на осколки." },
-  { type: "СОВЕТ", text: "Следите за патронами. Перезарядка занимает время, в которое вы уязвимы." },
-  { type: "ЛОР", text: "Синдикат «Трусы» — это не просто бренд одежды, это политическая сила, которую возглавляет Лёха." },
-  { type: "ФАКТ", text: "Витя и Лёха когда-то были друзьями, но война развела их по разные стороны." },
-  { type: "СОВЕТ", text: "Цепная молния Фиалки может поразить до 4 врагов подряд, если они стоят близко друг к другу." }
+  { type: "СОВЕТ", text: "Используйте укрытия. Витя наносит большой урон в ближнем бою." },
+  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов. Используйте её, чтобы вытащить врага." },
+  { type: "ЛОР", text: "Проект «Модернизация» разделил мир на Технократов и Охлакратов." },
+  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект. Каждая третья бомба разлетается на осколки." },
+  { type: "СОВЕТ", text: "Следите за патронами. Перезарядка занимает время." },
+  { type: "СОВЕТ", text: "Цепная молния Фиалки может поразить до 4 врагов подряд." },
+  { type: "ФАКТ", text: "Поле Василька лечит вас и наносит урон врагам. Стойте в нём!" }
 ];
 
 let currentTip = tips[Math.floor(Math.random() * tips.length)];
@@ -679,27 +781,23 @@ tipText.textContent = currentTip.text;
 
 setTimeout(() => {
   studioSplash.classList.add('hidden');
-  
   setTimeout(() => {
     loadingScreen.classList.remove('hidden');
-    
     let progress = 0;
     let loadInterval = setInterval(() => {
       progress += Math.random() * 15;
       if (progress > 100) progress = 100;
-      
       loadingBar.style.width = progress + '%';
       loadingStatus.textContent = Math.floor(progress) + '%';
-      
       if (progress >= 100) {
         clearInterval(loadInterval);
         setTimeout(() => {
           loadingScreen.classList.add('hidden');
           document.getElementById('start-screen').classList.remove('hidden');
+          updateUI();
         }, 500);
       }
     }, 150);
-    
   }, 800);
 }, 2500);
 
@@ -707,9 +805,6 @@ setTimeout(() => {
 const startScreen = document.getElementById('start-screen');
 const lobbyScreen = document.getElementById('lobby-screen');
 const fightersModal = document.getElementById('fighters-modal');
-const heroModal   = document.getElementById('hero-modal');
-const heroModalLesha = document.getElementById('hero-modal-lesha');
-const heroModalFialka = document.getElementById('hero-modal-fialka');
 const modeModal   = document.getElementById('mode-modal');
 const devOverlay  = document.getElementById('dev-overlay');
 const devTitle    = document.getElementById('dev-title');
@@ -717,8 +812,15 @@ const gameEl      = document.getElementById('game');
 const hintEl      = document.getElementById('hint');
 const modeLabel   = document.getElementById('lobby-mode-label');
 const newsModal   = document.getElementById('news-modal');
-const fialkaInfoModal = document.getElementById('fialka-info-modal');
-const vasilekInfoModal = document.getElementById('vasilek-info-modal');
+const roadModal   = document.getElementById('road-modal');
+const shopModal   = document.getElementById('shop-modal');
+const communityModal = document.getElementById('community-modal');
+
+// Модалки героев
+const heroModal   = document.getElementById('hero-modal');
+const heroModalLesha = document.getElementById('hero-modal-lesha');
+const heroModalFialka = document.getElementById('hero-modal-fialka');
+const heroModalVasilek = document.getElementById('hero-modal-vasilek');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
@@ -729,192 +831,77 @@ let selectedHero = 'Vitya';
 
 // --- СИСТЕМА РЕПЛИК ---
 const phrases = {
-  Vitya: [
-    "Я не толстый, я накачанный!",
-    "Мой вес — моё преимущество!",
-    "Охлакраты навсегда!",
-    "Свобода для жирного рода!",
-    "Меня не дразнить!",
-    "Лазер из груди — это круто!",
-    "Я верный боец Госпожи Свободы!",
-    "Ещё один бой, ещё один обед!"
-  ],
-  Lesha: [
-    "Трусы — это бренд!",
-    "Вся война — просто реклама!",
-    "Вы всё ещё здесь?",
-    "Синдикат Трусы рулит!",
-    "Покупайте мои трусы!",
-    "Я здесь, чтобы заявить о себе!",
-    "Бомбы — это весело!",
-    "Я лидер, а вы — так..."
-  ],
-  Fialka: [
-    "Напряжение растет!",
-    "Я — Технократ!",
-    "Мои системы в норме.",
-    "Электричество — моя стихия.",
-    "Сопротивление бесполезно.",
-    "Ты притянут к ответу.",
-    "Цепная реакция началась.",
-    "Паралич — это только начало."
-  ]
+  Vitya: ["Я не толстый, я накачанный!", "Мой вес — моё преимущество!", "Охлакраты навсегда!", "Свобода для жирного рода!", "Меня не дразнить!", "Лазер из груди — это круто!", "Я верный боец Госпожи Свободы!", "Ещё один бой, ещё один обед!"],
+  Lesha: ["Трусы — это бренд!", "Вся война — просто реклама!", "Вы всё ещё здесь?", "Синдикат Трусы рулит!", "Покупайте мои трусы!", "Я здесь, чтобы заявить о себе!", "Бомбы — это весело!", "Я лидер, а вы — так..."],
+  Fialka: ["Напряжение растет!", "Я — Технократ!", "Мои системы в норме.", "Электричество — моя стихия.", "Сопротивление бесполезно.", "Ты притянут к ответу.", "Цепная реакция началась.", "Паралич — это только начало."],
+  Vasilek: ["Лечение — это искусство!", "Стойте в зоне!", "Я розовый, но опасный!", "Мой автомат не дремлет!", "Осколки летят!", "Поддержка решает всё!", "Хаос — моя стихия!", "Я собран из лучших деталей!"]
 };
 
 let audio1 = new Audio('sounds/vitya_voice.mp3');
 let audio2 = new Audio('sounds/lesha_voice.mp3');
 let audio3 = new Audio('sounds/fialka_voice.mp3');
+let audio4 = new Audio('sounds/vasilek_voice.mp3');
 
 function showRandomPhrase(heroType) {
-  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : 'bubble-fialka'));
+  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : 'bubble-vasilek')));
   const arr = phrases[heroType];
   const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
-  
   bubble.textContent = randomPhrase;
   bubble.classList.add('show');
   
-  if (heroType === 'Vitya') {
-    audio1.volume = 1;
-    audio1.play().catch(()=>{});
-  } else if (heroType === 'Lesha') {
-    audio2.volume = 1;
-    audio2.play().catch(()=>{});
-  } else {
-    audio3.volume = 1;
-    audio3.play().catch(()=>{});
-  }
+  if (heroType === 'Vitya') audio1.play().catch(()=>{});
+  else if (heroType === 'Lesha') audio2.play().catch(()=>{});
+  else if (heroType === 'Fialka') audio3.play().catch(()=>{});
+  else audio4.play().catch(()=>{});
 
-  setTimeout(() => {
-    bubble.classList.remove('show');
-  }, 3000);
+  setTimeout(() => bubble.classList.remove('show'), 3000);
 }
 
-function playLobbyMusic() {
-  bgMusicBattle.pause();
-  bgMusicLobby.volume = 0.5;
-  bgMusicLobby.play().catch(e => console.log('Музыка лобби не загружена', e));
-}
-function playBattleMusic() {
-  bgMusicLobby.pause();
-  bgMusicBattle.volume = 0.5;
-  bgMusicBattle.play().catch(e => console.log('Боевая музыка не загружена', e));
-}
+function playLobbyMusic() { bgMusicBattle.pause(); bgMusicLobby.volume = 0.5; bgMusicLobby.play().catch(e=>{}); }
+function playBattleMusic() { bgMusicLobby.pause(); bgMusicBattle.volume = 0.5; bgMusicBattle.play().catch(e=>{}); }
 
-// --- ТАЙМЕРЫ АНОНСОВ ---
-let releaseTimeVasilek = localStorage.getItem('vasilek_release_time');
-if (!releaseTimeVasilek) {
-  releaseTimeVasilek = Date.now() + (48 * 60 * 60 * 1000); // 2 дня
-  localStorage.setItem('vasilek_release_time', releaseTimeVasilek);
-} else {
-  releaseTimeVasilek = parseInt(releaseTimeVasilek, 10);
-}
-
-function updateTimers() {
-  const now = Date.now();
-  const diff = Math.max(0, releaseTimeVasilek - now);
-  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  
-  const el = document.getElementById('teaser-timer-vasilek');
-  const cardTimer = document.getElementById('card-vasilek-timer');
-  const bigTimer = document.getElementById('teaser-timer-vasilek-big');
-  
-  const timeStr = `${d} д ${h} ч ${m} мин`;
-  
-  if (el) {
-    if (diff <= 0) el.textContent = "Уже в игре!";
-    else el.textContent = `через ${timeStr}`;
-  }
-  if (cardTimer) {
-    if (diff <= 0) cardTimer.textContent = "Доступен";
-    else cardTimer.textContent = `Скоро: ${d}д ${h}ч`;
-  }
-  if (bigTimer) {
-    if (diff <= 0) bigTimer.textContent = "Доступен в игре!";
-    else bigTimer.textContent = `До выхода: ${timeStr}`;
-  }
-}
-setInterval(updateTimers, 1000);
-updateTimers();
-
-window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); };
+// --- НАВИГАЦИЯ ---
+window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); updateUI(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
 
 window.openHeroDetails = function(hero){ 
-  if (hero === 'Vitya') {
-    heroModal.classList.add('show');
-    setTimeout(() => showRandomPhrase('Vitya'), 300);
-  }
-  if (hero === 'Lesha') {
-    heroModalLesha.style.display = 'flex';
-    setTimeout(() => showRandomPhrase('Lesha'), 300);
-  }
-  if (hero === 'Fialka') {
-    heroModalFialka.style.display = 'flex';
-    setTimeout(() => showRandomPhrase('Fialka'), 300);
-  }
+  if (hero === 'Vitya') { heroModal.classList.add('show'); setTimeout(() => showRandomPhrase('Vitya'), 300); }
+  if (hero === 'Lesha') { heroModalLesha.style.display = 'flex'; setTimeout(() => showRandomPhrase('Lesha'), 300); }
+  if (hero === 'Fialka') { heroModalFialka.style.display = 'flex'; setTimeout(() => showRandomPhrase('Fialka'), 300); }
+  if (hero === 'Vasilek') { heroModalVasilek.style.display = 'flex'; setTimeout(() => showRandomPhrase('Vasilek'), 300); }
 };
 window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
 window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
 window.closeFialkaDetails = function(){ heroModalFialka.style.display = 'none'; };
+window.closeVasilekDetails = function(){ heroModalVasilek.style.display = 'none'; };
 
-window.openFialkaInfo = function(){ fialkaInfoModal.classList.add('show'); };
-window.closeFialkaInfo = function(){ fialkaInfoModal.classList.remove('show'); };
-
-window.openVasilekInfo = function(){ vasilekInfoModal.classList.add('show'); };
-window.closeVasilekInfo = function(){ vasilekInfoModal.classList.remove('show'); };
-
-window.selectHeroAndClose = function(hero){ 
-  selectedHero = hero; 
-  closeHeroDetails(); 
-  closeFightersModal(); 
-  updateLobbySelection(); 
-};
-window.selectLeshaAndClose = function(){ 
-  selectedHero = 'Lesha'; 
-  closeLeshaDetails(); 
-  closeFightersModal(); 
-  updateLobbySelection(); 
-};
-window.selectFialkaAndClose = function(){ 
-  selectedHero = 'Fialka'; 
-  closeFialkaDetails(); 
-  closeFightersModal(); 
-  updateLobbySelection(); 
-};
+window.selectHeroAndClose = function(hero){ selectedHero = hero; closeHeroDetails(); closeFightersModal(); updateLobbySelection(); };
+window.selectLeshaAndClose = function(){ selectedHero = 'Lesha'; closeLeshaDetails(); closeFightersModal(); updateLobbySelection(); };
+window.selectFialkaAndClose = function(){ selectedHero = 'Fialka'; closeFialkaDetails(); closeFightersModal(); updateLobbySelection(); };
+window.selectVasilekAndClose = function(){ selectedHero = 'Vasilek'; closeVasilekDetails(); closeFightersModal(); updateLobbySelection(); };
 
 function updateLobbySelection() {
   const disp = document.getElementById('lobby-hero-display-inner');
   const name = document.getElementById('lobby-hero-name-big');
-  const cardVitya = document.getElementById('card-vitya');
-  const cardLesha = document.getElementById('card-lesha');
-  const cardFialka = document.getElementById('card-fialka');
+  document.querySelectorAll('.fighter-card').forEach(c => c.classList.remove('selected'));
 
-  if (cardVitya) cardVitya.classList.remove('selected');
-  if (cardLesha) cardLesha.classList.remove('selected');
-  if (cardFialka) cardFialka.classList.remove('selected');
-
-  if (selectedHero === 'Vitya') {
-    disp.style.backgroundImage = "url('img/Vitya.jpg')";
-    name.textContent = 'Витя';
-    if (cardVitya) cardVitya.classList.add('selected');
-  } else if (selectedHero === 'Lesha') {
-    disp.style.backgroundImage = "url('img/Lesha.jpg')";
-    name.textContent = 'Лёха';
-    if (cardLesha) cardLesha.classList.add('selected');
-  } else {
-    disp.style.backgroundImage = "url('img/Fialka.jpg')";
-    name.textContent = 'Фиалка';
-    if (cardFialka) cardFialka.classList.add('selected');
-  }
+  if (selectedHero === 'Vitya') { disp.style.backgroundImage = "url('img/Vitya.jpg')"; name.textContent = 'Витя'; document.getElementById('card-vitya').classList.add('selected'); }
+  else if (selectedHero === 'Lesha') { disp.style.backgroundImage = "url('img/Lesha.jpg')"; name.textContent = 'Лёха'; document.getElementById('card-lesha').classList.add('selected'); }
+  else if (selectedHero === 'Fialka') { disp.style.backgroundImage = "url('img/Fialka.jpg')"; name.textContent = 'Фиалка'; document.getElementById('card-fialka').classList.add('selected'); }
+  else { disp.style.backgroundImage = "url('img/Vasilek.jpg')"; name.textContent = 'Василёк'; document.getElementById('card-vasilek').classList.add('selected'); }
 }
 
 window.openModeModal = function(){ modeModal.classList.add('show'); };
 window.closeModeModal = function(){ modeModal.classList.remove('show'); };
 window.openNewsModal = function(){ newsModal.classList.add('show'); };
 window.closeNewsModal = function(){ newsModal.classList.remove('show'); };
+window.openRoadModal = function(){ roadModal.classList.add('show'); updateUI(); };
+window.closeRoadModal = function(){ roadModal.classList.remove('show'); };
+window.openShopModal = function(){ shopModal.classList.add('show'); updateUI(); };
+window.closeShopModal = function(){ shopModal.classList.remove('show'); };
+window.openCommunityModal = function(){ communityModal.classList.add('show'); };
+window.closeCommunityModal = function(){ communityModal.classList.remove('show'); };
 window.showDev = function(title){ devTitle.textContent = title + ' · В РАЗРАБОТКЕ'; devOverlay.classList.add('show'); };
 window.hideDev = function(){ devOverlay.classList.remove('show'); };
 
@@ -932,7 +919,7 @@ window.startGame = function(){
   hintEl.style.display = 'block';
   gameRunning = true;
   playBattleMusic();
-  startTraining();
+  startBattle();
 };
 
 window.backToLobby = function(){
@@ -942,6 +929,7 @@ window.backToLobby = function(){
   gameRunning = false;
   playLobbyMusic();
   updateLobbySelection();
+  updateUI();
 };
 
 addEventListener('keydown', e => {
@@ -950,11 +938,13 @@ addEventListener('keydown', e => {
     else if (heroModal.classList.contains('show')) closeHeroDetails();
     else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
     else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
-    else if (fialkaInfoModal.classList.contains('show')) closeFialkaInfo();
-    else if (vasilekInfoModal.classList.contains('show')) closeVasilekInfo();
+    else if (heroModalVasilek.style.display === 'flex') closeVasilekDetails();
     else if (fightersModal.classList.contains('show')) closeFightersModal();
     else if (modeModal.classList.contains('show')) closeModeModal();
     else if (newsModal.classList.contains('show')) closeNewsModal();
+    else if (roadModal.classList.contains('show')) closeRoadModal();
+    else if (shopModal.classList.contains('show')) closeShopModal();
+    else if (communityModal.classList.contains('show')) closeCommunityModal();
   }
 });
 
@@ -984,6 +974,7 @@ const WORLD_W = 2600, WORLD_H = 2000;
 const MAX_AMMO_VITYA = 5, RELOAD_VITYA = 1.6;
 const MAX_AMMO_LESHA = 3, RELOAD_LESHA = 2.0;
 const MAX_AMMO_FIALKA = 4, RELOAD_FIALKA = 1.8;
+const MAX_AMMO_VASILEK = 4, RELOAD_VASILEK = 1.5;
 
 let bots = []; 
 let rocks = []; 
@@ -993,6 +984,8 @@ let particles = [];
 let killFeed = []; 
 let matchSplashTimer = 0; 
 let gameOver = false;
+let gameTimeLeft = 0;
+let matchKills = 0;
 const cam = { x: 0, y: 0 };
 
 const player = {
@@ -1002,50 +995,34 @@ const player = {
   ammo: MAX_AMMO_VITYA, reloading: 0, walkPhase: 0,
   name: 'Вы', color: '#3fa9f5', colorLight: '#a8e0ff',
   isPlayer: true, moveTick: 0, mvx: 0, mvy: 0,
-  type: 'Vitya', poison: 0, stun: 0
+  type: 'Vitya', poison: 0, stun: 0, shootCount: 0
 };
 
 function createHero(id, type, isBot) {
   const spawn = findSpawnPoint();
   const isVitya = type === 'Vitya';
   const isLesha = type === 'Lesha';
+  const isFialka = type === 'Fialka';
   
-  let maxAmmo = MAX_AMMO_VITYA;
-  let reloadTime = RELOAD_VITYA;
-  let color = '#3fa9f5';
-  let colorLight = '#a8e0ff';
+  let maxAmmo = MAX_AMMO_VITYA, reloadTime = RELOAD_VITYA, color = '#3fa9f5', colorLight = '#a8e0ff';
   
-  if (isLesha) {
-    maxAmmo = MAX_AMMO_LESHA;
-    reloadTime = RELOAD_LESHA;
-    color = '#ff7a4d';
-    colorLight = '#ffb99b';
-  } else if (type === 'Fialka') {
-    maxAmmo = MAX_AMMO_FIALKA;
-    reloadTime = RELOAD_FIALKA;
-    color = '#c084fc';
-    colorLight = '#d8b4fe';
-  }
+  if (isLesha) { maxAmmo = MAX_AMMO_LESHA; reloadTime = RELOAD_LESHA; color = '#ff7a4d'; colorLight = '#ffb99b'; }
+  else if (isFialka) { maxAmmo = MAX_AMMO_FIALKA; reloadTime = RELOAD_FIALKA; color = '#c084fc'; colorLight = '#d8b4fe'; }
+  else if (type === 'Vasilek') { maxAmmo = MAX_AMMO_VASILEK; reloadTime = RELOAD_VASILEK; color = '#ff4d4d'; colorLight = '#ff9999'; }
 
   return {
     id: id, type: type, isPlayer: !isBot,
     x: spawn.x, y: spawn.y, r: 19,
-    hp: 100, maxHp: 100,
-    aim: Math.random()*TAU,
-    attackCd: 0, swing: 0,
-    ult: 0, ultActive: false, ultTime: 0, beamLen: 0,
+    hp: 100, maxHp: 100, aim: Math.random()*TAU,
+    attackCd: 0, swing: 0, ult: 0, ultActive: false, ultTime: 0, beamLen: 0,
     alive: true, respawn: 0, score: 0, hitFlash: 0,
     ammo: maxAmmo, maxAmmo: maxAmmo, reloadTime: reloadTime,
     reloading: 0, walkPhase: 0,
-    name: isBot ? (isVitya ? 'Витя-бот' : (isLesha ? 'Лёха-бот' : 'Фиалка-бот')) : 'Вы',
+    name: isBot ? (isVitya ? 'Витя-бот' : (isLesha ? 'Лёха-бот' : (isFialka ? 'Фиалка-бот' : 'Василёк-бот'))) : 'Вы',
     color: color, colorLight: colorLight,
-    poison: 0, poisonTick: 0,
-    botTimer: 0, botJitter: 0,
-    shootCount: 0, grenadeTimer: 0,
-    kbx: 0, kby: 0,
-    stun: 0,
-    hookTarget: null,
-    hookX: 0, hookY: 0
+    poison: 0, poisonTick: 0, botTimer: 0, botJitter: 0,
+    shootCount: 0, grenadeTimer: 0, kbx: 0, kby: 0, stun: 0,
+    hookTarget: null, hookX: 0, hookY: 0, healZone: null
   };
 }
 
@@ -1054,68 +1031,69 @@ function findSpawnPoint(){
     const x = 150 + Math.random()*(WORLD_W-300);
     const y = 150 + Math.random()*(WORLD_H-300);
     let ok = true;
-    for (const r of rocks){
-      if (Math.hypot(r.x-x, r.y-y) < r.r + 80){ ok = false; break; }
-    }
+    for (const r of rocks){ if (Math.hypot(r.x-x, r.y-y) < r.r + 80){ ok = false; break; } }
     if (ok) return {x, y};
   }
   return {x: WORLD_W/2, y: WORLD_H/2};
 }
 
 function genWorld(){
-  rocks = [];
-  furniture = [];
-  
+  rocks = []; furniture = [];
   for (let row = 0; row < 5; row++) {
     for (let col = 0; col < 6; col++) {
       const x = 400 + col * 350 + (row % 2 === 0 ? 0 : 40);
       const y = 400 + row * 300;
-      
       rocks.push({x: x, y: y, r: 35, type: 'desk'});
       furniture.push({x: x, y: y, type: 'desk'});
-      
       rocks.push({x: x, y: y + 45, r: 20, type: 'chair'});
       furniture.push({x: x, y: y + 45, type: 'chair'});
-      
-      if (Math.random() < 0.5) {
-        furniture.push({x: x + (Math.random()*20-10), y: y - (Math.random()*15), type: 'books'});
-      }
+      if (Math.random() < 0.5) furniture.push({x: x + (Math.random()*20-10), y: y - (Math.random()*15), type: 'books'});
     }
   }
-  
   for (let i = 0; i < 6; i++) {
-    const x = 100;
-    const y = 300 + i * 300;
+    const x = 100; const y = 300 + i * 300;
     rocks.push({x, y, r: 30, type: 'cabinet'});
     furniture.push({x, y, type: 'cabinet'});
   }
-  
   rocks.push({x: WORLD_W/2, y: 100, r: 50, type: 'board'});
   furniture.push({x: WORLD_W/2, y: 100, type: 'board'});
-  
   furniture.push({x: 800, y: 600, type: 'holo'});
   furniture.push({x: 1800, y: 1400, type: 'holo'});
 }
 
-function startTraining(){
+function startBattle(){
   gameOver = false;
-  bots = [];
-  bullets = [];
-  particles = [];
-  killFeed = [];
-  matchSplashTimer = 2.0; 
+  bots = []; bullets = []; particles = []; killFeed = [];
+  matchSplashTimer = 3.0; 
   genWorld();
 
   const pData = createHero('player', selectedHero, false);
   Object.assign(player, pData);
-  player.isPlayer = true;
-  player.name = 'Вы';
+  player.isPlayer = true; player.name = 'Вы';
 
-  for (let i = 0; i < 4; i++){
-    const rnd = Math.random();
-    const bType = rnd < 0.33 ? 'Vitya' : (rnd < 0.66 ? 'Lesha' : 'Fialka');
-    const bot = createHero('bot_'+i, bType, true);
-    bots.push(bot);
+  matchKills = 0;
+
+  if (currentMode === 'Тренировка') {
+    gameTimeLeft = 0; // Бесконечно
+    for (let i = 0; i < 4; i++){
+      const rnd = Math.random();
+      const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
+      bots.push(createHero('bot_'+i, bType, true));
+    }
+  } else if (currentMode === 'PVP-Битва') {
+    gameTimeLeft = 300; // 5 минут
+    for (let i = 0; i < 5; i++){
+      const rnd = Math.random();
+      const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
+      bots.push(createHero('bot_'+i, bType, true));
+    }
+  } else if (currentMode === 'Останется только один') {
+    gameTimeLeft = 0; // До победы
+    for (let i = 0; i < 9; i++){ // 9 ботов + игрок = 10
+      const rnd = Math.random();
+      const bType = rnd < 0.25 ? 'Vitya' : (rnd < 0.5 ? 'Lesha' : (rnd < 0.75 ? 'Fialka' : 'Vasilek'));
+      bots.push(createHero('bot_'+i, bType, true));
+    }
   }
 
   cam.x = Math.max(0, Math.min(WORLD_W - W, player.x - W/2));
@@ -1144,12 +1122,8 @@ canvas.addEventListener('contextmenu', e => e.preventDefault());
 function spawnHitParticles(x, y, color, n){
   if (particles.length > 900) return;
   for (let i = 0; i < n; i++){
-    const a = Math.random()*TAU;
-    const s = Math.random()*230 + 50;
-    particles.push({
-      x, y, vx: Math.cos(a)*s, vy: Math.sin(a)*s,
-      life: 0.6, max: 0.6, color, r: Math.random()*3 + 2
-    });
+    const a = Math.random()*TAU; const s = Math.random()*230 + 50;
+    particles.push({ x, y, vx: Math.cos(a)*s, vy: Math.sin(a)*s, life: 0.6, max: 0.6, color, r: Math.random()*3 + 2 });
   }
 }
 
@@ -1181,8 +1155,7 @@ function tryAttack(h) {
     h.aim = Math.atan2(target.y - h.y, target.x - h.x);
     damage(target, 46, h);
     const ang = Math.atan2(target.y - h.y, target.x - h.x);
-    target.kbx = Math.cos(ang) * 340;
-    target.kby = Math.sin(ang) * 340;
+    target.kbx = Math.cos(ang) * 340; target.kby = Math.sin(ang) * 340;
     spawnHitParticles(target.x, target.y, '#ffd88a', 12);
     return;
   }
@@ -1192,59 +1165,41 @@ function tryAttack(h) {
     return;
   }
   
-  h.ammo--; h.attackCd = h.type === 'Vitya' ? .4 : (h.type === 'Lesha' ? .7 : .5);
+  h.ammo--; h.attackCd = h.type === 'Vitya' ? .4 : (h.type === 'Lesha' ? .7 : (h.type === 'Vasilek' ? .6 : .5));
   
   if (h.type === 'Vitya') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
-    const bullet = {
-      x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30,
-      vx: Math.cos(a)*900, vy: Math.sin(a)*900,
-      r: 7, dmg: 16, life: 0.9, type: 'bullet'
-    };
-    bullets.push({ ...bullet, owner: h, color: h.color });
+    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*900, vy: Math.sin(a)*900, r: 7, dmg: 16, life: 0.9, type: 'bullet', owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8f2ff', 4);
   } else if (h.type === 'Lesha') {
     h.shootCount++;
     const isPoison = (h.shootCount % 2 === 0); 
     const isTriple = (h.shootCount % 3 === 0);
-    
     let tx, ty;
     if (h.isPlayer) {
-      tx = mouse.x - W/2 + h.x; 
-      ty = mouse.y - H/2 + h.y;
-      const distToClick = Math.hypot(tx - h.x, ty - h.y);
-      const MAX_RANGE = 750;
-      if (distToClick > MAX_RANGE) {
-        const ang = Math.atan2(ty - h.y, tx - h.x);
-        tx = h.x + Math.cos(ang) * MAX_RANGE;
-        ty = h.y + Math.sin(ang) * MAX_RANGE;
-      }
+      tx = mouse.x - W/2 + h.x; ty = mouse.y - H/2 + h.y;
+      const distToClick = Math.hypot(tx - h.x, ty - h.y); const MAX_RANGE = 750;
+      if (distToClick > MAX_RANGE) { const ang = Math.atan2(ty - h.y, tx - h.x); tx = h.x + Math.cos(ang) * MAX_RANGE; ty = h.y + Math.sin(ang) * MAX_RANGE; }
       h.aim = Math.atan2(ty - h.y, tx - h.x);
-    } else {
-      tx = h.x + Math.cos(h.aim) * 400;
-      ty = h.y + Math.sin(h.aim) * 400;
-    }
-
+    } else { tx = h.x + Math.cos(h.aim) * 400; ty = h.y + Math.sin(h.aim) * 400; }
     const spread = isTriple ? [-0.2, 0, 0.2] : [0];
-    
     for (let angOffset of spread) {
       const a = h.aim + angOffset;
-      const bullet = {
-        x: h.x, y: h.y, tx: tx, ty: ty,
-        vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100,
-        r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false
-      };
-      bullets.push({ ...bullet, owner: h, color: h.color });
+      bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100, r: 10, dmg: 25, life: 1.0, type: 'bomb', poison: isPoison, exploded: false, owner: h, color: h.color });
     }
   } else if (h.type === 'Fialka') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
-    const bullet = {
-      x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30,
-      vx: Math.cos(a)*800, vy: Math.sin(a)*800,
-      r: 8, dmg: 18, life: 0.9, type: 'chain_bolt', chained: []
-    };
-    bullets.push({ ...bullet, owner: h, color: h.color });
+    bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*800, vy: Math.sin(a)*800, r: 8, dmg: 18, life: 0.9, type: 'chain_bolt', chained: [], owner: h, color: h.color });
     spawnHitParticles(h.x + Math.cos(a)*32, h.y + Math.sin(a)*32, '#d8b4fe', 4);
+  } else if (h.type === 'Vasilek') {
+    // Василёк стреляет очередью (4 пули веером)
+    h.attackCd = 0.5;
+    for (let i = 0; i < 4; i++) {
+      const spread = (i - 1.5) * 0.1; // Веер
+      const a = h.aim + spread;
+      bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: 6, life: 0.8, type: 'shard_bullet', owner: h, color: '#ff99cc' });
+    }
+    spawnHitParticles(h.x + Math.cos(h.aim)*32, h.y + Math.sin(h.aim)*32, '#ff99cc', 6);
   }
 
   if (h.ammo <= 0 && h.reloading <= 0) h.reloading = h.reloadTime;
@@ -1252,76 +1207,43 @@ function tryAttack(h) {
 
 function activateUlt(h) {
   if (h.ult < 100 || h.ultActive || !h.alive) return;
-  h.ult = 0; h.ultActive = true; h.ultTime = 0.5; 
+  h.ult = 0; h.ultActive = true; h.ultTime = 1.0; 
   
   if (h.type === 'Lesha') {
-    const tx = h.x + Math.cos(h.aim) * 500;
-    const ty = h.y + Math.sin(h.aim) * 500;
-    const bullet = {
-      x: h.x, y: h.y, tx: tx, ty: ty,
-      vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800,
-      r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false
-    };
-    bullets.push({ ...bullet, owner: h, color: '#ff0000' });
+    const tx = h.x + Math.cos(h.aim) * 500; const ty = h.y + Math.sin(h.aim) * 500;
+    bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false, owner: h, color: '#ff0000' });
     h.ultTime = 1.0; 
   } else if (h.type === 'Fialka') {
-    h.ultActive = true;
-    h.ultTime = 1.0; 
-    h.hookTarget = null;
-    
-    const enemies = getAllEnemies(h);
-    let bestDist = 500; 
-    let targetEnemy = null;
-    
+    h.ultActive = true; h.ultTime = 1.0; h.hookTarget = null;
+    const enemies = getAllEnemies(h); let bestDist = 500; let targetEnemy = null;
     for (const e of enemies) {
-      const distToEnemy = Math.hypot(e.x - h.x, e.y - h.y);
-      if (distToEnemy > bestDist) continue;
-      
+      const distToEnemy = Math.hypot(e.x - h.x, e.y - h.y); if (distToEnemy > bestDist) continue;
       const angleToEnemy = Math.atan2(e.y - h.y, e.x - h.x);
-      let angleDiff = Math.abs(h.aim - angleToEnemy);
-      if (angleDiff > Math.PI) angleDiff = TAU - angleDiff;
-      
-      if (angleDiff < 0.5) {
-        bestDist = distToEnemy;
-        targetEnemy = e;
-      }
+      let angleDiff = Math.abs(h.aim - angleToEnemy); if (angleDiff > Math.PI) angleDiff = TAU - angleDiff;
+      if (angleDiff < 0.5) { bestDist = distToEnemy; targetEnemy = e; }
     }
-    
-    if (targetEnemy) {
-      h.hookTarget = targetEnemy;
-      h.hookX = targetEnemy.x;
-      h.hookY = targetEnemy.y;
-    } else {
-      h.hookX = h.x + Math.cos(h.aim) * 500;
-      h.hookY = h.y + Math.sin(h.aim) * 500;
-    }
+    if (targetEnemy) { h.hookTarget = targetEnemy; h.hookX = targetEnemy.x; h.hookY = targetEnemy.y; }
+    else { h.hookX = h.x + Math.cos(h.aim) * 500; h.hookY = h.y + Math.sin(h.aim) * 500; }
+  } else if (h.type === 'Vasilek') {
+    // Поле лечения и урона
+    h.ultActive = true; h.ultTime = 5.0;
+    h.healZone = { x: h.x, y: h.y, r: 150 };
   }
 }
 
 function damage(target, amount, source, isPoison) {
   if (!target.alive) return;
+  target.hp -= amount; target.hitFlash = 0.18;
+  if (isPoison) target.poison = Math.max(target.poison, 3.0);
+  if (source && source !== target && !source.ultActive) source.ult = Math.min(100, source.ult + amount * 0.5);
   
-  target.hp -= amount;
-  target.hitFlash = 0.18;
-  
-  if (isPoison) {
-    target.poison = Math.max(target.poison, 3.0);
-  }
-
-  if (source && source !== target && !source.ultActive) {
-    source.ult = Math.min(100, source.ult + amount * 0.5);
-  }
-
   if (target.hp <= 0) {
-    target.hp = 0;
-    target.alive = false;
-    target.respawn = 3;
-    target.ultActive = false;
-    target.ultTime = 0;
-    target.poison = 0;
+    target.hp = 0; target.alive = false; target.respawn = 3;
+    target.ultActive = false; target.ultTime = 0; target.poison = 0;
     spawnHitParticles(target.x, target.y, target.color, 28);
     if (source && source !== target) {
         source.score++;
+        if (source === player) matchKills++;
         addKillFeed(source, target);
     }
   }
@@ -1333,9 +1255,7 @@ function updateBot(bot, dt) {
     if (bot.respawn <= 0) {
       const spawn = findSpawnPoint();
       bot.x = spawn.x; bot.y = spawn.y;
-      bot.hp = bot.maxHp; bot.alive = true;
-      bot.ammo = bot.maxAmmo; bot.reloading = 0;
-      bot.poison = 0; bot.stun = 0;
+      bot.hp = bot.maxHp; bot.alive = true; bot.ammo = bot.maxAmmo; bot.reloading = 0; bot.poison = 0; bot.stun = 0;
     }
     return;
   }
@@ -1344,291 +1264,200 @@ function updateBot(bot, dt) {
   bot.swing = Math.max(0, bot.swing - dt);
   if (bot.reloading > 0) {
     bot.reloading -= dt;
-    if (bot.reloading <= 0) {
-      bot.reloading = 0;
-      bot.ammo = bot.maxAmmo;
-    }
+    if (bot.reloading <= 0) { bot.reloading = 0; bot.ammo = bot.maxAmmo; }
   }
 
-  if (bot.stun > 0) {
-    bot.stun -= dt;
-    bot.mvx = 0; bot.mvy = 0;
-    return;
-  }
+  if (bot.stun > 0) { bot.stun -= dt; bot.mvx = 0; bot.mvy = 0; return; }
 
   // УЛЬТА БОТА
   if (bot.ultActive) {
     bot.ultTime -= dt;
-    
     if (bot.type === 'Vitya') {
-      // Лазер у бота
       const enemies = getAllEnemies(bot);
       bot.ultTick = (bot.ultTick || 0) + dt;
       if (bot.ultTick > 0.1) {
         bot.ultTick = 0;
         for (const e of enemies) {
-          if (pointSegDist(e.x, e.y, bot.x, bot.y, bot.x + Math.cos(bot.aim)*1100, bot.y + Math.sin(bot.aim)*1100) < e.r + 11) {
-            damage(e, 5, bot);
-          }
+          if (pointSegDist(e.x, e.y, bot.x, bot.y, bot.x + Math.cos(bot.aim)*1100, bot.y + Math.sin(bot.aim)*1100) < e.r + 11) damage(e, 5, bot);
         }
       }
     } else if (bot.type === 'Lesha') {
-      // Лёха может двигаться
-      const enemies = getAllEnemies(bot);
-      let target = null, best = Infinity;
-      for (const e of enemies) {
-        if (!e.alive) continue;
-        const d = Math.hypot(bot.x - e.x, bot.y - e.y);
-        if (d < best) { best = d; target = e; }
-      }
+      const enemies = getAllEnemies(bot); let target = null, best = Infinity;
+      for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
       if (target) {
-        const dx = target.x - bot.x, dy = target.y - bot.y;
-        const d = Math.hypot(dx, dy) || 1;
-        const nx = dx / d, ny = dy / d;
-        let mx = 0, my = 0;
-        if (d > 220 + 60) { mx = nx; my = ny; }
-        else if (d < 220 - 80) { mx = -nx; my = -ny; }
-        else { mx = -ny; my = nx; }
-        
+        const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
+        const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
+        if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
         const len = Math.hypot(mx, my);
-        if (len > 0.001) {
-          bot.mvx = mx; bot.mvy = my;
-          bot.x += (mx / len) * 208 * dt;
-          bot.y += (my / len) * 208 * dt;
-          bot.walkPhase += dt * 14;
-        }
+        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * 208 * dt; bot.y += (my / len) * 208 * dt; bot.walkPhase += dt * 14; }
       }
     } else if (bot.type === 'Fialka') {
-      // Притягивание косой
       if (bot.hookTarget && bot.hookTarget.alive) {
-        const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x);
-        const pullSpeed = 600;
-        bot.hookTarget.x += Math.cos(ang) * pullSpeed * dt;
-        bot.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
-        
-        bot.hookX = bot.hookTarget.x;
-        bot.hookY = bot.hookTarget.y;
-        
-        if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) {
-          bot.hookTarget.stun = 2.0;
-          bot.hookTarget = null;
+        const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x); const pullSpeed = 600;
+        bot.hookTarget.x += Math.cos(ang) * pullSpeed * dt; bot.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
+        bot.hookX = bot.hookTarget.x; bot.hookY = bot.hookTarget.y;
+        if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) { bot.hookTarget.stun = 2.0; bot.hookTarget = null; }
+      }
+    } else if (bot.type === 'Vasilek') {
+      // Поле Василька
+      if (bot.healZone) {
+        const enemies = getAllEnemies(bot);
+        for (const e of enemies) {
+          if (Math.hypot(e.x - bot.healZone.x, e.y - bot.healZone.y) < bot.healZone.r) {
+            damage(e, 15 * dt, bot); // Урон врагам
+          }
+        }
+        if (Math.hypot(bot.x - bot.healZone.x, bot.y - bot.healZone.y) < bot.healZone.r) {
+           bot.hp = Math.min(bot.maxHp, bot.hp + 20 * dt); // Лечение себе
         }
       }
     }
-    
-    if (bot.ultTime <= 0) bot.ultActive = false;
-    return; // Бот не атакует и не двигается (кроме Лёхи) во время ульты
+    if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; }
+    return; 
   }
 
-  // Обычное поведение
-  const enemies = getAllEnemies(bot);
-  let target = null, best = Infinity;
-  for (const e of enemies) {
-    if (!e.alive) continue;
-    const d = Math.hypot(bot.x - e.x, bot.y - e.y);
-    if (d < best) { best = d; target = e; }
-  }
-
-  if (!target) {
-    bot.mvx = 0; bot.mvy = 0;
-    return;
-  }
+  const enemies = getAllEnemies(bot); let target = null, best = Infinity;
+  for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
+  if (!target) { bot.mvx = 0; bot.mvy = 0; return; }
 
   bot.botTimer -= dt;
-  if (bot.botTimer <= 0) {
-    bot.botTimer = 0.13 + Math.random() * 0.22;
-    bot.botJitter = (Math.random() - 0.5) * 0.18;
-  }
+  if (bot.botTimer <= 0) { bot.botTimer = 0.13 + Math.random() * 0.22; bot.botJitter = (Math.random() - 0.5) * 0.18; }
   const wantAim = Math.atan2(target.y - bot.y, target.x - bot.x) + bot.botJitter;
-  let da = wantAim - bot.aim;
-  while (da > Math.PI) da -= TAU;
-  while (da < -Math.PI) da += TAU;
+  let da = wantAim - bot.aim; while (da > Math.PI) da -= TAU; while (da < -Math.PI) da += TAU;
   bot.aim += da * Math.min(1, dt * 10);
 
-  const dx = target.x - bot.x, dy = target.y - bot.y;
-  const d = Math.hypot(dx, dy) || 1;
-  const nx = dx / d, ny = dy / d;
-  let mx = 0, my = 0;
-  const wantDist = 220;
-  
-  if (d > wantDist + 60) { mx = nx; my = ny; }
-  else if (d < wantDist - 80) { mx = -nx; my = -ny; }
-  else { mx = -ny; my = nx; }
-
+  const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
+  const nx = dx / d, ny = dy / d; let mx = 0, my = 0; const wantDist = 220;
+  if (d > wantDist + 60) { mx = nx; my = ny; } else if (d < wantDist - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
   for (const r of rocks) {
-    const rx = bot.x - r.x, ry = bot.y - r.y;
-    const rd = Math.hypot(rx, ry);
-    const safe = r.r + bot.r + 34;
-    if (rd < safe && rd > 0.01) {
-      mx += (rx / rd) * 1.6;
-      my += (ry / rd) * 1.6;
-    }
+    const rx = bot.x - r.x, ry = bot.y - r.y; const rd = Math.hypot(rx, ry); const safe = r.r + bot.r + 34;
+    if (rd < safe && rd > 0.01) { mx += (rx / rd) * 1.6; my += (ry / rd) * 1.6; }
   }
-
   const len = Math.hypot(mx, my);
-  if (len > 0.001) {
-    bot.mvx = mx; bot.mvy = my;
-    bot.x += (mx / len) * 208 * dt;
-    bot.y += (my / len) * 208 * dt;
-    bot.walkPhase += dt * 14;
-  } else {
-    bot.mvx = 0; bot.mvy = 0;
-    bot.walkPhase = 0;
-  }
-
-  bot.x = clamp(bot.x, 20, WORLD_W - 20);
-  bot.y = clamp(bot.y, 20, WORLD_H - 20);
+  if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * 208 * dt; bot.y += (my / len) * 208 * dt; bot.walkPhase += dt * 14; } else { bot.mvx = 0; bot.mvy = 0; bot.walkPhase = 0; }
+  bot.x = clamp(bot.x, 20, WORLD_W - 20); bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
   if (d < 720) {
-    if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) {
-      activateUlt(bot);
-    } else {
-      tryAttack(bot);
-    }
+    if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) activateUlt(bot);
+    else tryAttack(bot);
   }
-}
-
-function hasLOS(a, b) {
-  for (const r of rocks) {
-    if (segCircle(a.x, a.y, b.x, b.y, r.x, r.y, r.r) >= 0) return false;
-  }
-  return true;
 }
 
 function update(dt) {
   if (gameOver || !gameRunning) return;
 
-  if (matchSplashTimer > 0) {
-    matchSplashTimer -= dt;
-    return; 
+  if (matchSplashTimer > 0) { matchSplashTimer -= dt; return; }
+
+  // Таймеры режимов
+  if (currentMode === 'PVP-Битва') {
+    gameTimeLeft -= dt;
+    if (gameTimeLeft <= 0) {
+      gameOver = true;
+      const sorted = [player, ...bots].sort((a,b) => b.score - a.score);
+      winnerName = sorted[0].name;
+      playerData.sferi += 5; // Награда за матч
+      playerData.duli += 50;
+      saveData();
+      return;
+    }
+  } else if (currentMode === 'Останется только один') {
+    const aliveBots = bots.filter(b => b.alive).length;
+    if (!player.alive) {
+      gameOver = true;
+      winnerName = 'Боты';
+      playerData.sferi += 2;
+      saveData();
+      return;
+    } else if (aliveBots === 0 && player.alive) {
+      gameOver = true;
+      winnerName = player.name;
+      playerData.sferi += 15; // Больше за победу
+      playerData.duli += 150;
+      saveData();
+      return;
+    }
   }
 
-  const mwx = mouse.x - W/2 + player.x;
-  const mwy = mouse.y - H/2 + player.y;
+  const mwx = mouse.x - W/2 + player.x; const mwy = mouse.y - H/2 + player.y;
   
-  if (!player.ultActive && player.alive && player.stun <= 0) {
-     player.aim = Math.atan2(mwy - player.y, mwx - player.x);
-  }
+  if (!player.ultActive && player.alive && player.stun <= 0) player.aim = Math.atan2(mwy - player.y, mwx - player.x);
 
   if (!player.alive) {
     player.respawn -= dt;
-    if (player.respawn <= 0) {
-      const spawn = findSpawnPoint();
-      player.x = spawn.x; player.y = spawn.y;
-      player.hp = player.maxHp; player.alive = true;
-      player.ammo = player.maxAmmo; player.reloading = 0;
-      player.poison = 0; player.stun = 0;
+    if (player.respawn <= 0 && currentMode !== 'Останется только один') {
+      const spawn = findSpawnPoint(); player.x = spawn.x; player.y = spawn.y;
+      player.hp = player.maxHp; player.alive = true; player.ammo = player.maxAmmo; player.reloading = 0; player.poison = 0; player.stun = 0;
     }
   } else if (player.stun > 0) {
-    player.stun -= dt;
-    player.mvx = 0; player.mvy = 0;
+    player.stun -= dt; player.mvx = 0; player.mvy = 0;
   } else if (player.ultActive) {
     player.ultTime -= dt;
     
     if (player.type === 'Vitya') {
        player.aim = Math.atan2(mwy - player.y, mwx - player.x);
-       
        player.ultTick = (player.ultTick || 0) + dt;
        if (player.ultTick > 0.1) {
          player.ultTick = 0;
          const enemies = getAllEnemies(player);
-         for (const e of enemies) {
-           if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) {
-             damage(e, 5, player);
-           }
-         }
+         for (const e of enemies) { if (pointSegDist(e.x, e.y, player.x, player.y, player.x + Math.cos(player.aim)*1100, player.y + Math.sin(player.aim)*1100) < e.r + 11) damage(e, 5, player); }
        }
     } else if (player.type === 'Lesha') {
        let mx = 0, my = 0;
-       if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
-       if (keys['KeyA'] || keys['ArrowLeft'])  mx -= 1;
-       if (keys['KeyS'] || keys['ArrowDown'])  my += 1;
-       if (keys['KeyW'] || keys['ArrowUp'])    my -= 1;
+       if (keys['KeyD'] || keys['ArrowRight']) mx += 1; if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
+       if (keys['KeyS'] || keys['ArrowDown']) my += 1; if (keys['KeyW'] || keys['ArrowUp']) my -= 1;
        player.mvx = mx; player.mvy = my;
-       
        if (mx !== 0 || my !== 0) {
-          player.walkPhase += dt * 14;
-          const len = Math.hypot(mx, my);
-          player.x += (mx/len) * 208 * dt;
-          player.y += (my/len) * 208 * dt;
-          player.x = clamp(player.x, 20, WORLD_W - 20);
-          player.y = clamp(player.y, 20, WORLD_H - 20);
-       } else {
-          player.walkPhase = 0;
-       }
+          player.walkPhase += dt * 14; const len = Math.hypot(mx, my);
+          player.x += (mx/len) * 208 * dt; player.y += (my/len) * 208 * dt;
+          player.x = clamp(player.x, 20, WORLD_W - 20); player.y = clamp(player.y, 20, WORLD_H - 20);
+       } else player.walkPhase = 0;
     } else if (player.type === 'Fialka') {
        if (player.hookTarget && player.hookTarget.alive) {
-          const ang = Math.atan2(player.y - player.hookTarget.y, player.x - player.hookTarget.x);
-          const pullSpeed = 600;
-          player.hookTarget.x += Math.cos(ang) * pullSpeed * dt;
-          player.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
-          
-          player.hookX = player.hookTarget.x;
-          player.hookY = player.hookTarget.y;
-          
-          if (Math.hypot(player.x - player.hookTarget.x, player.y - player.hookTarget.y) < 40) {
-             player.hookTarget.stun = 2.0;
-             player.hookTarget = null; 
-          }
+          const ang = Math.atan2(player.y - player.hookTarget.y, player.x - player.hookTarget.x); const pullSpeed = 600;
+          player.hookTarget.x += Math.cos(ang) * pullSpeed * dt; player.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
+          player.hookX = player.hookTarget.x; player.hookY = player.hookTarget.y;
+          if (Math.hypot(player.x - player.hookTarget.x, player.y - player.hookTarget.y) < 40) { player.hookTarget.stun = 2.0; player.hookTarget = null; }
+       }
+    } else if (player.type === 'Vasilek') {
+       if (player.healZone) {
+         const enemies = getAllEnemies(player);
+         for (const e of enemies) {
+           if (Math.hypot(e.x - player.healZone.x, e.y - player.healZone.y) < player.healZone.r) damage(e, 15 * dt, player);
+         }
+         if (Math.hypot(player.x - player.healZone.x, player.y - player.healZone.y) < player.healZone.r) player.hp = Math.min(player.maxHp, player.hp + 20 * dt);
        }
     }
 
-    if (player.ultTime <= 0) { player.ultActive = false; }
+    if (player.ultTime <= 0) { player.ultActive = false; player.healZone = null; }
     
   } else {
     let mx = 0, my = 0;
-    if (keys['KeyD'] || keys['ArrowRight']) mx += 1;
-    if (keys['KeyA'] || keys['ArrowLeft'])  mx -= 1;
-    if (keys['KeyS'] || keys['ArrowDown'])  my += 1;
-    if (keys['KeyW'] || keys['ArrowUp'])    my -= 1;
-
+    if (keys['KeyD'] || keys['ArrowRight']) mx += 1; if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
+    if (keys['KeyS'] || keys['ArrowDown']) my += 1; if (keys['KeyW'] || keys['ArrowUp']) my -= 1;
     player.mvx = mx; player.mvy = my;
-
     if (mx !== 0 || my !== 0) {
-      player.walkPhase += dt * 14;
-      const len = Math.hypot(mx, my);
-      player.x += (mx/len) * 208 * dt;
-      player.y += (my/len) * 208 * dt;
-      player.x = clamp(player.x, 20, WORLD_W - 20);
-      player.y = clamp(player.y, 20, WORLD_H - 20);
-    } else {
-      player.walkPhase = 0;
-    }
+      player.walkPhase += dt * 14; const len = Math.hypot(mx, my);
+      player.x += (mx/len) * 208 * dt; player.y += (my/len) * 208 * dt;
+      player.x = clamp(player.x, 20, WORLD_W - 20); player.y = clamp(player.y, 20, WORLD_H - 20);
+    } else player.walkPhase = 0;
   }
 
   if (mouse.down && player.alive && player.stun <= 0) tryAttack(player);
   if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive && player.alive && player.stun <= 0) activateUlt(player);
 
-  player.attackCd = Math.max(0, player.attackCd - dt);
-  player.swing = Math.max(0, player.swing - dt);
+  player.attackCd = Math.max(0, player.attackCd - dt); player.swing = Math.max(0, player.swing - dt);
   
-  if (player.reloading > 0) {
-    player.reloading -= dt;
-    if (player.reloading <= 0) { player.reloading = 0; player.ammo = player.maxAmmo; }
-  }
-
+  if (player.reloading > 0) { player.reloading -= dt; if (player.reloading <= 0) { player.reloading = 0; player.ammo = player.maxAmmo; } }
   if (player.poison > 0) {
-    player.poison -= dt;
-    player.poisonTick = (player.poisonTick || 0) + dt;
-    if (player.poisonTick > 0.5) {
-      player.poisonTick = 0;
-      player.hp -= 3; 
-      spawnHitParticles(player.x, player.y, '#5cff5c', 3);
-      if (player.hp <= 0) damage(player, 0, null);
-    }
+    player.poison -= dt; player.poisonTick = (player.poisonTick || 0) + dt;
+    if (player.poisonTick > 0.5) { player.poisonTick = 0; player.hp -= 3; spawnHitParticles(player.x, player.y, '#5cff5c', 3); if (player.hp <= 0) damage(player, 0, null); }
   }
 
   for (const bot of bots) {
     updateBot(bot, dt);
     if (bot.poison > 0) {
-      bot.poison -= dt;
-      bot.poisonTick = (bot.poisonTick || 0) + dt;
-      if (bot.poisonTick > 0.5) {
-        bot.poisonTick = 0;
-        bot.hp -= 3;
-        spawnHitParticles(bot.x, bot.y, '#5cff5c', 3);
-        if (bot.hp <= 0) damage(bot, 0, null);
-      }
+      bot.poison -= dt; bot.poisonTick = (bot.poisonTick || 0) + dt;
+      if (bot.poisonTick > 0.5) { bot.poisonTick = 0; bot.hp -= 3; spawnHitParticles(bot.x, bot.y, '#5cff5c', 3); if (bot.hp <= 0) damage(bot, 0, null); }
     }
   }
 
@@ -1637,32 +1466,14 @@ function update(dt) {
     
     if (b.type === 'big_bomb' && !b.exploded) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-      
-      let hitEnemy = false;
-      const enemies = getAllEnemies(b.owner);
-      for (const e of enemies) {
-        if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-           hitEnemy = true;
-           break;
-        }
-      }
-
+      let hitEnemy = false; const enemies = getAllEnemies(b.owner);
+      for (const e of enemies) { if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) { hitEnemy = true; break; } }
       if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20 || hitEnemy) {
-        b.exploded = true;
-        spawnHitParticles(b.x, b.y, '#ff0000', 40);
-        for (const e of enemies) {
-          if (Math.hypot(e.x - b.x, e.y - b.y) < 150) {
-            damage(e, 50, b.owner);
-          }
-        }
+        b.exploded = true; spawnHitParticles(b.x, b.y, '#ff0000', 40);
+        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 150) damage(e, 50, b.owner); }
         for (let j = 0; j < 8; j++) {
           const ang = (j / 8) * TAU;
-          bullets.push({
-            x: b.x, y: b.y,
-            vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600,
-            r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false,
-            owner: b.owner, color: '#ff5a5a'
-          });
+          bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, owner: b.owner, color: '#ff5a5a' });
         }
         bullets.splice(i, 1);
       }
@@ -1670,392 +1481,205 @@ function update(dt) {
     }
 
     if (b.type === 'chain_bolt') {
-      b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-      let dead = b.life <= 0;
-      
-      if (!dead) {
-        for (const r of rocks) {
-          if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
-            spawnHitParticles(b.x, b.y, '#c084fc', 6);
-            dead = true; break;
-          }
-        }
-      }
-      
+      b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; let dead = b.life <= 0;
+      if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { spawnHitParticles(b.x, b.y, '#c084fc', 6); dead = true; break; } } }
       if (!dead) {
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
           if (!e.alive) continue;
           if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-            damage(e, b.dmg, b.owner);
-            spawnHitParticles(b.x, b.y, '#c084fc', 9);
-            b.chained.push(e);
-            dead = true;
-            
-            let lastTarget = e;
-            let chainCount = 0;
+            damage(e, b.dmg, b.owner); spawnHitParticles(b.x, b.y, '#c084fc', 9); b.chained.push(e); dead = true;
+            let lastTarget = e; let chainCount = 0;
             while (chainCount < 3) {
-              let nextTarget = null;
-              let minDist = 250;
+              let nextTarget = null; let minDist = 250;
               for (const e2 of enemies) {
                 if (e2 === lastTarget || !e2.alive || b.chained.includes(e2)) continue;
-                const d = Math.hypot(e2.x - lastTarget.x, e2.y - lastTarget.y);
-                if (d < minDist) { minDist = d; nextTarget = e2; }
+                const d = Math.hypot(e2.x - lastTarget.x, e2.y - lastTarget.y); if (d < minDist) { minDist = d; nextTarget = e2; }
               }
               if (nextTarget) {
-                damage(nextTarget, 12, b.owner);
-                spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
-                
-                ctx.save();
-                ctx.strokeStyle = '#c084fc';
-                ctx.lineWidth = 3;
-                ctx.shadowColor = '#c084fc';
-                ctx.shadowBlur = 15;
-                ctx.beginPath();
-                ctx.moveTo(lastTarget.x, lastTarget.y);
-                const midX = (lastTarget.x + nextTarget.x) / 2;
-                const midY = (lastTarget.y + nextTarget.y) / 2;
-                ctx.lineTo(midX + (Math.random()*40-20), midY + (Math.random()*40-20));
-                ctx.lineTo(nextTarget.x, nextTarget.y);
-                ctx.stroke();
-                ctx.restore();
-
-                b.chained.push(nextTarget);
-                lastTarget = nextTarget;
-                chainCount++;
-              } else {
-                break;
-              }
+                damage(nextTarget, 12, b.owner); spawnHitParticles(nextTarget.x, nextTarget.y, '#c084fc', 6);
+                ctx.save(); ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 3; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15;
+                ctx.beginPath(); ctx.moveTo(lastTarget.x, lastTarget.y);
+                const midX = (lastTarget.x + nextTarget.x) / 2; const midY = (lastTarget.y + nextTarget.y) / 2;
+                ctx.lineTo(midX + (Math.random()*40-20), midY + (Math.random()*40-20)); ctx.lineTo(nextTarget.x, nextTarget.y);
+                ctx.stroke(); ctx.restore();
+                b.chained.push(nextTarget); lastTarget = nextTarget; chainCount++;
+              } else break;
             }
             break;
           }
         }
       }
-      
       if (dead) bullets.splice(i, 1);
       continue;
     }
 
-    b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
-    let dead = b.life <= 0;
-
-    if (!dead && b.type === 'bomb') {
-      b.vx *= 0.9;
-      b.vy *= 0.9;
-      if (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15) {
-        dead = true;
-        spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
-        
+    if (b.type === 'shard_bullet') {
+      // Пули Василька, разбиваются на осколки
+      b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; let dead = b.life <= 0;
+      if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { dead = true; spawnHitParticles(b.x, b.y, '#ff99cc', 4); break; } } }
+      if (!dead) {
         const enemies = getAllEnemies(b.owner);
         for (const e of enemies) {
-          if (Math.hypot(e.x - b.x, e.y - b.y) < 95) {
-            damage(e, b.dmg, b.owner, b.poison);
+          if (!e.alive) continue;
+          if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
+            damage(e, b.dmg, b.owner); dead = true;
+            // Разбивается на 3 осколка
+            for (let j = 0; j < 3; j++) {
+              const ang = Math.random() * TAU;
+              bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 500, vy: Math.sin(ang) * 500, r: 4, dmg: 4, life: 0.4, type: 'bomb', poison: false, exploded: false, owner: b.owner, color: '#ffcccc' });
+            }
+            spawnHitParticles(b.x, b.y, '#ff99cc', 6);
+            break;
           }
         }
       }
+      if (dead) bullets.splice(i, 1);
+      continue;
     }
 
-    if (!dead) {
-      for (const r of rocks) {
-        if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) {
-          spawnHitParticles(b.x, b.y, '#b9c9d8', 6);
-          dead = true; 
-          if (b.type === 'bomb') spawnHitParticles(b.x, b.y, '#ffaa33', 10);
-          break;
-        }
+    b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; let dead = b.life <= 0;
+    if (!dead && b.type === 'bomb') {
+      b.vx *= 0.9; b.vy *= 0.9;
+      if (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15) {
+        dead = true; spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
+        const enemies = getAllEnemies(b.owner);
+        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 95) damage(e, b.dmg, b.owner, b.poison); }
       }
     }
-
+    if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { spawnHitParticles(b.x, b.y, '#b9c9d8', 6); dead = true; if (b.type === 'bomb') spawnHitParticles(b.x, b.y, '#ffaa33', 10); break; } } }
     if (!dead) {
       const enemies = getAllEnemies(b.owner);
       for (const e of enemies) {
         if (!e.alive) continue;
         if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-          if (b.type === 'bomb') {
-            spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
-            damage(e, b.dmg, b.owner, b.poison);
-          } else {
-            damage(e, b.dmg, b.owner);
-          }
-          spawnHitParticles(b.x, b.y, b.color, 9);
-          dead = true; break;
+          if (b.type === 'bomb') { spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15); damage(e, b.dmg, b.owner, b.poison); }
+          else damage(e, b.dmg, b.owner);
+          spawnHitParticles(b.x, b.y, b.color, 9); dead = true; break;
         }
       }
     }
-    
     if (dead) bullets.splice(i, 1);
   }
 
   for (let i = particles.length - 1; i >= 0; i--){
-    const p = particles[i];
-    p.x += p.vx * dt; p.y += p.vy * dt;
-    p.vx *= Math.pow(.02, dt); p.vy *= Math.pow(.02, dt);
-    p.life -= dt;
+    const p = particles[i]; p.x += p.vx * dt; p.y += p.vy * dt;
+    p.vx *= Math.pow(.02, dt); p.vy *= Math.pow(.02, dt); p.life -= dt;
     if (p.life <= 0) particles.splice(i, 1);
   }
-
-  for (let i = killFeed.length - 1; i >= 0; i--) {
-    killFeed[i].life -= dt;
-    if (killFeed[i].life <= 0) killFeed.splice(i, 1);
-  }
+  for (let i = killFeed.length - 1; i >= 0; i--) { killFeed[i].life -= dt; if (killFeed[i].life <= 0) killFeed.splice(i, 1); }
 
   let tx = player.x - W/2, ty = player.y - H/2;
-  tx = Math.max(0, Math.min(WORLD_W - W, tx));
-  ty = Math.max(0, Math.min(WORLD_H - H, ty));
-  cam.x += (tx - cam.x) * Math.min(1, dt * 13);
-  cam.y += (ty - cam.y) * Math.min(1, dt * 13);
+  tx = Math.max(0, Math.min(WORLD_W - W, tx)); ty = Math.max(0, Math.min(WORLD_H - H, ty));
+  cam.x += (tx - cam.x) * Math.min(1, dt * 13); cam.y += (ty - cam.y) * Math.min(1, dt * 13);
 }
 
 // --- РЕНДЕР ---
 function roundRect(c,x,y,w,h,r){
-  if (w < 0) { x += w; w = -w; }
-  r = Math.min(r, w/2, h/2);
-  c.beginPath();
-  c.moveTo(x+r, y); c.lineTo(x+w-r, y);
-  c.quadraticCurveTo(x+w, y, x+w, y+r);
-  c.lineTo(x+w, y+h-r);
-  c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-  c.lineTo(x+r, y+h);
-  c.quadraticCurveTo(x, y+h, x, y+h-r);
-  c.lineTo(x, y+r);
-  c.quadraticCurveTo(x, y, x+r, y);
-  c.closePath();
+  if (w < 0) { x += w; w = -w; } r = Math.min(r, w/2, h/2);
+  c.beginPath(); c.moveTo(x+r, y); c.lineTo(x+w-r, y); c.quadraticCurveTo(x+w, y, x+w, y+r);
+  c.lineTo(x+w, y+h-r); c.quadraticCurveTo(x+w, y+h, x+w-r, y+h); c.lineTo(x+r, y+h);
+  c.quadraticCurveTo(x, y+h, x, y+h-r); c.lineTo(x, y+r); c.quadraticCurveTo(x, y, x+r, y); c.closePath();
 }
 
 function segCircle(x1,y1,x2,y2,cx,cy,r){
-  const dx = x2-x1, dy = y2-y1;
-  const fx = x1-cx, fy = y1-cy;
-  const a = dx*dx + dy*dy;
-  if (a < 1e-6) return -1;
-  const b = 2*(fx*dx + fy*dy);
-  const c = fx*fx + fy*fy - r*r;
-  let disc = b*b - 4*a*c;
-  if (disc < 0) return -1;
-  disc = Math.sqrt(disc);
-  const t1 = (-b - disc) / (2*a);
-  const t2 = (-b + disc) / (2*a);
-  if (t1 >= 0 && t1 <= 1) return t1;
-  if (t2 >= 0 && t2 <= 1) return t2;
-  return -1;
+  const dx = x2-x1, dy = y2-y1; const fx = x1-cx, fy = y1-cy;
+  const a = dx*dx + dy*dy; if (a < 1e-6) return -1;
+  const b = 2*(fx*dx + fy*dy); const c = fx*fx + fy*fy - r*r;
+  let disc = b*b - 4*a*c; if (disc < 0) return -1; disc = Math.sqrt(disc);
+  const t1 = (-b - disc) / (2*a); const t2 = (-b + disc) / (2*a);
+  if (t1 >= 0 && t1 <= 1) return t1; if (t2 >= 0 && t2 <= 1) return t2; return -1;
 }
 
 function pointSegDist(px,py,x1,y1,x2,y2){
-  const dx = x2-x1, dy = y2-y1;
-  const a = dx*dx + dy*dy;
-  let t = a > 0 ? ((px-x1)*dx + (py-y1)*dy) / a : 0;
-  t = clamp(t, 0, 1);
+  const dx = x2-x1, dy = y2-y1; const a = dx*dx + dy*dy;
+  let t = a > 0 ? ((px-x1)*dx + (py-y1)*dy) / a : 0; t = clamp(t, 0, 1);
   return Math.hypot(px - (x1+dx*t), py - (y1+dy*t));
 }
 
 function drawGround(){
-  ctx.fillStyle = '#2b3138';
-  ctx.fillRect(0, 0, WORLD_W, WORLD_H);
-  
-  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-  ctx.lineWidth = 2;
-  for (let x = 0; x < WORLD_W; x += 100) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
-  }
-  for (let y = 0; y < WORLD_H; y += 100) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
-  }
-  
-  ctx.strokeStyle = 'rgba(10,14,20,0.8)';
-  ctx.lineWidth = 30;
-  ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
+  ctx.fillStyle = '#2b3138'; ctx.fillRect(0, 0, WORLD_W, WORLD_H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 2;
+  for (let x = 0; x < WORLD_W; x += 100) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke(); }
+  for (let y = 0; y < WORLD_H; y += 100) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke(); }
+  ctx.strokeStyle = 'rgba(10,14,20,0.8)'; ctx.lineWidth = 30; ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
 }
 
 function drawFurniture(){
   for (const f of furniture) {
     if (f.type === 'desk') {
-      ctx.fillStyle = '#5a3d2b';
-      roundRect(ctx, f.x - 35, f.y - 25, 70, 50, 5); ctx.fill();
+      ctx.fillStyle = '#5a3d2b'; roundRect(ctx, f.x - 35, f.y - 25, 70, 50, 5); ctx.fill();
       ctx.strokeStyle = '#3a2517'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = '#2b1a10';
-      ctx.fillRect(f.x - 30, f.y + 15, 8, 20);
-      ctx.fillRect(f.x + 22, f.y + 15, 8, 20);
+      ctx.fillStyle = '#2b1a10'; ctx.fillRect(f.x - 30, f.y + 15, 8, 20); ctx.fillRect(f.x + 22, f.y + 15, 8, 20);
     } else if (f.type === 'chair') {
-      ctx.fillStyle = '#4a5568';
-      roundRect(ctx, f.x - 18, f.y - 15, 36, 30, 4); ctx.fill();
+      ctx.fillStyle = '#4a5568'; roundRect(ctx, f.x - 18, f.y - 15, 36, 30, 4); ctx.fill();
       ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = '#4a5568';
-      roundRect(ctx, f.x - 18, f.y - 25, 36, 10, 3); ctx.fill();
-      ctx.stroke();
+      ctx.fillStyle = '#4a5568'; roundRect(ctx, f.x - 18, f.y - 25, 36, 10, 3); ctx.fill(); ctx.stroke();
     } else if (f.type === 'cabinet') {
-      ctx.fillStyle = '#4e5a68';
-      ctx.fillRect(f.x - 25, f.y - 45, 50, 90);
+      ctx.fillStyle = '#4e5a68'; ctx.fillRect(f.x - 25, f.y - 45, 50, 90);
       ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(f.x - 25, f.y - 45, 50, 90);
-      ctx.fillStyle = '#ffd700';
-      ctx.fillRect(f.x + 15, f.y - 10, 5, 20);
-      ctx.fillRect(f.x + 15, f.y + 15, 5, 20);
+      ctx.fillStyle = '#ffd700'; ctx.fillRect(f.x + 15, f.y - 10, 5, 20); ctx.fillRect(f.x + 15, f.y + 15, 5, 20);
     } else if (f.type === 'board') {
-      ctx.fillStyle = '#1a4a2e'; 
-      roundRect(ctx, f.x - 120, f.y - 50, 240, 100, 8); ctx.fill();
+      ctx.fillStyle = '#1a4a2e'; roundRect(ctx, f.x - 120, f.y - 50, 240, 100, 8); ctx.fill();
       ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(f.x - 80, f.y - 20, 40, 4);
-      ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
+      ctx.fillStyle = '#fff'; ctx.fillRect(f.x - 80, f.y - 20, 40, 4); ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
     } else if (f.type === 'books') {
-      ctx.fillStyle = '#ff4d4d';
-      ctx.fillRect(f.x - 10, f.y - 5, 20, 5);
-      ctx.fillStyle = '#4dff4d';
-      ctx.fillRect(f.x - 8, f.y - 10, 16, 5);
+      ctx.fillStyle = '#ff4d4d'; ctx.fillRect(f.x - 10, f.y - 5, 20, 5);
+      ctx.fillStyle = '#4dff4d'; ctx.fillRect(f.x - 8, f.y - 10, 16, 5);
     } else if (f.type === 'holo') {
-      const t = performance.now() / 1000;
-      ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
-      ctx.beginPath();
-      ctx.arc(f.x, f.y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      const t = performance.now() / 1000; ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
+      ctx.beginPath(); ctx.arc(f.x, f.y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU); ctx.fill();
+      ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)'; ctx.lineWidth = 2; ctx.stroke();
     }
   }
 }
 
 function drawHero(h){
-  const t = performance.now() / 1000;
-  const isMe = h === player;
-  const isVitya = h.type === 'Vitya';
-  const isLesha = h.type === 'Lesha';
-  const isFialka = h.type === 'Fialka';
+  const t = performance.now() / 1000; const isMe = h === player;
+  const isVitya = h.type === 'Vitya'; const isLesha = h.type === 'Lesha';
+  const isFialka = h.type === 'Fialka'; const isVasilek = h.type === 'Vasilek';
 
   ctx.save(); ctx.translate(h.x, h.y);
-  
   ctx.beginPath(); ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
   ctx.fillStyle = 'rgba(0,0,0,0.32)'; ctx.fill();
 
-  if (h.ultActive && isVitya){
-    const p = .5 + .5*Math.sin(t*22);
-    ctx.beginPath(); ctx.arc(0, 0, 19 + 10 + p*7, 0, TAU);
-    ctx.strokeStyle = 'rgba(120,225,255,' + (.35 + .45*p) + ')';
-    ctx.lineWidth = 4; ctx.stroke();
-  }
+  if (h.ultActive && isVitya){ const p = .5 + .5*Math.sin(t*22); ctx.beginPath(); ctx.arc(0, 0, 19 + 10 + p*7, 0, TAU); ctx.strokeStyle = 'rgba(120,225,255,' + (.35 + .45*p) + ')'; ctx.lineWidth = 4; ctx.stroke(); }
 
-  if (h.stun > 0) {
-    ctx.beginPath(); ctx.arc(0, 0, 25, 0, TAU);
-    ctx.strokeStyle = 'rgba(255, 255, 0, ' + (0.5 + 0.5*Math.sin(t*20)) + ')';
-    ctx.lineWidth = 3; ctx.stroke();
-  }
+  if (h.stun > 0) { ctx.beginPath(); ctx.arc(0, 0, 25, 0, TAU); ctx.strokeStyle = 'rgba(255, 255, 0, ' + (0.5 + 0.5*Math.sin(t*20)) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
 
-  const walk = Math.sin(h.walkPhase || 0) * 4;
-  const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
+  const walk = Math.sin(h.walkPhase || 0) * 4; const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
 
-  if (isVitya) {
-    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.fillStyle = '#e5e7eb';
-    ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-  } else if (isLesha) {
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.fillStyle = '#111';
-    ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-  } else {
-    ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke();
-    ctx.fillStyle = '#64748b';
-    ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill();
-  }
+  if (isVitya) { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#e5e7eb'; ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else if (isLesha) { ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
 
   ctx.lineWidth = 4.5;
-  if (isVitya) {
-    ctx.strokeStyle = '#fca5a5';
-    ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke();
-  } else if (isLesha) {
-    ctx.strokeStyle = '#1e293b'; 
-    ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke();
-  } else {
-    ctx.strokeStyle = '#3b82f6'; 
-    ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke();
-  }
+  if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else { ctx.strokeStyle = '#3b82f6'; ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
 
   const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
-  if (isVitya) {
-    g.addColorStop(0, '#f87171'); 
-    g.addColorStop(1, '#b91c1c'); 
-    ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU);
-    ctx.fillStyle = g; ctx.fill();
-    ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke();
-    
-    ctx.fillStyle = '#1f2937';
-    roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill();
-    ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke();
-    
-    ctx.fillStyle = '#374151';
-    ctx.fillRect(-5, -10, 2, 18);
-    ctx.fillRect(3, -10, 2, 18);
-  } else if (isLesha) {
-    g.addColorStop(0, '#f8fafc'); 
-    g.addColorStop(1, '#cbd5e1');
-    ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU);
-    ctx.fillStyle = g; ctx.fill();
-    ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke();
-    
-    ctx.fillStyle = '#1e293b';
-    ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(9, -10); ctx.lineTo(4, 10); ctx.lineTo(9, 12); ctx.closePath(); ctx.fill();
-    
-    ctx.fillStyle = '#ef4444';
-    ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill();
-  } else {
-    g.addColorStop(0, '#3b82f6'); 
-    g.addColorStop(1, '#1e40af');
-    ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU);
-    ctx.fillStyle = g; ctx.fill();
-    ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke();
-    
-    ctx.fillStyle = '#60a5fa';
-    roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill();
-    ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke();
-  }
+  if (isVitya) { g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c'); ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke(); ctx.fillStyle = '#1f2937'; roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke(); ctx.fillStyle = '#374151'; ctx.fillRect(-5, -10, 2, 18); ctx.fillRect(3, -10, 2, 18); }
+  else if (isLesha) { g.addColorStop(0, '#f8fafc'); g.addColorStop(1, '#cbd5e1'); ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke(); ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(9, -10); ctx.lineTo(4, 10); ctx.lineTo(9, 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill(); }
+  else if (isVasilek) { g.addColorStop(0, '#ff7b7b'); g.addColorStop(1, '#b32d2d'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#800000'; ctx.stroke(); ctx.fillStyle = '#ff99cc'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#ffcccc'; ctx.stroke(); }
+  else { g.addColorStop(0, '#3b82f6'); g.addColorStop(1, '#1e40af'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke(); ctx.fillStyle = '#60a5fa'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke(); }
 
   ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
-  ctx.fillStyle = isFialka ? '#e2e8f0' : '#fcd34d';
-  ctx.fill();
-  ctx.lineWidth = 2; ctx.strokeStyle = isFialka ? '#94a3b8' : '#b45309'; ctx.stroke();
+  if (isVasilek) { ctx.fillStyle = '#ffccff'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#ff4d4d'; ctx.stroke(); }
+  else { ctx.fillStyle = isFialka ? '#e2e8f0' : '#fcd34d'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = isFialka ? '#94a3b8' : '#b45309'; ctx.stroke(); }
 
-  if (isVitya) {
-    ctx.fillStyle = '#78350f';
-    ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    ctx.beginPath(); ctx.arc(-4, -18, 5, 0, TAU); ctx.fill();
-  } else if (isLesha) {
-    ctx.fillStyle = '#451a03';
-    ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    ctx.fillStyle = '#fcd34d';
-    ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill();
-  } else {
-    ctx.fillStyle = '#cbd5e1';
-    ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
-    ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke();
-    
-    ctx.fillStyle = '#3b82f6';
-    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();
-    ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke();
-    ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke();
-  }
+  if (isVitya) { ctx.fillStyle = '#78350f'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-4, -18, 5, 0, TAU); ctx.fill(); }
+  else if (isLesha) { ctx.fillStyle = '#451a03'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill(); }
+  else if (isVasilek) { ctx.fillStyle = '#ff66cc'; ctx.beginPath(); ctx.arc(0, -17, 9, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-5, -18, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(5, -18, 4, 0, TAU); ctx.fill(); }
+  else { ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke(); ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke(); }
 
-  if (h.poison > 0) {
-    ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU);
-    ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')';
-    ctx.lineWidth = 2; ctx.stroke();
-  }
+  if (h.poison > 0) { ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU); ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')'; ctx.lineWidth = 2; ctx.stroke(); }
+  if (h.ultActive && isVitya){ ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU); ctx.fillStyle = '#eaffff'; ctx.fill(); }
 
-  if (h.ultActive && isVitya){
-    ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU);
-    ctx.fillStyle = '#eaffff'; ctx.fill();
-  }
-
+  // РУКИ/ОРУЖИЕ
   ctx.save(); ctx.translate(8, -4); ctx.rotate(h.aim || 0);
   let swingOff = 0;
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
@@ -2064,361 +1688,198 @@ function drawHero(h){
   if (h.reloading > 0) reloadOff = Math.sin((h.reloading / h.reloadTime) * Math.PI) * 0.6;
   ctx.rotate(reloadOff);
 
-  if (isVitya) {
-    ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke();
-    ctx.fillStyle = '#1f2937';
-    roundRect(ctx, 10, -4, 16, 8, 2); ctx.fill();
-    ctx.fillStyle = '#374151';
-    roundRect(ctx, 8, -2, 6, 10, 1); ctx.fill();
-    ctx.fillStyle = '#6b7280';
-    ctx.beginPath(); ctx.arc(26, 0, 2, 0, TAU); ctx.fill();
-  } else if (isLesha) {
-    ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke();
-    ctx.fillStyle = '#111'; 
-    ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill();
-    ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-    ctx.fillStyle = '#ef4444';
-    roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill();
-    ctx.fillStyle = '#5cff5c';
-    ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); 
-  } else {
-    ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke();
-    ctx.fillStyle = '#1e293b';
-    roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill();
-    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.strokeStyle = '#93c5fd';
-    ctx.beginPath(); ctx.moveTo(14, -4); ctx.lineTo(18, 4); ctx.lineTo(22, -4); ctx.stroke();
-  }
+  if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#1f2937'; roundRect(ctx, 10, -4, 16, 8, 2); ctx.fill(); ctx.fillStyle = '#374151'; roundRect(ctx, 8, -2, 6, 10, 1); ctx.fill(); ctx.fillStyle = '#6b7280'; ctx.beginPath(); ctx.arc(26, 0, 2, 0, TAU); ctx.fill(); }
+  else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#ef4444'; roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill(); ctx.fillStyle = '#5cff5c'; ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); }
+  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#333'; roundRect(ctx, 10, -4, 24, 8, 2); ctx.fill(); ctx.fillStyle = '#ff99cc'; roundRect(ctx, 30, -2, 6, 4, 1); ctx.fill(); }
+  else { ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke(); ctx.fillStyle = '#1e293b'; roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill(); ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.strokeStyle = '#93c5fd'; ctx.beginPath(); ctx.moveTo(14, -4); ctx.lineTo(18, 4); ctx.lineTo(22, -4); ctx.stroke(); }
   ctx.restore();
 
-  if (h.swing > 0){
-    const st = 1 - h.swing / .25;
-    const baseA = h.aim - 1.1 + st*2.1;
-    ctx.beginPath(); ctx.arc(0, 0, 19*1.95, baseA - .95, baseA + .45);
-    ctx.strokeStyle = 'rgba(255,236,180,' + (.75 * (1 - st)) + ')';
-    ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.stroke();
-  }
+  if (h.swing > 0){ const st = 1 - h.swing / .25; const baseA = h.aim - 1.1 + st*2.1; ctx.beginPath(); ctx.arc(0, 0, 19*1.95, baseA - .95, baseA + .45); ctx.strokeStyle = 'rgba(255,236,180,' + (.75 * (1 - st)) + ')'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.stroke(); }
 
   ctx.restore();
 
-  const bw = 54, bh = 8;
-  const bx = h.x - bw/2, by = h.y - 19 - 34;
-  ctx.fillStyle = 'rgba(8,12,18,0.75)';
-  roundRect(ctx, bx - 1.5, by - 1.5, bw + 3, bh + 3, 4); ctx.fill();
-  const frac = Math.max(0, h.hp / h.maxHp);
-  ctx.fillStyle = isMe ? '#4fd6a0' : (isFialka ? '#c084fc' : '#ff5a5a');
+  const bw = 54, bh = 8; const bx = h.x - bw/2, by = h.y - 19 - 34;
+  ctx.fillStyle = 'rgba(8,12,18,0.75)'; roundRect(ctx, bx - 1.5, by - 1.5, bw + 3, bh + 3, 4); ctx.fill();
+  const frac = Math.max(0, h.hp / h.maxHp); ctx.fillStyle = isMe ? '#4fd6a0' : (isVasilek ? '#ff4d4d' : (isFialka ? '#c084fc' : '#ff5a5a'));
   roundRect(ctx, bx, by, bw * frac, bh, 3); ctx.fill();
   
   const ammoY = by - 8;
-  if (isMe) {
-    for (let i = 0; i < h.maxAmmo; i++){
-      const ax = h.x - (h.maxAmmo-1)*4 + i*8;
-      ctx.beginPath(); ctx.arc(ax, ammoY, 2.5, 0, TAU);
-      ctx.fillStyle = i < h.ammo ? '#ffd700' : 'rgba(255,255,255,0.15)'; ctx.fill();
-    }
-  }
+  if (isMe) { for (let i = 0; i < h.maxAmmo; i++){ const ax = h.x - (h.maxAmmo-1)*4 + i*8; ctx.beginPath(); ctx.arc(ax, ammoY, 2.5, 0, TAU); ctx.fillStyle = i < h.ammo ? '#ffd700' : 'rgba(255,255,255,0.15)'; ctx.fill(); } }
 
-  ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center';
-  ctx.fillStyle = isMe ? '#a9e8ff' : (isFialka ? '#d8b4fe' : 'rgba(222,234,246,0.82)');
+  ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = isMe ? '#a9e8ff' : (isVasilek ? '#ff9999' : (isFialka ? '#d8b4fe' : 'rgba(222,234,246,0.82)'));
   ctx.fillText(h.name, h.x, ammoY - 8);
 
-  if (h.reloading > 0 && h.alive) {
-    ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900';
-    ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18);
-  }
+  if (h.reloading > 0 && h.alive) { ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900'; ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18); }
 }
 
-function drawHeroes(){
-  for (const bot of bots) if (bot.alive) drawHero(bot);
-  if (player.alive) drawHero(player);
-}
+function drawHeroes(){ for (const bot of bots) if (bot.alive) drawHero(bot); if (player.alive) drawHero(player); }
 
 function drawBullets(){
   for (const b of bullets) {
-    if (b.type === 'big_bomb') {
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
-      ctx.fillStyle = '#ff3333'; ctx.fill();
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU);
-      ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke();
-    } else if (b.type === 'bomb') {
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
-      ctx.fillStyle = '#111'; ctx.fill();
-      ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444';
-      roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill();
-    } else if (b.type === 'chain_bolt') {
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
-      ctx.fillStyle = '#c084fc'; ctx.fill();
-      ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10;
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU);
-      ctx.fillStyle = '#fff'; ctx.fill();
-      ctx.shadowBlur = 0;
-    } else {
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU);
-      ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU);
-      ctx.fillStyle = '#e6f7ff'; ctx.fill();
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU);
-      ctx.fillStyle = b.color; ctx.fill();
-    }
+    if (b.type === 'big_bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff3333'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU); ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke(); }
+    else if (b.type === 'bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#111'; ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444'; roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill(); }
+    else if (b.type === 'chain_bolt') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill(); ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
+    else if (b.type === 'shard_bullet') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff99cc'; ctx.fill(); ctx.shadowColor = '#ff99cc'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
+    else { ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU); ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#e6f7ff'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU); ctx.fillStyle = b.color; ctx.fill(); }
   }
 }
 
 function drawLasers(){
   const t = performance.now() / 1000;
-  
   for (const h of [player, ...bots]) {
     if (h.ultActive && h.type === 'Vitya' && h.alive) {
-      let maxLen = 1100;
-      const sx = h.x, sy = h.y;
-      const ex0 = sx + Math.cos(h.aim) * 1100;
-      const ey0 = sy + Math.sin(h.aim) * 1100;
-      for (const r of rocks){
-        const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r);
-        if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100);
-      }
-      const ex = sx + Math.cos(h.aim) * maxLen;
-      const ey = sy + Math.sin(h.aim) * maxLen;
-
+      let maxLen = 1100; const sx = h.x, sy = h.y; const ex0 = sx + Math.cos(h.aim) * 1100; const ey0 = sy + Math.sin(h.aim) * 1100;
+      for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
+      const ex = sx + Math.cos(h.aim) * maxLen; const ey = sy + Math.sin(h.aim) * maxLen;
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = 'rgba(60,170,255,0.16)'; ctx.lineWidth = 42; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = 'rgba(90,212,255,0.30)'; ctx.lineWidth = 23; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = 'rgba(185,245,255,0.85)'; ctx.lineWidth = 10; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey);
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
-      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU);
-      ctx.fillStyle = 'rgba(160,238,255,0.35)'; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(60,170,255,0.16)'; ctx.lineWidth = 42; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(90,212,255,0.30)'; ctx.lineWidth = 23; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(185,245,255,0.85)'; ctx.lineWidth = 10; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
+      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU); ctx.fillStyle = 'rgba(160,238,255,0.35)'; ctx.fill();
       ctx.restore();
     }
     
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(h.x, h.y);
-        ctx.lineTo(h.hookX, h.hookY);
-        ctx.strokeStyle = '#c084fc';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#c084fc';
-        ctx.shadowBlur = 15;
-        ctx.stroke();
-        
-        const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x);
-        ctx.translate(h.hookX, h.hookY);
-        ctx.rotate(angleToHook);
-        ctx.beginPath();
-        ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2);
-        ctx.strokeStyle = '#d8b4fe';
-        ctx.lineWidth = 6;
-        ctx.stroke();
-        
+        ctx.save(); ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(h.hookX, h.hookY);
+        ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 4; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15; ctx.stroke();
+        const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x); ctx.translate(h.hookX, h.hookY); ctx.rotate(angleToHook);
+        ctx.beginPath(); ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2); ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 6; ctx.stroke();
+        ctx.restore();
+    }
+
+    if (h.ultActive && h.type === 'Vasilek' && h.alive && h.healZone) {
+        ctx.save(); ctx.beginPath(); ctx.arc(h.healZone.x, h.healZone.y, h.healZone.r, 0, TAU);
+        ctx.fillStyle = 'rgba(255, 77, 77, 0.2)'; ctx.fill();
+        ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
         ctx.restore();
     }
   }
 }
 
-function drawParticles(){
-  for (const p of particles){
-    const a = Math.max(0, p.life / p.max);
-    ctx.globalAlpha = a;
-    ctx.beginPath(); ctx.arc(p.x, p.y, p.r * a, 0, TAU);
-    ctx.fillStyle = p.color; ctx.fill();
-  }
-  ctx.globalAlpha = 1;
-}
+function drawParticles(){ for (const p of particles){ const a = Math.max(0, p.life / p.max); ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * a, 0, TAU); ctx.fillStyle = p.color; ctx.fill(); } ctx.globalAlpha = 1; }
 
-function drawCrosshair(){
-  ctx.save(); ctx.translate(mouse.x, mouse.y);
-  ctx.strokeStyle = 'rgba(165,238,255,0.9)'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(0, 0, 10, 0, TAU); ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(-17, 0); ctx.lineTo(-5, 0);
-  ctx.moveTo(5, 0); ctx.lineTo(17, 0);
-  ctx.moveTo(0, -17); ctx.lineTo(0, -5);
-  ctx.moveTo(0, 5); ctx.lineTo(0, 17);
-  ctx.stroke(); ctx.restore();
-}
+function drawCrosshair(){ ctx.save(); ctx.translate(mouse.x, mouse.y); ctx.strokeStyle = 'rgba(165,238,255,0.9)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, 10, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-17, 0); ctx.lineTo(-5, 0); ctx.moveTo(5, 0); ctx.lineTo(17, 0); ctx.moveTo(0, -17); ctx.lineTo(0, -5); ctx.moveTo(0, 5); ctx.lineTo(0, 17); ctx.stroke(); ctx.restore(); }
 
 function drawAmmoBar(){
-  const bw = 200, bh = 14;
-  const bx = W/2 - bw/2, by = H - 76;
-  ctx.fillStyle = 'rgba(6,10,16,0.72)';
-  roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 7); ctx.fill();
-  
+  const bw = 200, bh = 14; const bx = W/2 - bw/2, by = H - 76;
+  ctx.fillStyle = 'rgba(6,10,16,0.72)'; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 7); ctx.fill();
   const step = bw / player.maxAmmo;
-  for (let i = 0; i < player.maxAmmo; i++){
-    const ax = bx + 6 + i * (step - 4);
-    ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3);
-    ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; 
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; ctx.stroke();
-  }
-  
+  for (let i = 0; i < player.maxAmmo; i++){ const ax = bx + 6 + i * (step - 4); ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3); ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; ctx.fill(); ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; ctx.stroke(); }
   if (player.reloading > 0){
-    const frac = 1 - player.reloading / player.reloadTime;
-    ctx.fillStyle = 'rgba(255,153,0,0.8)';
+    const frac = 1 - player.reloading / player.reloadTime; ctx.fillStyle = 'rgba(255,153,0,0.8)';
     roundRect(ctx, bx, by + bh + 5, bw * frac, 4, 2); ctx.fill();
-    ctx.fillStyle = '#ffaa33';
-    ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('ПЕРЕЗАРЯДКА...', W/2, by - 10);
+    ctx.fillStyle = '#ffaa33'; ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('ПЕРЕЗАРЯДКА...', W/2, by - 10);
   }
 }
 
 function drawUltBar(){
-  const bw = 300, bh = 18;
-  const bx = W/2 - bw/2, by = H - 120;
-  ctx.fillStyle = 'rgba(6,10,16,0.72)';
-  roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 9); ctx.fill();
+  const bw = 300, bh = 18; const bx = W/2 - bw/2, by = H - 120;
+  ctx.fillStyle = 'rgba(6,10,16,0.72)'; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 9); ctx.fill();
   const frac = clamp(player.ult / 100, 0, 1);
-  
   if (player.ult >= 100) ctx.fillStyle = '#7ff0ff';
-  else {
-    const g = ctx.createLinearGradient(bx, 0, bx + bw, 0);
-    g.addColorStop(0, '#1e88e5'); 
-    g.addColorStop(1, '#7ff0ff');
-    ctx.fillStyle = g;
-  }
-  
+  else { const g = ctx.createLinearGradient(bx, 0, bx + bw, 0); g.addColorStop(0, '#1e88e5'); g.addColorStop(1, '#7ff0ff'); ctx.fillStyle = g; }
   if (frac > 0){ roundRect(ctx, bx, by, bw * frac, bh, 6); ctx.fill(); }
-  ctx.strokeStyle = 'rgba(140,220,255,0.5)'; ctx.lineWidth = 2;
-  roundRect(ctx, bx, by, bw, bh, 6); ctx.stroke();
+  ctx.strokeStyle = 'rgba(140,220,255,0.5)'; ctx.lineWidth = 2; roundRect(ctx, bx, by, bw, bh, 6); ctx.stroke();
   ctx.textAlign = 'center'; ctx.font = 'bold 13px system-ui, sans-serif';
-  if (player.ult >= 100){
-    const p = .5 + .5 * Math.sin(performance.now() / 150);
-    ctx.fillStyle = 'rgba(185,255,255,' + (.6 + .4*p) + ')';
-    ctx.fillText('УЛЬТА ГОТОВА  ·  ПРОБЕЛ / ПКМ', W/2, by - 12);
-  } else {
-    ctx.fillStyle = 'rgba(155,205,235,0.85)';
-    ctx.fillText('УЛЬТА  ' + Math.floor(player.ult) + '%', W/2, by - 12);
-  }
+  if (player.ult >= 100){ const p = .5 + .5 * Math.sin(performance.now() / 150); ctx.fillStyle = 'rgba(185,255,255,' + (.6 + .4*p) + ')'; ctx.fillText('УЛЬТА ГОТОВА  ·  ПРОБЕЛ / ПКМ', W/2, by - 12); }
+  else { ctx.fillStyle = 'rgba(155,205,235,0.85)'; ctx.fillText('УЛЬТА  ' + Math.floor(player.ult) + '%', W/2, by - 12); }
 }
 
 function drawScoreboard(){
   const list = [player, ...bots].sort((a, b) => b.score - a.score);
-  const x = W - 196, y = 14;
-  const rowH = 25;
-  const total = 34 + rowH * list.length;
-  ctx.fillStyle = 'rgba(8,14,22,0.62)';
-  roundRect(ctx, x, y, 182, total, 12); ctx.fill();
-  ctx.strokeStyle = 'rgba(90,140,180,0.35)'; ctx.lineWidth = 1.5;
-  roundRect(ctx, x, y, 182, total, 12); ctx.stroke();
+  const x = W - 196, y = 14; const rowH = 25; const total = 34 + rowH * list.length;
+  ctx.fillStyle = 'rgba(8,14,22,0.62)'; roundRect(ctx, x, y, 182, total, 12); ctx.fill();
+  ctx.strokeStyle = 'rgba(90,140,180,0.35)'; ctx.lineWidth = 1.5; roundRect(ctx, x, y, 182, total, 12); ctx.stroke();
   
-  ctx.textAlign = 'left'; ctx.font = 'bold 11px system-ui, sans-serif';
-  ctx.fillStyle = 'rgba(140,180,215,0.9)';
+  ctx.textAlign = 'left'; ctx.font = 'bold 11px system-ui, sans-serif'; ctx.fillStyle = 'rgba(140,180,215,0.9)';
   ctx.fillText(currentMode, x + 14, y + 20);
   
+  if (currentMode === 'PVP-Битва' || currentMode === 'Останется только один') {
+    ctx.textAlign = 'right'; ctx.fillStyle = '#ffd700';
+    if (currentMode === 'PVP-Битва') {
+       const m = Math.floor(gameTimeLeft / 60); const s = Math.floor(gameTimeLeft % 60);
+       ctx.fillText(`${m}:${s < 10 ? '0'+s : s}`, x + 166, y + 20);
+    } else {
+       ctx.fillText('Живых: ' + (bots.filter(b=>b.alive).length + (player.alive?1:0)), x + 166, y + 20);
+    }
+  }
+
   ctx.font = 'bold 13px system-ui, sans-serif';
   list.forEach((h, i) => {
     const ry = y + 42 + i * rowH;
-    ctx.beginPath(); ctx.arc(x + 18, ry - 4, 6, 0, TAU);
-    ctx.fillStyle = h.color; ctx.fill();
-    ctx.textAlign = 'left';
-    
-    const isMe = h === player;
-    ctx.fillStyle = isMe ? '#ffffff' : 'rgba(210,225,240,0.82)';
-    ctx.fillText(h.name, x + 32, ry);
-    ctx.textAlign = 'right';
-    ctx.fillStyle = isMe ? '#8fe8ff' : 'rgba(210,225,240,0.82)';
-    ctx.fillText(h.score, x + 166, ry);
+    ctx.beginPath(); ctx.arc(x + 18, ry - 4, 6, 0, TAU); ctx.fillStyle = h.color; ctx.fill();
+    ctx.textAlign = 'left'; ctx.fillStyle = h.isPlayer ? '#ffffff' : 'rgba(210,225,240,0.82)'; ctx.fillText(h.name, x + 32, ry);
+    ctx.textAlign = 'right'; ctx.fillStyle = h.isPlayer ? '#8fe8ff' : 'rgba(210,225,240,0.82)'; ctx.fillText(h.score, x + 166, ry);
   });
   ctx.textAlign = 'left';
 }
 
 function drawKillFeed() {
-  let startY = H / 2 - 100;
-  ctx.textAlign = 'center';
-  ctx.font = 'bold 16px system-ui, sans-serif';
-  
+  let startY = H / 2 - 100; ctx.textAlign = 'center'; ctx.font = 'bold 16px system-ui, sans-serif';
   for (let i = 0; i < killFeed.length; i++) {
-    const kf = killFeed[i];
-    const alpha = Math.min(1, kf.life / 1.0);
-    ctx.globalAlpha = alpha;
-    
-    ctx.fillStyle = 'rgba(0,0,0,0.6)';
-    const textWidth = ctx.measureText(kf.text).width;
-    roundRect(ctx, W/2 - textWidth/2 - 10, startY - 20, textWidth + 20, 30, 8);
-    ctx.fill();
-    
-    ctx.fillStyle = '#ff7b7b';
-    ctx.fillText(kf.text, W/2, startY);
-    
-    startY += 35;
+    const kf = killFeed[i]; const alpha = Math.min(1, kf.life / 1.0); ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'rgba(0,0,0,0.6)'; const textWidth = ctx.measureText(kf.text).width;
+    roundRect(ctx, W/2 - textWidth/2 - 10, startY - 20, textWidth + 20, 30, 8); ctx.fill();
+    ctx.fillStyle = '#ff7b7b'; ctx.fillText(kf.text, W/2, startY); startY += 35;
   }
   ctx.globalAlpha = 1;
 }
 
 function drawVersionBadge(){
-  const x = 14, y = 14, w = 118, h = 30;
-  ctx.fillStyle = 'rgba(8,14,22,0.75)';
-  roundRect(ctx, x, y, w, h, 8); ctx.fill();
-  ctx.strokeStyle = 'rgba(90,140,180,0.4)'; ctx.lineWidth = 1.5;
-  roundRect(ctx, x, y, w, h, 8); ctx.stroke();
-  ctx.textAlign = 'left'; ctx.font = 'bold 10px system-ui, sans-serif';
-  ctx.fillStyle = 'rgba(140,180,215,0.9)';
-  ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
-  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff';
-  ctx.fillText('PRE-ALPHA 0.3', x + 10, y + 24);
+  const x = 14, y = 14, w = 118, h = 30; ctx.fillStyle = 'rgba(8,14,22,0.75)';
+  roundRect(ctx, x, y, w, h, 8); ctx.fill(); ctx.strokeStyle = 'rgba(90,140,180,0.4)'; ctx.lineWidth = 1.5;
+  roundRect(ctx, x, y, w, h, 8); ctx.stroke(); ctx.textAlign = 'left'; ctx.font = 'bold 10px system-ui, sans-serif';
+  ctx.fillStyle = 'rgba(140,180,215,0.9)'; ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
+  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff'; ctx.fillText('PRE-ALPHA 0.4', x + 10, y + 24);
 }
 
 function render() {
   if (!gameRunning) return;
   ctx.clearRect(0, 0, W, H);
-  ctx.save();
-  ctx.translate(-cam.x, -cam.y);
+  ctx.save(); ctx.translate(-cam.x, -cam.y);
 
-  drawGround();
-  drawFurniture();
-  drawHeroes();
-  drawBullets();
-  drawLasers();
-  drawParticles();
-
+  drawGround(); drawFurniture(); drawHeroes(); drawBullets(); drawLasers(); drawParticles();
   ctx.restore();
 
-  drawVersionBadge();
-  drawCrosshair();
-  drawUltBar();
-  drawAmmoBar();
-  drawScoreboard();
-  drawKillFeed();
+  drawVersionBadge(); drawCrosshair(); drawUltBar(); drawAmmoBar(); drawScoreboard(); drawKillFeed();
   
   if (!player.alive && !gameOver) {
-    ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(140,195,230,0.95)';
-    ctx.font = 'bold 28px system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(140,195,230,0.95)'; ctx.font = 'bold 28px system-ui, sans-serif';
     ctx.fillText('ВОЗРОЖДЕНИЕ ЧЕРЕЗ ' + Math.ceil(player.respawn), W/2, H/2 - 30);
   }
 
   if (matchSplashTimer > 0) {
-    ctx.fillStyle = 'rgba(4,8,14,0.85)';
-    ctx.fillRect(0, 0, W, H);
-    
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#7ff0ff';
-    ctx.font = 'bold 64px system-ui, sans-serif';
+    ctx.fillStyle = 'rgba(4,8,14,0.85)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center'; ctx.fillStyle = '#7ff0ff'; ctx.font = 'bold 64px system-ui, sans-serif';
     ctx.fillText(currentMode, W/2, H/2 - 30);
-    
-    ctx.fillStyle = '#dbe9f7';
-    ctx.font = 'bold 32px system-ui, sans-serif';
+    ctx.fillStyle = '#dbe9f7'; ctx.font = 'bold 32px system-ui, sans-serif';
     ctx.fillText('Карта: Горный техникум', W/2, H/2 + 30);
+  }
+
+  if (gameOver) {
+    ctx.fillStyle = 'rgba(4,8,14,0.9)'; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'center';
+    const win = winnerName === 'Вы';
+    ctx.fillStyle = win ? '#7ff0ff' : '#ff7b7b';
+    ctx.font = 'bold 56px system-ui, sans-serif';
+    ctx.fillText(win ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ', W/2, H/2 - 30);
+    ctx.fillStyle = '#dbe9f7';
+    ctx.font = 'bold 24px system-ui, sans-serif';
+    ctx.fillText((win ? 'Вы' : winnerName) + ' побеждает в Горном техникуме!', W/2, H/2 + 24);
+    ctx.fillStyle = 'rgba(170,200,225,0.85)';
+    ctx.font = '18px system-ui, sans-serif';
+    ctx.fillText('Награда: Сферы и Дули. Нажмите ESC для выхода.', W/2, H/2 + 76);
+    ctx.textAlign = 'left';
   }
 }
 
 let lastT = performance.now();
 function frame(now) {
-  let dt = (now - lastT) / 1000;
-  lastT = now;
+  let dt = (now - lastT) / 1000; lastT = now;
   if (dt > 0.05) dt = 0.05;
 
-  if (gameRunning) {
-    update(dt);
-    render();
-  }
+  if (gameRunning) { update(dt); render(); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
