@@ -167,9 +167,8 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
-  /* Модалки */
-  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #vote-modal, #upgrade-modal, #result-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
-  #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show, #vote-modal.show, #upgrade-modal.show, #result-modal.show {display:flex}
+   /* Модалки */
+  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #vote-modal, #upgrade-modal, #result-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:10px;}
   
   #fighters-card, #hero-modal-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card, #road-card, #shop-card, #community-card, #vote-card, #upgrade-card, #result-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
   #hero-modal-card { flex-direction: row; gap: 26px; }
@@ -314,15 +313,16 @@
   .shop-item button:active { transform: translateY(2px); box-shadow: none; }
 
   /* Дорога Славы (модалка) */
-   #road-card { 
-    width: min(1200px, 95vw); 
+     #road-card { 
+    width: 95vw; /* Сделали карточку на 95% от ширины экрана */
+    max-width: 1600px; /* Увеличили максимальный предел ширины */
+    height: 80vh; /* Задали высоту в 80% от экрана, чтобы картинка не обрезалась */
     border-color: #ffd700; 
     padding: 0; 
     overflow: hidden; 
     display: flex; 
     flex-direction: column; 
-    /* Добавляем картинку сюда, на весь блок */
-    background: url('img/1_Season.jpg') center/cover no-repeat; 
+    background: url('img/1_Season.jpg') center/cover no-repeat;
   }
     .road-bg-image { 
     width: 100%; 
