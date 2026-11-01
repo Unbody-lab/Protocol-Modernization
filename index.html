@@ -1001,18 +1001,21 @@
 
 <!-- Firebase для общего голосования -->
 <script type="module">
-  import { initializeApp } from "https://cdn.jsdelivr.net/npm/firebase@10.8.1/firebase-app.js";
-  import { getDatabase, ref, onValue, runTransaction } from "https://cdn.jsdelivr.net/npm/firebase@10.8.1/firebase-database.js";
+  // Загружаем Firebase как единый пакет, чтобы не было конфликтов
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+  import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
   const firebaseConfig = {
     databaseURL: "https://protocol-modernization-default-rtdb.europe-west1.firebasedatabase.app"
   };
 
-  window.voteFor = function(hero, el) {
+  // Заглушка на случай, если Firebase не загрузится
+  window.voteFor = function() {
     alert("Пожалуйста, подождите, идет подключение к базе...");
   };
 
   try {
+    // Инициализация
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const votesRef = ref(db, 'votes');
@@ -1023,6 +1026,7 @@
       }
       if (!confirm('Подтвердите голос за ' + (hero==='artem'?'Артёма':hero==='benzopila'?'Машину-Бензопилу':'Дмитрия') + '?')) return;
 
+      // Отправляем голос в базу
       runTransaction(votesRef, (currentVotes) => {
         if (currentVotes) {
           currentVotes[hero] = (currentVotes[hero] || 0) + 1;
@@ -1031,29 +1035,36 @@
       }).then(() => {
         document.querySelectorAll('.vote-card').forEach(c => c.classList.remove('selected'));
         if (el) el.classList.add('selected');
+        
         localStorage.setItem('hasVotedInApp', 'true');
         window.playerData.hasVoted = true;
         window.saveData();
         alert('Спасибо за ваш голос!');
       }).catch(error => {
-        alert('Ошибка при отправке голоса.');
+        alert('Ошибка отправки. Проверьте интернет.');
         console.error(error);
       });
     };
 
+    // Слушаем изменения голосов в реальном времени
     onValue(votesRef, (snapshot) => {
       const data = snapshot.val() || { artem: 0, benzopila: 0, dmitry: 0 };
-      document.getElementById('vote-count-artem').textContent = (data.artem || 0) + ' голосов';
-      document.getElementById('vote-count-benzopila').textContent = (data.benzopila || 0) + ' голосов';
-      document.getElementById('vote-count-dmitry').textContent = (data.dmitry || 0) + ' голосов';
-      document.getElementById('vote-total').textContent = 'Всего голосов: ' + ((data.artem||0) + (data.benzopila||0) + (data.dmitry||0));
+      const elA = document.getElementById('vote-count-artem');
+      const elB = document.getElementById('vote-count-benzopila');
+      const elD = document.getElementById('vote-count-dmitry');
+      const elT = document.getElementById('vote-total');
+      
+      if (elA) elA.textContent = (data.artem || 0) + ' голосов';
+      if (elB) elB.textContent = (data.benzopila || 0) + ' голосов';
+      if (elD) elD.textContent = (data.dmitry || 0) + ' голосов';
+      if (elT) elT.textContent = 'Всего голосов: ' + ((data.artem||0) + (data.benzopila||0) + (data.dmitry||0));
     });
+    
   } catch(e) {
-    console.warn("Ошибка Firebase:", e);
+    console.error("Ошибка инициализации Firebase:", e);
     window.voteFor = function() { alert("Не удалось подключиться к базе. Голос не сохранен."); };
   }
 </script>
-
 <script>
 (function(){
 'use strict';
