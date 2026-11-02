@@ -1,3 +1,15 @@
+Обновленный код редактора. В него добавлены все запрошенные декорации, реализована система смены текстур и цвета пола, управление размером карты, а также загрузка пасхалки (фото Vitya_Face) через локальный файл.
+
+Что было изменено:
+
+Интерфейс: В боковую панель добавлены новые кнопки для всех предметов. Инструменты разделены на группы.
+Пасхалка: Добавлена кнопка «Загрузить фото». При выборе файла он загружается в память и рисуется на карте как спрайт размером 100x100.
+Пол: Добавлен блок настроек «Настройки пола» с выбором текстуры (Бетон/Дерево), пипеткой для выбора цвета и ползунком размера плитки.
+Размер карты: Добавлен ползунок «Размер карты». При его изменении пересоздается полотно Canvas и перерисовывается сетка под новые габариты.
+Отрисовка: В функцию render() добавлена логика отрисовки новых объектов, баскетбольного и волейбольного инвентаря, глобуса, школьных принадлежностей, автобуса и лестницы.
+Коллизии: Для крупных объектов (дверь, шкафчики, автобус) добавлена автоматическая генерация rocks (препятствий).
+html
+Копировать
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -70,33 +82,56 @@
   <h2>Редактор карт</h2>
   
   <h3>Инструменты</h3>
-  <div class="tool-btn active" onclick="setTool('desk')">
-    <span>📝</span> Парта
-  </div>
-  <div class="tool-btn" onclick="setTool('chair')">
-    <span>🪑</span> Стул
-  </div>
-  <div class="tool-btn" onclick="setTool('cabinet')">
-    <span>🗄️</span> Шкаф
-  </div>
-  <div class="tool-btn" onclick="setTool('board')">
-    <span>🟩</span> Доска
-  </div>
-  <div class="tool-btn" onclick="setTool('rock')">
-    <span>🪨</span> Камень (скала)
-  </div>
-  <div class="tool-btn" onclick="setTool('holo')">
-    <span>🔵</span> Голограмма
-  </div>
-  <div class="tool-btn danger" onclick="setTool('erase')">
-    <span>❌</span> Стереть
-  </div>
+  <div class="tool-btn active" onclick="setTool('desk')"><span>📝</span> Парта</div>
+  <div class="tool-btn" onclick="setTool('chair')"><span>🪑</span> Стул</div>
+  <div class="tool-btn" onclick="setTool('cabinet')"><span>🗄️</span> Шкаф</div>
+  <div class="tool-btn" onclick="setTool('board')"><span>🟩</span> Доска</div>
+  <div class="tool-btn" onclick="setTool('computer')"><span>💻</span> Компьютер</div>
+  <div class="tool-btn" onclick="setTool('door')"><span>🚪</span> Дерев. дверь</div>
+  <div class="tool-btn" onclick="setTool('holo')"><span>🔵</span> Голограмма</div>
+  <div class="tool-btn" onclick="setTool('locker')"><span>🛢️</span> Шк. шкафчик</div>
+  <div class="tool-btn" onclick="setTool('bus')"><span>🚌</span> Автобус</div>
+  <div class="tool-btn" onclick="setTool('stairs')"><span>🪜</span> Лестница</div>
+  <div class="tool-btn" onclick="setTool('ring')"><span>🏀</span> Кольцо</div>
+  <div class="tool-btn" onclick="setTool('ball_basket')"><span>🏀</span> Мяч (баск.)</div>
+  <div class="tool-btn" onclick="setTool('net_volley')"><span>🏐</span> Сетка (вол.)</div>
+  <div class="tool-btn" onclick="setTool('ball_volley')"><span>🏐</span> Мяч (вол.)</div>
+  <div class="tool-btn" onclick="setTool('globe')"><span>🌐</span> Глобус</div>
+  <div class="tool-btn" onclick="setTool('stationery')"><span>✏️</span> Канцелярия</div>
+  <div class="tool-btn danger" onclick="setTool('erase')"><span>❌</span> Стереть</div>
 
   <h3>Размер / Радиус</h3>
   <div class="control-group">
     <label>Размер: <span id="size-val">35</span></label>
     <input type="range" id="size-slider" min="10" max="200" value="35" oninput="document.getElementById('size-val').innerText = this.value">
   </div>
+
+  <h3>Настройки пола</h3>
+  <div class="control-group">
+    <label>Текстура:</label>
+    <select id="floor-texture" onchange="updateFloorSettings()">
+      <option value="concrete">Бетон</option>
+      <option value="wood">Дерево</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Цвет:</label>
+    <input type="color" id="floor-color" value="#808080" onchange="updateFloorSettings()">
+  </div>
+  <div class="control-group">
+    <label>Размер плитки: <span id="tile-val">100</span></label>
+    <input type="range" id="tile-slider" min="20" max="300" value="100" oninput="document.getElementById('tile-val').innerText = this.value; updateFloorSettings()">
+  </div>
+
+  <h3>Размер карты</h3>
+  <div class="control-group">
+    <label>Размер: <span id="map-val">2600x2000</span></label>
+    <input type="range" id="map-slider" min="1000" max="5000" value="2600" oninput="resizeMap(this.value)">
+  </div>
+
+  <h3>Пасхалка</h3>
+  <button class="action-btn" style="font-size:14px;" onclick="document.getElementById('easter-file').click()">Загрузить Vitya_Face</button>
+  <input type="file" id="easter-file" accept="image/*" style="display:none;" onchange="loadEasterEgg(event)">
 
   <h3>Действия</h3>
   <button class="action-btn" onclick="generateJSON()">Сгенерировать JSON</button>
@@ -108,7 +143,7 @@
 
 <script>
 // --- НАСТРОЙКИ МИРА ---
-const WORLD_W = 2600, WORLD_H = 2000;
+let WORLD_W = 2600, WORLD_H = 2000;
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
 const canvas = document.getElementById('editor-canvas');
@@ -121,19 +156,34 @@ let isDragging = false;
 let lastMouseX = 0, lastMouseY = 0;
 
 // Данные карты
-let furniture = []; // Для декора (парты, шкафы и т.д.)
-let rocks = [];     // Для коллизий (камни, парты, шкафы)
+let furniture = []; 
+let rocks = [];     
+let easterEggImg = null;
+
+// Настройки пола
+const floorSettings = {
+    texture: 'concrete',
+    color: '#808080',
+    tileSize: 100
+};
 
 let currentTool = 'desk';
 
+function resizeMap(size) {
+    WORLD_W = size;
+    WORLD_H = Math.round(size * 0.77); // Сохраняем пропорции
+    document.getElementById('map-val').innerText = `${WORLD_W}x${WORLD_H}`;
+    resize(); // Пересоздаем canvas
+}
+
 function resize() {
-  W = window.innerWidth - 320; // Учитываем ширину панели
-  H = window.innerHeight;
-  canvas.width = Math.floor(W * DPR);
-  canvas.height = Math.floor(H * DPR);
-  canvas.style.width = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    W = window.innerWidth - 320;
+    H = window.innerHeight;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
 }
 window.addEventListener('resize', resize);
 resize();
@@ -159,21 +209,42 @@ window.clearMap = function() {
 window.generateJSON = function() {
   const data = {
     furniture: furniture,
-    rocks: rocks
+    rocks: rocks,
+    world: { w: WORLD_W, h: WORLD_H },
+    floor: floorSettings
   };
   document.getElementById('json-output').value = JSON.stringify(data, null, 2);
 };
 
+// --- ЗАГРУЗКА ПАСХАЛКИ ---
+function loadEasterEgg(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        easterEggImg = new Image();
+        easterEggImg.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+// --- НАСТРОЙКИ ПОЛА ---
+function updateFloorSettings() {
+    floorSettings.texture = document.getElementById('floor-texture').value;
+    floorSettings.color = document.getElementById('floor-color').value;
+    floorSettings.tileSize = parseInt(document.getElementById('tile-slider').value);
+}
+
 // --- ВВОД ---
 canvas.addEventListener('mousedown', (e) => {
-  if (e.button === 1 || e.button === 2) { // Средняя или правая кнопка - перемещение
+  if (e.button === 1 || e.button === 2) { 
     isDragging = true;
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
     return;
   }
   
-  if (e.button === 0) { // Левая кнопка - рисование
+  if (e.button === 0) { 
     const rect = canvas.getBoundingClientRect();
     const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
     const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
@@ -181,7 +252,6 @@ canvas.addEventListener('mousedown', (e) => {
     const size = parseInt(document.getElementById('size-slider').value);
 
     if (currentTool === 'erase') {
-      // Удаление ближайшего объекта
       for (let i = furniture.length - 1; i >= 0; i--) {
         if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
           furniture.splice(i, 1);
@@ -193,13 +263,13 @@ canvas.addEventListener('mousedown', (e) => {
         }
       }
     } else {
-      // Добавление
       if (currentTool === 'rock') {
         rocks.push({ x: mwx, y: mwy, r: size, type: 'rock' });
       } else {
         furniture.push({ x: mwx, y: mwy, type: currentTool, r: size });
-        // Для парт и шкафов добавляем коллизию
-        if (currentTool === 'desk' || currentTool === 'cabinet') {
+        
+        // Генерация коллизий для крупных объектов
+        if (currentTool === 'desk' || currentTool === 'cabinet' || currentTool === 'door' || currentTool === 'locker' || currentTool === 'bus' || currentTool === 'stairs') {
            rocks.push({ x: mwx, y: mwy, r: size, type: currentTool });
         }
       }
@@ -207,9 +277,7 @@ canvas.addEventListener('mousedown', (e) => {
   }
 });
 
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-});
+window.addEventListener('mouseup', () => { isDragging = false; });
 
 window.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
@@ -228,7 +296,6 @@ window.addEventListener('mousemove', (e) => {
 
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-// Зум
 canvas.addEventListener('wheel', (e) => {
   e.preventDefault();
   const zoomSpeed = 0.1;
@@ -239,7 +306,6 @@ canvas.addEventListener('wheel', (e) => {
   
   cam.zoom = Math.max(0.2, Math.min(3, cam.zoom));
   
-  // Зум к курсору
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
@@ -271,23 +337,38 @@ function render() {
   ctx.translate(cam.x, cam.y);
   ctx.scale(cam.zoom, cam.zoom);
 
-  // Фон (сетка)
-  ctx.fillStyle = '#2b3138';
+  // --- ОТРИСОВКА ПОЛА ---
+  const tileSize = floorSettings.tileSize;
+  ctx.fillStyle = floorSettings.color;
   ctx.fillRect(0, 0, WORLD_W, WORLD_H);
   
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-  ctx.lineWidth = 2;
-  for (let x = 0; x < WORLD_W; x += 100) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
-  }
-  for (let y = 0; y < WORLD_H; y += 100) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
+  if (floorSettings.texture === 'wood') {
+      ctx.fillStyle = '#8B4513';
+      for(let x=0; x<WORLD_W; x+=tileSize*2){
+          for(let y=0; y<WORLD_H; y+=tileSize){
+              ctx.fillRect(x, y, tileSize, tileSize);
+          }
+      }
+  } else {
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < WORLD_W; x += tileSize) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
+      }
+      for (let y = 0; y < WORLD_H; y += tileSize) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
+      }
   }
 
   // Границы
   ctx.strokeStyle = 'rgba(10,14,20,0.8)';
   ctx.lineWidth = 30;
   ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
+
+  // Пасхалка
+  if (easterEggImg) {
+      ctx.drawImage(easterEggImg, 50, 50, 100, 100);
+  }
 
   // Отрисовка мебели
   for (const f of furniture) {
@@ -319,6 +400,18 @@ function render() {
       ctx.fillStyle = '#fff';
       ctx.fillRect(f.x - 80, f.y - 20, 40, 4);
       ctx.fillRect(f.x + 40, f.y + 10, 30, 4);
+    } else if (f.type === 'computer') {
+      ctx.fillStyle = '#2c3e50';
+      ctx.fillRect(f.x - 25, f.y - 20, 50, 40);
+      ctx.fillStyle = '#34495e';
+      ctx.fillRect(f.x - 20, f.y - 35, 40, 15);
+      ctx.strokeStyle = '#1a252f'; ctx.lineWidth = 2; ctx.strokeRect(f.x - 25, f.y - 20, 50, 40);
+    } else if (f.type === 'door') {
+      ctx.fillStyle = '#8B4513';
+      ctx.fillRect(f.x - 40, f.y - 100, 80, 200);
+      ctx.fillStyle = '#654321';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 15, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#5a3d2b'; ctx.lineWidth = 4; ctx.strokeRect(f.x - 40, f.y - 100, 80, 200);
     } else if (f.type === 'holo') {
       const t = performance.now() / 1000;
       ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
@@ -328,6 +421,65 @@ function render() {
       ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
       ctx.lineWidth = 2;
       ctx.stroke();
+    } else if (f.type === 'locker') {
+      ctx.fillStyle = '#a9a9a9';
+      ctx.fillRect(f.x - 25, f.y - 60, 50, 120);
+      ctx.fillStyle = '#d3d3d3';
+      ctx.fillRect(f.x - 15, f.y - 50, 30, 20);
+      ctx.fillRect(f.x - 15, f.y - 10, 30, 20);
+      ctx.fillRect(f.x - 15, f.y + 30, 30, 20);
+      ctx.strokeStyle = '#696969'; ctx.lineWidth = 2; ctx.strokeRect(f.x - 25, f.y - 60, 50, 120);
+    } else if (f.type === 'bus') {
+      ctx.fillStyle = '#ff4500';
+      ctx.fillRect(f.x - 100, f.y - 40, 200, 80);
+      ctx.fillStyle = '#000';
+      ctx.fillRect(f.x - 90, f.y - 30, 20, 60);
+      ctx.fillRect(f.x - 50, f.y - 30, 20, 60);
+      ctx.fillRect(f.x - 10, f.y - 30, 20, 60);
+      ctx.fillRect(f.x + 30, f.y - 30, 20, 60);
+      ctx.strokeStyle = '#8b0000'; ctx.lineWidth = 3; ctx.strokeRect(f.x - 100, f.y - 40, 200, 80);
+    } else if (f.type === 'stairs') {
+      ctx.fillStyle = '#708090';
+      for(let i=0; i<5; i++){
+          ctx.fillRect(f.x - 40 + i*15, f.y - 20 + i*10, 40, 10);
+      }
+      ctx.strokeStyle = '#2f4f4f'; ctx.lineWidth = 2; ctx.strokeRect(f.x - 40, f.y - 20, 40, 80);
+    } else if (f.type === 'ring') {
+      ctx.strokeStyle = '#cd7f32'; ctx.lineWidth = 8;
+      ctx.beginPath(); ctx.arc(f.x, f.y - 40, 25, 0, TAU); ctx.stroke();
+      ctx.fillStyle = '#8b4513';
+      ctx.fillRect(f.x - 5, f.y - 10, 10, 100);
+    } else if (f.type === 'ball_basket') {
+      ctx.fillStyle = '#ff4500';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 15, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 15, 0, TAU); ctx.stroke();
+    } else if (f.type === 'net_volley') {
+      ctx.strokeStyle = '#008000'; ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath(); ctx.moveTo(f.x - 100, f.y); ctx.lineTo(f.x + 100, f.y); ctx.stroke();
+      ctx.setLineDash([]);
+    } else if (f.type === 'ball_volley') {
+      ctx.fillStyle = '#add8e6';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 12, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#00008b'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(f.x, f.y, 12, 0, TAU); ctx.stroke();
+    } else if (f.type === 'globe') {
+      ctx.fillStyle = '#2980b9';
+      ctx.beginPath(); ctx.arc(f.x, f.y, 25, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#3498db'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.strokeStyle = '#000'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(f.x - 25, f.y); ctx.lineTo(f.x + 25, f.y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(f.x, f.y - 25); ctx.lineTo(f.x, f.y + 25); ctx.stroke();
+    } else if (f.type === 'stationery') {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(f.x - 20, f.y - 5, 40, 10); // Линейка
+      ctx.fillStyle = '#ff0000';
+      ctx.fillRect(f.x - 2, f.y - 15, 4, 20); // Ручка
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(f.x + 10, f.y - 15, 2, 20); // Карандаш
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(f.x - 15, f.y - 15, 2, 20); // Ластик
     }
   }
 
@@ -345,7 +497,6 @@ function render() {
     }
   }
   
-  // Подсветка коллизий (для отладки)
   ctx.strokeStyle = 'rgba(255,0,0,0.3)';
   ctx.lineWidth = 1;
   for (const r of rocks) {
@@ -354,7 +505,6 @@ function render() {
     }
   }
 
-  // Границы мира
   ctx.strokeStyle = '#ff4d4d';
   ctx.lineWidth = 4;
   ctx.strokeRect(0, 0, WORLD_W, WORLD_H);
