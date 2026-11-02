@@ -23,31 +23,31 @@
     border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 5px;}
 
   .tool-btn {
-    padding: 9px 10px; background: rgba(63,169,245,0.1); border: 2px solid rgba(127,240,255,0.4);
+    padding: 8px 6px; background: rgba(63,169,245,0.1); border: 2px solid rgba(127,240,255,0.4);
     color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: left;
-    transition: all 0.2s; display: flex; align-items: center; gap: 8px; font-size: 13px;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 12px;
   }
   .tool-btn:hover { background: rgba(63,169,245,0.3); border-color: #7ff0ff; }
   .tool-btn.active { background: #3fa9f5; color: #000; border-color: #7ff0ff; }
 
-  .control-group { display: flex; flex-direction: column; gap: 5px; }
-  .control-group label { color: #b8cde0; font-size: 13px; }
+  .control-group { display: flex; flex-direction: column; gap: 4px; }
+  .control-group label { color: #b8cde0; font-size: 12px; }
   .control-group input[type="range"] { width: 100%; cursor: pointer; }
   .control-group input[type="number"], .control-group select, .control-group input[type="color"] {
-    width: 100%; padding: 6px; border-radius: 6px; border: 1px solid rgba(90,140,180,0.4);
+    width: 100%; padding: 5px; border-radius: 6px; border: 1px solid rgba(90,140,180,0.4);
     background: #0a0e14; color: #7ff0ff; outline: none;
   }
 
   #json-output {
-    width: 100%; height: 120px; background: #0a0e14; color: #7ff0ff;
+    width: 100%; height: 100px; background: #0a0e14; color: #7ff0ff;
     border: 1px solid rgba(90,140,180,0.4); border-radius: 8px;
-    padding: 10px; font-family: monospace; font-size: 12px; resize: vertical;
+    padding: 10px; font-family: monospace; font-size: 11px; resize: vertical;
     outline: none;
   }
 
   .action-btn {
-    padding: 10px; background: #ffb450; color: #000; border: none;
-    border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 15px;
+    padding: 8px; background: #ffb450; color: #000; border: none;
+    border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 13px;
     transition: transform 0.1s;
   }
   .action-btn:hover { transform: translateY(-2px); background: #ffd700; }
@@ -58,11 +58,11 @@
   #top-bar {
     position: fixed; top: 10px; left: 10px; z-index: 10;
     background: rgba(14,22,32,0.85); border: 1px solid rgba(90,140,180,0.4);
-    padding: 8px 16px; border-radius: 8px; color: #7ff0ff;
-    font-family: monospace; font-size: 14px; pointer-events: none;
+    padding: 6px 12px; border-radius: 8px; color: #7ff0ff;
+    font-family: monospace; font-size: 13px; pointer-events: none;
   }
 
-  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
   .row { display: flex; gap: 6px; align-items: center; }
   .row > * { flex: 1; }
 </style>
@@ -105,12 +105,22 @@
     <div class="tool-btn danger" onclick="setTool('erase', this)"><span>❌</span> Стереть</div>
   </div>
 
-  <h3>Размер / Радиус</h3>
+  <h3>Настройки объекта (нового / выделенного)</h3>
   <div class="control-group">
     <label>Размер: <span id="size-val">35</span></label>
     <input type="range" id="size-slider" min="10" max="200" value="35"
       oninput="document.getElementById('size-val').innerText = this.value">
   </div>
+  <div class="control-group">
+    <label>Поворот: <span id="rot-val">0</span>°</label>
+    <input type="range" id="rot-slider" min="0" max="360" value="0"
+      oninput="document.getElementById('rot-val').innerText = this.value">
+  </div>
+  <div class="control-group">
+    <label>Цвет объекта</label>
+    <input type="color" id="obj-color" value="#ffffff">
+  </div>
+  <button class="action-btn" onclick="applyToSelected()">Применить к выделенному</button>
 
   <h3>Пол</h3>
   <div class="control-group">
@@ -163,12 +173,13 @@ let lastMouseX = 0, lastMouseY = 0;
 // Данные карты
 let furniture = [];
 let rocks = [];
+let selectedObj = null; // Ссылка на выделенный объект
 
 let currentTool = 'desk';
 
-// Пасхалка Vitya_Face: положите файл Vitya_Face.png рядом с HTML.
+// Пасхалка Vitya_Face
 const VITYA_IMG = new Image();
-VITYA_IMG.src = 'Vitya_Face.png'; // <-- при необходимости замените путь
+VITYA_IMG.src = 'Vitya_Face.png'; 
 
 function resize() {
   W = window.innerWidth - 340;
@@ -190,12 +201,18 @@ window.setTool = function(tool, el) {
   currentTool = tool;
   document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
   if (el) el.classList.add('active');
+  
+  // При смене инструмента сбрасываем выделение
+  if (tool !== 'select') {
+    selectedObj = null;
+  }
 };
 
 window.clearMap = function() {
   if (confirm('Вы уверены, что хотите очистить карту?')) {
     furniture = [];
     rocks = [];
+    selectedObj = null;
   }
 };
 
@@ -203,6 +220,16 @@ window.applyWorldSize = function() {
   const nw = Math.max(400, Math.min(10000, parseInt(document.getElementById('world-w').value) || WORLD_W));
   const nh = Math.max(400, Math.min(10000, parseInt(document.getElementById('world-h').value) || WORLD_H));
   WORLD_W = nw; WORLD_H = nh;
+};
+
+window.applyToSelected = function() {
+  if (!selectedObj) {
+    alert('Сначала кликните по объекту левой кнопкой (режим "Стереть" или просто клик по карте).');
+    return;
+  }
+  selectedObj.color = document.getElementById('obj-color').value;
+  selectedObj.rot = parseInt(document.getElementById('rot-slider').value);
+  selectedObj.r = parseInt(document.getElementById('size-slider').value);
 };
 
 window.generateJSON = function() {
@@ -233,10 +260,14 @@ canvas.addEventListener('mousedown', (e) => {
     const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
 
     const size = parseInt(document.getElementById('size-slider').value);
+    const rot = parseInt(document.getElementById('rot-slider').value);
+    const color = document.getElementById('obj-color').value;
 
     if (currentTool === 'erase') {
+      // Удаление
       for (let i = furniture.length - 1; i >= 0; i--) {
         if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
+          if (selectedObj === furniture[i]) selectedObj = null;
           furniture.splice(i, 1);
         }
       }
@@ -246,17 +277,19 @@ canvas.addEventListener('mousedown', (e) => {
         }
       }
     } else {
+      // Добавление
+      const newObj = { x: mwx, y: mwy, type: currentTool, r: size, rot: rot, color: color };
       if (currentTool === 'rock') {
-        rocks.push({ x: mwx, y: mwy, r: size, type: 'rock' });
+        rocks.push(newObj);
       } else {
-        furniture.push({ x: mwx, y: mwy, type: currentTool, r: size });
-
-        // коллизии для крупных объектов
+        furniture.push(newObj);
+        // Коллизии для крупных объектов
         const collidable = ['desk','cabinet','woodcab','locker','bus','stairs','wooddoor','vitya'];
         if (collidable.includes(currentTool)) {
           rocks.push({ x: mwx, y: mwy, r: size, type: currentTool });
         }
       }
+      selectedObj = newObj; // Автовыделение нового
     }
   }
 });
@@ -325,7 +358,6 @@ function drawFloor() {
   ctx.fillRect(0, 0, WORLD_W, WORLD_H);
 
   if (tex === 'wood') {
-    // имитация досок
     ctx.save();
     ctx.globalAlpha = 0.25;
     ctx.strokeStyle = '#000';
@@ -334,7 +366,6 @@ function drawFloor() {
     for (let y = 0; y < WORLD_H; y += step) {
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
     }
-    // смещённые вертикальные стыки
     for (let y = 0; y < WORLD_H; y += step) {
       const offset = (Math.floor(y/step) % 2) * (step * 2);
       for (let x = offset; x < WORLD_W; x += step * 4) {
@@ -343,7 +374,6 @@ function drawFloor() {
     }
     ctx.restore();
   } else {
-    // бетон — лёгкие пятна
     ctx.save();
     ctx.globalAlpha = 0.08;
     ctx.fillStyle = '#000';
@@ -356,7 +386,6 @@ function drawFloor() {
     ctx.restore();
   }
 
-  // сетка
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 2;
   for (let x = 0; x < WORLD_W; x += 100) {
@@ -369,355 +398,447 @@ function drawFloor() {
 
 // --- ОТРИСОВКА ОБЪЕКТОВ ---
 function drawFurniture(f) {
-  const x = f.x, y = f.y, r = f.r;
+  ctx.save();
+  ctx.translate(f.x, f.y);
+  ctx.rotate((f.rot || 0) * Math.PI / 180);
+  
+  const r = f.r;
+  const baseColor = f.color || '#ffffff'; 
+  
+  // Функция для затемнения/осветления цвета
+  const shade = (hex, percent) => {
+    let num = parseInt(hex.replace("#",""),16),
+    amt = Math.round(2.55 * percent),
+    R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+    return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
+  };
 
   switch (f.type) {
     case 'desk': {
-      ctx.fillStyle = '#5a3d2b';
-      roundRect(ctx, x - 35, y - 25, 70, 50, 5); ctx.fill();
-      ctx.strokeStyle = '#3a2517'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = '#2b1a10';
-      ctx.fillRect(x - 30, y + 15, 8, 20);
-      ctx.fillRect(x + 22, y + 15, 8, 20);
+      ctx.fillStyle = shade(baseColor, -40);
+      roundRect(ctx, -35, -25, 70, 50, 5); ctx.fill();
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = shade(baseColor, -70);
+      ctx.fillRect(-30, 15, 8, 20);
+      ctx.fillRect(22, 15, 8, 20);
       break;
     }
     case 'chair': {
-      ctx.fillStyle = '#4a5568';
-      roundRect(ctx, x - 18, y - 15, 36, 30, 4); ctx.fill();
-      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2; ctx.stroke();
-      roundRect(ctx, x - 18, y - 25, 36, 10, 3); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = shade(baseColor, -30);
+      roundRect(ctx, -18, -15, 36, 30, 4); ctx.fill();
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2; ctx.stroke();
+      roundRect(ctx, -18, -25, 36, 10, 3); ctx.fill(); ctx.stroke();
       break;
     }
     case 'cabinet': {
-      ctx.fillStyle = '#4e5a68';
-      ctx.fillRect(x - 25, y - 45, 50, 90);
-      ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 3; ctx.strokeRect(x - 25, y - 45, 50, 90);
+      ctx.fillStyle = shade(baseColor, -30);
+      ctx.fillRect(-25, -45, 50, 90);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.strokeRect(-25, -45, 50, 90);
       ctx.fillStyle = '#ffd700';
-      ctx.fillRect(x + 15, y - 10, 5, 20);
-      ctx.fillRect(x + 15, y + 15, 5, 20);
+      ctx.fillRect(15, -10, 5, 20);
+      ctx.fillRect(15, 15, 5, 20);
       break;
     }
     case 'board': {
-      ctx.fillStyle = '#1a4a2e';
-      roundRect(ctx, x - 120, y - 50, 240, 100, 8); ctx.fill();
+      ctx.fillStyle = shade(baseColor, -50);
+      roundRect(ctx, -120, -50, 240, 100, 8); ctx.fill();
       ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
       ctx.fillStyle = '#fff';
-      ctx.fillRect(x - 80, y - 20, 40, 4);
-      ctx.fillRect(x + 40, y + 10, 30, 4);
+      ctx.fillRect(-80, -20, 40, 4);
+      ctx.fillRect(40, 10, 30, 4);
       break;
     }
     case 'holo': {
       const t = performance.now() / 1000;
-      ctx.fillStyle = 'rgba(127, 240, 255, 0.2)';
-      ctx.beginPath();
-      ctx.arc(x, y + Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(127, 240, 255, 0.6)';
-      ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = shade(baseColor, 20); ctx.globalAlpha = 0.2;
+      ctx.beginPath(); ctx.arc(0, Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU); ctx.fill();
+      ctx.strokeStyle = baseColor; ctx.globalAlpha = 0.6; ctx.lineWidth = 2; ctx.stroke();
+      ctx.globalAlpha = 1;
       break;
     }
     case 'computer': {
-      // монитор
       ctx.fillStyle = '#111';
-      roundRect(ctx, x - 22, y - 18, 44, 30, 4); ctx.fill();
-      ctx.fillStyle = '#7ff0ff';
-      roundRect(ctx, x - 18, y - 14, 36, 22, 3); ctx.fill();
+      roundRect(ctx, -22, -18, 44, 30, 4); ctx.fill();
+      ctx.fillStyle = baseColor;
+      roundRect(ctx, -18, -14, 36, 22, 3); ctx.fill();
       ctx.fillStyle = '#222';
-      ctx.fillRect(x - 6, y + 12, 12, 10);
+      ctx.fillRect(-6, 12, 12, 10);
       ctx.fillStyle = '#555';
-      ctx.fillRect(x - 14, y + 22, 28, 4);
-      // клавиатура
+      ctx.fillRect(-14, 22, 28, 4);
       ctx.fillStyle = '#333';
-      roundRect(ctx, x - 24, y + 30, 48, 12, 3); ctx.fill();
+      roundRect(ctx, -24, 30, 48, 12, 3); ctx.fill();
       break;
     }
     case 'wooddoor': {
-      ctx.fillStyle = '#8b5a2b';
-      ctx.fillRect(x - 30, y - 50, 60, 100);
-      ctx.strokeStyle = '#5a3a18'; ctx.lineWidth = 4; ctx.strokeRect(x - 30, y - 50, 60, 100);
+      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillRect(-30, -50, 60, 100);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-30, -50, 60, 100);
       ctx.fillStyle = '#ffd700';
-      ctx.beginPath(); ctx.arc(x + 18, y, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(18, 0, 4, 0, TAU); ctx.fill();
       break;
     }
     case 'holohuman': {
       const t = performance.now() / 1000;
+      const c = baseColor; // Используем выбранный цвет (по умолчанию #7ff0ff)
+      
       ctx.save();
-      ctx.globalAlpha = 0.7;
-      ctx.strokeStyle = 'rgba(127,240,255,0.9)';
-      ctx.lineWidth = 3;
-      // голова
-      ctx.beginPath(); ctx.arc(x, y - 30 + Math.sin(t*2)*2, 12, 0, TAU); ctx.stroke();
-      // тело
-      ctx.beginPath(); ctx.moveTo(x, y - 18); ctx.lineTo(x, y + 15); ctx.stroke();
-      // руки
-      ctx.beginPath(); ctx.moveTo(x - 18, y - 5); ctx.lineTo(x + 18, y - 5); ctx.stroke();
-      // ноги
-      ctx.beginPath(); ctx.moveTo(x, y + 15); ctx.lineTo(x - 12, y + 40); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x, y + 15); ctx.lineTo(x + 12, y + 40); ctx.stroke();
-      // свечение
-      ctx.globalAlpha = 0.15;
-      ctx.fillStyle = '#7ff0ff';
-      ctx.beginPath(); ctx.arc(x, y, 40, 0, TAU); ctx.fill();
+      // Легкое покачивание
+      ctx.rotate(Math.sin(t*1.5) * 0.05);
+      
+      // Эффект голограммы (свечение)
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = c;
+      
+      ctx.fillStyle = c;
+      ctx.globalAlpha = 0.6;
+      
+      // Тело (торс)
+      ctx.beginPath();
+      ctx.moveTo(-15, -10);
+      ctx.quadraticCurveTo(-20, 20, -15, 50);
+      ctx.lineTo(15, 50);
+      ctx.quadraticCurveTo(20, 20, 15, -10);
+      ctx.closePath(); ctx.fill();
+
+      // Голова
+      ctx.beginPath();
+      ctx.arc(0, -30, 14, 0, TAU); ctx.fill();
+      
+      // Шея
+      ctx.fillRect(-5, -18, 10, 8);
+
+      // Руки
+      ctx.beginPath();
+      ctx.moveTo(-15, -5);
+      ctx.lineTo(-35, 25);
+      ctx.lineTo(-30, 30);
+      ctx.lineTo(-12, 5);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(15, -5);
+      ctx.lineTo(35, 25);
+      ctx.lineTo(30, 30);
+      ctx.lineTo(12, 5);
+      ctx.fill();
+
+      // Ноги
+      ctx.beginPath();
+      ctx.moveTo(-12, 50);
+      ctx.lineTo(-15, 80);
+      ctx.lineTo(-8, 80);
+      ctx.lineTo(-5, 50);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(12, 50);
+      ctx.lineTo(15, 80);
+      ctx.lineTo(8, 80);
+      ctx.lineTo(5, 50);
+      ctx.fill();
+
+      // Скан-линии (эффект голограммы)
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#fff';
+      ctx.globalAlpha = 0.3;
+      ctx.lineWidth = 1;
+      const scanY = (t * 40) % 120 - 20; // Движение сверху вниз
+      ctx.beginPath();
+      ctx.moveTo(-30, scanY);
+      ctx.lineTo(30, scanY);
+      ctx.stroke();
+      
       ctx.restore();
       break;
     }
     case 'woodcab': {
-      ctx.fillStyle = '#8b5a2b';
-      ctx.fillRect(x - 35, y - 50, 70, 100);
-      ctx.strokeStyle = '#5a3a18'; ctx.lineWidth = 4; ctx.strokeRect(x - 35, y - 50, 70, 100);
-      ctx.beginPath(); ctx.moveTo(x, y - 50); ctx.lineTo(x, y + 50); ctx.stroke();
+      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillRect(-35, -50, 70, 100);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-35, -50, 70, 100);
+      ctx.beginPath(); ctx.moveTo(0, -50); ctx.lineTo(0, 50); ctx.stroke();
       ctx.fillStyle = '#ffd700';
-      ctx.beginPath(); ctx.arc(x - 8, y, 4, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(x + 8, y, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(-8, 0, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(8, 0, 4, 0, TAU); ctx.fill();
       break;
     }
     case 'locker': {
-      // школьный шкафчик — вертикальные секции
       const w = 22, h = 80;
       for (let i = -1; i <= 1; i++) {
-        const cx = x + i * w;
-        ctx.fillStyle = i % 2 === 0 ? '#4e5a68' : '#5b6878';
-        ctx.fillRect(cx - w/2 + 1, y - h/2, w - 2, h);
-        ctx.strokeStyle = '#2d3748'; ctx.lineWidth = 2;
-        ctx.strokeRect(cx - w/2 + 1, y - h/2, w - 2, h);
-        // вентиляционные щели
+        const cx = i * w;
+        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -10) : shade(baseColor, -20);
+        ctx.fillRect(cx - w/2 + 1, -h/2, w - 2, h);
+        ctx.strokeStyle = shade(baseColor, -50); ctx.lineWidth = 2;
+        ctx.strokeRect(cx - w/2 + 1, -h/2, w - 2, h);
         ctx.strokeStyle = '#1a2028';
         for (let s = 0; s < 3; s++) {
           ctx.beginPath();
-          ctx.moveTo(cx - w/2 + 5, y - h/2 + 10 + s * 5);
-          ctx.lineTo(cx + w/2 - 5, y - h/2 + 10 + s * 5);
+          ctx.moveTo(cx - w/2 + 5, -h/2 + 10 + s * 5);
+          ctx.lineTo(cx + w/2 - 5, -h/2 + 10 + s * 5);
           ctx.stroke();
         }
-        // ручка
         ctx.fillStyle = '#ffd700';
-        ctx.fillRect(cx + w/2 - 6, y + 5, 3, 10);
+        ctx.fillRect(cx + w/2 - 6, 5, 3, 10);
       }
       break;
     }
     case 'stairs': {
-      ctx.fillStyle = '#777';
       const steps = 6, sw = 100, sh = 16;
       for (let i = 0; i < steps; i++) {
-        ctx.fillStyle = i % 2 === 0 ? '#888' : '#777';
-        ctx.fillRect(x - sw/2, y - steps*sh/2 + i*sh, sw, sh - 2);
-        ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
-        ctx.strokeRect(x - sw/2, y - steps*sh/2 + i*sh, sw, sh - 2);
+        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -20) : shade(baseColor, -30);
+        ctx.fillRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
+        ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2;
+        ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
     }
     case 'bus': {
-      // школьный автобус
-      ctx.fillStyle = '#ffd700';
-      roundRect(ctx, x - 90, y - 40, 180, 80, 12); ctx.fill();
-      ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 4; ctx.stroke();
-      // окна
-      ctx.fillStyle = '#7ff0ff';
-      for (let i = 0; i < 4; i++) {
-        roundRect(ctx, x - 75 + i*35, y - 30, 28, 22, 3); ctx.fill();
-      }
-      // колёса
+      // Точная копия по референсу
+      // Кузов
+      ctx.fillStyle = baseColor || '#ffb400';
+      roundRect(ctx, -90, -35, 180, 70, 10); ctx.fill();
+      
+      // Передняя часть (капот)
+      ctx.beginPath();
+      ctx.moveTo(90, -20);
+      ctx.lineTo(110, -10);
+      ctx.quadraticCurveTo(120, 0, 110, 20);
+      ctx.lineTo(90, 35);
+      ctx.closePath(); ctx.fill();
+
+      // Черная полоса по центру
+      ctx.fillStyle = '#111';
+      ctx.fillRect(-90, 5, 180, 8);
+      
+      // Окна
       ctx.fillStyle = '#222';
-      ctx.beginPath(); ctx.arc(x - 55, y + 40, 12, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(x + 55, y + 40, 12, 0, TAU); ctx.fill();
-      // дверь
-      ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 3;
-      ctx.strokeRect(x + 60, y - 30, 25, 50);
+      for (let i = 0; i < 7; i++) {
+        roundRect(ctx, -80 + i*20, -25, 16, 20, 2); ctx.fill();
+      }
+      // Окно двери
+      roundRect(ctx, 65, -25, 16, 20, 2); ctx.fill();
+
+      // Дверь (передняя)
+      ctx.fillStyle = '#222';
+      roundRect(ctx, 65, -5, 25, 40, 3); ctx.fill();
+      ctx.strokeStyle = '#111'; ctx.lineWidth = 2; ctx.stroke();
+      
+      // Надпись
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 6px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('OKLAHOMA CITY PUBLIC SCHOOLS', -40, 3);
+      ctx.textAlign = 'start';
+
+      // Колёса
+      ctx.fillStyle = '#111';
+      ctx.beginPath(); ctx.arc(-55, 38, 14, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(55, 38, 14, 0, TAU); ctx.fill();
+      // Диски
+      ctx.fillStyle = '#555';
+      ctx.beginPath(); ctx.arc(-55, 38, 6, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(55, 38, 6, 0, TAU); ctx.fill();
+
+      // Зеркала
+      ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(100, -25); ctx.lineTo(115, -35); ctx.stroke();
+      ctx.fillStyle = '#111';
+      roundRect(ctx, 110, -40, 8, 12, 2); ctx.fill();
+      
+      // Фары
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(108, 10, 3, 0, TAU); ctx.fill();
+      
       break;
     }
     case 'basket_ring': {
-      // щит
       ctx.fillStyle = '#fff';
-      roundRect(ctx, x - 30, y - 40, 60, 45, 4); ctx.fill();
+      roundRect(ctx, -30, -40, 60, 45, 4); ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 3; ctx.stroke();
-      // кольцо
-      ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.arc(x, y + 12, 18, 0, TAU); ctx.stroke();
-      // сетка
+      ctx.strokeStyle = baseColor; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(0, 12, 18, 0, TAU); ctx.stroke();
       ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.5;
       for (let i = 0; i < 6; i++) {
         const a = (i / 6) * TAU;
         ctx.beginPath();
-        ctx.moveTo(x + Math.cos(a)*18, y + 12 + Math.sin(a)*18);
-        ctx.lineTo(x + Math.cos(a)*10, y + 40);
+        ctx.moveTo(Math.cos(a)*18, 12 + Math.sin(a)*18);
+        ctx.lineTo(Math.cos(a)*10, 40);
         ctx.stroke();
-      }
-      break;
+           break;
     }
     case 'basket_ball': {
-      const g = ctx.createRadialGradient(x - 5, y - 5, 3, x, y, 18);
-      g.addColorStop(0, '#ff9933'); g.addColorStop(1, '#cc4400');
+      const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 18);
+      g.addColorStop(0, shade(baseColor, 20)); 
+      g.addColorStop(1, shade(baseColor, -40));
       ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(x, y, 18, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#331100'; ctx.lineWidth = 2; ctx.stroke();
-      // линии мяча
-      ctx.beginPath(); ctx.arc(x, y, 18, 0, TAU); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x - 18, y); ctx.lineTo(x + 18, y); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x, y - 18); ctx.lineTo(x, y + 18); ctx.stroke();
+      
+      // Линии мяча
+      ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(18, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -18); ctx.lineTo(0, 18); ctx.stroke();
       break;
     }
     case 'volley_net': {
-      // столбы
-      ctx.fillStyle = '#555';
-      ctx.fillRect(x - 120, y - 40, 6, 80);
-      ctx.fillRect(x + 114, y - 40, 6, 80);
-      // сетка
-      ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.5;
+      // Столбы
+      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillRect(-120, -40, 6, 80);
+      ctx.fillRect(114, -40, 6, 80);
+      // Сетка
+      ctx.strokeStyle = baseColor; ctx.lineWidth = 1.5;
       for (let i = 0; i <= 12; i++) {
-        const nx = x - 114 + (i / 12) * 228;
-        ctx.beginPath(); ctx.moveTo(nx, y - 25); ctx.lineTo(nx, y + 25); ctx.stroke();
+        const nx = -114 + (i / 12) * 228;
+        ctx.beginPath(); ctx.moveTo(nx, -25); ctx.lineTo(nx, 25); ctx.stroke();
       }
       for (let j = 0; j <= 4; j++) {
-        const ny = y - 25 + (j / 4) * 50;
-        ctx.beginPath(); ctx.moveTo(x - 114, ny); ctx.lineTo(x + 114, ny); ctx.stroke();
+        const ny = -25 + (j / 4) * 50;
+        ctx.beginPath(); ctx.moveTo(-114, ny); ctx.lineTo(114, ny); ctx.stroke();
       }
-      // верхняя лента
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 4;
-      ctx.beginPath(); ctx.moveTo(x - 114, y - 25); ctx.lineTo(x + 114, y - 25); ctx.stroke();
+      // Верхняя лента
+      ctx.strokeStyle = shade(baseColor, 20); ctx.lineWidth = 4;
+      ctx.beginPath(); ctx.moveTo(-114, -25); ctx.lineTo(114, -25); ctx.stroke();
       break;
     }
     case 'volley_ball': {
-      const g = ctx.createRadialGradient(x - 5, y - 5, 3, x, y, 16);
-      g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#cccccc');
+      const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 16);
+      g.addColorStop(0, '#ffffff'); g.addColorStop(1, shade(baseColor, -20));
       ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(x, y, 16, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-      // полосы
       ctx.strokeStyle = '#3fa9f5'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.arc(x, y, 16, 0.2, 1.8); ctx.stroke();
-      ctx.beginPath(); ctx.arc(x, y, 16, Math.PI + 0.2, Math.PI + 1.8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0.2, 1.8); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 16, Math.PI + 0.2, Math.PI + 1.8); ctx.stroke();
       break;
     }
     case 'globe': {
-      // подставка
-      ctx.fillStyle = '#8b5a2b';
-      ctx.fillRect(x - 3, y + 10, 6, 20);
-      ctx.beginPath(); ctx.arc(x, y + 30, 14, 0, Math.PI); ctx.fill();
-      // сфера
-      const g = ctx.createRadialGradient(x - 6, y - 6, 4, x, y, 24);
-      g.addColorStop(0, '#7ff0ff'); g.addColorStop(1, '#1a4a8b');
+      // Подставка
+      ctx.fillStyle = shade(baseColor, -50);
+      ctx.fillRect(-3, 10, 6, 20);
+      ctx.beginPath(); ctx.arc(0, 30, 14, 0, Math.PI); ctx.fill();
+      // Сфера
+      const g = ctx.createRadialGradient(-6, -6, 4, 0, 0, 24);
+      g.addColorStop(0, shade(baseColor, 30)); g.addColorStop(1, shade(baseColor, -30));
       ctx.fillStyle = g;
-      ctx.beginPath(); ctx.arc(x, y, 24, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 24, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
-      // континенты (упрощённо)
+      // Континенты
       ctx.fillStyle = '#2ecc71';
-      ctx.beginPath(); ctx.ellipse(x - 6, y - 4, 8, 10, 0.5, 0, TAU); ctx.fill();
-            ctx.beginPath(); ctx.ellipse(x + 8, y + 6, 6, 8, -0.4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(-6, -4, 8, 10, 0.5, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(8, 6, 6, 8, -0.4, 0, TAU); ctx.fill();
       break;
     }
     case 'ruler': {
-      // линейка
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(-0.15);
-      ctx.fillStyle = '#f5e6a8';
+      ctx.fillStyle = baseColor;
       roundRect(ctx, -60, -10, 120, 20, 3); ctx.fill();
-      ctx.strokeStyle = '#b8a24a'; ctx.lineWidth = 2; ctx.stroke();
-      // деления
-      ctx.strokeStyle = '#5a4a10'; ctx.lineWidth = 1.5;
+      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 2; ctx.stroke();
+      // Деления
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 1.5;
       for (let i = 0; i <= 12; i++) {
         const px = -60 + (i / 12) * 120;
         const h = (i % 2 === 0) ? 8 : 5;
         ctx.beginPath(); ctx.moveTo(px, -10); ctx.lineTo(px, -10 + h); ctx.stroke();
       }
-      ctx.restore();
       break;
     }
     case 'pen': {
-      // ручка
-      ctx.save();
-      ctx.translate(x, y);
+      // Уменьшенный размер
+      ctx.scale(0.5, 0.5); 
       ctx.rotate(0.6);
-      // корпус
-      ctx.fillStyle = '#1a4a8b';
+      // Корпус
+      ctx.fillStyle = baseColor;
       roundRect(ctx, -30, -5, 55, 10, 4); ctx.fill();
-      ctx.strokeStyle = '#0d2a52'; ctx.lineWidth = 2; ctx.stroke();
-      // колпачок
-      ctx.fillStyle = '#3fa9f5';
+      ctx.strokeStyle = shade(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
+      // Колпачок
+      ctx.fillStyle = shade(baseColor, 30);
       roundRect(ctx, 20, -6, 14, 12, 4); ctx.fill();
       ctx.stroke();
-      // клип
+      // Клип
       ctx.fillStyle = '#ffd700';
       ctx.fillRect(24, -12, 3, 8);
-      // стержень
+      // Стержень
       ctx.fillStyle = '#333';
       ctx.beginPath();
       ctx.moveTo(-30, -3); ctx.lineTo(-38, 0); ctx.lineTo(-30, 3);
       ctx.closePath(); ctx.fill();
-      ctx.restore();
       break;
     }
     case 'eraser': {
-      // ластик
-      ctx.save();
-      ctx.translate(x, y);
+      // Уменьшенный размер
+      ctx.scale(0.5, 0.5);
       ctx.rotate(0.2);
-      ctx.fillStyle = '#ff8fa3';
+      ctx.fillStyle = baseColor;
       roundRect(ctx, -22, -12, 44, 24, 5); ctx.fill();
-      ctx.strokeStyle = '#c94f66'; ctx.lineWidth = 2; ctx.stroke();
-      // бумажная обёртка
+      ctx.strokeStyle = shade(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
+      // Обёртка
       ctx.fillStyle = '#ffffff';
       roundRect(ctx, -22, -12, 44, 8, 4); ctx.fill();
-      ctx.strokeStyle = '#c94f66'; ctx.stroke();
-      ctx.restore();
+      ctx.strokeStyle = shade(baseColor, -20); ctx.stroke();
       break;
     }
     case 'pencil': {
-      // карандаш
-      ctx.save();
-      ctx.translate(x, y);
+      // Уменьшенный размер
+      ctx.scale(0.5, 0.5);
       ctx.rotate(0.5);
-      // корпус
-      ctx.fillStyle = '#f4c542';
+      // Корпус
+      ctx.fillStyle = baseColor;
       ctx.fillRect(-35, -5, 60, 10);
-      ctx.strokeStyle = '#b8912a'; ctx.lineWidth = 2; ctx.strokeRect(-35, -5, 60, 10);
-      // полоски
-      ctx.fillStyle = '#e0a800';
+      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 2; ctx.strokeRect(-35, -5, 60, 10);
+      // Полоски (декор)
+      ctx.fillStyle = shade(baseColor, -10);
       ctx.fillRect(-35, -5, 60, 3);
-      // грифель
+      // Грифель
       ctx.fillStyle = '#f2e2c0';
       ctx.beginPath();
       ctx.moveTo(25, -5); ctx.lineTo(38, 0); ctx.lineTo(25, 5);
       ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = '#b8912a'; ctx.stroke();
+      ctx.strokeStyle = shade(baseColor, -30); ctx.stroke();
       ctx.fillStyle = '#333';
       ctx.beginPath();
       ctx.moveTo(33, -2); ctx.lineTo(38, 0); ctx.lineTo(33, 2);
       ctx.closePath(); ctx.fill();
-      // ластик на конце
+      // Ластик на конце
       ctx.fillStyle = '#ff8fa3';
       roundRect(ctx, -45, -5, 10, 10, 3); ctx.fill();
       ctx.strokeStyle = '#c94f66'; ctx.stroke();
-      ctx.restore();
       break;
     }
     case 'vitya': {
-      // Пасхалка Vitya_Face — фото
       const size = Math.max(40, r * 2);
       if (VITYA_IMG.complete && VITYA_IMG.naturalWidth > 0) {
         ctx.save();
         ctx.beginPath();
-        roundRect(ctx, x - size/2, y - size/2, size, size, 8);
+        roundRect(ctx, -size/2, -size/2, size, size, 8);
         ctx.clip();
-        ctx.drawImage(VITYA_IMG, x - size/2, y - size/2, size, size);
+        ctx.drawImage(VITYA_IMG, -size/2, -size/2, size, size);
         ctx.restore();
-        ctx.strokeStyle = '#7ff0ff'; ctx.lineWidth = 3;
-        roundRect(ctx, x - size/2, y - size/2, size, size, 8);
+        ctx.strokeStyle = baseColor; ctx.lineWidth = 3;
+        roundRect(ctx, -size/2, -size/2, size, size, 8);
         ctx.stroke();
       } else {
-        // заглушка, пока фото не загрузилось
-        ctx.fillStyle = '#3fa9f5';
-        roundRect(ctx, x - size/2, y - size/2, size, size, 8); ctx.fill();
+        ctx.fillStyle = baseColor;
+        roundRect(ctx, -size/2, -size/2, size, size, 8); ctx.fill();
         ctx.fillStyle = '#fff';
         ctx.font = 'bold 14px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('Vitya_Face', x, y);
+        ctx.fillText('Vitya_Face', 0, 0);
         ctx.textAlign = 'start';
         ctx.textBaseline = 'alphabetic';
       }
       break;
     }
   }
+
+  // Индикатор выделения
+  if (selectedObj === f) {
+    ctx.strokeStyle = '#ff00ff';
+    ctx.setLineDash([5, 5]);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(-r-10, -r-10, r*2+20, r*2+20);
+    ctx.setLineDash([]);
+  }
+
+  ctx.restore();
 }
 
 // --- ОТРИСОВКА ---
