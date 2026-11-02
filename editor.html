@@ -591,62 +591,83 @@ function drawFurniture(f) {
       }
       break;
     }
-    case 'bus': {
-      // Точная копия по референсу
-      // Кузов
+        case 'bus': {
+      // Кузов (основная часть)
       ctx.fillStyle = baseColor || '#ffb400';
-      roundRect(ctx, -90, -35, 180, 70, 10); ctx.fill();
+      roundRect(ctx, -90, -35, 180, 70, 8); ctx.fill();
       
-      // Передняя часть (капот)
+      // Плавный капот (передняя часть)
       ctx.beginPath();
-      ctx.moveTo(90, -20);
-      ctx.lineTo(110, -10);
-      ctx.quadraticCurveTo(120, 0, 110, 20);
-      ctx.lineTo(90, 35);
-      ctx.closePath(); ctx.fill();
+      ctx.moveTo(90, -35); // Верх капота
+      // Плавный спуск к "носу"
+      ctx.bezierCurveTo(115, -35, 125, -15, 125, 5);
+      // Закругление "носа" вниз
+      ctx.bezierCurveTo(125, 20, 115, 35, 90, 35);
+      ctx.closePath();
+      ctx.fill();
+
+      // Решётка радиатора
+      ctx.fillStyle = '#222';
+      roundRect(ctx, 108, -15, 10, 30, 4); ctx.fill();
+      ctx.strokeStyle = '#555'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(110, -5); ctx.lineTo(118, -5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(110, 0); ctx.lineTo(118, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(110, 5); ctx.lineTo(118, 5); ctx.stroke();
+      
+      // Бампер
+      ctx.fillStyle = '#333';
+      roundRect(ctx, 118, 20, 12, 15, 3); ctx.fill();
 
       // Черная полоса по центру
       ctx.fillStyle = '#111';
       ctx.fillRect(-90, 5, 180, 8);
       
-      // Окна
+      // Окна (салон)
       ctx.fillStyle = '#222';
       for (let i = 0; i < 7; i++) {
-        roundRect(ctx, -80 + i*20, -25, 16, 20, 2); ctx.fill();
+        // Окна с небольшим зазором между ними
+        roundRect(ctx, -80 + i*20, -25, 16, 22, 3); ctx.fill();
       }
-      // Окно двери
-      roundRect(ctx, 65, -25, 16, 20, 2); ctx.fill();
-
-      // Дверь (передняя)
+      
+      // Передняя дверь
       ctx.fillStyle = '#222';
-      roundRect(ctx, 65, -5, 25, 40, 3); ctx.fill();
+      roundRect(ctx, 65, -28, 18, 60, 3); ctx.fill(); // Сама дверь
       ctx.strokeStyle = '#111'; ctx.lineWidth = 2; ctx.stroke();
       
+      // Окно двери
+      ctx.fillStyle = '#222';
+      roundRect(ctx, 67, -25, 14, 22, 2); ctx.fill();
+      ctx.strokeStyle = '#111'; ctx.stroke();
+
       // Надпись
       ctx.fillStyle = '#000';
       ctx.font = 'bold 6px sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('OKLAHOMA CITY PUBLIC SCHOOLS', -40, 3);
+      ctx.fillText('ПГТ ГБПОУ', -40, 2);
       ctx.textAlign = 'start';
 
       // Колёса
+      // Заднее
       ctx.fillStyle = '#111';
       ctx.beginPath(); ctx.arc(-55, 38, 14, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(55, 38, 14, 0, TAU); ctx.fill();
-      // Диски
       ctx.fillStyle = '#555';
       ctx.beginPath(); ctx.arc(-55, 38, 6, 0, TAU); ctx.fill();
+      // Переднее
+      ctx.fillStyle = '#111';
+      ctx.beginPath(); ctx.arc(55, 38, 14, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#555';
       ctx.beginPath(); ctx.arc(55, 38, 6, 0, TAU); ctx.fill();
 
-      // Зеркала
+      // Зеркала (сзади капота)
       ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(100, -25); ctx.lineTo(115, -35); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(95, -30); ctx.lineTo(110, -45); ctx.stroke();
       ctx.fillStyle = '#111';
-      roundRect(ctx, 110, -40, 8, 12, 2); ctx.fill();
+      roundRect(ctx, 105, -50, 10, 8, 2); ctx.fill();
       
-      // Фары
+      // Фара
       ctx.fillStyle = '#fff';
-      ctx.beginPath(); ctx.arc(108, 10, 3, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(120, 5, 4, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; ctx.stroke();
       
       break;
     }
