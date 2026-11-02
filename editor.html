@@ -590,7 +590,7 @@ function drawFurniture(f) {
         ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
-    }    case 'bus': {
+    }        case 'bus': {
       const isApoc = baseColor !== '#ffffff' && baseColor !== '#ffb400';
       const busColor = isApoc ? baseColor : '#ffb400';
       const darkMetal = isApoc ? '#2a2e35' : '#111';
@@ -702,46 +702,51 @@ function drawFurniture(f) {
       }
 
       // ==========================================
-      // 5. КАПОТ (ПОДНЯТ И БЕЗ СТЕКЛА)
+      // 5. ОСТРЫЙ КАПОТ (БЕЗ СТЕКЛА)
       // ==========================================
       ctx.fillStyle = busColor;
       ctx.beginPath();
-      // Начинаем ровно от уровня нижней части окон (y = -15)
-      ctx.moveTo(85, -15); 
-      ctx.lineTo(120, -15); // Верх капота ровный
-      ctx.quadraticCurveTo(155, -15, 155, 5); // Закругление носа
-      ctx.lineTo(155, 35); // Передняя решетка
+      ctx.moveTo(85, -15); // Верх у стойки
+      ctx.lineTo(120, -15); 
+      ctx.lineTo(165, 15); // Острый нос (сдвинут вперед)
+      ctx.lineTo(165, 35); // Низ носа
       ctx.lineTo(85, 35);  // Низ капота
       ctx.closePath();
       ctx.fill();
       ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
 
-      // Линии на капоте (по бокам)
+      // Линии на капоте (под углом к носу)
       ctx.strokeStyle = isApoc ? '#111' : '#e08a00'; ctx.lineWidth = 3;
-      ctx.beginPath(); ctx.moveTo(90, 5); ctx.lineTo(145, 5); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(90, 20); ctx.lineTo(145, 20); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(90, 5); ctx.lineTo(155, 18); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(90, 20); ctx.lineTo(155, 25); ctx.stroke();
 
       // ==========================================
       // 6. РЕШЁТКА, ФАРЫ И БАМПЕР
       // ==========================================
-      // Решётка радиатора (вертикальная)
+      // Решётка радиатора (на скошенной части)
       ctx.fillStyle = '#252525';
-      roundRect(ctx, 145, -10, 10, 35, 2); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(155, 15); 
+      ctx.lineTo(163, 19); 
+      ctx.lineTo(163, 32); 
+      ctx.lineTo(155, 35); 
+      ctx.closePath();
+      ctx.fill();
+      
       ctx.strokeStyle = '#777'; ctx.lineWidth = 1.5;
-      for (let i = 0; i < 4; i++) {
-        ctx.beginPath(); ctx.moveTo(147, -5 + i * 8); ctx.lineTo(154, -5 + i * 8); ctx.stroke();
-      }
+      ctx.beginPath(); ctx.moveTo(158, 20); ctx.lineTo(161, 22); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(158, 26); ctx.lineTo(161, 27); ctx.stroke();
 
-      // Фары
+      // Фары (на скошенном носу)
       ctx.fillStyle = isApoc ? '#00ffcc' : '#fff6bd';
       ctx.shadowBlur = isApoc ? 15 : 8; ctx.shadowColor = isApoc ? '#00ffcc' : '#fff3aa';
-      ctx.beginPath(); ctx.arc(152, -5, 4, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(152, 20, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(160, 12, 3.5, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(160, 32, 3.5, 0, TAU); ctx.fill();
       ctx.shadowBlur = 0;
 
       // Бампер
       ctx.fillStyle = '#303030';
-      roundRect(ctx, 140, 30, 18, 9, 2); ctx.fill();
+      roundRect(ctx, 148, 33, 18, 9, 2); ctx.fill();
       ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
 
       // ==========================================
