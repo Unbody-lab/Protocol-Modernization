@@ -590,8 +590,7 @@ function drawFurniture(f) {
         ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
-    }
-                   case 'bus': {
+    }    case 'bus': {
       const isApoc = baseColor !== '#ffffff' && baseColor !== '#ffb400';
       const busColor = isApoc ? baseColor : '#ffb400';
       const darkMetal = isApoc ? '#2a2e35' : '#111';
@@ -682,7 +681,7 @@ function drawFurniture(f) {
       }
 
       // ==========================================
-      // 4. ПЕРЕДНЯЯ ДВЕРЬ (ВПИСАНА ИДЕАЛЬНО)
+      // 4. ПЕРЕДНЯЯ ДВЕРЬ
       // ==========================================
       if (!isApoc) {
         ctx.fillStyle = '#222';
@@ -703,60 +702,46 @@ function drawFurniture(f) {
       }
 
       // ==========================================
-      // 5. ПЕРЕДНЯЯ ЧАСТЬ (КАПОТ И ЛОБОВОЕ СТЕКЛО)
+      // 5. КАПОТ (ПОДНЯТ И БЕЗ СТЕКЛА)
       // ==========================================
-      // Капот (без желтого выступа, плавно)
       ctx.fillStyle = busColor;
       ctx.beginPath();
-      ctx.moveTo(85, 10); // Начинается ниже лобового стекла
-      ctx.lineTo(115, 15); 
-      ctx.quadraticCurveTo(155, 15, 155, 35);
-      ctx.lineTo(85, 35);
+      // Начинаем ровно от уровня нижней части окон (y = -15)
+      ctx.moveTo(85, -15); 
+      ctx.lineTo(120, -15); // Верх капота ровный
+      ctx.quadraticCurveTo(155, -15, 155, 5); // Закругление носа
+      ctx.lineTo(155, 35); // Передняя решетка
+      ctx.lineTo(85, 35);  // Низ капота
       ctx.closePath();
       ctx.fill();
       ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
 
-      // Лобовое стекло (наклонное)
-      ctx.fillStyle = glassColor;
-      ctx.beginPath();
-      ctx.moveTo(85, -55);
-      ctx.lineTo(105, -10);
-      ctx.lineTo(85, -10);
-      ctx.closePath();
-      ctx.fill();
-      ctx.strokeStyle = darkMetal; ctx.lineWidth = 3; ctx.stroke();
-
-      // Окантовка лобового стекла
-      ctx.strokeStyle = isApoc ? '#111' : '#e08a00';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(83, -55);
-      ctx.lineTo(103, -10);
-      ctx.stroke();
-
-      // Линии на капоте
+      // Линии на капоте (по бокам)
       ctx.strokeStyle = isApoc ? '#111' : '#e08a00'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(90, 5); ctx.lineTo(145, 5); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(90, 20); ctx.lineTo(145, 20); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(90, 28); ctx.lineTo(145, 28); ctx.stroke();
 
       // ==========================================
       // 6. РЕШЁТКА, ФАРЫ И БАМПЕР
       // ==========================================
+      // Решётка радиатора (вертикальная)
       ctx.fillStyle = '#252525';
-      roundRect(ctx, 145, 12, 10, 25, 2); ctx.fill();
+      roundRect(ctx, 145, -10, 10, 35, 2); ctx.fill();
       ctx.strokeStyle = '#777'; ctx.lineWidth = 1.5;
-      for (let i = 0; i < 3; i++) {
-        ctx.beginPath(); ctx.moveTo(147, 16 + i * 7); ctx.lineTo(154, 16 + i * 7); ctx.stroke();
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath(); ctx.moveTo(147, -5 + i * 8); ctx.lineTo(154, -5 + i * 8); ctx.stroke();
       }
 
+      // Фары
       ctx.fillStyle = isApoc ? '#00ffcc' : '#fff6bd';
       ctx.shadowBlur = isApoc ? 15 : 8; ctx.shadowColor = isApoc ? '#00ffcc' : '#fff3aa';
-      ctx.beginPath(); ctx.arc(150, 15, 4, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(150, 28, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(152, -5, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(152, 20, 4, 0, TAU); ctx.fill();
       ctx.shadowBlur = 0;
 
+      // Бампер
       ctx.fillStyle = '#303030';
-      roundRect(ctx, 140, 35, 18, 9, 2); ctx.fill();
+      roundRect(ctx, 140, 30, 18, 9, 2); ctx.fill();
       ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
 
       // ==========================================
