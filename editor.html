@@ -590,99 +590,27 @@ function drawFurniture(f) {
         ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
-    }
-          case 'bus': {
+    }case 'bus': {
   const busColor = baseColor !== '#ffffff' ? baseColor : '#ffb400';
 
-  // ==========================================
-  // ДЛИННЫЙ ОСНОВНОЙ КУЗОВ
-  // ==========================================
-  ctx.fillStyle = busColor;
-  roundRect(ctx, -190, -48, 245, 96, 12);
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  // Нижняя тень кузова
-  ctx.fillStyle = 'rgba(0,0,0,0.12)';
-  roundRect(ctx, -186, 35, 237, 10, 4);
-  ctx.fill();
-
-
-  // ==========================================
-  // ЧЁРНАЯ ПОЛОСА ПО БОКУ
-  // ==========================================
-  ctx.fillStyle = '#171717';
-  ctx.fillRect(-190, 8, 245, 9);
-
-
-  // ==========================================
-  // ПАССАЖИРСКИЕ ОКНА — ИХ СТАЛО БОЛЬШЕ
-  // ==========================================
-  ctx.fillStyle = '#263746';
-
-  for (let i = 0; i < 9; i++) {
-    roundRect(ctx, -175 + i * 25, -34, 20, 27, 4);
-    ctx.fill();
-
-    ctx.strokeStyle = '#111';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-
-  // ==========================================
-  // ПЕРЕДНЯЯ ДВЕРЬ / КАБИНА
-  // ==========================================
-  ctx.fillStyle = '#222';
-  roundRect(ctx, 45, -48, 30, 96, 4);
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Окна двери
-  ctx.fillStyle = '#304354';
-
-  roundRect(ctx, 50, -40, 20, 34, 3);
-  ctx.fill();
-
-  roundRect(ctx, 50, -1, 20, 30, 3);
-  ctx.fill();
-
-  // Ручка двери
-  ctx.fillStyle = '#aaa';
-  roundRect(ctx, 62, 7, 4, 12, 1);
-  ctx.fill();
-
-
-  // ==========================================
-  // ДЛИННЫЙ БОКОВОЙ КАПОТ
-  // ==========================================
+  // =====================================
+  // ОСНОВНОЙ ОВАЛЬНЫЙ КУЗОВ
+  // =====================================
   ctx.fillStyle = busColor;
 
   ctx.beginPath();
+  ctx.moveTo(-180, 48);
+  ctx.lineTo(-180, -20);
 
-  ctx.moveTo(75, -18);
+  // Округлая задняя часть
+  ctx.quadraticCurveTo(-180, -58, -140, -58);
 
-  // Верх капота
-  ctx.lineTo(120, -14);
-  ctx.lineTo(160, -8);
+  // Выпуклая крыша
+  ctx.lineTo(35, -58);
+  ctx.quadraticCurveTo(58, -58, 58, -35);
 
-  // Передняя часть
-  ctx.quadraticCurveTo(175, -5, 175, 8);
-
-  ctx.lineTo(175, 30);
-
-  // Нижняя часть
-  ctx.quadraticCurveTo(170, 38, 155, 38);
-
-  ctx.lineTo(90, 38);
-  ctx.lineTo(75, 28);
-
+  // Передняя часть кузова
+  ctx.lineTo(58, 48);
   ctx.closePath();
   ctx.fill();
 
@@ -690,80 +618,156 @@ function drawFurniture(f) {
   ctx.lineWidth = 4;
   ctx.stroke();
 
+  // Верхний блик крыши
+  ctx.strokeStyle = '#ffdb69';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(-165, -38);
+  ctx.quadraticCurveTo(-165, -53, -140, -53);
+  ctx.lineTo(35, -53);
+  ctx.stroke();
 
-  // Верхняя линия капота
+
+  // =====================================
+  // НИЖНЯЯ ПОЛОСА КУЗОВА
+  // =====================================
+  ctx.fillStyle = 'rgba(0,0,0,0.10)';
+  ctx.fillRect(-175, 35, 225, 9);
+
+  // Чёрная боковая полоса
+  ctx.fillStyle = '#171717';
+  ctx.fillRect(-180, 7, 238, 10);
+
+
+  // =====================================
+  // ОКНА
+  // =====================================
+  ctx.fillStyle = '#263746';
+
+  for (let i = 0; i < 9; i++) {
+    const x = -160 + i * 25;
+
+    roundRect(ctx, x, -38, 19, 27, 5);
+    ctx.fill();
+
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Блик стекла
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 2;
+
+    ctx.beginPath();
+    ctx.moveTo(x + 5, -33);
+    ctx.lineTo(x + 5, -17);
+    ctx.stroke();
+  }
+
+
+  // =====================================
+  // ПЕРЕДНЯЯ ДВЕРЬ
+  // =====================================
+  ctx.fillStyle = '#222';
+
+  roundRect(ctx, 45, -48, 30, 96, 4);
+  ctx.fill();
+
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.fillStyle = '#304354';
+
+  roundRect(ctx, 50, -40, 20, 35, 3);
+  ctx.fill();
+
+  ctx.stroke();
+
+  roundRect(ctx, 50, 0, 20, 30, 3);
+  ctx.fill();
+
+  ctx.stroke();
+
+  // Ручка
+  ctx.fillStyle = '#aaa';
+  roundRect(ctx, 62, 8, 4, 12, 1);
+  ctx.fill();
+
+
+  // =====================================
+  // КАПОТ — КОРОТКИЙ, КАК РАНЬШЕ
+  // =====================================
+  ctx.fillStyle = busColor;
+
+  ctx.beginPath();
+  ctx.moveTo(75, -18);
+  ctx.lineTo(115, -14);
+  ctx.lineTo(145, -9);
+  ctx.quadraticCurveTo(155, -7, 155, 5);
+  ctx.lineTo(155, 28);
+  ctx.quadraticCurveTo(150, 37, 137, 37);
+  ctx.lineTo(90, 37);
+  ctx.lineTo(75, 28);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  // Линия капота
   ctx.strokeStyle = '#e08a00';
   ctx.lineWidth = 3;
 
   ctx.beginPath();
   ctx.moveTo(80, -10);
-  ctx.lineTo(120, -6);
-  ctx.lineTo(166, 1);
+  ctx.lineTo(112, -6);
+  ctx.lineTo(146, 0);
   ctx.stroke();
 
 
-  // Линия сбоку на капоте
-  ctx.strokeStyle = '#e08a00';
-  ctx.lineWidth = 2;
-
-  ctx.beginPath();
-  ctx.moveTo(88, 5);
-  ctx.lineTo(165, 11);
-  ctx.stroke();
-
-
-  // ==========================================
-  // БОКОВОЙ МАРКЕР
-  // ==========================================
-  ctx.fillStyle = '#ff7a00';
-  roundRect(ctx, 145, 10, 11, 5, 2);
-  ctx.fill();
-
-
-  // ==========================================
-  // ПЕРЕДНЯЯ РЕШЁТКА
-  // ==========================================
+  // =====================================
+  // РЕШЁТКА РАДИАТОРА
+  // =====================================
   ctx.fillStyle = '#252525';
-  roundRect(ctx, 170, -5, 10, 40, 2);
+  roundRect(ctx, 150, -5, 10, 38, 2);
   ctx.fill();
 
   ctx.strokeStyle = '#777';
   ctx.lineWidth = 1.5;
 
-  for (let i = 0; i < 5; i++) {
-    const yy = 0 + i * 7;
-
+  for (let i = 0; i < 4; i++) {
     ctx.beginPath();
-    ctx.moveTo(172, yy);
-    ctx.lineTo(179, yy);
+    ctx.moveTo(152, i * 8);
+    ctx.lineTo(159, i * 8);
     ctx.stroke();
   }
 
 
-  // ==========================================
+  // =====================================
   // ФАРЫ
-  // ==========================================
+  // =====================================
   ctx.fillStyle = '#fff6bd';
-
   ctx.shadowBlur = 8;
   ctx.shadowColor = '#fff3aa';
 
   ctx.beginPath();
-  ctx.arc(178, 0, 5, 0, TAU);
+  ctx.arc(158, 0, 5, 0, TAU);
   ctx.fill();
 
   ctx.beginPath();
-  ctx.arc(178, 28, 5, 0, TAU);
+  ctx.arc(158, 27, 5, 0, TAU);
   ctx.fill();
 
   ctx.shadowBlur = 0;
 
 
-  // ==========================================
+  // =====================================
   // БАМПЕР
-  // ==========================================
+  // =====================================
   ctx.fillStyle = '#303030';
-  roundRect(ctx, 168, 35, 20, 9, 2);
+  roundRect(ctx, 148, 35, 18, 9, 2);
   ctx.fill();
 
   ctx.strokeStyle = '#111';
@@ -771,47 +775,9 @@ function drawFurniture(f) {
   ctx.stroke();
 
 
-  // ==========================================
-  // КРЫША
-  // ==========================================
-  ctx.fillStyle = '#ffca3a';
-  roundRect(ctx, -182, -54, 240, 8, 4);
-  ctx.fill();
-
-
-  // ==========================================
-  // СИГНАЛЬНЫЕ ЛАМПЫ
-  // ==========================================
-  ctx.fillStyle = '#ff4d4d';
-
-  ctx.shadowBlur = 6;
-ctx.shadowColor = '#ff3333';
-
-  ctx.beginPath();
-  ctx.arc(-170, -58, 6, 0, TAU);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(52, -58, 6, 0, TAU);
-  ctx.fill();
-
-  ctx.shadowBlur = 0;
-
-
-  // ==========================================
-  // ЛАМПЫ НА КРЫШЕ
-  // ==========================================
-  ctx.fillStyle = '#e788ff';
-
-  for (let i = 0; i < 12; i++) {
-    roundRect(ctx, -110 + i * 13, -55, 7, 3, 1);
-    ctx.fill();
-  }
-
-
-  // ==========================================
+  // =====================================
   // ЗЕРКАЛО
-  // ==========================================
+  // =====================================
   ctx.strokeStyle = '#161616';
   ctx.lineWidth = 3;
 
@@ -821,65 +787,92 @@ ctx.shadowColor = '#ff3333';
   ctx.stroke();
 
   ctx.fillStyle = '#222';
-  roundRect(ctx, 84, -64, 14, 9, 4);
+roundRect(ctx, 84, -64, 14, 9, 4);
   ctx.fill();
 
+  ctx.strokeStyle = '#111';
+  ctx.lineWidth = 2;
+  ctx.stroke();
 
-  // ==========================================
+
+  // =====================================
   // КОЛЁСА
-  // ==========================================
+  // =====================================
+  const wheels = [-130, 105];
 
-  // Заднее колесо — смещено назад
-  ctx.fillStyle = '#151515';
-  ctx.beginPath();
-  ctx.arc(-140, 48, 21, 0, TAU);
-  ctx.fill();
+  for (const wx of wheels) {
+    // Шина
+    ctx.fillStyle = '#151515';
+    ctx.beginPath();
+    ctx.arc(wx, 48, 21, 0, TAU);
+    ctx.fill();
 
-  ctx.strokeStyle = '#050505';
-  ctx.lineWidth = 3;
-  ctx.stroke();
+    ctx.strokeStyle = '#050505';
+    ctx.lineWidth = 3;
+    ctx.stroke();
 
-  // Переднее колесо
-  ctx.fillStyle = '#151515';
-  ctx.beginPath();
-  ctx.arc(110, 48, 21, 0, TAU);
-  ctx.fill();
+    // Диск
+    ctx.fillStyle = '#bfc3c7';
+    ctx.beginPath();
+    ctx.arc(wx, 48, 9, 0, TAU);
+    ctx.fill();
 
-  ctx.strokeStyle = '#050505';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-
-  // ==========================================
-  // ДИСКИ
-  // ==========================================
-  ctx.fillStyle = '#bfc3c7';
-
-  ctx.beginPath();
-  ctx.arc(-140, 48, 9, 0, TAU);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(110, 48, 9, 0, TAU);
-  ctx.fill();
+    // Арка
+    ctx.strokeStyle = '#d88200';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(wx, 48, 25, Math.PI, TAU);
+    ctx.stroke();
+  }
 
 
-  // ==========================================
-  // КОЛЁСНЫЕ АРКИ
-  // ==========================================
-  ctx.strokeStyle = '#d88200';
-  ctx.lineWidth = 3;
+  // =====================================
+  // КРАСНЫЕ МИГАЛКИ
+  // =====================================
+  ctx.fillStyle = '#ff3333';
+  ctx.shadowBlur = 7;
+  ctx.shadowColor = '#ff3333';
 
-  ctx.beginPath();
-  ctx.arc(-140, 48, 25, Math.PI, TAU);
-  ctx.stroke();
+  for (const x of [-145, 45]) {
+    ctx.beginPath();
+    ctx.arc(x, -62, 6, 0, TAU);
+    ctx.fill();
+  }
 
-  ctx.beginPath();
-  ctx.arc(110, 48, 25, Math.PI, TAU);
-  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+
+  // =====================================
+  // КРЫШНЫЕ ОГНИ
+  // =====================================
+  ctx.fillStyle = '#e788ff';
+
+  for (let i = 0; i < 9; i++) {
+    roundRect(ctx, -75 + i * 14, -61, 8, 4, 2);
+    ctx.fill();
+  }
 
   break;
 }
+   case 'basket_ring': {
+      // Щит
+      ctx.fillStyle = '#fff';
+      roundRect(ctx, -30, -40, 60, 45, 4); ctx.fill();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 3; ctx.stroke();
+      // Кольцо
+      ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.arc(0, 12, 18, 0, TAU); ctx.stroke();
+      // Сетка
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * TAU;
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(a)*18, 12 + Math.sin(a)*18);
+        ctx.lineTo(Math.cos(a)*10, 40);
+        ctx.stroke();
+      }
+      break;
+    }
     case 'basket_ball': {
       const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 18);
       g.addColorStop(0, shade(baseColor, 20)); 
