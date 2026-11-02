@@ -591,306 +591,248 @@ function drawFurniture(f) {
       }
       break;
     }
-      case 'bus': {
-  const busColor = baseColor !== '#ffffff' ? baseColor : '#ffb400';
-
-  // ==========================================
-  // ОСНОВНОЙ ОВАЛЬНЫЙ КУЗОВ
-  // ==========================================
-  ctx.fillStyle = busColor;
-
-  ctx.beginPath();
-  ctx.moveTo(-195, 45);
-
-  // Закруглённая задняя часть
-  ctx.quadraticCurveTo(-210, 45, -210, 25);
-  ctx.lineTo(-210, -20);
-
-  // Плавная округлая крыша
-  ctx.quadraticCurveTo(-210, -65, -170, -65);
-  ctx.lineTo(45, -65);
-
-  // Переход к кабине
-  ctx.quadraticCurveTo(65, -65, 65, -45);
-  ctx.lineTo(65, 45);
-
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  // Блик на крыше
-  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-  ctx.lineWidth = 5;
-
-  ctx.beginPath();
-  ctx.moveTo(-198, -20);
-  ctx.quadraticCurveTo(-198, -59, -165, -60);
-  ctx.lineTo(35, -60);
-  ctx.stroke();
-
-
-  // ==========================================
-  // НИЖНЯЯ ЧАСТЬ КУЗОВА
-  // ==========================================
-  ctx.fillStyle = 'rgba(180,90,0,0.12)';
-  ctx.beginPath();
-  ctx.moveTo(-195, 43);
-  ctx.lineTo(60, 43);
-  ctx.lineTo(60, 48);
-  ctx.lineTo(-190, 48);
-  ctx.closePath();
-  ctx.fill();
-
-
-  // ==========================================
-  // ЧЁРНАЯ БОКОВАЯ ПОЛОСА
-  // ==========================================
-  ctx.fillStyle = '#171717';
-  ctx.fillRect(-208, 5, 273, 11);
-
-
-  // ==========================================
-  // ОКНА — 9 ШТУК
-  // ==========================================
-  ctx.fillStyle = '#26394e';
-
-  for (let i = 0; i < 9; i++) {
-    const x = -185 + i * 27;
-
-    roundRect(ctx, x, -48, 21, 35, 5);
-    ctx.fill();
-
-    ctx.strokeStyle = '#111';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    // Отблеск на стекле
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-    ctx.lineWidth = 2;
-
-    ctx.beginPath();
-    ctx.moveTo(x + 5, -42);
-    ctx.lineTo(x + 5, -20);
-    ctx.stroke();
-  }
-
-
-  // ==========================================
-  // ПЕРЕДНЯЯ ДВЕРЬ
-  // ==========================================
-  ctx.fillStyle = '#222';
-
-  roundRect(ctx, 45, -55, 30, 105, 4);
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Верхнее стекло
-  ctx.fillStyle = '#304354';
-  roundRect(ctx, 50, -48, 20, 39, 3);
-  ctx.fill();
-
-  // Нижнее стекло
-  roundRect(ctx, 50, -3, 20, 35, 3);
-  ctx.fill();
-
-  // Ручка
-  ctx.fillStyle = '#aaa';
-  roundRect(ctx, 63, 10, 4, 12, 1);
-  ctx.fill();
-
-
-  // ==========================================
-  // КАПОТ — КОРОТКИЙ, КАК РАНЬШЕ
-  // ==========================================
-  ctx.fillStyle = busColor;
-
-  ctx.beginPath();
-  ctx.moveTo(75, -18);
-  ctx.lineTo(115, -14);
-  ctx.lineTo(145, -9);
-
-  ctx.quadraticCurveTo(155, -7, 155, 5);
-  ctx.lineTo(155, 28);
-
-  ctx.quadraticCurveTo(150, 37, 137, 37);
-  ctx.lineTo(90, 37);
-  ctx.lineTo(75, 28);
-
-  ctx.closePath();
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  // Верхняя линия капота
-  ctx.strokeStyle = '#e08a00';
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-  ctx.moveTo(80, -10);
-  ctx.lineTo(146, 0);
-  ctx.stroke();
-
-  // Боковая линия
-  ctx.beginPath();
-  ctx.moveTo(88, 5);
-  ctx.lineTo(145, 11);
-  ctx.stroke();
-
-
-  // ==========================================
-  // РЕШЁТКА РАДИАТОРА
-  // ==========================================
-  ctx.fillStyle = '#252525';
-  roundRect(ctx, 150, -5, 10, 40, 2);
-  ctx.fill();
-
-  ctx.strokeStyle = '#777';
-  ctx.lineWidth = 1.5;
-
-  for (let i = 0; i < 5; i++) {
-    ctx.beginPath();
-    ctx.moveTo(152, i * 7);
-    ctx.lineTo(159, i * 7);
-    ctx.stroke();
-  }
-
-
-  // ==========================================
-  // ФАРЫ
-  // ==========================================
-  ctx.fillStyle = '#fff6bd';
-  ctx.shadowBlur = 8;
-  ctx.shadowColor = '#fff3aa';
-
-  ctx.beginPath();
-  ctx.arc(158, 0, 5, 0, TAU);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(158, 27, 5, 0, TAU);
-  ctx.fill();
-
-  ctx.shadowBlur = 0;
-
-
-  // ==========================================
-  // БАМПЕР
-
-// ==========================================
-  ctx.fillStyle = '#303030';
-  roundRect(ctx, 148, 35, 18, 9, 2);
-  ctx.fill();
-
-  ctx.strokeStyle = '#111';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-
-  // ==========================================
-  // ЗЕРКАЛО
-  // ==========================================
-  ctx.strokeStyle = '#161616';
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-  ctx.moveTo(73, -38);
-  ctx.lineTo(88, -58);
-  ctx.stroke();
-
-  ctx.fillStyle = '#222';
-  roundRect(ctx, 84, -64, 14, 9, 4);
-  ctx.fill();
-
-
-  // ==========================================
-  // КРЫШНЫЕ СИГНАЛЫ
-  // ==========================================
-  ctx.fillStyle = '#ff3333';
-  ctx.shadowBlur = 7;
-  ctx.shadowColor = '#ff2222';
-
-  ctx.beginPath();
-  ctx.arc(-170, -65, 7, 0, TAU);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(52, -65, 7, 0, TAU);
-  ctx.fill();
-
-  ctx.shadowBlur = 0;
-
-
-  // ==========================================
-  // ДОПОЛНИТЕЛЬНЫЕ ЛАМПЫ НА КРЫШЕ
-  // ==========================================
-  ctx.fillStyle = '#e788ff';
-
-  for (let i = 0; i < 9; i++) {
-    roundRect(ctx, -80 + i * 15, -68, 9, 4, 2);
-    ctx.fill();
-  }
-
-
-  // ==========================================
-  // КОЛЁСА
-  // ==========================================
-
-  // Заднее колесо
-  ctx.fillStyle = '#151515';
-  ctx.beginPath();
-  ctx.arc(-140, 48, 21, 0, TAU);
-  ctx.fill();
-
-  ctx.strokeStyle = '#050505';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Переднее колесо
-  ctx.beginPath();
-  ctx.arc(105, 48, 21, 0, TAU);
-  ctx.fill();
-  ctx.stroke();
-
-
-  // ==========================================
-  // ДИСКИ
-  // ==========================================
-  ctx.fillStyle = '#bfc3c7';
-
-  ctx.beginPath();
-  ctx.arc(-140, 48, 9, 0, TAU);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(105, 48, 9, 0, TAU);
-  ctx.fill();
-
-
-  // ==========================================
-  // КОЛЁСНЫЕ АРКИ
-  // ==========================================
-  ctx.strokeStyle = '#d88200';
-  ctx.lineWidth = 3;
-
-  ctx.beginPath();
-  ctx.arc(-140, 48, 25, Math.PI, TAU);
-  ctx.stroke();
-
-  ctx.beginPath();
-  ctx.arc(105, 48, 25, Math.PI, TAU);
-  ctx.stroke();
-
-
-  break;
-}
+          case 'bus': {
+      const isApoc = baseColor !== '#ffffff' && baseColor !== '#ffb400';
+      
+      // Если выбран цвет по умолчанию — рисуем обычный. Если выбран любой другой — он станет основой для апокалиптической версии.
+      const busColor = isApoc ? baseColor : '#ffb400';
+      const darkMetal = isApoc ? '#2a2e35' : '#111';
+      const glassColor = isApoc ? '#00ffcc' : '#304354';
+      
+      // ==========================================
+      // ОСНОВНОЙ КУЗОВ
+      // ==========================================
+      ctx.fillStyle = busColor;
+      ctx.beginPath();
+      ctx.moveTo(-195, 45);
+      ctx.quadraticCurveTo(-210, 45, -210, 25);
+      ctx.lineTo(-210, -20);
+      ctx.quadraticCurveTo(-210, -65, -170, -65);
+      ctx.lineTo(45, -65);
+      ctx.quadraticCurveTo(65, -65, 65, -45);
+      ctx.lineTo(65, 45);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darkMetal;
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      // ==========================================
+      // ТЕКСТУРЫ И РЖАВЧИНА (ТОЛЬКО ДЛЯ АПОКАЛИПСИСА)
+      // ==========================================
+      if (isApoc) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(-195, 45);
+        ctx.quadraticCurveTo(-210, 45, -210, 25);
+        ctx.lineTo(-210, -20);
+        ctx.quadraticCurveTo(-210, -65, -170, -65);
+        ctx.lineTo(45, -65);
+        ctx.quadraticCurveTo(65, -65, 65, -45);
+        ctx.lineTo(65, 45);
+        ctx.closePath();
+        ctx.clip();
+
+        // Пятна ржавчины
+        ctx.fillStyle = 'rgba(120, 50, 20, 0.4)';
+        ctx.beginPath(); ctx.arc(-180, -10, 25, 0, TAU); ctx.fill();
+        ctx.beginPath(); ctx.arc(-120, 20, 35, 0, TAU); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, -40, 20, 0, TAU); ctx.fill();
+        
+        // Стальные заплатки
+        ctx.fillStyle = '#444b54';
+        ctx.fillRect(-150, -10, 30, 40);
+        ctx.fillRect(-60, 10, 40, 25);
+        ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+        ctx.strokeRect(-150, -10, 30, 40);
+        ctx.strokeRect(-60, 10, 40, 25);
+
+        // Заклёпки
+        ctx.fillStyle = '#888';
+        for(let i=0; i<4; i++) {
+          ctx.beginPath(); ctx.arc(-145, -5 + i*10, 1.5, 0, TAU); ctx.fill();
+          ctx.beginPath(); ctx.arc(-125, -5 + i*10, 1.5, 0, TAU); ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      // Блик на крыше
+      ctx.strokeStyle = isApoc ? 'rgba(0,255,204,0.2)' : 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(-198, -20);
+      ctx.quadraticCurveTo(-198, -59, -165, -60);
+      ctx.lineTo(35, -60);
+      ctx.stroke();
+
+      // ==========================================
+      // НИЖНЯЯ ЧАСТЬ / ПОЛОСА
+      // ==========================================
+      ctx.fillStyle = isApoc ? '#1a1c21' : 'rgba(180,90,0,0.12)';
+      ctx.beginPath();
+      ctx.moveTo(-195, 43);
+      ctx.lineTo(60, 43);
+      ctx.lineTo(60, 48);
+      ctx.lineTo(-190, 48);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = isApoc ? '#111' : '#171717';
+      ctx.fillRect(-208, 5, 273, 11);
+
+      // ==========================================
+      // ОКНА (9 ШТУК)
+      // ==========================================
+      for (let i = 0; i < 9; i++) {
+        const x = -185 + i * 27;
+        ctx.fillStyle = glassColor;
+        roundRect(ctx, x, -48, 21, 35, 5); ctx.fill();
+        ctx.strokeStyle = darkMetal; ctx.lineWidth = 3; ctx.stroke();
+
+        // Сетка/усиление на окнах для апокалипсиса
+        if (isApoc) {
+          ctx.strokeStyle = '#111'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x+10, -48); ctx.lineTo(x+10, -13); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(x, -30); ctx.lineTo(x+21, -30); ctx.stroke();
+        } else {
+          // Обычный блик
+          ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(x + 5, -42); ctx.lineTo(x + 5, -20); ctx.stroke();
+        }
+      }
+
+      // ==========================================
+      // НОРМАЛЬНАЯ ПЕРЕДНЯЯ ДВЕРЬ (ВПИСАНА В КУЗОВ)
+      // ==========================================
+      // Дверь теперь внутри кузова, не вылезает на крышу и не перекрывает окна
+      ctx.fillStyle = isApoc ? '#0d0d0f' : '#222';
+      roundRect(ctx, 40, -55, 25, 100, 4); ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
+
+      // Стекло двери
+      ctx.fillStyle = glassColor;
+      roundRect(ctx, 44, -48, 17, 35, 2); ctx.fill();
+      if (isApoc) { // Светящаяся линия
+        ctx.fillStyle = '#00ffcc';
+        ctx.fillRect(44, -10, 17, 3);
+      }
+
+      // Нижняя панель двери
+      ctx.fillStyle = isApoc ? '#1f2329' : '#333';
+      roundRect(ctx, 44, 0, 17, 40, 2); ctx.fill();
+
+      // Ручка
+      ctx.fillStyle = '#aaa';
+      roundRect(ctx, 56, 10, 4, 12, 1); ctx.fill();
+
+      // ==========================================
+      // КАПОТ
+      // ==========================================
+      ctx.fillStyle = busColor;
+      ctx.beginPath();
+      ctx.moveTo(75, -18);
+      ctx.lineTo(115, -14);
+      ctx.lineTo(145, -9);
+      ctx.quadraticCurveTo(155, -7, 155, 5);
+      ctx.lineTo(155, 28);
+      ctx.quadraticCurveTo(150, 37, 137, 37);
+      ctx.lineTo(90, 37);
+      ctx.lineTo(75, 28);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
+
+      // Линии на капоте
+      ctx.strokeStyle = isApoc ? '#111' : '#e08a00';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(80, -10); ctx.lineTo(146, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(88, 5); ctx.lineTo(145, 11); ctx.stroke();
+
+      // ==========================================
+      // РЕШЁТКА РАДИАТОРА
+      // ==========================================
+      ctx.fillStyle = '#252525';
+      roundRect(ctx, 150, -5, 10, 40, 2); ctx.fill();
+      ctx.strokeStyle = '#777'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 5; i++) {
+        ctx.beginPath(); ctx.moveTo(152, i * 7); ctx.lineTo(159, i * 7); ctx.stroke();
+      }
+
+      // ==========================================
+      // ФАРЫ (СВЕТЯЩИЕСЯ)
+      // ==========================================
+      ctx.fillStyle = isApoc ? '#00ffcc' : '#fff6bd';
+      ctx.shadowBlur = isApoc ? 15 : 8;
+      ctx.shadowColor = isApoc ? '#00ffcc' : '#fff3aa';
+      ctx.beginPath(); ctx.arc(158, 0, 5, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(158, 27, 5, 0, TAU); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // ==========================================
+      // БАМПЕР
+      // ==========================================
+      ctx.fillStyle = '#303030';
+      roundRect(ctx, 148, 35, 18, 9, 2); ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
+
+      // ==========================================
+      // ЗЕРКАЛО
+      // ==========================================
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(73, -38); ctx.lineTo(88, -58); ctx.stroke();
+      ctx.fillStyle = '#222';
+      roundRect(ctx, 84, -64, 14, 9, 4); ctx.fill();
+
+      // ==========================================
+      // КРЫШНЫЕ СИГНАЛЫ И ЛАМПЫ
+      // ==========================================
+      ctx.fillStyle = '#ff3333';
+      ctx.shadowBlur = 7; ctx.shadowColor = '#ff2222';
+      ctx.beginPath(); ctx.arc(-170, -65, 7, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(52, -65, 7, 0, TAU); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      ctx.fillStyle = isApoc ? '#ff0055' : '#e788ff';
+      for (let i = 0; i < 9; i++) {
+        roundRect(ctx, -80 + i * 15, -68, 9, 4, 2); ctx.fill();
+      }
+
+      // ==========================================
+      // ДОПОЛНИТЕЛЬНО: ПРОВОДА И АНТЕННА (АПОКАЛИПСИС)
+      // ==========================================
+      if (isApoc) {
+        ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-50, -65); ctx.lineTo(-60, -85); ctx.lineTo(-50, -95); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-20, -65); ctx.quadraticCurveTo(-10, -90, 10, -70); ctx.stroke();
+        
+        // Неоновая полоса
+        ctx.fillStyle = '#00ffcc';
+        ctx.shadowBlur = 10; ctx.shadowColor = '#00ffcc';
+        ctx.fillRect(-190, 20, 230, 2);
+        ctx.shadowBlur = 0;
+      }
+
+      // ==========================================
+      // КОЛЁСА
+      // ==========================================
+      ctx.fillStyle = '#151515';
+      ctx.beginPath(); ctx.arc(-140, 48, 21, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#050505'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.beginPath(); ctx.arc(105, 48, 21, 0, TAU); ctx.fill(); ctx.stroke();
+
+      // Диски
+      ctx.fillStyle = isApoc ? '#555' : '#bfc3c7';
+      ctx.beginPath(); ctx.arc(-140, 48, 9, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(105, 48, 9, 0, TAU); ctx.fill();
+
+      // Арки
+      ctx.strokeStyle = isApoc ? '#111' : '#d88200';
+      ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(-140, 48, 25, Math.PI, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.arc(105, 48, 25, Math.PI, TAU); ctx.stroke();
+
+      break;
+    }
    case 'basket_ring': {
       // Щит
       ctx.fillStyle = '#fff';
