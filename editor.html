@@ -590,14 +590,14 @@ function drawFurniture(f) {
         ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
-    }               case 'bus': {
+    }                  case 'bus': {
       const isApoc = baseColor !== '#ffffff' && baseColor !== '#ffb400';
       const busColor = isApoc ? baseColor : '#ffb400';
       const darkMetal = isApoc ? '#2a2e35' : '#111';
       const glassColor = isApoc ? '#00ffcc' : '#304354';
 
       // ==========================================
-      // 1. ОСНОВНОЙ КУЗОВ
+      // 1. ОСНОВНОЙ КУЗОВ (Сглаженная крыша и стойка)
       // ==========================================
       ctx.fillStyle = busColor;
       ctx.beginPath();
@@ -605,14 +605,12 @@ function drawFurniture(f) {
       ctx.quadraticCurveTo(-210, 45, -210, 25);
       ctx.lineTo(-210, -20);
       ctx.quadraticCurveTo(-210, -65, -170, -65);
-      ctx.lineTo(75, -65); // Крыша до кабины
-      ctx.quadraticCurveTo(85, -65, 85, -55); // Закругление стойки
-      ctx.lineTo(85, 45); // Стойка вниз
+      ctx.lineTo(75, -65); 
+      ctx.quadraticCurveTo(85, -65, 85, -55); // Сглаженный переход к стойке
+      ctx.lineTo(85, 45); 
       ctx.closePath();
       ctx.fill();
-      ctx.strokeStyle = darkMetal;
-      ctx.lineWidth = 4;
-      ctx.stroke();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
 
       // ==========================================
       // ТЕКСТУРЫ И БРОНЯ (ДЛЯ АПОКАЛИПСИСА)
@@ -630,7 +628,6 @@ function drawFurniture(f) {
         ctx.beginPath(); ctx.arc(-180, -10, 25, 0, TAU); ctx.fill();
         ctx.beginPath(); ctx.arc(-120, 20, 35, 0, TAU); ctx.fill();
         
-        // Броня на месте двери
         ctx.fillStyle = '#444b54';
         ctx.fillRect(55, -65, 30, 110);
         ctx.strokeStyle = '#111'; ctx.lineWidth = 2; ctx.strokeRect(55, -65, 30, 110);
@@ -651,7 +648,7 @@ function drawFurniture(f) {
       ctx.stroke();
 
       // ==========================================
-      // 2. НИЖНЯЯ ПОЛОСА
+      // 2. НИЖНЯЯ ПОЛОСА И ЮБКА
       // ==========================================
       ctx.fillStyle = isApoc ? '#1a1c21' : 'rgba(180,90,0,0.12)';
       ctx.beginPath();
@@ -662,7 +659,7 @@ function drawFurniture(f) {
       ctx.fillRect(-208, 5, 291, 11);
 
       // ==========================================
-      // 3. ОКНА (7 ШТУК)
+      // 3. ОКНА (7 САЛОНА + 1 КАБИНА)
       // ==========================================
       for (let i = 0; i < 7; i++) {
         const x = -185 + i * 27;
@@ -680,40 +677,41 @@ function drawFurniture(f) {
         }
       }
 
+      // Окно водителя (на стойке кузова)
+      ctx.fillStyle = glassColor;
+      roundRect(ctx, 50, -48, 25, 35, 4); ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 3; ctx.stroke();
+
       // ==========================================
-      // 4. ПЕРЕДНЯЯ ДВЕРЬ
+      // 4. ПЕРЕДНЯЯ ДВЕРЬ (Сдвинута для окна)
       // ==========================================
       if (!isApoc) {
         ctx.fillStyle = '#222';
-        roundRect(ctx, 55, -55, 25, 100, 4); ctx.fill();
+        roundRect(ctx, 30, -55, 22, 100, 4); ctx.fill();
         ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
 
         // Стекло двери
         ctx.fillStyle = glassColor;
-        roundRect(ctx, 59, -48, 17, 35, 2); ctx.fill();
+        roundRect(ctx, 33, -48, 16, 35, 2); ctx.fill();
         
         // Нижняя панель
         ctx.fillStyle = '#333';
-        roundRect(ctx, 59, 0, 17, 40, 2); ctx.fill();
+        roundRect(ctx, 33, 0, 16, 40, 2); ctx.fill();
 
         // Ручка
         ctx.fillStyle = '#aaa';
-        roundRect(ctx, 71, 10, 4, 12, 1); ctx.fill();
+        roundRect(ctx, 43, 10, 4, 12, 1); ctx.fill();
       }
 
       // ==========================================
-      // 5. ПЛАВНЫЙ КАПОТ
+      // 5. СГЛАЖЕННЫЙ КАПОТ
       // ==========================================
       ctx.fillStyle = busColor;
       ctx.beginPath();
-      // Начинаем ровно от уровня окон
-      ctx.moveTo(85, -15); 
-      ctx.lineTo(120, -15); 
-      // Плавный спуск к носу
-      ctx.quadraticCurveTo(155, -15, 155, 10);
-      // Закругление на передней части вниз
-      ctx.quadraticCurveTo(155, 35, 130, 35);
-      // Низ капота
+      ctx.moveTo(85, -10); // Верх капота
+      ctx.lineTo(115, -10); 
+      ctx.quadraticCurveTo(155, -10, 155, 15); // Плавный спуск вперед
+      ctx.quadraticCurveTo(155, 35, 125, 35); // Закругление вниз
       ctx.lineTo(85, 35); 
       ctx.closePath();
       ctx.fill();
@@ -725,42 +723,41 @@ function drawFurniture(f) {
       ctx.moveTo(90, 5); 
       ctx.quadraticCurveTo(140, 5, 148, 15); 
       ctx.stroke();
-      
       ctx.beginPath(); 
       ctx.moveTo(90, 20); 
-      ctx.quadraticCurveTo(135, 20, 145, 25); 
+      ctx.quadraticCurveTo(130, 20, 140, 25); 
       ctx.stroke();
 
       // ==========================================
       // 6. РЕШЁТКА, ФАРЫ И БАМПЕР
       // ==========================================
-      // Решётка радиатора (слегка наклонена)
+      // Решётка радиатора
       ctx.fillStyle = '#252525';
-      ctx.beginPath();
-      ctx.moveTo(145, 0); 
-      ctx.lineTo(152, 5); 
-      ctx.lineTo(152, 30); 
-      ctx.lineTo(145, 33); 
-      ctx.closePath();
-      ctx.fill();
-      
+      roundRect(ctx, 146, 0, 8, 30, 2); ctx.fill();
       ctx.strokeStyle = '#777'; ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(147, 5); ctx.lineTo(150, 8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(147, 12); ctx.lineTo(150, 14); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(147, 19); ctx.lineTo(150, 20); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(147, 26); ctx.lineTo(150, 26); ctx.stroke();
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath(); ctx.moveTo(148, 5 + i * 7); ctx.lineTo(152, 5 + i * 7); ctx.stroke();
+      }
 
-      // Фары
+      // ФАРЫ (Спереди и сзади)
       ctx.fillStyle = isApoc ? '#00ffcc' : '#fff6bd';
       ctx.shadowBlur = isApoc ? 15 : 8; ctx.shadowColor = isApoc ? '#00ffcc' : '#fff3aa';
-      ctx.beginPath(); ctx.arc(153, 5, 3.5, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(153, 28, 3.5, 0, TAU); ctx.fill();
+      // Передние фары (сбоку)
+      ctx.beginPath(); ctx.arc(154, 5, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(154, 25, 4, 0, TAU); ctx.fill();
+      // Задние фары
+      ctx.beginPath(); ctx.arc(-207, -5, 4, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(-207, 20, 4, 0, TAU); ctx.fill();
       ctx.shadowBlur = 0;
 
-      // Бампер
+      // БАМПЕР (Передний и задний)
       ctx.fillStyle = '#303030';
-      roundRect(ctx, 145, 31, 15, 8, 2); ctx.fill();
+      // Передний
+      roundRect(ctx, 145, 32, 15, 8, 2); ctx.fill();
       ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
+      // Задний
+      roundRect(ctx, -210, 32, 15, 8, 2); ctx.fill();
+      ctx.stroke();
 
       // ==========================================
       // 7. ДЕКОР (ЗЕРКАЛА, СИГНАЛЫ, ПРОВОДА)
