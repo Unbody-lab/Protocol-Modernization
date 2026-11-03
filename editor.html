@@ -808,53 +808,172 @@ function drawFurniture(f) {
 
       break;
     }
-        case 'bus_wreck': {
+           case 'bus_wreck': {
+      const wreckColor = baseColor !== '#ffffff' ? baseColor : '#cfa641'; // Тусклый желтый по умолчанию
       const darkMetal = '#111';
-      const rust = '#8a4b22';
-      
-      // Кузов (сломанный)
-      ctx.fillStyle = '#4a4d52';
-      ctx.beginPath();
-      ctx.moveTo(-195, 45); ctx.lineTo(-210, 45); ctx.lineTo(-210, 25);
-      ctx.lineTo(-210, -20); ctx.lineTo(-170, -65); ctx.lineTo(70, -65);
-      ctx.lineTo(80, -40); ctx.lineTo(85, 45); ctx.closePath();
-      ctx.fill(); ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
+      const rust = 'rgba(120, 50, 20, 0.6)';
 
-      // Провалы, дыры и ржавчина
-      ctx.fillStyle = '#222';
-      ctx.beginPath(); ctx.arc(-150, -20, 20, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(-50, 10, 15, 0, TAU); ctx.fill();
+      // ==========================================
+      // 1. ОСНОВНОЙ КУЗОВ (помят и наклонен)
+      // ==========================================
+      ctx.fillStyle = wreckColor;
+      ctx.beginPath();
+      ctx.moveTo(-195, 45);
+      // Сзади сильно смят
+      ctx.lineTo(-200, 30);
+      ctx.lineTo(-190, -10);
+      ctx.lineTo(-160, -55); // Задняя часть крыши провалена
+      ctx.lineTo(-120, -65); // Ровная часть крыши
+      ctx.lineTo(75, -65); 
+      ctx.quadraticCurveTo(85, -65, 85, -55); 
+      ctx.lineTo(85, 45); 
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
+
+      // Вмятины и ржавчина на кузове
       ctx.fillStyle = rust;
-      ctx.beginPath(); ctx.arc(-100, -40, 30, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(-170, -20, 25, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(-140, 15, 30, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(-50, -30, 20, 0, TAU); ctx.fill();
       
-      // Разбитые окна
-      ctx.fillStyle = '#111';
+      // Темные пятна копоти
+      ctx.fillStyle = 'rgba(0,0,0,0.4)';
+      ctx.beginPath(); ctx.arc(-80, 10, 40, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, -50, 15, 0, TAU); ctx.fill();
+
+      // ==========================================
+      // 2. НИЖНЯЯ ПОЛОСА (частично стерта)
+      // ==========================================
+      ctx.fillStyle = '#171717';
+      ctx.fillRect(-180, 5, 260, 11);
+      // Стертость полосы
+      ctx.fillStyle = wreckColor;
+      ctx.fillRect(-120, 5, 30, 11);
+
+      // ==========================================
+      // 3. ОКНА (Большинство выбито)
+      // ==========================================
       for (let i = 0; i < 6; i++) {
         const x = -185 + i * 27;
-        roundRect(ctx, x, -48, 21, 35, 5); ctx.fill();
-        // Осколки
-        ctx.strokeStyle = '#555'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(x, -48); ctx.lineTo(x+21, -13); ctx.stroke();
+        
+        // Рамка окна
+        ctx.strokeStyle = darkMetal; ctx.lineWidth = 3;
+        roundRect(ctx, x, -48, 21, 35, 5); ctx.stroke();
+
+        if (i === 0 || i === 2 || i === 4) {
+          // Выбитые окна (черные дыры с осколками)
+          ctx.fillStyle = '#0a0a0a';
+          roundRect(ctx, x, -48, 21, 35, 5); ctx.fill();
+          
+          // Трещины/осколки
+          ctx.strokeStyle = '#444'; ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(x + 5, -48);
+          ctx.lineTo(x + 15, -30);
+          ctx.lineTo(x + 10, -13);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(x + 15, -30);
+          ctx.lineTo(x + 21, -40);
+          ctx.stroke();
+        } else {
+          // Уцелевшие, но грязные окна
+          ctx.fillStyle = '#202830';
+          roundRect(ctx, x, -48, 21, 35, 5); ctx.fill();
+          // Трещина на стекле
+          ctx.strokeStyle = '#555'; ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x + 10, -48);
+          ctx.lineTo(x + 5, -20);
+          ctx.stroke();
+        }
       }
 
-      // Искореженный капот
-      ctx.fillStyle = '#4a4d52';
+      // Окно кабины (выбито)
+      ctx.fillStyle = '#0a0a0a';
+      roundRect(ctx, 50, -48, 25, 35, 4); ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 3; ctx.stroke();
+
+      // ==========================================
+      // 4. ДВЕРИ (Одна сорвана, другая заклинена)
+      // ==========================================
+      // Передняя дверь (заклинена, открыта наружу)
+      ctx.fillStyle = '#1a1c21';
       ctx.beginPath();
-      ctx.moveTo(85, -10); ctx.lineTo(110, -20); ctx.lineTo(130, 10); ctx.lineTo(155, 35); ctx.lineTo(85, 35); ctx.closePath();
-      ctx.fill(); ctx.strokeStyle = darkMetal; ctx.lineWidth = 3; ctx.stroke();
+      ctx.moveTo(35, -55); ctx.lineTo(50, -40); ctx.lineTo(50, 45); ctx.lineTo(35, 45); ctx.closePath();
+      ctx.fill(); ctx.strokeStyle = darkMetal; ctx.lineWidth = 2; ctx.stroke();
 
-      // Крыло и колесо
-      ctx.fillStyle = '#151515';
-      ctx.beginPath(); ctx.arc(115, 48, 21, 0, TAU); ctx.fill();
-      ctx.strokeStyle = '#050505'; ctx.lineWidth = 3; ctx.stroke();
+      // Задняя дверь (сорвана, висит на петлях)
+      ctx.fillStyle = '#222';
+      ctx.beginPath();
+      ctx.moveTo(-110, -55); ctx.lineTo(-100, -60); ctx.lineTo(-100, 45); ctx.lineTo(-110, 45); ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      // ==========================================
+      // 5. КАПОТ (сорван и искорежен)
+      // ==========================================
+      ctx.fillStyle = wreckColor;
+      ctx.beginPath();
+      ctx.moveTo(85, -10); 
+      ctx.lineTo(115, -5); // Капот задран вверх
+      ctx.lineTo(140, 15); // Согнут
+      ctx.lineTo(125, 35); 
+      ctx.lineTo(85, 35); 
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
+
+      // Огонь/Копоть из-под капота
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.beginPath(); ctx.arc(110, 10, 15, 0, TAU); ctx.fill();
+
+      // ==========================================
+      // 6. ОСТАТКИ ФАР, БАМПЕРОВ И ЗАДНИХ ДЕТАЛЕЙ
+      // ==========================================
+      // Разбитая фара
+      ctx.fillStyle = '#333';
+      ctx.beginPath(); ctx.arc(145, 10, 5, 0, TAU); ctx.fill();
       ctx.fillStyle = '#555';
-      ctx.beginPath(); ctx.arc(-140, 48, 21, 0, TAU); ctx.fill(); // Заднее колесо
+      ctx.beginPath(); ctx.arc(145, 10, 3, 0, TAU); ctx.fill();
 
-      // Торчащие провода и антенна
-      ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(-50, -65); ctx.lineTo(-60, -85); ctx.lineTo(-50, -95); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-20, -65); ctx.quadraticCurveTo(-10, -90, 10, -70); ctx.stroke();
+      // Отвалившийся задний бампер
+      ctx.fillStyle = '#303030';
+      ctx.save();
+      ctx.translate(-200, 50);
+      ctx.rotate(0.3);
+      roundRect(ctx, 0, 0, 25, 8, 2); ctx.fill();
+      ctx.restore();
+
+      // ==========================================
+      // 7. КОЛЁСА (Одно спущено, одно отсутствует)
+      // ==========================================
+      // Переднее колесо (спущено)
+      ctx.fillStyle = '#151515';
+      ctx.beginPath(); ctx.ellipse(115, 50, 21, 15, 0, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#050505'; ctx.lineWidth = 3; ctx.stroke();
       
+      // Заднее колесо (отсутствует, торчит только ось)
+      ctx.strokeStyle = '#444'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(-140, 35); ctx.lineTo(-140, 55); ctx.stroke();
+      // Обломки диска на земле
+      ctx.fillStyle = '#bfc3c7';
+      ctx.beginPath(); ctx.arc(-155, 60, 8, 0, TAU); ctx.fill();
+
+      // ==========================================
+      // 8. ПОЖАР, ДЫМ И ПРОВОДА
+      // ==========================================
+      // Торчащие провода
+      ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(-50, -65); ctx.bezierCurveTo(-60, -85, -40, -95, -50, -110); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-20, -65); ctx.bezierCurveTo(-10, -90, 20, -80, 10, -100); ctx.stroke();
+      
+      // Дым/искры (анимация не обязательна, но можно добавить статичный огонь)
+      ctx.fillStyle = 'rgba(255, 100, 0, 0.4)';
+      ctx.beginPath(); ctx.arc(-100, -60, 15, 0, TAU); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 200, 0, 0.6)';
+      ctx.beginPath(); ctx.arc(-100, -60, 8, 0, TAU); ctx.fill();
+
       break;
     }
    case 'basket_ring': {
