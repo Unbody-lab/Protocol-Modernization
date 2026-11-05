@@ -74,15 +74,12 @@
   .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
   .row { display: flex; gap: 6px; align-items: center; }
   .row > * { flex: 1; }
-  
-  /* Скрываем лишние настройки для стен */
-  #wall-settings { display: none; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
 </style>
 </head>
 <body>
 
 <div id="top-bar">X: 0, Y: 0</div>
-<div id="help-bar">Управление: ЛКМ - ставить/выделять, ПКМ - двигать карту, Колесо - зум. Стрелки - двигать объект, [/] - крутить.</div>
+<div id="help-bar">ЛКМ - ставить/тянуть. ПКМ - двигать карту. Колесо - зум. Стрелки - двигать. [/] - крутить.</div>
 <canvas id="editor-canvas"></canvas>
 
 <div id="sidebar">
@@ -121,13 +118,12 @@
     <div class="tool-btn" onclick="setTool('pencil', this)"><span>✏️</span> Карандаш</div>
     <div class="tool-btn" onclick="setTool('vitya', this)"><span>🖼️</span> Vitya_Face</div>
     
-    <!-- НОВЫЕ ОБЪЕКТЫ -->
     <div class="tool-btn" onclick="setTool('broken_glass', this)"><span>💥</span> Разбитое стекло</div>
     <div class="tool-btn" onclick="setTool('bottles', this)"><span>🍾</span> Бутылки</div>
     <div class="tool-btn" onclick="setTool('office_chair', this)"><span>💺</span> Офис. кресло</div>
     <div class="tool-btn" onclick="setTool('tech_building', this)"><span>🏢</span> Техникум</div>
     <div class="tool-btn" onclick="setTool('fence', this)"><span>🚧</span> Сетч. забор</div>
-    <div class="tool-btn" onclick="setTool('fence_barbed', this)"><span>⛓️</span> Забор с проволокой</div>
+    <div class="tool-btn" onclick="setTool('fence_barbed', this)"><span>⛓️</span> Колюч. забор</div>
     <div class="tool-btn" onclick="setTool('barrier', this)"><span>🚧</span> Шлагбаум</div>
     <div class="tool-btn" onclick="setTool('checkpoint', this)"><span>🛑</span> КПП</div>
     <div class="tool-btn" onclick="setTool('parking', this)"><span>🅿️</span> Парковка</div>
@@ -159,7 +155,6 @@
       <input type="color" id="obj-color" value="#ffffff" oninput="updateSelected()">
     </div>
     
-    <!-- Специально для деревянного ящика -->
     <div class="control-group" id="crate-settings" style="display:none; margin-top: 5px; background: rgba(0,0,0,0.2); padding: 8px; border-radius: 6px;">
       <label style="color: #ffd700;">Содержимое ящика:</label>
       <select id="crate-loot">
@@ -177,8 +172,8 @@
       <button class="action-btn primary" onclick="moveLayer(-1)">Слой -1</button>
     </div>
     <div class="control-group" style="margin-top: 8px;">
-      <label>Размер стены (толщина)</label>
-      <input type="range" id="wall-thick" min="5" max="50" value="15">
+      <label>Толщина стены</label>
+      <input type="range" id="wall-thick" min="5" max="50" value="15" oninput="updateSelected()">
     </div>
   </div>
 
@@ -223,10 +218,8 @@
 </div>
 
 <script>
-// --- НАСТРОЙКИ МИРА ---
 let WORLD_W = 2600, WORLD_H = 2000;
 const DPR = Math.min(window.devicePixelRatio || 1, 2);
-
 const canvas = document.getElementById('editor-canvas');
 const ctx = canvas.getContext('2d');
 let W = window.innerWidth, H = window.innerHeight;
@@ -239,12 +232,10 @@ let lastMouseX = 0, lastMouseY = 0;
 
 let furniture = [];
 let walls = [];
-let floorPattern = null; // Для исправления бетона
-
+let floorPattern = null;
 let selectedObj = null;
 let currentTool = 'desk';
 
-// Пасхалка
 const VITYA_IMG = new Image();
 VITYA_IMG.src = 'Vitya_Face.png'; 
 
@@ -263,11 +254,10 @@ resize();
 cam.x = -WORLD_W/2 + W/2;
 cam.y = -WORLD_H/2 + H/2;
 
-// --- ГЕНЕРАЦИЯ ТЕКСТУР ПОЛА ---
+// --- ГЕНЕРАЦИЯ ТЕКСТУР ПОЛА (ИСПРАВЛЕН МОРГАЮЩИЙ БЕТОН) ---
 function generateFloorPattern() {
   const tex = document.getElementById('floor-texture').value;
   const col = document.getElementById('floor-color').value;
-  
   const pCanvas = document.createElement('canvas');
   pCanvas.width = 256; pCanvas.height = 256;
   const pCtx = pCanvas.getContext('2d');
@@ -276,9 +266,7 @@ function generateFloorPattern() {
   pCtx.fillRect(0, 0, 256, 256);
 
   if (tex === 'wood') {
-    pCtx.globalAlpha = 0.25;
-    pCtx.strokeStyle = '#000';
-    pCtx.lineWidth = 2;
+    pCtx.globalAlpha = 0.25; pCtx.strokeStyle = '#000'; pCtx.lineWidth = 2;
     for (let y = 0; y < 256; y += 32) {
       pCtx.beginPath(); pCtx.moveTo(0, y); pCtx.lineTo(256, y); pCtx.stroke();
     }
@@ -289,12 +277,9 @@ function generateFloorPattern() {
       }
     }
   } else if (tex === 'concrete' || tex === 'stone' || tex === 'asphalt') {
-    pCtx.globalAlpha = (tex === 'asphalt') ? 0.15 : 0.08;
-    pCtx.fillStyle = '#000';
+    pCtx.globalAlpha = (tex === 'asphalt') ? 0.15 : 0.08; pCtx.fillStyle = '#000';
     for (let i = 0; i < 150; i++) {
-      const x = Math.random() * 256;
-      const y = Math.random() * 256;
-      const r = 5 + Math.random() * 30;
+      const x = Math.random() * 256, y = Math.random() * 256, r = 5 + Math.random() * 30;
       pCtx.beginPath(); pCtx.arc(x, y, r, 0, Math.PI * 2); pCtx.fill();
     }
   } else if (tex === 'grass') {
@@ -304,30 +289,25 @@ function generateFloorPattern() {
       pCtx.fillRect(Math.random()*256, Math.random()*256, 2, 4);
     }
   } else if (tex === 'metal') {
-    pCtx.globalAlpha = 0.2;
-    pCtx.strokeStyle = '#fff';
-    pCtx.lineWidth = 1;
+    pCtx.globalAlpha = 0.2; pCtx.strokeStyle = '#fff'; pCtx.lineWidth = 1;
     for (let i = 0; i < 256; i += 16) {
       pCtx.beginPath(); pCtx.moveTo(i, 0); pCtx.lineTo(i, 256); pCtx.stroke();
     }
   } else if (tex === 'glass') {
-    pCtx.globalAlpha = 0.1;
-    pCtx.strokeStyle = '#fff';
-    pCtx.lineWidth = 4;
+    pCtx.globalAlpha = 0.1; pCtx.strokeStyle = '#fff'; pCtx.lineWidth = 4;
     for (let i = -256; i < 256; i += 64) {
       pCtx.beginPath(); pCtx.moveTo(i, 0); pCtx.lineTo(i+256, 256); pCtx.stroke();
     }
   }
-
   floorPattern = ctx.createPattern(pCanvas, 'repeat');
-  floorPattern.setTransform(new DOMMatrix().scale(2)); // Масштабируем текстуру
+  floorPattern.setTransform(new DOMMatrix().scale(2));
 }
 
 document.getElementById('floor-texture').addEventListener('change', generateFloorPattern);
 document.getElementById('floor-color').addEventListener('change', generateFloorPattern);
 generateFloorPattern();
 
-// --- ИНСТРУМЕНТЫ ---
+// --- УПРАВЛЕНИЕ ---
 window.setTool = function(tool, el) {
   currentTool = tool;
   document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
@@ -336,11 +316,7 @@ window.setTool = function(tool, el) {
 };
 
 window.clearMap = function() {
-  if (confirm('Очистить карту?')) {
-    furniture = [];
-    walls = [];
-    selectedObj = null;
-  }
+  if (confirm('Очистить карту?')) { furniture = []; walls = []; selectedObj = null; }
 };
 
 window.applyWorldSize = function() {
@@ -348,55 +324,50 @@ window.applyWorldSize = function() {
   WORLD_H = Math.max(400, parseInt(document.getElementById('world-h').value) || 2000);
 };
 
-// --- ВВОД ---
 canvas.addEventListener('mousedown', (e) => {
   const rect = canvas.getBoundingClientRect();
   const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
   const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
 
-  if (e.button === 1 || e.button === 2) {
-    isDraggingCam = true;
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-    return;
-  }
+  if (e.button === 1 || e.button === 2) { isDraggingCam = true; lastMouseX = e.clientX; lastMouseY = e.clientY; return; }
 
   if (e.button === 0) {
     const size = parseInt(document.getElementById('size-slider').value);
     const rot = parseInt(document.getElementById('rot-slider').value);
     const color = document.getElementById('obj-color').value;
 
-    // 1. Проверяем клик по существующему объекту (выделение)
-    let clickedObj = null;
-    let clickedWall = null;
+    // Поиск объекта под курсором
+    let clickedObj = null, clickedWall = null;
     
-    // Проверяем стены
     for (let i = walls.length - 1; i >= 0; i--) {
       const w = walls[i];
-      // Простое расстояние до центра стены
-      if (Math.hypot(w.x1 - mwx, w.y1 - mwy) < 20 || Math.hypot(w.x2 - mwx, w.y2 - mwy) < 20) {
-        clickedWall = w;
-        break;
-      }
+      const A = mwx - w.x1, B = mwy - w.y1, C = w.x2 - w.x1, D = w.y2 - w.y1;
+      const dot = A * C + B * D;
+      const len_sq = C * C + D * D;
+      let param = -1;
+      if (len_sq !== 0) param = dot / len_sq;
+      
+      let xx, yy;
+      if (param < 0) { xx = w.x1; yy = w.y1; }
+      else if (param > 1) { xx = w.x2; yy = w.y2; }
+      else { xx = w.x1 + param * C; yy = w.y1 + param * D; }
+      
+      const dx = mwx - xx, dy = mwy - yy;
+      if (Math.sqrt(dx * dx + dy * dy) < w.thick/2 + 10) { clickedWall = w; break; }
     }
-    // Проверяем мебель (сверху вниз)
+    
     if (!clickedWall) {
       for (let i = furniture.length - 1; i >= 0; i--) {
-        if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
-          clickedObj = furniture[i];
-          break;
-        }
+        if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) { clickedObj = furniture[i]; break; }
       }
     }
 
     if (clickedWall) {
-      if (currentTool === 'erase') {
-        walls = walls.filter(w => w !== clickedWall);
-      } else {
+      if (currentTool === 'erase') walls = walls.filter(w => w !== clickedWall);
+      else {
         selectedObj = clickedWall;
         document.getElementById('wall-thick').value = clickedWall.thick;
         isDraggingObj = true;
-        // Запоминаем, за какую точку тянем (если близко к концу)
         if (Math.hypot(clickedWall.x2 - mwx, clickedWall.y2 - mwy) < 30) {
           dragOffsetX = clickedWall.x1; dragOffsetY = clickedWall.y1;
         } else {
@@ -415,81 +386,56 @@ canvas.addEventListener('mousedown', (e) => {
         dragOffsetY = clickedObj.y - mwy;
       }
     } else {
-      // 2. Добавление новых объектов
       if (currentTool === 'wall') {
-        // Начинаем новую стену
         const newWall = { x1: mwx, y1: mwy, x2: mwx, y2: mwy, type: 'wall', thick: parseInt(document.getElementById('wall-thick').value), layer: 0 };
-        walls.push(newWall);
-        selectedObj = newWall;
+        walls.push(newWall); selectedObj = newWall;
       } else {
         const newObj = { x: mwx, y: mwy, type: currentTool, r: size, rot: rot, color: color, layer: 0 };
-        // Если это ящик, берем настройки
-        if (currentTool === 'wooden_crate') {
-          newObj.loot = document.getElementById('crate-loot').value;
-        }
-        furniture.push(newObj);
-        selectedObj = newObj;
-        syncPanelWithObj();
+        if (currentTool === 'wooden_crate') newObj.loot = document.getElementById('crate-loot').value;
+        furniture.push(newObj); selectedObj = newObj; syncPanelWithObj();
       }
     }
   }
 });
 
-// Обработка перетаскивания
 window.addEventListener('mousemove', (e) => {
   const rect = canvas.getBoundingClientRect();
   const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
   const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
-
   document.getElementById('top-bar').innerText = `X: ${Math.round(mwx)}, Y: ${Math.round(mwy)}`;
 
   if (isDraggingCam) {
-    cam.x += e.clientX - lastMouseX;
-    cam.y += e.clientY - lastMouseY;
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
+    cam.x += e.clientX - lastMouseX; cam.y += e.clientY - lastMouseY;
+    lastMouseX = e.clientX; lastMouseY = e.clientY;
   } else if (isDraggingObj && selectedObj) {
     if (selectedObj.type === 'wall') {
-      // Тянем конец стены
       if (Math.hypot(selectedObj.x2 - mwx, selectedObj.y2 - mwy) < 50) {
          selectedObj.x2 = mwx; selectedObj.y2 = mwy;
       } else {
          selectedObj.x1 = mwx; selectedObj.y1 = mwy;
       }
     } else {
-      selectedObj.x = mwx + dragOffsetX;
-      selectedObj.y = mwy + dragOffsetY;
+      selectedObj.x = mwx + dragOffsetX; selectedObj.y = mwy + dragOffsetY;
     }
   }
 });
 
-window.addEventListener('mouseup', () => {
-  isDraggingCam = false;
-  isDraggingObj = false;
-});
-
+window.addEventListener('mouseup', () => { isDraggingCam = false; isDraggingObj = false; });
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 canvas.addEventListener('wheel', (e) => {
   e.preventDefault();
-  const zoomSpeed = 0.1;
-  const oldZoom = cam.zoom;
-  if (e.deltaY < 0) cam.zoom += zoomSpeed;
-  else cam.zoom -= zoomSpeed;
+  const zoomSpeed = 0.1, oldZoom = cam.zoom;
+  if (e.deltaY < 0) cam.zoom += zoomSpeed; else cam.zoom -= zoomSpeed;
   cam.zoom = Math.max(0.2, Math.min(3, cam.zoom));
-
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
+  const mouseX = e.clientX - rect.left, mouseY = e.clientY - rect.top;
   cam.x = mouseX - (mouseX - cam.x) * (cam.zoom / oldZoom);
   cam.y = mouseY - (mouseY - cam.y) * (cam.zoom / oldZoom);
 }, { passive: false });
 
-// --- UI ЛОГИКА ---
 function syncPanelWithObj() {
   if (!selectedObj) return;
-  
   if (selectedObj.type === 'wall') {
     document.getElementById('crate-settings').style.display = 'none';
   } else {
@@ -498,8 +444,6 @@ function syncPanelWithObj() {
     document.getElementById('rot-slider').value = selectedObj.rot || 0;
     document.getElementById('rot-val').innerText = selectedObj.rot || 0;
     if (selectedObj.color) document.getElementById('obj-color').value = selectedObj.color;
-    
-    // Показываем настройки ящика
     if (selectedObj.type === 'wooden_crate') {
       document.getElementById('crate-settings').style.display = 'flex';
       document.getElementById('crate-loot').value = selectedObj.loot || 'none';
@@ -511,65 +455,39 @@ function syncPanelWithObj() {
 
 window.updateSelected = function() {
   if (!selectedObj) return;
-  
   if (selectedObj.type === 'wall') {
     selectedObj.thick = parseInt(document.getElementById('wall-thick').value);
   } else {
     selectedObj.r = parseInt(document.getElementById('size-slider').value);
     selectedObj.rot = parseInt(document.getElementById('rot-slider').value);
     selectedObj.color = document.getElementById('obj-color').value;
-    
     document.getElementById('size-val').innerText = selectedObj.r;
     document.getElementById('rot-val').innerText = selectedObj.rot;
-    
-    if (selectedObj.type === 'wooden_crate') {
-      selectedObj.loot = document.getElementById('crate-loot').value;
-    }
+    if (selectedObj.type === 'wooden_crate') selectedObj.loot = document.getElementById('crate-loot').value;
   }
 };
 
 window.moveLayer = function(dir) {
-  if (selectedObj && selectedObj.type !== 'wall') {
-    selectedObj.layer = (selectedObj.layer || 0) + dir;
-  }
+  if (selectedObj && selectedObj.type !== 'wall') selectedObj.layer = (selectedObj.layer || 0) + dir;
 };
 
-// Клавиатура для точного перемещения
 window.addEventListener('keydown', (e) => {
   if (!selectedObj) return;
   const speed = e.shiftKey ? 50 : 10;
-  
   if (e.key === 'ArrowUp') selectedObj.y -= speed;
   if (e.key === 'ArrowDown') selectedObj.y += speed;
   if (e.key === 'ArrowLeft') selectedObj.x -= speed;
   if (e.key === 'ArrowRight') selectedObj.x += speed;
-  
-  if (e.key === '[') {
-    if (selectedObj.type === 'wall') return;
-    selectedObj.rot = (selectedObj.rot || 0) - 15;
-    document.getElementById('rot-slider').value = selectedObj.rot;
-    document.getElementById('rot-val').innerText = selectedObj.rot;
-  }
-  if (e.key === ']') {
-    if (selectedObj.type === 'wall') return;
-    selectedObj.rot = (selectedObj.rot || 0) + 15;
-    document.getElementById('rot-slider').value = selectedObj.rot;
-    document.getElementById('rot-val').innerText = selectedObj.rot;
-  }
+  if (e.key === '[') { if (selectedObj.type === 'wall') return; selectedObj.rot = (selectedObj.rot || 0) - 15; document.getElementById('rot-slider').value = selectedObj.rot; }
+  if (e.key === ']') { if (selectedObj.type === 'wall') return; selectedObj.rot = (selectedObj.rot || 0) + 15; document.getElementById('rot-slider').value = selectedObj.rot; }
 });
 
-// --- JSON ---
 window.generateJSON = function() {
-  const data = {
+  document.getElementById('json-output').value = JSON.stringify({
     world: { width: WORLD_W, height: WORLD_H },
-    floor: {
-      texture: document.getElementById('floor-texture').value,
-      color: document.getElementById('floor-color').value
-    },
-    furniture: furniture,
-    walls: walls
-  };
-  document.getElementById('json-output').value = JSON.stringify(data, null, 2);
+    floor: { texture: document.getElementById('floor-texture').value, color: document.getElementById('floor-color').value },
+    furniture: furniture, walls: walls
+  }, null, 2);
 };
 
 window.loadFromJSON = function() {
@@ -577,68 +495,37 @@ window.loadFromJSON = function() {
     const val = document.getElementById('json-output').value;
     if (!val) return alert('Вставьте JSON!');
     const data = JSON.parse(val);
-    
     if (data.world) { WORLD_W = data.world.width; WORLD_H = data.world.height; }
     if (data.floor) {
       document.getElementById('floor-texture').value = data.floor.texture;
       document.getElementById('floor-color').value = data.floor.color;
       generateFloorPattern();
     }
-    furniture = data.furniture || [];
-    walls = data.walls || [];
-    selectedObj = null;
+    furniture = data.furniture || []; walls = data.walls || []; selectedObj = null;
     alert('Загружено!');
-  } catch(e) {
-    alert('Ошибка: ' + e.message);
-  }
+  } catch(e) { alert('Ошибка: ' + e.message); }
 };
 
-// --- ВСПОМОГАТЕЛЬНЫЕ ---
+// --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
 const TAU = Math.PI * 2;
 function roundRect(c,x,y,w,h,r){
-  if (w < 0) { x += w; w = -w; }
-  r = Math.min(r, w/2, h/2);
-  c.beginPath();
-  c.moveTo(x+r, y); c.lineTo(x+w-r, y);
-  c.quadraticCurveTo(x+w, y, x+w, y+r);
-  c.lineTo(x+w, y+h-r);
-  c.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
-  c.lineTo(x+r, y+h);
-  c.quadraticCurveTo(x, y+h, x, y+h-r);
-  c.lineTo(x, y+r);
-  c.quadraticCurveTo(x, y, x+r, y);
-  c.closePath();
+  if (w < 0) { x += w; w = -w; } r = Math.min(r, w/2, h/2);
+  c.beginPath(); c.moveTo(x+r, y); c.lineTo(x+w-r, y); c.quadraticCurveTo(x+w, y, x+w, y+r); c.lineTo(x+w, y+h-r);
+  c.quadraticCurveTo(x+w, y+h, x+w-r, y+h); c.lineTo(x+r, y+h); c.quadraticCurveTo(x, y+h, x, y+h-r); c.lineTo(x, y+r);
+  c.quadraticCurveTo(x, y, x+r, y); c.closePath();
 }
 
-// --- ФОН ПОЛА ---
 function drawFloor() {
-  if (floorPattern) {
-    ctx.fillStyle = floorPattern;
-    ctx.fillRect(0, 0, WORLD_W, WORLD_H);
-  } else {
-    ctx.fillStyle = document.getElementById('floor-color').value;
-    ctx.fillRect(0, 0, WORLD_W, WORLD_H);
-  }
-
-  // Сетка
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-  ctx.lineWidth = 2;
-  for (let x = 0; x < WORLD_W; x += 100) {
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
-  }
-  for (let y = 0; y < WORLD_H; y += 100) {
-    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
-  }
+  if (floorPattern) { ctx.fillStyle = floorPattern; ctx.fillRect(0, 0, WORLD_W, WORLD_H); }
+  else { ctx.fillStyle = document.getElementById('floor-color').value; ctx.fillRect(0, 0, WORLD_W, WORLD_H); }
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 2;
+  for (let x = 0; x < WORLD_W; x += 100) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke(); }
+  for (let y = 0; y < WORLD_H; y += 100) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke(); }
 }
 
-// --- ОТРИСОВКА ОБЪЕКТОВ ---
 function drawFurniture(f) {
-  ctx.save();
-  ctx.translate(f.x, f.y);
-  ctx.rotate((f.rot || 0) * Math.PI / 180);
-  
-  const r = f.r;
-  const baseColor = f.color || '#ffffff'; 
+  ctx.save(); ctx.translate(f.x, f.y); ctx.rotate((f.rot || 0) * Math.PI / 180);
+  const r = f.r; const baseColor = f.color || '#ffffff'; 
   const shade = (hex, percent) => {
     let num = parseInt(hex.replace("#",""),16), amt = Math.round(2.55 * percent);
     let R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
@@ -646,350 +533,324 @@ function drawFurniture(f) {
   };
 
   switch (f.type) {
-    // ... (все старые объекты: desk, chair, cabinet, board, holo, computer, wooddoor, holohuman, woodcab, locker, stairs, bus, bus_wreck, basket_ring, basket_ball, volley_net, volley_ball, globe, pen, eraser, pencil, vitya - оставляем без изменений) ...
-    case 'desk': ctx.fillStyle = shade(baseColor, -40); roundRect(ctx, -35, -25, 70, 50, 5); ctx.fill(); ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.stroke(); break;
-    case 'chair': ctx.fillStyle = shade(baseColor, -30); roundRect(ctx, -18, -15, 36, 30, 4); ctx.fill(); break;
-    case 'cabinet': ctx.fillStyle = shade(baseColor, -30); ctx.fillRect(-25, -45, 50, 90); break;
-    case 'board': ctx.fillStyle = shade(baseColor, -50); roundRect(ctx, -120, -50, 240, 100, 8); ctx.fill(); break;
-    case 'rock': 
-      ctx.beginPath(); ctx.ellipse(7, 11, r*.95, r*.78, 0, 0, TAU); ctx.fillStyle = 'rgba(0,0,0,0.30)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.fillStyle = shade(baseColor, -20); ctx.fill(); break;
-    case 'holo': 
+    // ==========================================
+    // ВОССТАНОВЛЕННЫЙ СТАРЫЙ КОД
+    // ==========================================
+    case 'desk': {
+      ctx.fillStyle = shade(baseColor, -40); roundRect(ctx, -35, -25, 70, 50, 5); ctx.fill();
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = shade(baseColor, -70); ctx.fillRect(-30, 15, 8, 20); ctx.fillRect(22, 15, 8, 20); break;
+    }
+    case 'chair': {
+      ctx.fillStyle = shade(baseColor, -30); roundRect(ctx, -18, -15, 36, 30, 4); ctx.fill();
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2; ctx.stroke();
+      roundRect(ctx, -18, -25, 36, 10, 3); ctx.fill(); ctx.stroke(); break;
+    }
+    case 'cabinet': {
+      ctx.fillStyle = shade(baseColor, -30); ctx.fillRect(-25, -45, 50, 90);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.strokeRect(-25, -45, 50, 90);
+      ctx.fillStyle = '#ffd700'; ctx.fillRect(15, -10, 5, 20); ctx.fillRect(15, 15, 5, 20); break;
+    }
+    case 'board': {
+      ctx.fillStyle = shade(baseColor, -50); roundRect(ctx, -120, -50, 240, 100, 8); ctx.fill();
+      ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
+      ctx.fillStyle = '#fff'; ctx.fillRect(-80, -20, 40, 4); ctx.fillRect(40, 10, 30, 4); break;
+    }
+    case 'holo': {
       const t = performance.now() / 1000;
       ctx.fillStyle = shade(baseColor, 20); ctx.globalAlpha = 0.2;
-      ctx.beginPath(); ctx.arc(0, Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU); ctx.fill(); break;
-    case 'computer': ctx.fillStyle = '#111'; roundRect(ctx, -22, -18, 44, 30, 4); ctx.fill(); break;
-    case 'wooddoor': ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-30, -50, 60, 100); break;
-    case 'holohuman': ctx.fillStyle = baseColor; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(0, -30, 14, 0, TAU); ctx.fill(); break; // Упрощено
-    case 'woodcab': ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-35, -50, 70, 100); break;
-    case 'locker': ctx.fillStyle = shade(baseColor, -10); ctx.fillRect(-22, -40, 44, 80); break;
-    case 'stairs': ctx.fillStyle = shade(baseColor, -20); ctx.fillRect(-50, -50, 100, 100); break;
-    case 'bus': 
-      ctx.fillStyle = baseColor; roundRect(ctx, -195, -65, 280, 110, 10); ctx.fill();
-      break; // Упрощено для краткости
-    case 'bus_wreck':
-      ctx.fillStyle = baseColor; roundRect(ctx, -195, -65, 280, 110, 10); ctx.fill();
-      break; // Упрощено
-    case 'basket_ring': ctx.fillStyle = '#fff'; ctx.fillRect(-30, -40, 60, 45); break;
-    case 'basket_ball': ctx.fillStyle = baseColor; ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.fill(); break;
-    case 'volley_net': ctx.fillStyle = baseColor; ctx.fillRect(-114, -25, 228, 50); break;
-    case 'volley_ball': ctx.fillStyle = baseColor; ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill(); break;
-    case 'globe': ctx.fillStyle = baseColor; ctx.beginPath(); ctx.arc(0, 0, 24, 0, TAU); ctx.fill(); break;
-    
-    // УМЕНЬШЕННАЯ ЛИНЕЙКА
-    case 'ruler': 
-      ctx.fillStyle = baseColor;
-      roundRect(ctx, -30, -5, 60, 10, 2); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 1; ctx.stroke();
-      for (let i = 0; i <= 6; i++) {
-        ctx.beginPath(); ctx.moveTo(-30 + i*10, -5); ctx.lineTo(-30 + i*10, -2); ctx.stroke();
-      }
+      ctx.beginPath(); ctx.arc(0, Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU); ctx.fill();
+      ctx.strokeStyle = baseColor; ctx.globalAlpha = 0.6; ctx.lineWidth = 2; ctx.stroke();
+      ctx.globalAlpha = 1; break;
+    }
+    case 'computer': {
+      ctx.fillStyle = '#111'; roundRect(ctx, -22, -18, 44, 30, 4); ctx.fill();
+      ctx.fillStyle = baseColor; roundRect(ctx, -18, -14, 36, 22, 3); ctx.fill();
+      ctx.fillStyle = '#222'; ctx.fillRect(-6, 12, 12, 10); ctx.fillStyle = '#555'; ctx.fillRect(-14, 22, 28, 4);
+      ctx.fillStyle = '#333'; roundRect(ctx, -24, 30, 48, 12, 3); ctx.fill(); break;
+    }
+    case 'wooddoor': {
+      ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-30, -50, 60, 100);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-30, -50, 60, 100);
+      ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(18, 0, 4, 0, TAU); ctx.fill(); break;
+    }
+    case 'holohuman': {
+      const t = performance.now() / 1000; const c = baseColor;
+      ctx.save(); ctx.rotate(Math.sin(t*1.5) * 0.05); ctx.shadowBlur = 15; ctx.shadowColor = c; ctx.fillStyle = c; ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.moveTo(-15, -10); ctx.quadraticCurveTo(-20, 20, -15, 50); ctx.lineTo(15, 50); ctx.quadraticCurveTo(20, 20, 15, -10); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, -30, 14, 0, TAU); ctx.fill(); ctx.fillRect(-5, -18, 10, 8);
+      ctx.beginPath(); ctx.moveTo(-15, -5); ctx.lineTo(-35, 25); ctx.lineTo(-30, 30); ctx.lineTo(-12, 5); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(15, -5); ctx.lineTo(35, 25); ctx.lineTo(30, 30); ctx.lineTo(12, 5); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(-12, 50); ctx.lineTo(-15, 80); ctx.lineTo(-8, 80); ctx.lineTo(-5, 50); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(12, 50); ctx.lineTo(15, 80); ctx.lineTo(8, 80); ctx.lineTo(5, 50); ctx.fill();
+      ctx.shadowBlur = 0; ctx.strokeStyle = '#fff'; ctx.globalAlpha = 0.3; ctx.lineWidth = 1;
+      const scanY = (t * 40) % 120 - 20; ctx.beginPath(); ctx.moveTo(-30, scanY); ctx.lineTo(30, scanY); ctx.stroke(); ctx.restore(); break;
+    }
+    case 'woodcab': {
+      ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-35, -50, 70, 100);
+      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-35, -50, 70, 100);
+      ctx.beginPath(); ctx.moveTo(0, -50); ctx.lineTo(0, 50); ctx.stroke();
+      ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(-8, 0, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(8, 0, 4, 0, TAU); ctx.fill(); break;
+    }
+    case 'locker': {
+      const w = 22, h = 80;
+      for (let i = -1; i <= 1; i++) {
+        const cx = i * w;
+        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -10) : shade(baseColor, -20);
+        ctx.fillRect(cx - w/2 + 1, -h/2, w - 2, h);
+        ctx.strokeStyle = shade(baseColor, -50); ctx.lineWidth = 2; ctx.strokeRect(cx - w/2 + 1, -h/2, w - 2, h);
+        ctx.strokeStyle = '#1a2028';
+        for (let s = 0; s < 3; s++) { ctx.beginPath(); ctx.moveTo(cx - w/2 + 5, -h/2 + 10 + s * 5); ctx.lineTo(cx + w/2 - 5, -h/2 + 10 + s * 5); ctx.stroke(); }
+        ctx.fillStyle = '#ffd700'; ctx.fillRect(cx + w/2 - 6, 5, 3, 10);
+      } break;
+    }
+    case 'stairs': {
+      const steps = 6, sw = 100, sh = 16;
+      for (let i = 0; i < steps; i++) {
+        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -20) : shade(baseColor, -30);
+        ctx.fillRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
+        ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2; ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
+      } break;
+    }
+    case 'bus': {
+      const busColor = baseColor !== '#ffffff' ? baseColor : '#ffb400';
+      ctx.fillStyle = busColor; roundRect(ctx, -195, -65, 280, 110, 10); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.fillRect(-208, 5, 291, 11);
+      for (let i = 0; i < 7; i++) { ctx.fillStyle = '#304354'; roundRect(ctx, -185 + i*27, -48, 21, 35, 5); ctx.fill(); }
+      ctx.fillStyle = '#222'; roundRect(ctx, 30, -55, 22, 100, 4); ctx.fill();
+      ctx.fillStyle = busColor; roundRect(ctx, 85, -10, 70, 45, 10); ctx.fill();
+      ctx.fillStyle = '#fff6bd'; ctx.beginPath(); ctx.arc(154, 5, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(154, 25, 4, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#151515'; ctx.beginPath(); ctx.arc(-140, 48, 21, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(115, 48, 21, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#bfc3c7'; ctx.beginPath(); ctx.arc(-140, 48, 9, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(115, 48, 9, 0, TAU); ctx.fill();
       break;
-      
-    case 'pen': ctx.scale(0.5, 0.5); ctx.fillStyle = baseColor; roundRect(ctx, -30, -5, 55, 10, 4); ctx.fill(); break;
-    case 'eraser': ctx.scale(0.5, 0.5); ctx.fillStyle = baseColor; roundRect(ctx, -22, -12, 44, 24, 5); ctx.fill(); break;
-    case 'pencil': ctx.scale(0.5, 0.5); ctx.fillStyle = baseColor; ctx.fillRect(-35, -5, 60, 10); break;
-    case 'vitya': ctx.fillStyle = baseColor; ctx.fillRect(-r, -r, r*2, r*2); break;
+    }
+    case 'bus_wreck': {
+      const busColor = baseColor !== '#ffffff' ? baseColor : '#cfa641';
+      ctx.fillStyle = busColor; roundRect(ctx, -195, -65, 280, 110, 10); ctx.fill();
+      ctx.fillStyle = 'rgba(90, 40, 10, 0.5)'; ctx.beginPath(); ctx.ellipse(-160, -10, 25, 15, 0.5, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#171717'; ctx.fillRect(-208, 5, 291, 11);
+      for (let i = 0; i < 7; i++) {
+        if(i%2===0) { ctx.fillStyle = '#050505'; } else { ctx.fillStyle = '#202830'; }
+        roundRect(ctx, -185 + i*27, -48, 21, 35, 5); ctx.fill();
+      }
+      ctx.fillStyle = '#151515'; ctx.beginPath(); ctx.ellipse(-140, 50, 21, 15, 0, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(115, 48, 21, 0, TAU); ctx.fill();
+      ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.arc(110, 15, 15, 0, TAU); ctx.fill();
+      break;
+    }
+    case 'basket_ring': {
+      ctx.fillStyle = '#fff'; roundRect(ctx, -30, -40, 60, 45, 4); ctx.fill();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 3; ctx.stroke();
+      ctx.strokeStyle = '#ff6600'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(0, 12, 18, 0, TAU); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.5;
+      for (let i = 0; i < 6; i++) { const a = (i / 6) * TAU; ctx.beginPath(); ctx.moveTo(Math.cos(a)*18, 12 + Math.sin(a)*18); ctx.lineTo(Math.cos(a)*10, 40); ctx.stroke(); } break;
+    }
+    case 'basket_ball': {
+      const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 18); g.addColorStop(0, shade(baseColor, 20)); g.addColorStop(1, shade(baseColor, -40));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#331100'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-18, 0); ctx.lineTo(18, 0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -18); ctx.lineTo(0, 18); ctx.stroke(); break;
+    }
+    case 'volley_net': {
+      ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-120, -40, 6, 80); ctx.fillRect(114, -40, 6, 80);
+      ctx.strokeStyle = baseColor; ctx.lineWidth = 1.5;
+      for (let i = 0; i <= 12; i++) { const nx = -114 + (i / 12) * 228; ctx.beginPath(); ctx.moveTo(nx, -25); ctx.lineTo(nx, 25); ctx.stroke(); }
+      for (let j = 0; j <= 4; j++) { const ny = -25 + (j / 4) * 50; ctx.beginPath(); ctx.moveTo(-114, ny); ctx.lineTo(114, ny); ctx.stroke(); }
+      ctx.strokeStyle = shade(baseColor, 20); ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(-114, -25); ctx.lineTo(114, -25); ctx.stroke(); break;
+    }
+    case 'volley_ball': {
+      const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 16); g.addColorStop(0, '#ffffff'); g.addColorStop(1, shade(baseColor, -20));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.strokeStyle = '#3fa9f5'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(0, 0, 16, 0.2, 1.8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 16, Math.PI + 0.2, Math.PI + 1.8); ctx.stroke(); break;
+    }
+    case 'globe': {
+      ctx.fillStyle = shade(baseColor, -50); ctx.fillRect(-3, 10, 6, 20); ctx.beginPath(); ctx.arc(0, 30, 14, 0, Math.PI); ctx.fill();
+      const g = ctx.createRadialGradient(-6, -6, 4, 0, 0, 24); g.addColorStop(0, shade(baseColor, 30)); g.addColorStop(1, shade(baseColor, -30));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 24, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#2ecc71'; ctx.beginPath(); ctx.ellipse(-6, -4, 8, 10, 0.5, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(8, 6, 6, 8, -0.4, 0, TAU); ctx.fill(); break;
+    }
+    case 'ruler': { // Уменьшенная
+      ctx.fillStyle = baseColor; roundRect(ctx, -30, -5, 60, 10, 2); ctx.fill();
+      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 1; ctx.stroke();
+      for (let i = 0; i <= 6; i++) { ctx.beginPath(); ctx.moveTo(-30 + i*10, -5); ctx.lineTo(-30 + i*10, -2); ctx.stroke(); } break;
+    }
+    case 'pen': {
+      ctx.scale(0.5, 0.5); ctx.rotate(0.6); ctx.fillStyle = baseColor; roundRect(ctx, -30, -5, 55, 10, 4); ctx.fill();
+      ctx.fillStyle = shade(baseColor, 30); roundRect(ctx, 20, -6, 14, 12, 4); ctx.fill();
+      ctx.fillStyle = '#333'; ctx.beginPath(); ctx.moveTo(-30, -3); ctx.lineTo(-38, 0); ctx.lineTo(-30, 3); ctx.closePath(); ctx.fill(); break;
+    }
+    case 'eraser': {
+      ctx.scale(0.5, 0.5); ctx.rotate(0.2); ctx.fillStyle = baseColor; roundRect(ctx, -22, -12, 44, 24, 5); ctx.fill();
+      ctx.fillStyle = '#ffffff'; roundRect(ctx, -22, -12, 44, 8, 4); ctx.fill(); break;
+    }
+    case 'pencil': {
+      ctx.scale(0.5, 0.5); ctx.rotate(0.5); ctx.fillStyle = baseColor; ctx.fillRect(-35, -5, 60, 10);
+      ctx.fillStyle = '#f2e2c0'; ctx.beginPath(); ctx.moveTo(25, -5); ctx.lineTo(38, 0); ctx.lineTo(25, 5); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#333'; ctx.beginPath(); ctx.moveTo(33, -2); ctx.lineTo(38, 0); ctx.lineTo(33, 2); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ff8fa3'; roundRect(ctx, -45, -5, 10, 10, 3); ctx.fill(); break;
+    }
+    case 'vitya': {
+      const size = Math.max(40, r * 2);
+      if (VITYA_IMG.complete && VITYA_IMG.naturalWidth > 0) {
+        ctx.save(); ctx.beginPath(); roundRect(ctx, -size/2, -size/2, size, size, 8); ctx.clip();
+        ctx.drawImage(VITYA_IMG, -size/2, -size/2, size, size); ctx.restore();
+        ctx.strokeStyle = baseColor; ctx.lineWidth = 3; roundRect(ctx, -size/2, -size/2, size, size, 8); ctx.stroke();
+      } else {
+        ctx.fillStyle = baseColor; roundRect(ctx, -size/2, -size/2, size, size, 8); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Vitya_Face', 0, 0);
+        ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      } break;
+    }
 
     // ==========================================
     // НОВЫЕ ОБЪЕКТЫ
     // ==========================================
-    case 'broken_glass':
-      ctx.fillStyle = 'rgba(200, 230, 255, 0.4)';
-      ctx.beginPath(); ctx.moveTo(-15, -10); ctx.lineTo(10, -15); ctx.lineTo(15, 5); ctx.lineTo(-5, 15); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.beginPath(); ctx.moveTo(-2, -5); ctx.lineTo(5, 2); ctx.lineTo(-8, 8); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(20, -20); ctx.stroke(); // Трещина
-      break;
-      
-    case 'bottles':
-      ctx.fillStyle = '#2a5b2a'; // Зеленое стекло
-      ctx.beginPath(); ctx.ellipse(-5, 5, 8, 15, 0.2, 0, TAU); ctx.fill();
-      ctx.fillStyle = '#5b2a2a'; // Коричневое стекло
-      ctx.beginPath(); ctx.ellipse(8, 2, 7, 14, -0.3, 0, TAU); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.5; // Блик
-      ctx.fillRect(-8, 0, 2, 10); ctx.fillRect(5, -2, 2, 10);
-      break;
-
-    case 'office_chair':
-      ctx.fillStyle = '#222'; // Спинка
-      roundRect(ctx, -15, -25, 30, 40, 5); ctx.fill();
-      ctx.fillStyle = '#333'; // Сиденье
-      roundRect(ctx, -18, 5, 36, 15, 5); ctx.fill();
-      ctx.strokeStyle = '#555'; ctx.lineWidth = 3; // Ножка
-      ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(0, 35); ctx.stroke();
-      // Колесики
-      ctx.fillStyle = '#111';
-      ctx.beginPath(); ctx.arc(-12, 38, 5, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(12, 38, 5, 0, TAU); ctx.fill();
-      break;
-
-    case 'tech_building':
-      ctx.fillStyle = shade(baseColor, -50); // Стены
-      ctx.fillRect(-60, -50, 120, 100);
-      ctx.fillStyle = shade(baseColor, -20); // Крыша
-      ctx.beginPath(); ctx.moveTo(-70, -50); ctx.lineTo(0, -80); ctx.lineTo(70, -50); ctx.closePath(); ctx.fill();
-      // Окна
-      ctx.fillStyle = '#ffd700';
-      for (let i = 0; i < 3; i++) {
-        ctx.fillRect(-40 + i*30, -20, 15, 20);
-        ctx.fillRect(-40 + i*30, 10, 15, 20);
-      }
-      // Дверь
-      ctx.fillStyle = '#333';
-      ctx.fillRect(-10, 30, 20, 20);
-      break;
-
-    case 'fence':
-    case 'fence_barbed':
+    case 'broken_glass': {
+      ctx.fillStyle = 'rgba(200, 230, 255, 0.4)'; ctx.beginPath(); ctx.moveTo(-15, -10); ctx.lineTo(10, -15); ctx.lineTo(15, 5); ctx.lineTo(-5, 15); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; ctx.beginPath(); ctx.moveTo(-2, -5); ctx.lineTo(5, 2); ctx.lineTo(-8, 8); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(20, -20); ctx.stroke(); break;
+    }
+    case 'bottles': {
+      ctx.fillStyle = '#2a5b2a'; ctx.beginPath(); ctx.ellipse(-5, 5, 8, 15, 0.2, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#5b2a2a'; ctx.beginPath(); ctx.ellipse(8, 2, 7, 14, -0.3, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.globalAlpha = 0.5; ctx.fillRect(-8, 0, 2, 10); ctx.fillRect(5, -2, 2, 10); ctx.globalAlpha = 1; break;
+    }
+    case 'office_chair': {
+      ctx.fillStyle = '#222'; roundRect(ctx, -15, -25, 30, 40, 5); ctx.fill();
+      ctx.fillStyle = '#333'; roundRect(ctx, -18, 5, 36, 15, 5); ctx.fill();
+      ctx.strokeStyle = '#555'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 20); ctx.lineTo(0, 35); ctx.stroke();
+      ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(-12, 38, 5, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(12, 38, 5, 0, TAU); ctx.fill(); break;
+    }
+    case 'tech_building': {
+      ctx.fillStyle = shade(baseColor, -50); ctx.fillRect(-60, -50, 120, 100);
+      ctx.fillStyle = shade(baseColor, -20); ctx.beginPath(); ctx.moveTo(-70, -50); ctx.lineTo(0, -80); ctx.lineTo(70, -50); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ffd700'; for (let i = 0; i < 3; i++) { ctx.fillRect(-40 + i*30, -20, 15, 20); ctx.fillRect(-40 + i*30, 10, 15, 20); }
+      ctx.fillStyle = '#333'; ctx.fillRect(-10, 30, 20, 20); break;
+    }
+    case 'fence': case 'fence_barbed': {
       ctx.strokeStyle = '#888'; ctx.lineWidth = 2;
-      for (let i = -40; i <= 40; i += 10) {
-        ctx.beginPath(); ctx.moveTo(i, -30); ctx.lineTo(i, 30); ctx.stroke();
-      }
-      for (let i = -30; i <= 30; i += 10) {
-        ctx.beginPath(); ctx.moveTo(-40, i); ctx.lineTo(40, i); ctx.stroke();
-      }
-      // Столбы
-      ctx.fillStyle = '#555';
-      ctx.fillRect(-45, -35, 6, 70); ctx.fillRect(39, -35, 6, 70);
-      
-      if (f.type === 'fence_barbed') {
-        ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1;
-        for (let i = -40; i < 40; i += 20) {
-          ctx.beginPath(); ctx.arc(i, -35, 5, 0, Math.PI, true); ctx.stroke(); // Колючки
-        }
-      }
-      break;
-
-    case 'barrier':
-      ctx.fillStyle = '#555'; ctx.fillRect(-20, 0, 10, 20); // Основание
-      ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 6;
-      ctx.beginPath(); ctx.moveTo(-15, 5); ctx.lineTo(35, -15); ctx.stroke(); // Стрела
-      ctx.fillStyle = '#fff';
-      for(let i=0; i<3; i++) ctx.fillRect(-5 + i*12, 0 - i*4, 4, 10); // Полоски
-      break;
-
-    case 'checkpoint':
-      ctx.fillStyle = '#333';
-      ctx.fillRect(-40, -40, 80, 80); // Будка
-      ctx.fillStyle = '#7ff0ff'; // Окно
-      ctx.fillRect(-25, -25, 50, 30);
-      ctx.fillStyle = '#111'; // Крыша
-      ctx.fillRect(-45, -45, 90, 10);
-      break;
-
-    case 'parking':
-      ctx.strokeStyle = '#fff'; ctx.lineWidth = 4;
-      for (let i = -40; i <= 40; i += 20) {
-        ctx.beginPath(); ctx.moveTo(i, -20); ctx.lineTo(i, 20); ctx.stroke();
-      }
-      ctx.font = 'bold 14px Arial'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
-      ctx.fillText('P', 0, 8);
-      break;
-
-    case 'garage':
-      ctx.fillStyle = shade(baseColor, -40);
-      ctx.fillRect(-50, -40, 100, 80);
-      ctx.fillStyle = '#444'; // Ворота
-      ctx.fillRect(-30, -10, 60, 50);
-      ctx.strokeStyle = '#222'; ctx.lineWidth = 2;
-      for (let i = -10; i < 40; i += 10) {
-        ctx.beginPath(); ctx.moveTo(-30, i); ctx.lineTo(30, i); ctx.stroke();
-      }
-      break;
-
-    case 'steel_shelf':
-      ctx.fillStyle = '#555';
-      ctx.fillRect(-40, -40, 10, 80); ctx.fillRect(30, -40, 10, 80); // Стойки
-      ctx.fillStyle = '#777';
-      for (let i = -20; i <= 20; i += 20) {
-        ctx.fillRect(-30, i, 60, 5); // Полки
-      }
-      break;
-
-    case 'carrier': // Бронированный грузовик
-      ctx.fillStyle = '#4a4d52';
-      roundRect(ctx, -50, -25, 100, 50, 5); ctx.fill();
-      ctx.fillStyle = '#222'; // Кабина
-      roundRect(ctx, 50, -20, 25, 40, 3); ctx.fill();
-      ctx.fillStyle = '#111'; // Колеса
-      ctx.beginPath(); ctx.arc(-30, 30, 12, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(30, 30, 12, 0, TAU); ctx.fill();
-      break;
-
-    case 'cardboard_box':
-      ctx.fillStyle = '#c29b6a';
-      ctx.fillRect(-15, -15, 30, 30);
+      for (let i = -40; i <= 40; i += 10) { ctx.beginPath(); ctx.moveTo(i, -30); ctx.lineTo(i, 30); ctx.stroke(); }
+      for (let i = -30; i <= 30; i += 10) { ctx.beginPath(); ctx.moveTo(-40, i); ctx.lineTo(40, i); ctx.stroke(); }
+      ctx.fillStyle = '#555'; ctx.fillRect(-45, -35, 6, 70); ctx.fillRect(39, -35, 6, 70);
+      if (f.type === 'fence_barbed') { ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; for (let i = -40; i < 40; i += 20) { ctx.beginPath(); ctx.arc(i, -35, 5, 0, Math.PI, true); ctx.stroke(); } } break;
+    }
+    case 'barrier': {
+      ctx.fillStyle = '#555'; ctx.fillRect(-20, 0, 10, 20);
+      ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(-15, 5); ctx.lineTo(35, -15); ctx.stroke();
+      ctx.fillStyle = '#fff'; for(let i=0; i<3; i++) ctx.fillRect(-5 + i*12, 0 - i*4, 4, 10); break;
+    }
+    case 'checkpoint': {
+      ctx.fillStyle = '#333'; ctx.fillRect(-40, -40, 80, 80);
+      ctx.fillStyle = '#7ff0ff'; ctx.fillRect(-25, -25, 50, 30);
+      ctx.fillStyle = '#111'; ctx.fillRect(-45, -45, 90, 10); break;
+    }
+    case 'parking': {
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; for (let i = -40; i <= 40; i += 20) { ctx.beginPath(); ctx.moveTo(i, -20); ctx.lineTo(i, 20); ctx.stroke(); }
+      ctx.font = 'bold 14px Arial'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText('P', 0, 8); ctx.textAlign = 'start'; break;
+    }
+    case 'garage': {
+      ctx.fillStyle = shade(baseColor, -40); ctx.fillRect(-50, -40, 100, 80);
+      ctx.fillStyle = '#444'; ctx.fillRect(-30, -10, 60, 50);
+      ctx.strokeStyle = '#222'; ctx.lineWidth = 2; for (let i = -10; i < 40; i += 10) { ctx.beginPath(); ctx.moveTo(-30, i); ctx.lineTo(30, i); ctx.stroke(); } break;
+    }
+    case 'steel_shelf': {
+      ctx.fillStyle = '#555'; ctx.fillRect(-40, -40, 10, 80); ctx.fillRect(30, -40, 10, 80);
+      ctx.fillStyle = '#777'; for (let i = -20; i <= 20; i += 20) { ctx.fillRect(-30, i, 60, 5); } break;
+    }
+    case 'carrier': {
+      ctx.fillStyle = '#4a4d52'; roundRect(ctx, -50, -25, 100, 50, 5); ctx.fill();
+      ctx.fillStyle = '#222'; roundRect(ctx, 50, -20, 25, 40, 3); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(-30, 30, 12, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(30, 30, 12, 0, TAU); ctx.fill(); break;
+    }
+    case 'cardboard_box': {
+      ctx.fillStyle = '#c29b6a'; ctx.fillRect(-15, -15, 30, 30);
       ctx.strokeStyle = '#8a5a2b'; ctx.lineWidth = 2; ctx.strokeRect(-15, -15, 30, 30);
-      ctx.beginPath(); ctx.moveTo(0, -15); ctx.lineTo(0, 15); ctx.stroke(); // Скотч
-      break;
-
-    case 'wooden_crate':
-      ctx.fillStyle = '#8b5a2b';
-      ctx.fillRect(-20, -20, 40, 40);
+      ctx.beginPath(); ctx.moveTo(0, -15); ctx.lineTo(0, 15); ctx.stroke(); break;
+    }
+    case 'wooden_crate': {
+      ctx.fillStyle = '#8b5a2b'; ctx.fillRect(-20, -20, 40, 40);
       ctx.strokeStyle = '#5a3a18'; ctx.lineWidth = 3; ctx.strokeRect(-20, -20, 40, 40);
-      // Доски
-      ctx.beginPath(); ctx.moveTo(-20, 0); ctx.lineTo(20, 0); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(0, 20); ctx.stroke();
-      // Маркировка (если есть лут)
-      if (f.loot && f.loot !== 'none') {
-        ctx.fillStyle = '#ffd700'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center';
-        ctx.fillText('!', 0, 5);
-      }
-      break;
-
-    case 'barrel':
-      ctx.fillStyle = shade(baseColor, -20);
-      ctx.beginPath(); ctx.ellipse(0, 0, 15, 20, 0, 0, TAU); ctx.fill();
-      ctx.fillStyle = 'rgba(200, 50, 50, 0.4)'; // Ржавчина
-      ctx.beginPath(); ctx.arc(-5, -5, 8, 0, TAU); ctx.fill();
-      ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.ellipse(0, 0, 15, 20, 0, 0, TAU); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-15, -5); ctx.lineTo(15, -5); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-15, 5); ctx.lineTo(15, 5); ctx.stroke();
-      break;
-
-    case 'extinguisher':
-      ctx.fillStyle = '#cc0000';
-      roundRect(ctx, -8, -15, 16, 30, 4); ctx.fill();
-      ctx.fillStyle = '#111'; // Шланг
-      ctx.fillRect(-2, -20, 4, 10);
-      ctx.fillStyle = '#ddd'; // Этикетка
-      ctx.fillRect(-6, -5, 12, 10);
-      break;
-
-    case 'gray_smoke':
-      ctx.fillStyle = 'rgba(150, 150, 150, 0.5)';
-      ctx.beginPath(); ctx.arc(0, 0, 30, 0, TAU); ctx.fill();
-      ctx.fillStyle = 'rgba(180, 180, 180, 0.4)';
-      ctx.beginPath(); ctx.arc(-15, -10, 20, 0, TAU); ctx.fill();
-      ctx.beginPath(); ctx.arc(15, 10, 25, 0, TAU); ctx.fill();
-      break;
-  }
-
-  // Индикатор выделения
-  if (selectedObj === f) {
-    ctx.strokeStyle = '#ff00ff';
-    ctx.setLineDash([5, 5]);
-    ctx.lineWidth = 2;
-    ctx.strokeRect(-r-10, -r-10, r*2+20, r*2+20);
-    ctx.setLineDash([]);
-  }
-
-  ctx.restore();
-}
-
-// --- ОТРИСОВКА СТЕН ---
-function drawWall(w) {
-  ctx.save();
-  ctx.beginPath();
-  ctx.moveTo(w.x1, w.y1);
-  ctx.lineTo(w.x2, w.y2);
-  ctx.lineCap = 'round';
-  ctx.lineWidth = w.thick;
-  
-  // Если стена выделена - рисуем контур
-  if (selectedObj === w) {
-    ctx.strokeStyle = 'rgba(255,0,255,0.5)';
-    ctx.lineWidth = w.thick + 6;
-    ctx.stroke();
-    ctx.strokeStyle = '#ff00ff';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    
-    // Ручки для перетаскивания
-    ctx.fillStyle = '#ff00ff';
-    ctx.beginPath(); ctx.arc(w.x1, w.y1, 6, 0, TAU); ctx.fill();
-    ctx.beginPath(); ctx.arc(w.x2, w.y2, 6, 0, TAU); ctx.fill();
-  } else {
-    ctx.strokeStyle = '#555';
-    ctx.stroke();
-    // Внутренняя линия для объема
-    ctx.strokeStyle = '#888';
-    ctx.lineWidth = Math.max(1, w.thick - 4);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-// --- РЕНДЕР ---
-function render() {
-  ctx.clearRect(0, 0, W, H);
-
-  ctx.save();
-  ctx.translate(cam.x, cam.y);
-  ctx.scale(cam.zoom, cam.zoom);
-
-  drawFloor();
-
-  // Рамка мира
-  ctx.strokeStyle = 'rgba(10,14,20,0.8)';
-  ctx.lineWidth = 30;
-  ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
-
-  // Сортировка по слоям
-  const allDrawables = [...walls, ...furniture].sort((a, b) => (a.layer || 0) - (b.layer || 0));
-
-  for (const obj of allDrawables) {
-    if (obj.type === 'wall') {
-      drawWall(obj);
-    } else {
-      drawFurniture(obj);
+      ctx.beginPath(); ctx.moveTo(-20, 0); ctx.lineTo(20, 0); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(0, 20); ctx.stroke();
+      if (f.loot && f.loot !== 'none') { ctx.fillStyle = '#ffd700'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center'; ctx.fillText('!', 0, 5); ctx.textAlign = 'start'; } break;
+    }
+    case 'barrel': {
+      ctx.fillStyle = shade(baseColor, -20); ctx.beginPath(); ctx.ellipse(0, 0, 15, 20, 0, 0, TAU); ctx.fill();
+      ctx.fillStyle = 'rgba(200, 50, 50, 0.4)'; ctx.beginPath(); ctx.arc(-5, -5, 8, 0, TAU); ctx.fill();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(0, 0, 15, 20, 0, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-15, -5); ctx.lineTo(15, -5); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-15, 5); ctx.lineTo(15, 5); ctx.stroke(); break;
+    }
+    case 'extinguisher': {
+      ctx.fillStyle = '#cc0000'; roundRect(ctx, -8, -15, 16, 30, 4); ctx.fill();
+      ctx.fillStyle = '#111'; ctx.fillRect(-2, -20, 4, 10);
+      ctx.fillStyle = '#ddd'; ctx.fillRect(-6, -5, 12, 10); break;
+    }
+    case 'gray_smoke': {
+      ctx.fillStyle = 'rgba(150, 150, 150, 0.5)'; ctx.beginPath(); ctx.arc(0, 0, 30, 0, TAU); ctx.fill();
+      ctx.fillStyle = 'rgba(180, 180, 180, 0.4)'; ctx.beginPath(); ctx.arc(-15, -10, 20, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(15, 10, 25, 0, TAU); ctx.fill(); break;
     }
   }
 
-  // Подсветка коллизий (отладка)
-  ctx.strokeStyle = 'rgba(255,0,0,0.15)';
-  ctx.lineWidth = 1;
-  for (const f of furniture) {
-    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, TAU); ctx.stroke();
+  if (selectedObj === f) {
+    ctx.strokeStyle = '#ff00ff'; ctx.setLineDash([5, 5]); ctx.lineWidth = 2;
+    ctx.strokeRect(-r-10, -r-10, r*2+20, r*2+20); ctx.setLineDash([]);
+  }
+  ctx.restore();
+}
+
+function drawWall(w) {
+  ctx.save();
+  ctx.beginPath(); ctx.moveTo(w.x1, w.y1); ctx.lineTo(w.x2, w.y2);
+  ctx.lineCap = 'round'; ctx.lineWidth = w.thick;
+  if (selectedObj === w) {
+    ctx.strokeStyle = 'rgba(255,0,255,0.5)'; ctx.lineWidth = w.thick + 6; ctx.stroke();
+    ctx.strokeStyle = '#ff00ff'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#ff00ff'; ctx.beginPath(); ctx.arc(w.x1, w.y1, 6, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(w.x2, w.y2, 6, 0, TAU); ctx.fill();
+  } else {
+    ctx.strokeStyle = '#555'; ctx.stroke();
+    ctx.strokeStyle = '#888'; ctx.lineWidth = Math.max(1, w.thick - 4); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.save(); ctx.translate(cam.x, cam.y); ctx.scale(cam.zoom, cam.zoom);
+  drawFloor();
+  ctx.strokeStyle = 'rgba(10,14,20,0.8)'; ctx.lineWidth = 30; ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
+
+  const allDrawables = [...walls, ...furniture].sort((a, b) => (a.layer || 0) - (b.layer || 0));
+  for (const obj of allDrawables) {
+    if (obj.type === 'wall') drawWall(obj);
+    else drawFurniture(obj);
   }
 
-  ctx.restore();
-  requestAnimationFrame(render);
+  ctx.strokeStyle = 'rgba(255,0,0,0.15)'; ctx.lineWidth = 1;
+  for (const f of furniture) { ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, TAU); ctx.stroke(); }
+  ctx.restore(); requestAnimationFrame(render);
 }
 
 requestAnimationFrame(render);
 
-// --- БЫСТРАЯ ЗАГРУЗКА ---
 window.loadMap = function(mapType) {
-  furniture = [];
-  walls = [];
-  selectedObj = null;
-  
+  furniture = []; walls = []; selectedObj = null;
   if (mapType === 'backyard') {
-    WORLD_W = 2600; WORLD_H = 2000;
-    document.getElementById('world-w').value = WORLD_W;
-    document.getElementById('world-h').value = WORLD_H;
-    document.getElementById('floor-texture').value = 'asphalt';
-    document.getElementById('floor-color').value = '#333';
-    generateFloorPattern();
-
+    WORLD_W = 2600; WORLD_H = 2000; document.getElementById('world-w').value = WORLD_W; document.getElementById('world-h').value = WORLD_H;
+    document.getElementById('floor-texture').value = 'asphalt'; document.getElementById('floor-color').value = '#333'; generateFloorPattern();
     furniture.push({ x: 1300, y: 1000, type: 'bus_wreck', r: 100, rot: 0, color: '#cfa641', layer: 0 });
     furniture.push({ x: 500, y: 500, type: 'bus', r: 100, rot: 90, color: '#ffb400', layer: 0 });
-    for(let i=0; i<5; i++) {
-      furniture.push({ x: 300 + i*400, y: 1700, type: 'wooden_crate', r: 30, rot: 0, color: '#8b5a2b', loot: 'random', layer: 0 });
-    }
+    for(let i=0; i<5; i++) furniture.push({ x: 300 + i*400, y: 1700, type: 'wooden_crate', r: 30, rot: 0, color: '#8b5a2b', loot: 'random', layer: 0 });
   } else if (mapType === 'gym') {
-    WORLD_W = 2200; WORLD_H = 1600;
-    document.getElementById('world-w').value = WORLD_W;
-    document.getElementById('world-h').value = WORLD_H;
-    document.getElementById('floor-texture').value = 'wood';
-    document.getElementById('floor-color').value = '#c4a47a';
-    generateFloorPattern();
-
+    WORLD_W = 2200; WORLD_H = 1600; document.getElementById('world-w').value = WORLD_W; document.getElementById('world-h').value = WORLD_H;
+    document.getElementById('floor-texture').value = 'wood'; document.getElementById('floor-color').value = '#c4a47a'; generateFloorPattern();
     furniture.push({ x: 1100, y: 800, type: 'volley_net', r: 100, rot: 0, color: '#ffffff', layer: 0 });
     for(let i=0; i<6; i++) {
       furniture.push({ x: 100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68', layer: 0 });
       furniture.push({ x: 2100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68', layer: 0 });
     }
   }
-  
-  cam.x = -WORLD_W/2 + W/2;
-  cam.y = -WORLD_H/2 + H/2;
+  cam.x = -WORLD_W/2 + W/2; cam.y = -WORLD_H/2 + H/2;
 };
 </script>
 </body>
