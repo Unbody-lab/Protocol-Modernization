@@ -11,42 +11,21 @@
   canvas{display:block;cursor:crosshair}
 
   /* ============ ЗАСТАВКА СТУДИИ ============ */
-  #studio-splash {
-    position: fixed; inset: 0; z-index: 10000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #0a0e14;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-  }
+  #studio-splash { position: fixed; inset: 0; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0a0e14; transition: opacity 0.8s ease, visibility 0.8s ease; }
   #studio-splash.hidden { opacity: 0; visibility: hidden; }
-  .studio-splash-logo {
-    font-size: 56px; font-weight: 900; letter-spacing: 6px;
-    color: #ffffff; text-shadow: 0 0 40px rgba(127,240,255,0.5);
-    animation: scaleUp 2s ease-out;
-  }
-  .studio-splash-sub {
-    font-size: 16px; color: #7ff0ff; letter-spacing: 12px;
-    margin-top: 10px; text-transform: uppercase; font-weight: 700;
-    animation: fadeIn 2s ease-out;
-  }
+  .studio-splash-logo { font-size: 56px; font-weight: 900; letter-spacing: 6px; color: #ffffff; text-shadow: 0 0 40px rgba(127,240,255,0.5); animation: scaleUp 2s ease-out; }
+  .studio-splash-sub { font-size: 16px; color: #7ff0ff; letter-spacing: 12px; margin-top: 10px; text-transform: uppercase; font-weight: 700; animation: fadeIn 2s ease-out; }
   @keyframes scaleUp { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
 
   /* ============ ЭКРАН ЗАГРУЗКИ ============ */
-  #loading-screen {
-    position: fixed; inset: 0; z-index: 9999;
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    background: url('img/Loading.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);
-    transition: opacity 0.5s ease, visibility 0.5s ease;
-    padding-bottom: 80px;
-  }
+  #loading-screen { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; background: url('img/Loading.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%); transition: opacity 0.5s ease, visibility 0.5s ease; padding-bottom: 80px; }
   #loading-screen::after { content: ''; position: absolute; inset: 0; background: rgba(10,15,22,0.7); }
   #loading-screen.hidden { opacity: 0; visibility: hidden; }
-  
   .loading-container { position: relative; z-index: 10; width: 80%; max-width: 1200px; display: flex; flex-direction: column; align-items: center; }
   .loading-bar-container { width: 100%; height: 16px; background: rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 20px; border: 2px solid rgba(90,140,180,0.3); }
   .loading-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #3fa9f5, #7ff0ff); border-radius: 8px; transition: width 0.1s linear; }
   .loading-status { font-size: 20px; color: rgba(160,200,230,0.9); letter-spacing: 2px; font-weight: bold; margin-bottom: 30px; }
-
   .loading-tip-box { background: rgba(14,22,32,0.85); border-left: 6px solid #ffb450; padding: 30px; border-radius: 16px; width: 100%; text-align: left; box-shadow: 0 10px 40px rgba(0,0,0,0.6); backdrop-filter: blur(10px); }
   .tip-label { font-size: 16px; color: #ffb450; font-weight: 900; letter-spacing: 2px; margin-bottom: 12px; text-transform: uppercase; }
   .tip-text { font-size: 26px; color: #dbe9f7; line-height: 1.5; }
@@ -56,7 +35,6 @@
   .screen.hidden{opacity:0; visibility:hidden; pointer-events:none}
   .screen-bg{position:absolute; inset:0; z-index:-1; background: linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%);}
   .screen-bg::after{content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,15,22,0.2) 0%,rgba(10,15,22,0.6) 100%);}
-
   #lobby-screen .screen-bg { background:url('img/Lobby2.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%); }
   #start-screen .screen-bg { background:url('img/Menu.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38 0%,#2a3a4a 50%,#1a2530 100%); }
 
@@ -83,46 +61,15 @@
   .top-btn{display:flex; align-items:center; gap:8px; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.4); color:#cfe3f5; padding:9px 18px; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px); position:relative;}
   .top-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.6); color:#fff}
 
-  /* ====== ДОРОГА СЛАВЫ — УЗКАЯ ВЕРХНЯЯ ПАНЕЛЬ ====== */
-  #road-top-panel {
-    position: relative; z-index: 3;
-    width: 100%; max-width: 1000px; /* Ограничили ширину */
-    margin: 0 auto 16px auto; /* Центрировали */
-    background: linear-gradient(90deg, rgba(14,22,32,0.85), rgba(40,30,10,0.75));
-    border: 2px solid rgba(255,215,0,0.45);
-    border-radius: 12px;
-    padding: 6px 16px;
-    display: flex; align-items: center; gap: 14px;
-    backdrop-filter: blur(6px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+  /* ДОРОГА СЛАВЫ — ВЕРХНЯЯ ПАНЕЛЬ */
+  #road-top-panel { position: relative; z-index: 3; width: 100%; max-width: 1000px; margin: 0 auto 16px auto; background: linear-gradient(90deg, rgba(14,22,32,0.85), rgba(40,30,10,0.75)); border: 2px solid rgba(255,215,0,0.45); border-radius: 12px; padding: 6px 16px; display: flex; align-items: center; gap: 14px; backdrop-filter: blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; transition: all 0.2s; }
   #road-top-panel:hover { border-color: #ffd700; box-shadow: 0 6px 20px rgba(255,215,0,0.3); }
-  #road-top-panel .road-panel-title {
-    font-size: 13px; font-weight: 900; letter-spacing: 1px; color: #ffd700;
-    text-transform: uppercase; white-space: nowrap;
-  }
-  #road-top-panel .road-panel-progress-wrap {
-    flex: 1; height: 12px; background: rgba(0,0,0,0.6);
-    border-radius: 6px; border: 1px solid rgba(255,215,0,0.5);
-    position: relative; overflow: hidden; min-width: 100px;
-  }
-  #road-top-panel .road-panel-fill {
-    height: 100%; width: 0%; background: linear-gradient(90deg,#ffb450,#ffd700);
-    transition: width .4s; box-shadow: 0 0 8px #ffd700;
-  }
-  #road-top-panel .road-panel-text {
-    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;
-  }
+  #road-top-panel .road-panel-title { font-size: 13px; font-weight: 900; letter-spacing: 1px; color: #ffd700; text-transform: uppercase; white-space: nowrap; }
+  #road-top-panel .road-panel-progress-wrap { flex: 1; height: 12px; background: rgba(0,0,0,0.6); border-radius: 6px; border: 1px solid rgba(255,215,0,0.5); position: relative; overflow: hidden; min-width: 100px; }
+  #road-top-panel .road-panel-fill { height: 100%; width: 0%; background: linear-gradient(90deg,#ffb450,#ffd700); transition: width .4s; box-shadow: 0 0 8px #ffd700; }
+  #road-top-panel .road-panel-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000; }
   #road-top-panel .road-panel-nodes { display: flex; gap: 6px; }
-  .road-mini-node {
-    display: flex; align-items: center; gap: 4px;
-    background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.35);
-    border-radius: 8px; padding: 2px 8px; font-size: 10px; font-weight: 800; color: #fff;
-    white-space: nowrap; transition: all .2s;
-  }
+  .road-mini-node { display: flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.06); border: 1.5px solid rgba(255,215,0,0.35); border-radius: 8px; padding: 2px 8px; font-size: 10px; font-weight: 800; color: #fff; white-space: nowrap; transition: all .2s; }
   .road-mini-node.unlocked { border-color: #4fd6a0; background: rgba(79,214,160,0.15); box-shadow: 0 0 10px rgba(79,214,160,0.35); }
   .road-mini-node .mini-icon { width: 16px; height: 16px; background-size: cover; background-position: center; border-radius: 3px; }
 
@@ -147,17 +94,20 @@
   /* Блоки анонсов */
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.vasilek { bottom: 230px; }
+  .announce-banner.artem { bottom: 230px; border-color: #7ff0ff; box-shadow: 0 10px 30px rgba(127, 240, 255, 0.2);}
+  .announce-banner.artem:hover { border-color: #d8f4ff; box-shadow: 0 15px 40px rgba(127, 240, 255, 0.4); }
   .announce-banner.vote { bottom: 100px; border-color: #c084fc; box-shadow: 0 10px 30px rgba(192, 132, 252, 0.2);}
   .announce-banner.vote:hover { border-color: #d8b4fe; box-shadow: 0 15px 40px rgba(192, 132, 252, 0.4); }
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-banner.vasilek .announce-img { background-image: url('img/Vasilek.jpg'); }
+  .announce-banner.artem .announce-img { background-image: url('img/Artem.jpg'); border-right-color: #7ff0ff; }
   .announce-banner.vote .announce-img { background-image: url('img/Vote.jpg'); border-right-color: #c084fc; }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
+  .announce-banner.artem .announce-tag { color: #7ff0ff; }
   .announce-banner.vote .announce-tag { color: #c084fc; }
-  .announce-name {font-size: 28px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1; margin-top: 2px;}
+  .announce-name {font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1.1; margin-top: 2px;}
   .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
+  .announce-banner.artem .announce-timer { color: #7ff0ff; background: rgba(127,240,255,0.15); border-color: rgba(127,240,255,0.4); }
   .announce-banner.vote .announce-timer { color: #d8b4fe; background: rgba(192,132,252,0.15); border-color: rgba(192,132,252,0.4); }
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:12px 22px 18px;}
@@ -167,8 +117,7 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
-   /* Модалки */
- /* Модалки */
+  /* Модалки */
   #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #vote-modal, #upgrade-modal, #result-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
   #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show, #vote-modal.show, #upgrade-modal.show, #result-modal.show {display:flex} 
   
@@ -184,22 +133,8 @@
   #fighters-title{font-size:22px; font-weight:900; color:#fff; letter-spacing:1px;}
   #fighters-count{font-size:14px; font-weight:700; color:#7ff0ff; background:rgba(127,240,255,0.1); padding:4px 12px; border-radius:8px; border:1px solid rgba(127,240,255,0.3);}
   
-  /* СЕТКА БОЙЦОВ — ПО 4 В РЯД */
-  #fighters-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    padding: 6px 4px 20px 4px;
-    max-width: 1000px; /* Ограничиваем ширину, чтобы они не были огромными */
-    margin: 0 auto;
-    width: 100%;
-  }
-  .fighter-card{
-    position: relative; display:flex; flex-direction:column; justify-content:flex-end;
-    width: 100%; aspect-ratio: 3/4; /* Сохраняем пропорции карточек */
-    border-radius: 16px; cursor:pointer; background:rgba(255,255,255,0.03);
-    border: 3px solid rgba(90,140,180,0.25); transition:all .15s; overflow: hidden;
-  }
+  #fighters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 6px 4px 20px 4px; max-width: 1000px; margin: 0 auto; width: 100%; }
+  .fighter-card{ position: relative; display:flex; flex-direction:column; justify-content:flex-end; width: 100%; aspect-ratio: 3/4; border-radius: 16px; cursor:pointer; background:rgba(255,255,255,0.03); border: 3px solid rgba(90,140,180,0.25); transition:all .15s; overflow: hidden; }
   .fighter-card:hover{ transform:translateY(-4px); box-shadow: 0 0 20px rgba(176, 184, 196, 0.3); }
   .fighter-card.selected { border-color: #7ff0ff; box-shadow: 0 0 25px rgba(127, 240, 255, 0.5); background: rgba(63,169,245,0.15); }
   .fighter-card.selected .fighter-card-name { color: #7ff0ff; text-shadow: 0 0 10px rgba(127,240,255,0.5); }
@@ -211,12 +146,7 @@
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
   .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
 
-  .fighter-card .fighter-card-level {
-    position: absolute; top: 10px; left: 10px; z-index: 4;
-    background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700;
-    color: #ffd700; font-size: 12px; font-weight: 900;
-    padding: 3px 8px; border-radius: 8px;
-  }
+  .fighter-card .fighter-card-level { position: absolute; top: 10px; left: 10px; z-index: 4; background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700; color: #ffd700; font-size: 12px; font-weight: 900; padding: 3px 8px; border-radius: 8px; }
 
   /* Закрытый Лёха */
   .fighter-card.lesha.locked {cursor: not-allowed; border-color: #5a6a7a;}
@@ -239,7 +169,6 @@
   .tag{font-size:12px; font-weight:800; letter-spacing:1px; padding:5px 14px; border-radius:8px;}
   .tag-class{color:#ffb450; background:rgba(255,180,80,0.12); border:1px solid rgba(255,180,80,0.35)}
   .tag-rarity{color:#B0B8C4; background:rgba(176, 184, 196, 0.12); border:1px solid rgba(176, 184, 196, 0.35)}
-  
   .tag-epic {color:#c084fc; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.35)}
   .tag-crazy {color:#ff4d4d; background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35)}
 
@@ -249,18 +178,11 @@
   .stat-track{height:9px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden}
   .stat-fill{height:100%; border-radius:5px; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)}
   
-  /* Кнопки в карточке героя */
   .upgrade-row { display: flex; gap: 10px; margin-top: 10px; }
   .btn-select { flex: 1; padding: 14px 0; font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #0a1420; background: linear-gradient(180deg,#e0e5ec,#B0B8C4); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 0 #7a8494; transition: transform .1s; }
   .btn-select:hover { transform: translateY(-2px); }
   .btn-select:active { transform: translateY(2px); box-shadow: none; }
-  
-  .btn-upgrade {
-    flex: 1.5; padding: 12px 0; font-size: 15px; font-weight: 900; letter-spacing: 1px;
-    color: #0a1420; background: linear-gradient(180deg,#ffd700,#ffb450);
-    border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 0 #b87a00;
-    transition: transform .1s, box-shadow .1s;
-  }
+  .btn-upgrade { flex: 1.5; padding: 12px 0; font-size: 15px; font-weight: 900; letter-spacing: 1px; color: #0a1420; background: linear-gradient(180deg,#ffd700,#ffb450); border: none; border-radius: 10px; cursor: pointer; box-shadow: 0 4px 0 #b87a00; transition: transform .1s, box-shadow .1s; }
   .btn-upgrade:hover { transform: translateY(-2px); }
   .btn-upgrade:active { transform: translateY(2px); box-shadow: none; }
   .btn-upgrade:disabled { background: #4a5568; color: #8ea6bd; box-shadow: 0 4px 0 #2d3748; cursor: not-allowed; }
@@ -271,6 +193,10 @@
   .speech-bubble::after { content: ''; position: absolute; top: 20px; left: -10px; border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
 
   #mode-modal-card { width:min(1000px, 95vw); }
+  
+  /* ИСПРАВЛЕН ЗАГОЛОВОК РЕЖИМА */
+  #mode-modal-card h2 { color: #fff; margin-bottom: 20px; font-size: 24px; font-weight: 900; text-align: center; letter-spacing: 2px;}
+  
   .mode-grid { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
   .mode-option { position: relative; width: 240px; height: 300px; flex-shrink: 0; border-radius: 16px; cursor:pointer; transition:all .15s; background:rgba(63,169,245,0.08); border:3px solid rgba(90,140,180,0.3); overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
   .mode-option:hover { transform: translateY(-4px); border-color: rgba(127,240,255,0.6); }
@@ -284,12 +210,14 @@
   .mode-option-check { position: absolute; top: 12px; right: 12px; z-index: 3; width:32px; height:32px; border-radius:50%; border:2px solid rgba(127,240,255,0.6); background: rgba(10,15,22,0.6); display:flex; align-items:center; justify-content:center; font-size:16px; color:#7ff0ff; font-weight: bold; opacity: 0; transition: all .2s; }
   .mode-option.selected .mode-option-check { opacity: 1; background:rgba(127,240,255,0.2); }
   
-  .mode-option.disabled { opacity: 0.6; cursor: not-allowed; border-style: dashed; }
-  .mode-option.disabled::after { background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%); }
-  .mode-option.disabled .mode-option-name { color: #8ea6bd; }
-  .mode-option.disabled .mode-option-desc { color: #ffb450; font-weight: bold; }
-  
+  /* Заглушки для карт */
+  .map-icon-1 { background-image: url('img/CompCenter.jpg'); background-color: #2a1a3a;} /* Заглушки для карт */
+  .map-icon-2 { background-image: url('img/Backyard.jpg'); background-color: #1a3a2a;}
+  .map-icon-3 { background-image: url('img/Gym.jpg'); background-color: #3a2a1a;}
+
+  /* ИСПРАВЛЕН ЗАГОЛОВОК НОВОСТЕЙ */
   .news-content { text-align: left; max-height: 500px; overflow-y: auto; padding-right: 10px; }
+  .profile-card h2 { color: #fff; font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 20px; letter-spacing: 2px;}
   .news-block { background: rgba(0,0,0,0.3); padding: 0; border-radius: 16px; margin-bottom: 20px; border: 2px solid rgba(90,140,180,0.4); display: flex; overflow: hidden; cursor: pointer; transition: all 0.2s;}
   .news-block:hover { border-color: #7ff0ff; transform: translateY(-2px); box-shadow: 0 5px 20px rgba(127,240,255,0.2); }
   .news-img { width: 200px; height: 160px; background-size: cover; background-position: center; border-right: 2px solid rgba(90,140,180,0.4); flex-shrink: 0; }
@@ -299,7 +227,7 @@
   .news-text { font-size: 14px; color: #cfe3f5; line-height: 1.5; }
   .news-badge { display: inline-flex; align-items: center; justify-content: center; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 8px; vertical-align: middle; animation: pulse 2s infinite;}
 
-  /* ====== МАГАЗИН ====== */
+  /* МАГАЗИН */
   #shop-card { width: min(1280px, 96vw); border-color: #ffb450; padding: 26px 30px; }
   .shop-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,180,80,0.3); padding-bottom: 16px; margin-bottom: 20px; }
   .shop-header h2 { color: #ffd700; font-size: 30px; font-weight: 900; letter-spacing: 2px; }
@@ -315,41 +243,13 @@
   .shop-item button:active { transform: translateY(2px); box-shadow: none; }
 
   /* Дорога Славы (модалка) */
-     #road-card { 
-    width: 95vw; /* Сделали карточку на 95% от ширины экрана */
-    max-width: 1600px; /* Увеличили максимальный предел ширины */
-    height: 80vh; /* Задали высоту в 80% от экрана, чтобы картинка не обрезалась */
-    border-color: #ffd700; 
-    padding: 0; 
-    overflow: hidden; 
-    display: flex; 
-    flex-direction: column; 
-    background: url('img/1_Season(Halloween).jpg') center/cover no-repeat;
-  }
-    .road-bg-image { 
-    width: 100%; 
-    height: 220px; 
-    background: transparent; /* Убрали картинку, сделали прозрачным */
-    position: relative; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: flex-end; 
-    padding: 20px;
-  }
+  #road-card { width: 95vw; max-width: 1600px; height: 80vh; border-color: #ffd700; padding: 0; overflow: hidden; display: flex; flex-direction: column; background: url('img/1_Season(Halloween).jpg') center/cover no-repeat; }
+  .road-bg-image { width: 100%; height: 220px; background: transparent; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
   .road-title { font-size: 30px; font-weight: 900; color: #ffd700; text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 10px rgba(255,215,0,0.5); margin-bottom: 10px; }
   .road-progress-bar { width: 100%; height: 24px; background: rgba(0,0,0,0.7); border-radius: 12px; border: 2px solid #ffd700; position: relative; overflow: hidden;}
   .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s; box-shadow: 0 0 15px #ffd700;}
   .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;}
-  
-  /* Убрали черный фон у трека, сделали прозрачным */
-    .road-track { 
-    display: flex; 
-    align-items: center; 
-    gap: 0; 
-    padding: 40px 20px; 
-    overflow-x: auto; 
-    background: transparent; /* Прозрачный фон */
-  }
+  .road-track { display: flex; align-items: center; gap: 0; padding: 40px 20px; overflow-x: auto; background: transparent; flex: 1; }
   .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(14,22,32,0.7); backdrop-filter: blur(4px); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px;}
   .road-node::after { content: ''; position: absolute; top: 50%; left: 100%; width: 60px; height: 4px; background: rgba(255,255,255,0.3); z-index: -1; }
   .road-node:last-child::after { display: none; }
@@ -371,7 +271,6 @@
   .vote-card-count { font-size: 14px; font-weight: bold; color: #7ff0ff;}
   .vote-total { text-align: center; color: #c084fc; font-size: 14px; margin-top: 8px; font-weight: 700; }
 
-  /* Сообщество */
   .comm-btn { display: block; width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; font-size: 18px; font-weight: 900; text-decoration: none; color: #fff; text-align: center; transition: transform 0.1s; }
   .comm-btn:hover { transform: translateY(-2px); }
   .comm-tg { background: #229ED9; }
@@ -390,7 +289,6 @@
   #game.active{visibility:visible}
   #hint{display:none; position:absolute; bottom:20px; width:100%; text-align:center; color:#8ea6bd; z-index:100; font-weight:bold; text-shadow: 0 2px 4px black;}
 
-  /* Модалка улучшения */
   #upgrade-card { width: min(600px, 95vw); border-color: #ffd700; }
   .upgrade-hero-head { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
   .upgrade-hero-img { width: 120px; height: 120px; border-radius: 16px; background-size: cover; background-position: center; border: 3px solid #ffd700; }
@@ -410,7 +308,6 @@
   .upgrade-actions .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.25); }
   .upgrade-actions .btn-cancel:hover { background: rgba(255,255,255,0.2); }
 
-  /* ЭКРАН РЕЗУЛЬТАТОВ */
   #result-card { border-width: 4px; padding: 40px; }
   .result-title { font-size: 48px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;}
   .result-subtitle { font-size: 20px; color: #dbe9f7; margin-bottom: 30px;}
@@ -471,7 +368,6 @@
     <div class="top-btn" onclick="openCommunityModal()"><span class="icon">🌐</span> Сообщество</div>
   </div>
 
-  <!-- ДОРОГА СЛАВЫ — УЗКАЯ ВЕРХНЯЯ ПАНЕЛЬ -->
   <div id="road-top-panel" onclick="openRoadModal()">
     <div class="road-panel-title">🏆 Дорога Славы</div>
     <div class="road-panel-progress-wrap">
@@ -499,13 +395,13 @@
       </div>
     </div>
     
-    <!-- Анонс Василька -->
-    <div class="announce-banner vasilek" onclick="openVasilekInfo()">
+    <!-- Анонс Артёма (Победитель голосования) -->
+    <div class="announce-banner artem" onclick="openArtemInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
-        <div class="announce-tag">Обновление 0.4</div>
-        <div class="announce-name">Василёк</div>
-        <div class="announce-timer">Вышел!</div>
+        <div class="announce-tag">Результат голосования</div>
+        <div class="announce-name">Артём</div>
+        <div class="announce-timer">Выбран!</div>
       </div>
     </div>
 
@@ -696,7 +592,7 @@
   </div>
 </div>
 
-<!-- Василёк -->
+<!-- Василёк (ИСПРАВЛЕНО) -->
 <div id="hero-modal-vasilek" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,77,77,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeVasilekDetails()">✕</button>
@@ -712,12 +608,13 @@
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Робот.<br><br>
-        Розовый робот с аккуратно уложенными волосами. Вооружён автоматом, стреляет очередью. При контакте пули разбиваются на осколки.<br>
+        Изначально Василёк, задумывался как полицейский робот, однако его легкая броня и возможно (не возможно, а точно) его раскраска, не позволили этому случиться, поэтому он стал вторым роботом модели GNOC, имел романтические чувства к Фиалке, однако она не смогла ответить ему взаимностью, теперь он на стороне Технократов уничтожает всё живое, чтобы сделать Фиалке больно.<br>
+        <b>Атака:</b> Автомат (очередь).<br>
         <b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.
       </div>
       <div class="stat-block">
-        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">6</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:35%" id="stat-vasilek-dmg-bar"></div></div>
+        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">4</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:25%" id="stat-vasilek-dmg-bar"></div></div>
       </div>
       <div class="stat-block">
         <div class="stat-head"><span>Скорость</span><span id="stat-vasilek-spd">208</span></div>
@@ -732,6 +629,44 @@
         <button class="btn-upgrade" onclick="openUpgrade('Vasilek')">УЛУЧШИТЬ</button>
       </div>
       <div class="upgrade-cost" id="upg-cost-vasilek">Улучшение ур. 2: 150 Дулей</div>
+    </div>
+  </div>
+</div>
+
+<!-- Артём (Победитель голосования) -->
+<div id="hero-modal-artem" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
+  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(127,240,255,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
+    <button class="modal-close" onclick="closeArtemDetails()">✕</button>
+    <div id="hero-modal-left">
+      <div class="speech-bubble" id="bubble-artem"></div>
+      <div id="hero-modal-icon" style="background-image:url('img/Artem.jpg'); border-color: #7ff0ff;"></div>
+    </div>
+    <div id="hero-modal-right">
+      <div id="hero-modal-name">Артём</div>
+      <div class="tag-row">
+        <span class="tag tag-class" style="color:#7ff0ff; border-color:rgba(127,240,255,0.35)">КЛАСС: МАГ</span>
+        <span class="tag tag-epic" style="color:#ffb450; border-color:rgba(255,180,80,0.35)">РЕДКОСТЬ: ЛЕГЕНДАРНЫЙ</span>
+      </div>
+      <div id="hero-modal-desc">
+        <b>Вид:</b> Человек.<br><br>
+        Таинственный маг, что в совершенстве овладел магией фаллоиммитотаров.<br>
+        <b>Ульта:</b> Призывает магический шторм.
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон (магия)</span><span id="stat-artem-dmg">20</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-artem-dmg-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Скорость</span><span id="stat-artem-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-artem-spd-bar"></div></div>
+      </div>
+      <div class="stat-block">
+        <div class="stat-head"><span>Здоровье</span><span id="stat-artem-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-artem-hp-bar"></div></div>
+      </div>
+      <div class="upgrade-row">
+        <button class="btn-select" onclick="closeArtemDetails()" disabled style="opacity:0.5; cursor:not-allowed;">СКОРО</button>
+      </div>
     </div>
   </div>
 </div>
@@ -810,11 +745,13 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: РЕЖИМЫ -->
+<!-- МОДАЛКА: РЕЖИМЫ И ВЫБОР КАРТ -->
 <div id="mode-modal">
   <div id="mode-modal-card">
     <button class="modal-close" onclick="closeModeModal()">✕</button>
-    <h2>ВЫБОР РЕЖИМА</h2>
+    <h2>ВЫБОР РЕЖИМА И КАРТЫ</h2>
+    
+    <div style="color: #7ff0ff; font-size: 14px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Режим:</div>
     <div class="mode-grid">
       <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
        <div class="mode-option-icon" style="background-image:url('img/Training.jpg');"></div>
@@ -839,6 +776,37 @@
         <div class="mode-option-info">
           <div class="mode-option-name">Останется только один</div>
           <div class="mode-option-desc">10 игроков. Выживает сильнейший.</div>
+        </div>
+        <div class="mode-option-check">✓</div>
+      </div>
+    </div>
+
+    <div style="color: #7ff0ff; font-size: 14px; font-weight: 800; margin-top: 20px; margin-bottom: 10px; text-transform: uppercase;">Карта:</div>
+    <div class="mode-grid">
+      <!-- Карта 1 -->
+      <div class="mode-option selected" onclick="selectMap('Компьютерный центр', this)">
+        <div class="mode-option-icon map-icon-1"></div> <!-- Здесь будет картинка -->
+        <div class="mode-option-info">
+          <div class="mode-option-name">Компьютерный центр</div>
+          <div class="mode-option-desc">Тесные коридоры и серверные</div>
+        </div>
+        <div class="mode-option-check">✓</div>
+      </div>
+      <!-- Карта 2 -->
+      <div class="mode-option" onclick="selectMap('Задний двор', this)">
+        <div class="mode-option-icon map-icon-2"></div>
+        <div class="mode-option-info">
+          <div class="mode-option-name">Задний двор</div>
+          <div class="mode-option-desc">Открытая местность и ящики</div>
+        </div>
+        <div class="mode-option-check">✓</div>
+      </div>
+      <!-- Карта 3 -->
+      <div class="mode-option" onclick="selectMap('Спортзал', this)">
+        <div class="mode-option-icon map-icon-3"></div>
+        <div class="mode-option-info">
+          <div class="mode-option-name">Спортзал</div>
+          <div class="mode-option-desc">Много укрытий и снарядов</div>
         </div>
         <div class="mode-option-check">✓</div>
       </div>
@@ -949,6 +917,15 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
+      <div class="news-block" style="border-left-color: #7ff0ff;">
+        <div class="news-img" style="background-image: url('img/Artem.jpg');"></div>
+        <div class="news-info">
+          <div class="news-date" style="color: #7ff0ff;">ОБНОВЛЕНИЕ 0.4.5</div>
+          <div class="news-title">Артём победил в голосовании!</div>
+          <div class="news-text">Таинственный маг, что в совершенстве овладел магией фаллоиммитотаров. Скоро появится в игре!</div>
+        </div>
+      </div>
+
       <div class="news-block" style="border-left-color: #ff4d4d;">
         <div class="news-img" style="background-image: url('img/Vasilek.jpg');"></div>
         <div class="news-info">
@@ -967,7 +944,6 @@
         </div>
       </div>
 
-      <!-- ОБНОВЛЕНИЕ 0.2.5 ПОД 0.3 -->
       <div class="news-block" style="border-left-color: #7ff0ff;">
         <div class="news-img" style="background-image: url('img/Vitya.jpg');"></div>
         <div class="news-info">
@@ -1001,7 +977,6 @@
 
 <!-- Firebase для общего голосования -->
 <script type="module">
-  // Загружаем Firebase как единый пакет, чтобы не было конфликтов
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
   import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
@@ -1009,24 +984,22 @@
     databaseURL: "https://protocol-modernization-default-rtdb.europe-west1.firebasedatabase.app"
   };
 
-  // Заглушка на случай, если Firebase не загрузится
   window.voteFor = function() {
     alert("Пожалуйста, подождите, идет подключение к базе...");
   };
 
   try {
-    // Инициализация
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const votesRef = ref(db, 'votes');
 
     window.voteFor = function(hero, el) {
+      // Жесткая проверка на повторное голосование
       if (localStorage.getItem('hasVotedInApp') === 'true') {
-        return alert('Вы уже проголосовали!');
+        return alert('Вы уже проголосовали! С одного устройства можно голосовать только один раз.');
       }
       if (!confirm('Подтвердите голос за ' + (hero==='artem'?'Артёма':hero==='benzopila'?'Машину-Бензопилу':'Дмитрия') + '?')) return;
 
-      // Отправляем голос в базу
       runTransaction(votesRef, (currentVotes) => {
         if (currentVotes) {
           currentVotes[hero] = (currentVotes[hero] || 0) + 1;
@@ -1046,7 +1019,6 @@
       });
     };
 
-    // Слушаем изменения голосов в реальном времени
     onValue(votesRef, (snapshot) => {
       const data = snapshot.val() || { artem: 0, benzopila: 0, dmitry: 0 };
       const elA = document.getElementById('vote-count-artem');
@@ -1069,14 +1041,14 @@
 (function(){
 'use strict';
 
-// --- ДАННЫЕ ИГРОКА (СОХРАНЕНИЕ) ---
+// --- ДАННЫЕ ИГРОКА ---
 const DEFAULT_DATA = {
   duli: 500,
   oskolki: 500,
   sferi: 0,
   hasVoted: false,
   leshaUnlocked: false,
-  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1 },
+  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1 },
   claimedRoad10: false,
   claimedRoad25: false
 };
@@ -1089,7 +1061,6 @@ try {
   for (const k in DEFAULT_DATA.heroLevels) if (!(k in playerData.heroLevels)) playerData.heroLevels[k] = 1;
 } catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
 
-// Делаем playerData глобальным для модуля Firebase
 window.playerData = playerData;
 
 // ====== БАЗОВЫЕ ХАРАКТЕРИСТИКИ БОЙЦОВ ======
@@ -1097,14 +1068,15 @@ const HERO_BASE = {
   Vitya:   { dmg: 16, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
   Lesha:   { dmg: 25, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
   Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
-  Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 }
+  Vasilek: { dmg: 4,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 }, // УМЕНЬШЕН УРОН
+  Artem:   { dmg: 20, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200 }
 };
 const MAX_HERO_LEVEL = 5;
 
 function getHeroStats(type) {
   const base = HERO_BASE[type];
   const lvl = playerData.heroLevels[type] || 1;
-  const mult = 1 + (lvl - 1) * 0.12; // +12% за уровень
+  const mult = 1 + (lvl - 1) * 0.12;
   return {
     dmg: Math.round(base.dmg * mult * 10) / 10,
     spd: Math.round(base.spd * (1 + (lvl - 1) * 0.03)),
@@ -1113,9 +1085,8 @@ function getHeroStats(type) {
   };
 }
 
-// Улучшение теперь за Дули
 function getUpgradeCost(type) {
-  const base = HERO_BASE[type].cost * 2; // Базовая цена в Дулях
+  const base = HERO_BASE[type].cost * 2;
   const lvl = playerData.heroLevels[type] || 1;
   return Math.round(base * Math.pow(1.5, lvl - 1));
 }
@@ -1139,7 +1110,6 @@ function updateUI() {
   document.getElementById('road-ui-progress').style.width = prog + '%';
   document.getElementById('road-ui-progress-text').textContent = Math.min(50, playerData.sferi) + ' / 50';
 
-  // Мини-ноды в верхней панели
   document.getElementById('mini-node-10').classList.toggle('unlocked', playerData.sferi >= 10);
   document.getElementById('mini-node-25').classList.toggle('unlocked', playerData.sferi >= 25);
   document.getElementById('mini-node-50').classList.toggle('unlocked', playerData.sferi >= 50);
@@ -1152,7 +1122,6 @@ function updateUI() {
     document.getElementById('ui-vote-status').style.color = '';
   }
 
-  // Разблокировка Лёхи
   if (playerData.sferi >= 50) {
     playerData.leshaUnlocked = true;
     const cardLesha = document.getElementById('card-lesha');
@@ -1277,7 +1246,7 @@ window.openUpgrade = function(type) {
     buyBtn.disabled = true;
     buyBtn.textContent = 'МАКСИМАЛЬНЫЙ УРОВЕНЬ';
   } else {
-    buyBtn.disabled = playerData.duli < nextCost; // Проверка на Дули
+    buyBtn.disabled = playerData.duli < nextCost;
     buyBtn.textContent = `УЛУЧШИТЬ ЗА ${nextCost} ДУЛЕЙ`;
   }
 
@@ -1297,7 +1266,7 @@ window.confirmUpgrade = function() {
   const cost = getUpgradeCost(type);
   if (playerData.duli < cost) return alert('Недостаточно Дулей!');
   
-  playerData.duli -= cost; // Списываем Дули
+  playerData.duli -= cost;
   playerData.heroLevels[type] = lvl + 1;
   saveData();
   closeUpgrade();
@@ -1368,12 +1337,14 @@ const heroModal   = document.getElementById('hero-modal');
 const heroModalLesha = document.getElementById('hero-modal-lesha');
 const heroModalFialka = document.getElementById('hero-modal-fialka');
 const heroModalVasilek = document.getElementById('hero-modal-vasilek');
+const heroModalArtem = document.getElementById('hero-modal-artem');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
 
 let gameRunning = false;
 let currentMode = 'Тренировка';
+let currentMap = 'Компьютерный центр';
 let selectedHero = 'Vitya';
 
 // --- РЕПЛИКИ ---
@@ -1381,7 +1352,8 @@ const phrases = {
   Vitya: ["Я не толстый, я накачанный!", "Мой вес — моё преимущество!", "Охлакраты навсегда!", "Свобода для жирного рода!", "Меня не дразнить!", "Лазер из груди — это круто!", "Я верный боец Госпожи Свободы!", "Ещё один бой, ещё один обед!"],
   Lesha: ["Трусы — это бренд!", "Вся война — просто реклама!", "Вы всё ещё здесь?", "Синдикат Трусы рулит!", "Покупайте мои трусы!", "Я здесь, чтобы заявить о себе!", "Бомбы — это весело!", "Я лидер, а вы — так..."],
   Fialka: ["Напряжение растет!", "Я — Технократ!", "Мои системы в норме.", "Электричество — моя стихия.", "Сопротивление бесполезно.", "Ты притянут к ответу.", "Цепная реакция началась.", "Паралич — это только начало."],
-  Vasilek: ["Лечение — это искусство!", "Стойте в зоне!", "Я розовый, но опасный!", "Мой автомат не дремлет!", "Осколки летят!", "Поддержка решает всё!", "Хаос — моя стихия!", "Я собран из лучших деталей!"]
+  Vasilek: ["Лечение — это искусство!", "Стойте в зоне!", "Я розовый, но опасный!", "Мой автомат не дремлет!", "Осколки летят!", "Поддержка решает всё!", "Хаос — моя стихия!", "Я собран из лучших деталей!"],
+  Artem: ["Магия фаллоиммитотаров!", "Я таинственный маг!", "Мои чары неотразимы!", "Тьма ждёт!", "Скоро я буду в игре!"]
 };
 
 let audio1 = new Audio('sounds/vitya_voice.mp3');
@@ -1390,7 +1362,7 @@ let audio3 = new Audio('sounds/fialka_voice.mp3');
 let audio4 = new Audio('sounds/vasilek_voice.mp3');
 
 function showRandomPhrase(heroType) {
-  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : 'bubble-vasilek')));
+  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : 'bubble-artem'))));
   if (!bubble) return;
   const arr = phrases[heroType];
   const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
@@ -1400,7 +1372,7 @@ function showRandomPhrase(heroType) {
   if (heroType === 'Vitya') audio1.play().catch(()=>{});
   else if (heroType === 'Lesha') audio2.play().catch(()=>{});
   else if (heroType === 'Fialka') audio3.play().catch(()=>{});
-  else audio4.play().catch(()=>{});
+  else if (heroType === 'Vasilek') audio4.play().catch(()=>{});
 
   setTimeout(() => bubble.classList.remove('show'), 3000);
 }
@@ -1419,6 +1391,9 @@ window.openHeroDetails = function(hero){
   if (hero === 'Fialka') { heroModalFialka.style.display = 'flex'; setTimeout(() => showRandomPhrase('Fialka'), 300); }
   if (hero === 'Vasilek') { heroModalVasilek.style.display = 'flex'; setTimeout(() => showRandomPhrase('Vasilek'), 300); }
 };
+window.openArtemInfo = function() { heroModalArtem.style.display = 'flex'; setTimeout(() => showRandomPhrase('Artem'), 300); };
+window.closeArtemDetails = function() { heroModalArtem.style.display = 'none'; };
+
 window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
 window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
 window.closeFialkaDetails = function(){ heroModalFialka.style.display = 'none'; };
@@ -1457,10 +1432,19 @@ window.hideDev = function(){ devOverlay.classList.remove('show'); };
 
 window.selectMode = function(name, el){
   currentMode = name;
-  modeLabel.textContent = 'Режим: ' + name;
-  document.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
+  modeLabel.textContent = 'Режим: ' + name + ' (' + currentMap + ')';
+  const grid = el.parentElement;
+  grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
   if (el) el.classList.add('selected');
-  closeModeModal();
+  // Не закрываем модалку, чтобы можно было выбрать карту
+};
+
+window.selectMap = function(name, el) {
+  currentMap = name;
+  modeLabel.textContent = 'Режим: ' + currentMode + ' (' + currentMap + ')';
+  const grid = el.parentElement;
+  grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
+  if (el) el.classList.add('selected');
 };
 
 window.startGame = function(){
@@ -1473,7 +1457,7 @@ window.startGame = function(){
 };
 
 window.backToLobby = function(){
-  resultModal.classList.remove('show'); // Скрываем экран результатов
+  resultModal.classList.remove('show');
   lobbyScreen.classList.remove('hidden');
   gameEl.classList.remove('active');
   hintEl.style.display = 'none';
@@ -1490,6 +1474,7 @@ addEventListener('keydown', e => {
     else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
     else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
     else if (heroModalVasilek.style.display === 'flex') closeVasilekDetails();
+    else if (heroModalArtem.style.display === 'flex') closeArtemDetails();
     else if (document.getElementById('upgrade-modal').classList.contains('show')) closeUpgrade();
     else if (fightersModal.classList.contains('show')) closeFightersModal();
     else if (modeModal.classList.contains('show')) closeModeModal();
@@ -1577,7 +1562,7 @@ function createHero(id, type, isBot) {
     poison: 0, poisonTick: 0, botTimer: 0, botJitter: 0,
     shootCount: 0, grenadeTimer: 0, kbx: 0, kby: 0, stun: 0,
     hookTarget: null, hookX: 0, hookY: 0, healZone: null,
-    dmg: stats.dmg, spd: stats.spd
+    dmg: stats.dmg, spd: stats.spd, eliminated: false // Флаг для режима королевской битвы
   };
 }
 
@@ -1684,8 +1669,8 @@ function spawnHitParticles(x, y, color, n){
 }
 
 function getAllEnemies(hero) {
-  if (hero === player) return bots.filter(b => b.alive);
-  return [player, ...bots.filter(b => b !== hero)];
+  if (hero === player) return bots.filter(b => b.alive && !b.eliminated);
+  return [player, ...bots.filter(b => b !== hero && b.alive && !b.eliminated)];
 }
 
 function addKillFeed(killer, victim) {
@@ -1752,7 +1737,8 @@ function tryAttack(h) {
     for (let i = 0; i < 4; i++) {
       const spread = (i - 1.5) * 0.1;
       const a = h.aim + spread;
-      bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: h.dmg, life: 0.8, type: 'shard_bullet', owner: h, color: '#ff99cc' });
+      // ПУЛИ БОЛЬШЕ НЕ РАЗБИВАЮТСЯ (удален тип shard_bullet)
+      bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: h.dmg, life: 0.8, type: 'bullet', owner: h, color: '#ff99cc' });
     }
     spawnHitParticles(h.x + Math.cos(h.aim)*32, h.y + Math.sin(h.aim)*32, '#ff99cc', 6);
   }
@@ -1783,7 +1769,6 @@ function activateUlt(h) {
     h.ultActive = true; h.ultTime = 5.0;
     h.healZone = { x: h.x, y: h.y, r: 150 };
   } else if (h.type === 'Vitya') {
-    // УВЕЛИЧЕНО ВРЕМЯ УЛЬТЫ ВИТИ
     h.ultActive = true; h.ultTime = 3.5; 
   }
 }
@@ -1798,6 +1783,12 @@ function damage(target, amount, source, isPoison) {
     target.hp = 0; target.alive = false; target.respawn = 3;
     target.ultActive = false; target.ultTime = 0; target.poison = 0;
     spawnHitParticles(target.x, target.y, target.color, 28);
+    
+    // ВЫБЫВАНИЕ В РЕЖИМЕ КОРОЛЕВСКОЙ БИТВЫ
+    if (currentMode === 'Останется только один') {
+      target.eliminated = true;
+    }
+
     if (source && source !== target) {
         source.score++;
         if (source === player) matchKills++;
@@ -1807,6 +1798,9 @@ function damage(target, amount, source, isPoison) {
 }
 
 function updateBot(bot, dt) {
+  // Если бот выбыл, он больше не респавнится
+  if (bot.eliminated) return;
+
   if (!bot.alive) {
     bot.respawn -= dt;
     if (bot.respawn <= 0) {
@@ -1894,7 +1888,6 @@ function updateBot(bot, dt) {
   }
 }
 
-// ====== ФУНКЦИЯ ЗАВЕРШЕНИЯ БОЯ С НАГРАДАМИ ======
 function finishBattle(isWin, reason) {
   gameOver = true;
   gameRunning = false;
@@ -1918,7 +1911,6 @@ function finishBattle(isWin, reason) {
   playerData.duli = Math.max(0, playerData.duli + duliDelta);
   saveData();
 
-  // Показать экран результатов
   document.getElementById('res-title').textContent = isWin ? 'ПОБЕДА!' : 'ПОРАЖЕНИЕ';
   document.getElementById('res-title').style.color = isWin ? '#4fd6a0' : '#ff4d4d';
   document.getElementById('res-subtitle').textContent = resultText;
@@ -1942,7 +1934,7 @@ function update(dt) {
       return;
     }
   } else if (currentMode === 'Останется только один') {
-    const aliveBots = bots.filter(b => b.alive).length;
+    const aliveBots = bots.filter(b => !b.eliminated && b.alive).length;
     if (!player.alive) {
       finishBattle(false, 'dead');
       return;
@@ -1951,7 +1943,7 @@ function update(dt) {
       return;
     }
   } else if (currentMode === 'Тренировка') {
-    const aliveBots = bots.filter(b => b.alive).length;
+    const aliveBots = bots.filter(b => !b.eliminated && b.alive).length;
     if (!player.alive && aliveBots === 0) {
       finishBattle(false, 'dead');
       return;
@@ -2287,14 +2279,13 @@ function drawHero(h){
   if (h.reloading > 0 && h.alive) { ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900'; ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18); }
 }
 
-function drawHeroes(){ for (const bot of bots) if (bot.alive) drawHero(bot); if (player.alive) drawHero(player); }
+function drawHeroes(){ for (const bot of bots) if (bot.alive && !bot.eliminated) drawHero(bot); if (player.alive) drawHero(player); }
 
 function drawBullets(){
   for (const b of bullets) {
     if (b.type === 'big_bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff3333'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU); ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke(); }
     else if (b.type === 'bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#111'; ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444'; roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill(); }
     else if (b.type === 'chain_bolt') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill(); ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
-    else if (b.type === 'shard_bullet') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff99cc'; ctx.fill(); ctx.shadowColor = '#ff99cc'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
     else { ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU); ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#e6f7ff'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU); ctx.fillStyle = b.color; ctx.fill(); }
   }
 }
@@ -2302,6 +2293,7 @@ function drawBullets(){
 function drawLasers(){
   const t = performance.now() / 1000;
   for (const h of [player, ...bots]) {
+    if (h.eliminated) continue; // Не рисуем выбывших
     if (h.ultActive && h.type === 'Vitya' && h.alive) {
       let maxLen = 1100; const sx = h.x, sy = h.y; const ex0 = sx + Math.cos(h.aim) * 1100; const ey0 = sy + Math.sin(h.aim) * 1100;
       for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
@@ -2362,7 +2354,12 @@ function drawUltBar(){
 }
 
 function drawScoreboard(){
-  const list = [player, ...bots].sort((a, b) => b.score - a.score);
+  const list = [player, ...bots].sort((a, b) => {
+    if (a.eliminated && !b.eliminated) return 1;
+    if (!a.eliminated && b.eliminated) return -1;
+    return b.score - a.score;
+  });
+  
   const x = W - 196, y = 14; const rowH = 25; const total = 34 + rowH * list.length;
   ctx.fillStyle = 'rgba(8,14,22,0.62)'; roundRect(ctx, x, y, 182, total, 12); ctx.fill();
   ctx.strokeStyle = 'rgba(90,140,180,0.35)'; ctx.lineWidth = 1.5; roundRect(ctx, x, y, 182, total, 12); ctx.stroke();
@@ -2376,16 +2373,20 @@ function drawScoreboard(){
        const m = Math.floor(gameTimeLeft / 60); const s = Math.floor(gameTimeLeft % 60);
        ctx.fillText(`${m}:${s < 10 ? '0'+s : s}`, x + 166, y + 20);
     } else {
-       ctx.fillText('Живых: ' + (bots.filter(b=>b.alive).length + (player.alive?1:0)), x + 166, y + 20);
+       // Считаем только не выбывших
+       const aliveCount = bots.filter(b=>!b.eliminated && b.alive).length + (player.alive?1:0);
+       ctx.fillText('Живых: ' + aliveCount, x + 166, y + 20);
     }
   }
 
   ctx.font = 'bold 13px system-ui, sans-serif';
   list.forEach((h, i) => {
     const ry = y + 42 + i * rowH;
-    ctx.beginPath(); ctx.arc(x + 18, ry - 4, 6, 0, TAU); ctx.fillStyle = h.color; ctx.fill();
-    ctx.textAlign = 'left'; ctx.fillStyle = h.isPlayer ? '#ffffff' : 'rgba(210,225,240,0.82)'; ctx.fillText(h.name, x + 32, ry);
-    ctx.textAlign = 'right'; ctx.fillStyle = h.isPlayer ? '#8fe8ff' : 'rgba(210,225,240,0.82)'; ctx.fillText(h.score, x + 166, ry);
+    ctx.beginPath(); ctx.arc(x + 18, ry - 4, 6, 0, TAU); ctx.fillStyle = h.eliminated ? '#444' : h.color; ctx.fill();
+    ctx.textAlign = 'left'; ctx.fillStyle = h.eliminated ? '#666' : (h.isPlayer ? '#ffffff' : 'rgba(210,225,240,0.82)'); 
+    ctx.fillText(h.name, x + 32, ry);
+    ctx.textAlign = 'right'; ctx.fillStyle = h.eliminated ? '#666' : (h.isPlayer ? '#8fe8ff' : 'rgba(210,225,240,0.82)'); 
+    ctx.fillText(h.eliminated ? '-' : h.score, x + 166, ry);
   });
   ctx.textAlign = 'left';
 }
@@ -2421,7 +2422,11 @@ function render() {
   
   if (!player.alive && !gameOver) {
     ctx.textAlign = 'center'; ctx.fillStyle = 'rgba(140,195,230,0.95)'; ctx.font = 'bold 28px system-ui, sans-serif';
-    ctx.fillText('ВОЗРОЖДЕНИЕ ЧЕРЕЗ ' + Math.ceil(player.respawn), W/2, H/2 - 30);
+    if (currentMode === 'Останется только один') {
+      ctx.fillText('ВЫ ВЫБЫЛИ', W/2, H/2 - 30);
+    } else {
+      ctx.fillText('ВОЗРОЖДЕНИЕ ЧЕРЕЗ ' + Math.ceil(player.respawn), W/2, H/2 - 30);
+    }
   }
 
   if (matchSplashTimer > 0) {
@@ -2429,7 +2434,7 @@ function render() {
     ctx.textAlign = 'center'; ctx.fillStyle = '#7ff0ff'; ctx.font = 'bold 64px system-ui, sans-serif';
     ctx.fillText(currentMode, W/2, H/2 - 30);
     ctx.fillStyle = '#dbe9f7'; ctx.font = 'bold 32px system-ui, sans-serif';
-    ctx.fillText('Карта: Горный техникум', W/2, H/2 + 30);
+    ctx.fillText('Карта: ' + currentMap, W/2, H/2 + 30);
   }
 }
 
