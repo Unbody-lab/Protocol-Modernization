@@ -12,50 +12,52 @@
   #editor-canvas{display:block;cursor:crosshair}
 
   #sidebar {
-    position: fixed; top: 0; right: 0; width: 340px; height: 100%;
+    position: fixed; top: 0; right: 0; width: 360px; height: 100%;
     background: rgba(14,22,32,0.97); border-left: 2px solid rgba(90,140,180,0.4);
-    display: flex; flex-direction: column; padding: 16px; gap: 10px;
+    display: flex; flex-direction: column; padding: 12px; gap: 8px;
     z-index: 10; box-shadow: -10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;
   }
 
-  #sidebar h2 { color: #7ff0ff; font-size: 20px; text-align: center; margin-bottom: 6px; }
-  #sidebar h3 { color: #fff; font-size: 14px; margin-top: 10px; margin-bottom: 5px;
-    border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 5px;}
+  #sidebar h2 { color: #7ff0ff; font-size: 18px; text-align: center; margin-bottom: 2px; }
+  #sidebar h3 { color: #fff; font-size: 12px; margin-top: 8px; margin-bottom: 4px;
+    border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 4px; text-transform: uppercase; letter-spacing: .5px;}
 
   .tool-btn {
-    padding: 8px 6px; background: rgba(63,169,245,0.1); border: 2px solid rgba(127,240,255,0.4);
-    color: #fff; border-radius: 8px; cursor: pointer; font-weight: bold; text-align: left;
-    transition: all 0.2s; display: flex; align-items: center; gap: 6px; font-size: 12px;
+    padding: 6px 5px; background: rgba(63,169,245,0.1); border: 2px solid rgba(127,240,255,0.4);
+    color: #fff; border-radius: 7px; cursor: pointer; font-weight: bold; text-align: left;
+    transition: all 0.2s; display: flex; align-items: center; gap: 4px; font-size: 11px;
+    line-height: 1.1;
   }
   .tool-btn:hover { background: rgba(63,169,245,0.3); border-color: #7ff0ff; }
   .tool-btn.active { background: #3fa9f5; color: #000; border-color: #7ff0ff; }
 
-  .control-group { display: flex; flex-direction: column; gap: 4px; }
-  .control-group label { color: #b8cde0; font-size: 12px; }
+  .control-group { display: flex; flex-direction: column; gap: 3px; }
+  .control-group label { color: #b8cde0; font-size: 11px; }
   .control-group input[type="range"] { width: 100%; cursor: pointer; }
   .control-group input[type="number"], .control-group select, .control-group input[type="color"] {
-    width: 100%; padding: 5px; border-radius: 6px; border: 1px solid rgba(90,140,180,0.4);
-    background: #0a0e14; color: #7ff0ff; outline: none;
+    width: 100%; padding: 4px; border-radius: 6px; border: 1px solid rgba(90,140,180,0.4);
+    background: #0a0e14; color: #7ff0ff; outline: none; font-size: 12px;
   }
 
   #json-output {
-    width: 100%; height: 100px; background: #0a0e14; color: #7ff0ff;
+    width: 100%; height: 90px; background: #0a0e14; color: #7ff0ff;
     border: 1px solid rgba(90,140,180,0.4); border-radius: 8px;
-    padding: 10px; font-family: monospace; font-size: 11px; resize: vertical;
+    padding: 8px; font-family: monospace; font-size: 10px; resize: vertical;
     outline: none;
   }
 
   .action-btn {
-    padding: 8px; background: #ffb450; color: #000; border: none;
-    border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 13px;
+    padding: 7px; background: #ffb450; color: #000; border: none;
+    border-radius: 8px; cursor: pointer; font-weight: 900; font-size: 12px;
     transition: transform 0.1s;
   }
-  .action-btn:hover { transform: translateY(-2px); background: #ffd700; }
-  .action-btn:active { transform: translateY(2px); }
+  .action-btn:hover { transform: translateY(-1px); background: #ffd700; }
+  .action-btn:active { transform: translateY(1px); }
   .action-btn.danger { background: #ff4d4d; color: #fff; }
   .action-btn.danger:hover { background: #ff7b7b; }
   .action-btn.primary { background: #3fa9f5; color: #fff; }
   .action-btn.primary:hover { background: #7ff0ff; color: #000; }
+  .action-btn.small { padding: 4px 6px; font-size: 11px; }
 
   #top-bar {
     position: fixed; top: 10px; left: 10px; z-index: 10;
@@ -64,60 +66,134 @@
     font-family: monospace; font-size: 13px; pointer-events: none;
   }
 
-  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .row { display: flex; gap: 6px; align-items: center; }
+  #hint-bar {
+    position: fixed; bottom: 10px; left: 10px; z-index: 10;
+    background: rgba(14,22,32,0.85); border: 1px solid rgba(90,140,180,0.4);
+    padding: 6px 12px; border-radius: 8px; color: #b8cde0;
+    font-family: monospace; font-size: 11px; pointer-events: none;
+    max-width: calc(100vw - 400px);
+  }
+
+  .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; }
+  .tool-grid.tight { grid-template-columns: 1fr 1fr 1fr; }
+  .row { display: flex; gap: 5px; align-items: center; }
   .row > * { flex: 1; }
+
+  details { background: rgba(255,255,255,0.02); border-radius: 6px; padding: 4px 6px; }
+  details summary { cursor: pointer; color: #7ff0ff; font-size: 12px; font-weight: bold; outline: none; }
+  details[open] summary { margin-bottom: 4px; }
+
+  .floor-swatch { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 4px; border:1px solid rgba(255,255,255,.2);}
 </style>
 </head>
 <body>
 
-<div id="top-bar">X: 0, Y: 0</div>
+<div id="top-bar">X: 0, Y: 0 · Этаж: 0</div>
+<div id="hint-bar">ЛКМ — действие · ПКМ/СКМ — панорама · Колесо — зум/размер · R/Shift+R — поворот выделенного · Стрелки — сдвиг выделенного · Del — удалить</div>
 <canvas id="editor-canvas"></canvas>
 
 <div id="sidebar">
   <h2>Редактор карт</h2>
 
   <h3>Быстрая загрузка</h3>
-  <div class="row" style="margin-bottom: 10px;">
-    <button class="action-btn primary" onclick="loadMap('backyard')">🏡 Задний двор</button>
-    <button class="action-btn primary" onclick="loadMap('gym')">🏀 Спортзал</button>
+  <div class="row" style="margin-bottom: 6px;">
+    <button class="action-btn primary" onclick="loadMap('backyard')">🏡 Двор</button>
+    <button class="action-btn primary" onclick="loadMap('gym')">🏀 Зал</button>
   </div>
 
-  <h3>Инструменты (мебель / декор)</h3>
+  <h3>Режим</h3>
   <div class="tool-grid">
-    <div class="tool-btn active" onclick="setTool('desk', this)"><span>📝</span> Парта</div>
-    <div class="tool-btn" onclick="setTool('chair', this)"><span>🪑</span> Стул</div>
-    <div class="tool-btn" onclick="setTool('cabinet', this)"><span>🗄️</span> Шкаф</div>
-    <div class="tool-btn" onclick="setTool('board', this)"><span>🟩</span> Доска</div>
-    <div class="tool-btn" onclick="setTool('rock', this)"><span>🪨</span> Камень</div>
-    <div class="tool-btn" onclick="setTool('holo', this)"><span>🔵</span> Голограмма</div>
-
-    <div class="tool-btn" onclick="setTool('computer', this)"><span>💻</span> Компьютер</div>
-    <div class="tool-btn" onclick="setTool('wooddoor', this)"><span>🚪</span> Дерев. дверь</div>
-    <div class="tool-btn" onclick="setTool('holohuman', this)"><span>🧍</span> Голо-человек</div>
-    <div class="tool-btn" onclick="setTool('woodcab', this)"><span>🗄️</span> Дерев. шкаф</div>
-    <div class="tool-btn" onclick="setTool('locker', this)"><span>🔐</span> Шкафчик</div>
-    <div class="tool-btn" onclick="setTool('stairs', this)"><span>🪜</span> Лестница</div>
-    <div class="tool-btn" onclick="setTool('bus', this)"><span>🚌</span> Автобус</div>
-    <div class="tool-btn" onclick="setTool('bus_wreck', this)"><span>🚌</span> Разбитый автобус</div>
-    <div class="tool-btn" onclick="setTool('basket_ring', this)"><span>🏀</span> Кольцо</div>
-    <div class="tool-btn" onclick="setTool('basket_ball', this)"><span>🏀</span> Б. мяч</div>
-    <div class="tool-btn" onclick="setTool('volley_net', this)"><span>🏐</span> Вол. сетка</div>
-    <div class="tool-btn" onclick="setTool('volley_ball', this)"><span>🏐</span> Вол. мяч</div>
-    <div class="tool-btn" onclick="setTool('globe', this)"><span>🌍</span> Глобус</div>
-    <div class="tool-btn" onclick="setTool('ruler', this)"><span>📏</span> Линейка</div>
-    <div class="tool-btn" onclick="setTool('pen', this)"><span>🖊️</span> Ручка</div>
-    <div class="tool-btn" onclick="setTool('eraser', this)"><span>🧽</span> Ластик</div>
-    <div class="tool-btn" onclick="setTool('pencil', this)"><span>✏️</span> Карандаш</div>
-    <div class="tool-btn" onclick="setTool('vitya', this)"><span>🖼️</span> Vitya_Face</div>
-
+    <div class="tool-btn" onclick="setTool('select', this)"><span>🖱️</span> Выделить/Двигать</div>
+    <div class="tool-btn active" onclick="setTool('desk', this)"><span>📝</span> Ставить объект</div>
+    <div class="tool-btn" onclick="setTool('wall', this)"><span>🧱</span> Стена (тянуть)</div>
     <div class="tool-btn danger" onclick="setTool('erase', this)"><span>❌</span> Стереть</div>
   </div>
 
-  <h3>Настройки объекта (нового / выделенного)</h3>
+  <h3>Этаж</h3>
+  <div class="row">
+    <div class="control-group">
+      <label>Текущий этаж</label>
+      <input type="number" id="floor-level" value="0" min="0" max="9" step="1" onchange="setCurrentFloor(this.value)">
+    </div>
+    <div class="control-group">
+      <label>Показ этажей</label>
+      <select id="floor-view" onchange="render()">
+        <option value="all">Все</option>
+        <option value="current">Текущий</option>
+        <option value="below">До текущего</option>
+      </select>
+    </div>
+  </div>
+
+  <details>
+    <summary>Мебель и декор (1)</summary>
+    <div class="tool-grid">
+      <div class="tool-btn active" onclick="setTool('desk', this)"><span>📝</span> Парта</div>
+      <div class="tool-btn" onclick="setTool('chair', this)"><span>🪑</span> Стул</div>
+      <div class="tool-btn" onclick="setTool('compchair', this)"><span>💺</span> Комп. кресло</div>
+      <div class="tool-btn" onclick="setTool('cabinet', this)"><span>🗄️</span> Шкаф</div>
+      <div class="tool-btn" onclick="setTool('woodcab', this)"><span>🗄️</span> Дерев. шкаф</div>
+      <div class="tool-btn" onclick="setTool('locker', this)"><span>🔐</span> Шкафчик</div>
+      <div class="tool-btn" onclick="setTool('steelshelf', this)"><span>🗄️</span> Сталь. полка</div>
+      <div class="tool-btn" onclick="setTool('board', this)"><span>🟩</span> Доска</div>
+      <div class="tool-btn" onclick="setTool('computer', this)"><span>💻</span> Компьютер</div>
+      <div class="tool-btn" onclick="setTool('globe', this)"><span>🌍</span> Глобус</div>
+      <div class="tool-btn" onclick="setTool('ruler', this)"><span>📏</span> Линейка</div>
+      <div class="tool-btn" onclick="setTool('pen', this)"><span>🖊️</span> Ручка</div>
+      <div class="tool-btn" onclick="setTool('eraser', this)"><span>🧽</span> Ластик</div>
+      <div class="tool-btn" onclick="setTool('pencil', this)"><span>✏️</span> Карандаш</div>
+      <div class="tool-btn" onclick="setTool('stairs', this)"><span>🪜</span> Лестница</div>
+      <div class="tool-btn" onclick="setTool('wooddoor', this)"><span>🚪</span> Дерев. дверь</div>
+      <div class="tool-btn" onclick="setTool('vitya', this)"><span>🖼️</span> Vitya_Face</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Постройки и техника</summary>
+    <div class="tool-grid">
+      <div class="tool-btn" onclick="setTool('tehnikum', this)"><span>🏫</span> Техникум</div>
+      <div class="tool-btn" onclick="setTool('kpp', this)"><span>🏢</span> КПП</div>
+      <div class="tool-btn" onclick="setTool('garage', this)"><span>🏚️</span> Гараж</div>
+      <div class="tool-btn" onclick="setTool('parking', this)"><span>🅿️</span> Парковка</div>
+      <div class="tool-btn" onclick="setTool('fence', this)"><span>🚧</span> Сетч. забор</div>
+      <div class="tool-btn" onclick="setTool('fence_barb', this)"><span>⛓️</span> Забор с колючкой</div>
+      <div class="tool-btn" onclick="setTool('barrier', this)"><span>🚧</span> Шлагбаум</div>
+      <div class="tool-btn" onclick="setTool('bus', this)"><span>🚌</span> Автобус</div>
+      <div class="tool-btn" onclick="setTool('bus_wreck', this)"><span>🚌</span> Разбитый автобус</div>
+      <div class="tool-btn" onclick="setTool('carrier', this)"><span>🚚</span> Перевозчик</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Мелкий декор и мусор</summary>
+    <div class="tool-grid tight">
+      <div class="tool-btn" onclick="setTool('broken_glass', this)"><span>🔷</span> Разб. стекло</div>
+      <div class="tool-btn" onclick="setTool('glass_bottles', this)"><span>🍾</span> Бутылки</div>
+      <div class="tool-btn" onclick="setTool('cardboard', this)"><span>📦</span> Карт. коробка</div>
+      <div class="tool-btn" onclick="setTool('woodcrate', this)"><span>🧰</span> Дерев. ящик</div>
+      <div class="tool-btn" onclick="setTool('barrel', this)"><span>🛢️</span> Жел. бочка</div>
+      <div class="tool-btn" onclick="setTool('extinguisher', this)"><span>🧯</span> Огнетушитель</div>
+      <div class="tool-btn" onclick="setTool('smoke', this)"><span>💨</span> Серый дым</div>
+      <div class="tool-btn" onclick="setTool('rock', this)"><span>🪨</span> Камень</div>
+      <div class="tool-btn" onclick="setTool('holo', this)"><span>🔵</span> Голограмма</div>
+      <div class="tool-btn" onclick="setTool('holohuman', this)"><span>🧍</span> Голо-человек</div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Спорт</summary>
+    <div class="tool-grid">
+      <div class="tool-btn" onclick="setTool('basket_ring', this)"><span>🏀</span> Кольцо</div>
+      <div class="tool-btn" onclick="setTool('basket_ball', this)"><span>🏀</span> Б. мяч</div>
+      <div class="tool-btn" onclick="setTool('volley_net', this)"><span>🏐</span> Вол. сетка</div>
+      <div class="tool-btn" onclick="setTool('volley_ball', this)"><span>🏐</span> Вол. мяч</div>
+    </div>
+  </details>
+
+  <h3>Настройки объекта</h3>
   <div class="control-group">
     <label>Размер: <span id="size-val">35</span></label>
-    <input type="range" id="size-slider" min="10" max="200" value="35"
+    <input type="range" id="size-slider" min="5" max="400" value="35"
       oninput="document.getElementById('size-val').innerText = this.value">
   </div>
   <div class="control-group">
@@ -131,11 +207,55 @@
   </div>
   <button class="action-btn" onclick="applyToSelected()">Применить к выделенному</button>
 
+  <details id="crate-details">
+    <summary>Содержимое деревянного ящика</summary>
+    <div class="control-group">
+      <label>Предмет</label>
+      <select id="crate-item">
+        <option value="medkit">Аптечка</option>
+        <option value="ammo">Патроны</option>
+        <option value="bandage">Бинт</option>
+        <option value="water">Вода</option>
+        <option value="food">Еда</option>
+        <option value="battery">Батарейка</option>
+        <option value="flashlight">Фонарик</option>
+        <option value="key">Ключ</option>
+        <option value="scrap">Металлолом</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Количество</label>
+      <input type="number" id="crate-count" value="1" min="1" max="99">
+    </div>
+    <div class="row">
+      <button class="action-btn small" onclick="addCrateItem()">Добавить</button>
+      <button class="action-btn small danger" onclick="clearCrateItems()">Очистить</button>
+    </div>
+    <div class="control-group">
+      <label>Случайный предмет при уничтожении</label>
+      <select id="crate-random">
+        <option value="false">Нет</option>
+        <option value="true">Да</option>
+      </select>
+    </div>
+    <div style="color:#b8cde0;font-size:11px;margin-top:2px;">
+      Содержимое: <span id="crate-preview">—</span>
+    </div>
+    <div class="row" style="margin-top:4px;">
+      <button class="action-btn small" onclick="applyCrateSettings()">Записать в ящик</button>
+    </div>
+  </details>
+
   <h3>Пол</h3>
   <div class="control-group">
     <label>Текстура пола</label>
     <select id="floor-texture">
       <option value="concrete">Бетон</option>
+      <option value="asphalt">Асфальт</option>
+      <option value="grass">Трава</option>
+      <option value="stone">Камень</option>
+      <option value="metal">Металл</option>
+      <option value="glass">Стекло</option>
       <option value="wood">Дерево</option>
     </select>
   </div>
@@ -163,7 +283,7 @@
   <button class="action-btn danger" onclick="clearMap()">Очистить карту</button>
 
   <h3>Результат (JSON)</h3>
-  <textarea id="json-output" placeholder="Нажмите 'Сгенерировать JSON' для сохранения или вставьте JSON и нажмите 'Загрузить'"></textarea>
+  <textarea id="json-output" placeholder="Нажмите 'Сгенерировать JSON'..."></textarea>
 </div>
 
 <script>
@@ -181,18 +301,25 @@ let isDragging = false;
 let lastMouseX = 0, lastMouseY = 0;
 
 // Данные карты
-let furniture = [];
-let rocks = [];
-let selectedObj = null; // Ссылка на выделенный объект
+let furniture = [];   // объекты
+let rocks = [];       // камни + невидимые коллайдеры
+let walls = [];       // стены: {x1,y1,x2,y2,thickness,color,floorLevel}
+let selectedObj = null;      // ссылка на выделенный (furniture/rock/wall)
+let selectedKind = null;     // 'furniture' | 'rock' | 'wall'
 
 let currentTool = 'desk';
+let currentFloor = 0;
+
+// Стена: временная линия при протяжке
+let wallStart = null; // {x,y}
+let wallPreview = null;
 
 // Пасхалка Vitya_Face
 const VITYA_IMG = new Image();
-VITYA_IMG.src = 'Vitya_Face.png'; 
+VITYA_IMG.src = 'Vitya_Face.png';
 
 function resize() {
-  W = window.innerWidth - 340;
+  W = window.innerWidth - 360;
   H = window.innerHeight;
   canvas.width = Math.floor(W * DPR);
   canvas.height = Math.floor(H * DPR);
@@ -211,17 +338,24 @@ window.setTool = function(tool, el) {
   currentTool = tool;
   document.querySelectorAll('.tool-btn').forEach(btn => btn.classList.remove('active'));
   if (el) el.classList.add('active');
-  
+
   if (tool !== 'select') {
-    selectedObj = null;
+    // при смене инструмента не сбрасываем выделение, но если это "ставить" — сбрасываем
+    if (tool !== 'erase') { /* оставляем выделение для применения настроек */ }
   }
+  canvas.style.cursor = (tool === 'wall') ? 'crosshair' : (tool === 'select' ? 'move' : 'crosshair');
+};
+
+window.setCurrentFloor = function(v) {
+  currentFloor = Math.max(0, Math.min(9, parseInt(v) || 0));
+  document.getElementById('floor-level').value = currentFloor;
+  updateTopBar();
 };
 
 window.clearMap = function() {
-  if (confirm('Вы уверены, что хотите очистить карту?')) {
-    furniture = [];
-    rocks = [];
-    selectedObj = null;
+  if (confirm('Очистить карту?')) {
+    furniture = []; rocks = []; walls = [];
+    selectedObj = null; selectedKind = null;
   }
 };
 
@@ -231,14 +365,66 @@ window.applyWorldSize = function() {
   WORLD_W = nw; WORLD_H = nh;
 };
 
+function updateTopBar() {
+  document.getElementById('top-bar').innerText =
+    `X: ${Math.round(mouseWorld.x)}, Y: ${Math.round(mouseWorld.y)} · Этаж: ${currentFloor}`;
+}
+const mouseWorld = {x:0,y:0};
+
 window.applyToSelected = function() {
-  if (!selectedObj) {
-    alert('Сначала кликните по объекту левой кнопкой (режим "Стереть" или просто клик по карте).');
+  if (!selectedObj) { alert('Сначала выделите объект (режим "Выделить/Двигать").'); return; }
+  const color = document.getElementById('obj-color').value;
+  const rot = parseInt(document.getElementById('rot-slider').value);
+  const r = parseInt(document.getElementById('size-slider').value);
+
+  if (selectedKind === 'furniture' || selectedKind === 'rock') {
+    selectedObj.color = color;
+    selectedObj.rot = rot;
+    selectedObj.r = r;
+  } else if (selectedKind === 'wall') {
+    selectedObj.color = color;
+    selectedObj.thickness = Math.max(2, r / 5);
+  }
+};
+
+// --- СОДЕРЖИМОЕ ЯЩИКА ---
+function refreshCratePreview() {
+  if (selectedKind !== 'furniture' || !selectedObj || selectedObj.type !== 'woodcrate') {
+    document.getElementById('crate-preview').innerText = '— (выделите деревянный ящик)';
     return;
   }
-  selectedObj.color = document.getElementById('obj-color').value;
-  selectedObj.rot = parseInt(document.getElementById('rot-slider').value);
-  selectedObj.r = parseInt(document.getElementById('size-slider').value);
+  const items = selectedObj.contents || [];
+  const txt = items.length
+    ? items.map(i => `${i.name}×${i.count}`).join(', ')
+    : '—';
+  document.getElementById('crate-preview').innerText =
+    txt + (selectedObj.randomLoot ? ' · [случайный]' : '');
+}
+
+window.addCrateItem = function() {
+  if (selectedKind !== 'furniture' || !selectedObj || selectedObj.type !== 'woodcrate') {
+    alert('Выделите деревянный ящик!'); return;
+  }
+  const name = document.getElementById('crate-item').value;
+  const count = Math.max(1, parseInt(document.getElementById('crate-count').value) || 1);
+  if (!selectedObj.contents) selectedObj.contents = [];
+  const ex = selectedObj.contents.find(i => i.name === name);
+  if (ex) ex.count += count; else selectedObj.contents.push({ name, count });
+  refreshCratePreview();
+};
+
+window.clearCrateItems = function() {
+  if (selectedKind !== 'furniture' || !selectedObj || selectedObj.type !== 'woodcrate') return;
+  selectedObj.contents = [];
+  refreshCratePreview();
+};
+
+window.applyCrateSettings = function() {
+  if (selectedKind !== 'furniture' || !selectedObj || selectedObj.type !== 'woodcrate') {
+    alert('Выделите деревянный ящик!'); return;
+  }
+  selectedObj.randomLoot = document.getElementById('crate-random').value === 'true';
+  refreshCratePreview();
 };
 
 // --- JSON ---
@@ -249,8 +435,25 @@ window.generateJSON = function() {
       texture: document.getElementById('floor-texture').value,
       color: document.getElementById('floor-color').value
     },
-    furniture: furniture.map(f => ({ type: f.type, x: Math.round(f.x), y: Math.round(f.y), r: f.r, rot: f.rot, color: f.color })),
-    rocks: rocks.map(r => ({ x: Math.round(r.x), y: Math.round(r.y), r: r.r, type: r.type }))
+    walls: walls.map(w => ({
+      x1: Math.round(w.x1), y1: Math.round(w.y1),
+      x2: Math.round(w.x2), y2: Math.round(w.y2),
+      thickness: w.thickness, color: w.color, floorLevel: w.floorLevel || 0
+    })),
+    furniture: furniture.map(f => ({
+      type: f.type,
+      x: Math.round(f.x), y: Math.round(f.y),
+      r: f.r, rot: f.rot, color: f.color,
+      floorLevel: f.floorLevel || 0,
+      ...(f.type === 'woodcrate' ? {
+        contents: f.contents || [],
+        randomLoot: !!f.randomLoot
+      } : {})
+    })),
+    rocks: rocks.map(r => ({
+      x: Math.round(r.x), y: Math.round(r.y), r: r.r, type: r.type,
+      floorLevel: r.floorLevel || 0
+    }))
   };
   document.getElementById('json-output').value = JSON.stringify(data, null, 2);
 };
@@ -259,10 +462,8 @@ window.loadFromJSON = function() {
   try {
     const val = document.getElementById('json-output').value;
     if (!val) return alert('Вставьте JSON в текстовое поле!');
-    
     const data = JSON.parse(val);
-    
-    // Применяем настройки мира
+
     if (data.world) {
       WORLD_W = data.world.width || 2600;
       WORLD_H = data.world.height || 2000;
@@ -273,12 +474,16 @@ window.loadFromJSON = function() {
       document.getElementById('floor-texture').value = data.floor.texture || 'concrete';
       document.getElementById('floor-color').value = data.floor.color || '#2b3138';
     }
-    
-    // Загружаем объекты
+
     furniture = data.furniture || [];
     rocks = data.rocks || [];
-    selectedObj = null;
-    
+    walls = data.walls || [];
+    // гарантируем поля
+    furniture.forEach(f => { if (f.floorLevel == null) f.floorLevel = 0; });
+    rocks.forEach(r => { if (r.floorLevel == null) r.floorLevel = 0; });
+    walls.forEach(w => { if (w.floorLevel == null) w.floorLevel = 0; });
+
+    selectedObj = null; selectedKind = null;
     alert('Карта успешно загружена!');
   } catch(e) {
     alert('Ошибка при загрузке JSON: ' + e.message);
@@ -286,6 +491,59 @@ window.loadFromJSON = function() {
 };
 
 // --- ВВОД ---
+function screenToWorld(clientX, clientY) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (clientX - rect.left - cam.x) / cam.zoom,
+    y: (clientY - rect.top - cam.y) / cam.zoom
+  };
+}
+
+// Найти ближайший выделяемый объект в точке
+function pickObject(mwx, mwy) {
+  // приоритет: мебель, затем стены, затем камни
+  for (let i = furniture.length - 1; i >= 0; i--) {
+    const f = furniture[i];
+    if (visibleOnFloor(f.floorLevel)) {
+      const rr = hitRadius(f);
+      if (Math.hypot(f.x - mwx, f.y - mwy) < rr) {
+        return { obj: f, kind: 'furniture' };
+      }
+    }
+  }
+  for (let i = walls.length - 1; i >= 0; i--) {
+    const w = walls[i];
+    if (!visibleOnFloor(w.floorLevel)) continue;
+    const d = distToSegment(mwx, mwy, w.x1, w.y1, w.x2, w.y2);
+    if (d < Math.max(10, w.thickness)) return { obj: w, kind: 'wall' };
+  }
+  for (let i = rocks.length - 1; i >= 0; i--) {
+    const r = rocks[i];
+    if (visibleOnFloor(r.floorLevel)) {
+      if (Math.hypot(r.x - mwx, r.y - mwy) < Math.max(12, r.r)) {
+        return { obj: r, kind: 'rock' };
+      }
+    }
+  }
+  return null;
+}
+
+function hitRadius(f) {
+  // разные объекты имеют разный «радиус попадания»
+  const big = ['bus','bus_wreck','tehnikum','garage','kpp','parking','carrier','stairs','board','volley_net','fence','fence_barb'];
+  const mul = big.includes(f.type) ? 1.6 : 1.2;
+  return Math.max(20, (f.r || 30) * mul);
+}
+
+function visibleOnFloor(fl) {
+  const mode = document.getElementById('floor-view').value;
+  fl = fl || 0;
+  if (mode === 'all') return true;
+  if (mode === 'current') return fl === currentFloor;
+  if (mode === 'below') return fl <= currentFloor;
+  return true;
+}
+
 canvas.addEventListener('mousedown', (e) => {
   if (e.button === 1 || e.button === 2) {
     isDragging = true;
@@ -294,75 +552,176 @@ canvas.addEventListener('mousedown', (e) => {
     return;
   }
 
-  if (e.button === 0) {
-    const rect = canvas.getBoundingClientRect();
-    const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
-    const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
+  if (e.button !== 0) return;
 
-    const size = parseInt(document.getElementById('size-slider').value);
-    const rot = parseInt(document.getElementById('rot-slider').value);
-    const color = document.getElementById('obj-color').value;
+  const mw = screenToWorld(e.clientX, e.clientY);
+  mouseWorld.x = mw.x; mouseWorld.y = mw.y;
 
-    if (currentTool === 'erase') {
-      // Удаление
-      let erased = false;
-      for (let i = furniture.length - 1; i >= 0; i--) {
-        if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
-          if (selectedObj === furniture[i]) selectedObj = null;
-          furniture.splice(i, 1);
-          erased = true;
-        }
-      }
-      for (let i = rocks.length - 1; i >= 0; i--) {
-        if (Math.hypot(rocks[i].x - mwx, rocks[i].y - mwy) < rocks[i].r + 20) {
-          rocks.splice(i, 1);
-          erased = true;
-        }
-      }
-      // Если не стёрли, возможно мы кликнули чтобы выделить
-      if (!erased) {
-        for (let i = furniture.length - 1; i >= 0; i--) {
-          if (Math.hypot(furniture[i].x - mwx, furniture[i].y - mwy) < furniture[i].r + 20) {
-            selectedObj = furniture[i];
-            document.getElementById('size-slider').value = selectedObj.r;
-            document.getElementById('rot-slider').value = selectedObj.rot || 0;
-            document.getElementById('obj-color').value = selectedObj.color || '#ffffff';
-            break;
+  // Стена: начинаем протяжку
+  if (currentTool === 'wall') {
+    wallStart = { x: mw.x, y: mw.y };
+    wallPreview = { x1: mw.x, y1: mw.y, x2: mw.x, y2: mw.y };
+    return;
+  }
+
+  if (currentTool === 'erase') {
+    const hit = pickObject(mw.x, mw.y);
+    if (hit) {
+      if (hit.kind === 'furniture') {
+        // убираем невидимый коллайдер, если он есть
+        const idx = furniture.indexOf(hit.obj);
+        furniture.splice(idx, 1);
+        for (let i = rocks.length - 1; i >= 0; i--) {
+          if (rocks[i].type === hit.obj.type && rocks[i].x === hit.obj.x && rocks[i].y === hit.obj.y) {
+            rocks.splice(i, 1); break;
           }
         }
-      }
-    } else {
-      // Добавление
-      const newObj = { x: mwx, y: mwy, type: currentTool, r: size, rot: rot, color: color };
-      if (currentTool === 'rock') {
-        rocks.push(newObj);
+      } else if (hit.kind === 'wall') {
+        walls.splice(walls.indexOf(hit.obj), 1);
       } else {
-        furniture.push(newObj);
-        // Коллизии для крупных объектов
-        const collidable = ['desk','cabinet','woodcab','locker','bus','stairs','wooddoor','vitya'];
-        if (collidable.includes(currentTool)) {
-          rocks.push({ x: mwx, y: mwy, r: size, type: currentTool });
-        }
+        rocks.splice(rocks.indexOf(hit.obj), 1);
       }
-      selectedObj = newObj; // Автовыделение нового
+      if (selectedObj === hit.obj) { selectedObj = null; selectedKind = null; }
     }
+    refreshCratePreview();
+    return;
+  }
+
+  if (currentTool === 'select') {
+    const hit = pickObject(mw.x, mw.y);
+    if (hit) {
+      selectedObj = hit.obj;
+      selectedKind = hit.kind;
+      if (hit.kind === 'furniture') {
+        document.getElementById('size-slider').value = hit.obj.r;
+        document.getElementById('rot-slider').value = hit.obj.rot || 0;
+        document.getElementById('obj-color').value = hit.obj.color || '#ffffff';
+        if (hit.obj.type === 'woodcrate') {
+          document.getElementById('crate-random').value = hit.obj.randomLoot ? 'true' : 'false';
+          refreshCratePreview();
+        } else {
+          refreshCratePreview();
+        }
+      } else if (hit.kind === 'wall') {
+        document.getElementById('obj-color').value = hit.obj.color || '#8a8f96';
+        document.getElementById('size-slider').value = Math.round((hit.obj.thickness || 10) * 5);
+        refreshCratePreview();
+      } else if (hit.kind === 'rock') {
+        document.getElementById('size-slider').value = hit.obj.r;
+        refreshCratePreview();
+      }
+      // Начинаем перетаскивание
+      dragState = {
+        kind: hit.kind,
+        obj: hit.obj,
+        offsetX: (hit.kind === 'wall' ? 0 : hit.obj.x - mw.x),
+        offsetY: (hit.kind === 'wall' ? 0 : hit.obj.y - mw.y),
+        wallOrig: hit.kind === 'wall' ? {x1:hit.obj.x1,y1:hit.obj.y1,x2:hit.obj.x2,y2:hit.obj.y2} : null,
+        startX: mw.x, startY: mw.y
+      };
+    } else {
+      selectedObj = null; selectedKind = null;
+      refreshCratePreview();
+    }
+    return;
+  }
+
+  // Иначе — добавление объекта
+  const size = parseInt(document.getElementById('size-slider').value);
+  const rot = parseInt(document.getElementById('rot-slider').value);
+  const color = document.getElementById('obj-color').value;
+
+  const newObj = {
+    x: mw.x, y: mw.y,
+    type: currentTool, r: size, rot: rot, color: color,
+    floorLevel: currentFloor
+  };
+
+  if (currentTool === 'rock') {
+    rocks.push(newObj);
+  } else {
+    if (currentTool === 'woodcrate') {
+      newObj.contents = [];
+      newObj.randomLoot = false;
+    }
+    furniture.push(newObj);
+    const collidable = ['desk','cabinet','woodcab','locker','bus','bus_wreck','stairs','wooddoor','vitya',
+      'tehnikum','kpp','garage','parking','fence','fence_barb','barrier','carrier','steelshelf',
+      'woodcrate','barrel','compchair','extinguisher'];
+    if (collidable.includes(currentTool)) {
+      rocks.push({ x: mw.x, y: mw.y, r: size, type: currentTool, floorLevel: currentFloor });
+    }
+  }
+  selectedObj = newObj;
+  selectedKind = (currentTool === 'rock') ? 'rock' : 'furniture';
+  if (currentTool === 'woodcrate') {
+    document.getElementById('crate-random').value = 'false';
+    refreshCratePreview();
   }
 });
 
-window.addEventListener('mouseup', () => { isDragging = false; });
+let dragState = null;
+
+window.addEventListener('mouseup', (e) => {
+  // Завершение стены
+  if (currentTool === 'wall' && wallStart && wallPreview) {
+    const len = Math.hypot(wallPreview.x2 - wallPreview.x1, wallPreview.y2 - wallPreview.y1);
+    if (len > 10) {
+      walls.push({
+        x1: wallPreview.x1, y1: wallPreview.y1,
+        x2: wallPreview.x2, y2: wallPreview.y2,
+        thickness: Math.max(4, parseInt(document.getElementById('size-slider').value) / 5),
+        color: document.getElementById('obj-color').value,
+        floorLevel: currentFloor
+      });
+    }
+    wallStart = null; wallPreview = null;
+  }
+  isDragging = false;
+  dragState = null;
+});
 
 window.addEventListener('mousemove', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const mwx = (e.clientX - rect.left - cam.x) / cam.zoom;
-  const mwy = (e.clientY - rect.top - cam.y) / cam.zoom;
-
-  document.getElementById('top-bar').innerText = `X: ${Math.round(mwx)}, Y: ${Math.round(mwy)}`;
+  const mw = screenToWorld(e.clientX, e.clientY);
+  mouseWorld.x = mw.x; mouseWorld.y = mw.y;
+  updateTopBar();
 
   if (isDragging) {
     cam.x += e.clientX - lastMouseX;
     cam.y += e.clientY - lastMouseY;
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
+    return;
+  }
+
+  if (currentTool === 'wall' && wallStart && wallPreview) {
+    wallPreview.x2 = mw.x; wallPreview.y2 = mw.y;
+    return;
+  }
+
+  if (dragState) {
+    if (dragState.kind === 'furniture' || dragState.kind === 'rock') {
+      const o = dragState.obj;
+      o.x = mw.x + dragState.offsetX;
+      o.y = mw.y + dragState.offsetY;
+      // двигаем коллайдер синхронно (если это мебель с коллайдером)
+      if (dragState.kind === 'furniture') {
+        for (const r of rocks) {
+          if (r.type === o.type && r._linkedTo === o) {
+            r.x = o.x; r.y = o.y;
+          }
+        }
+        // простая синхронизация по совпадению типа и старой позиции не надёжна —
+        // при создании привяжем через _linkedTo
+      }
+    } else if (dragState.kind === 'wall') {
+      const dx = mw.x - dragState.startX;
+      const dy = mw.y - dragState.startY;
+      dragState.obj.x1 = dragState.wallOrig.x1 + dx;
+      dragState.obj.y1 = dragState.wallOrig.y1 + dy;
+      dragState.obj.x2 = dragState.wallOrig.x2 + dx;
+      dragState.obj.y2 = dragState.wallOrig.y2 + dy;
+    }
   }
 });
 
@@ -370,21 +729,90 @@ canvas.addEventListener('contextmenu', e => e.preventDefault());
 
 canvas.addEventListener('wheel', (e) => {
   e.preventDefault();
+  // Если выделен объект и не зажат Alt — меняем размер
+  if (selectedObj && !e.altKey) {
+    if (selectedKind === 'furniture' || selectedKind === 'rock') {
+      selectedObj.r = Math.max(5, Math.min(400, selectedObj.r + (e.deltaY < 0 ? 2 : -2)));
+      document.getElementById('size-slider').value = selectedObj.r;
+    } else if (selectedKind === 'wall') {
+      selectedObj.thickness = Math.max(2, Math.min(80, (selectedObj.thickness || 8) + (e.deltaY < 0 ? 1 : -1)));
+      document.getElementById('size-slider').value = Math.round(selectedObj.thickness * 5);
+    }
+    return;
+  }
+
   const zoomSpeed = 0.1;
   const oldZoom = cam.zoom;
-
   if (e.deltaY < 0) cam.zoom += zoomSpeed;
   else cam.zoom -= zoomSpeed;
-
   cam.zoom = Math.max(0.2, Math.min(3, cam.zoom));
 
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
-
   cam.x = mouseX - (mouseX - cam.x) * (cam.zoom / oldZoom);
   cam.y = mouseY - (mouseY - cam.y) * (cam.zoom / oldZoom);
 }, { passive: false });
+
+// Горячие клавиши
+window.addEventListener('keydown', (e) => {
+  if (!selectedObj) return;
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+  const step = e.shiftKey ? 10 : 2;
+  if (e.key === 'r' || e.key === 'R' || e.key === 'к' || e.key === 'К') {
+    if (selectedKind === 'furniture' || selectedKind === 'rock') {
+      selectedObj.rot = ((selectedObj.rot || 0) + (e.shiftKey ? -15 : 15) + 360) % 360;
+      document.getElementById('rot-slider').value = selectedObj.rot;
+    }
+    e.preventDefault();
+  }
+  if (e.key === '+' || e.key === '=' || e.key === ']') {
+    if (selectedKind === 'furniture' || selectedKind === 'rock') {
+      selectedObj.r = Math.min(400, selectedObj.r + 3);
+      document.getElementById('size-slider').value = selectedObj.r;
+    }
+    e.preventDefault();
+  }
+  if (e.key === '-' || e.key === '[') {
+    if (selectedKind === 'furniture' || selectedKind === 'rock') {
+      selectedObj.r = Math.max(5, selectedObj.r - 3);
+      document.getElementById('size-slider').value = selectedObj.r;
+    }
+    e.preventDefault();
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    if (selectedKind === 'furniture' || selectedKind === 'rock') {
+      if (e.key === 'ArrowLeft') selectedObj.x -= step;
+      if (e.key === 'ArrowRight') selectedObj.x += step;
+      if (e.key === 'ArrowUp') selectedObj.y -= step;
+      if (e.key === 'ArrowDown') selectedObj.y += step;
+    } else if (selectedKind === 'wall') {
+      if (e.key === 'ArrowLeft') { selectedObj.x1-=step; selectedObj.x2-=step; }
+      if (e.key === 'ArrowRight') { selectedObj.x1+=step; selectedObj.x2+=step; }
+      if (e.key === 'ArrowUp') { selectedObj.y1-=step; selectedObj.y2-=step; }
+      if (e.key === 'ArrowDown') { selectedObj.y1+=step; selectedObj.y2+=step; }
+    }
+    e.preventDefault();
+  }
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (selectedKind === 'furniture') {
+      const o = selectedObj;
+      furniture.splice(furniture.indexOf(o), 1);
+      for (let i = rocks.length-1; i>=0; i--) {
+        if (rocks[i]._linkedTo === o) rocks.splice(i,1);
+      }
+    } else if (selectedKind === 'wall') {
+      walls.splice(walls.indexOf(selectedObj), 1);
+    } else if (selectedKind === 'rock') {
+      rocks.splice(rocks.indexOf(selectedObj), 1);
+    }
+    selectedObj = null; selectedKind = null;
+    refreshCratePreview();
+    e.preventDefault();
+  }
+});
 
 // --- ВСПОМОГАТЕЛЬНЫЕ ---
 const TAU = Math.PI * 2;
@@ -402,6 +830,34 @@ function roundRect(c,x,y,w,h,r){
   c.lineTo(x, y+r);
   c.quadraticCurveTo(x, y, x+r, y);
   c.closePath();
+}
+
+function shade(hex, percent) {
+  if (!hex || hex[0] !== '#') hex = '#ffffff';
+  if (hex.length === 4) hex = '#' + hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+  let num = parseInt(hex.replace("#",""),16),
+  amt = Math.round(2.55 * percent),
+  R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
+  return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
+}
+
+function distToSegment(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const len2 = dx*dx + dy*dy;
+  if (len2 === 0) return Math.hypot(px - x1, py - y1);
+  let t = ((px - x1) * dx + (py - y1) * dy) / len2;
+  t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (x1 + t*dx), py - (y1 + t*dy));
+}
+
+// Детерминированный шум (чтобы бетон не «моргал»)
+function seededRand(seed) {
+  let s = seed % 2147483647;
+  if (s <= 0) s += 2147483646;
+  return function() {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
 }
 
 // --- ФОН ПОЛА ---
@@ -428,19 +884,183 @@ function drawFloor() {
       }
     }
     ctx.restore();
-  } else {
+  } else if (tex === 'concrete') {
+    // детерминированные пятна — не моргают
     ctx.save();
-    ctx.globalAlpha = 0.08;
+    const rnd = seededRand(1337);
+    ctx.globalAlpha = 0.07;
     ctx.fillStyle = '#000';
-    for (let i = 0; i < 400; i++) {
-      const x = Math.random() * WORLD_W;
-      const y = Math.random() * WORLD_H;
-      const r = 10 + Math.random() * 40;
+    for (let i = 0; i < 500; i++) {
+      const x = rnd() * WORLD_W;
+      const y = rnd() * WORLD_H;
+      const r = 8 + rnd() * 45;
       ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
     }
+    ctx.globalAlpha = 0.05;
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 200; i++) {
+      const x = rnd() * WORLD_W;
+      const y = rnd() * WORLD_H;
+      const r = 10 + rnd() * 30;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+    }
+    // трещины
+    ctx.globalAlpha = 0.15;
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 40; i++) {
+      let x = rnd() * WORLD_W, y = rnd() * WORLD_H;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      const segs = 3 + Math.floor(rnd()*4);
+      for (let s = 0; s < segs; s++) {
+        x += (rnd()-0.5)*80; y += (rnd()-0.5)*80;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  } else if (tex === 'asphalt') {
+    ctx.save();
+    const rnd = seededRand(42);
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = '#000';
+    for (let i = 0; i < 2500; i++) {
+      const x = rnd() * WORLD_W;
+      const y = rnd() * WORLD_H;
+      const s = 1 + rnd() * 3;
+      ctx.fillRect(x, y, s, s);
+    }
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = '#fff';
+    for (let i = 0; i < 1200; i++) {
+      const x = rnd() * WORLD_W;
+      const y = rnd() * WORLD_H;
+      const s = 1 + rnd() * 2;
+      ctx.fillRect(x, y, s, s);
+    }
+    // заплатки
+    ctx.globalAlpha = 0.12;
+    ctx.fillStyle = '#000';
+    for (let i = 0; i < 30; i++) {
+      const x = rnd() * WORLD_W, y = rnd() * WORLD_H;
+      const w = 60 + rnd()*180, h = 40 + rnd()*120;
+      roundRect(ctx, x, y, w, h, 20); ctx.fill();
+    }
+    ctx.restore();
+  } else if (tex === 'grass') {
+    ctx.save();
+    const rnd = seededRand(7);
+    // базовые пятна травы
+    for (let i = 0; i < 900; i++) {
+      const x = rnd() * WORLD_W, y = rnd() * WORLD_H;
+      const r = 20 + rnd()*70;
+      const g = 40 + Math.floor(rnd()*50);
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = `rgb(${Math.floor(g*0.4)},${g+20},${Math.floor(g*0.4)})`;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+    }
+    // травинки
+    ctx.globalAlpha = 0.35;
+    for (let i = 0; i < 5000; i++) {
+      const x = rnd() * WORLD_W, y = rnd() * WORLD_H;
+      const h = 2 + rnd()*5;
+      const g = 60 + Math.floor(rnd()*70);
+      ctx.strokeStyle = `rgb(${Math.floor(g*0.5)},${g},${Math.floor(g*0.4)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (rnd()-0.5)*3, y - h); ctx.stroke();
+    }
+    ctx.restore();
+  } else if (tex === 'stone') {
+    ctx.save();
+    const rnd = seededRand(99);
+    // плиты
+    const pw = 120, ph = 90;
+    for (let y = 0; y < WORLD_H; y += ph) {
+      const off = (Math.floor(y/ph) % 2) * (pw/2);
+      for (let x = -pw; x < WORLD_W + pw; x += pw) {
+        const xx = x + off;
+        const c = 10 + Math.floor(rnd()*30);
+        ctx.fillStyle = shade(col, -5 + rnd()*15);
+        ctx.fillRect(xx+2, y+2, pw-4, ph-4);
+        ctx.strokeStyle = `rgba(0,0,0,0.35)`;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(xx+2, y+2, pw-4, ph-4);
+        // крапинки
+        ctx.globalAlpha = 0.25;
+        ctx.fillStyle = '#000';
+        for (let k = 0; k < 12; k++) {
+          ctx.fillRect(xx + 6 + rnd()*(pw-12), y + 6 + rnd()*(ph-12), 2+rnd()*3, 2+rnd()*3);
+        }
+        ctx.globalAlpha = 1;
+      }
+    }
+    ctx.restore();
+  } else if (tex === 'metal') {
+    ctx.save();
+    const rnd = seededRand(555);
+    // диагональные блики
+    for (let i = -WORLD_H; i < WORLD_W; i += 60) {
+      ctx.globalAlpha = 0.04;
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 30;
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + WORLD_H, WORLD_H); ctx.stroke();
+    }
+    // заклёпки
+    ctx.globalAlpha = 0.5;
+    const step = 200;
+    for (let y = step/2; y < WORLD_H; y += step) {
+      for (let x = step/2; x < WORLD_W; x += step) {
+        ctx.fillStyle = shade(col, 25);
+        ctx.beginPath(); ctx.arc(x, y, 5, 0, TAU); ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
+        ctx.beginPath(); ctx.arc(x+1, y+1, 5, 0, TAU); ctx.fill();
+        ctx.fillStyle = shade(col, 35);
+        ctx.beginPath(); ctx.arc(x, y, 3, 0, TAU); ctx.fill();
+      }
+    }
+    // царапины
+    ctx.globalAlpha = 0.12;
+    ctx.strokeStyle = '#fff';
+    for (let i = 0; i < 120; i++) {
+      const x = rnd()*WORLD_W, y = rnd()*WORLD_H;
+      const a = rnd()*TAU, l = 20 + rnd()*120;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.cos(a)*l, y + Math.sin(a)*l); ctx.stroke();
+    }
+    ctx.restore();
+  } else if (tex === 'glass') {
+    ctx.save();
+    // сетка стеклянных панелей
+    const step = 300;
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 4;
+    for (let x = 0; x < WORLD_W; x += step) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, WORLD_H); ctx.stroke();
+    }
+    for (let y = 0; y < WORLD_H; y += step) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WORLD_W, y); ctx.stroke();
+    }
+    // блики
+    const rnd = seededRand(2024);
+    for (let i = 0; i < 80; i++) {
+      const x = rnd()*WORLD_W, y = rnd()*WORLD_H;
+      const w = 40 + rnd()*160, h = 2 + rnd()*4;
+      const a = rnd()*TAU;
+      ctx.save();
+      ctx.translate(x, y); ctx.rotate(a);
+      ctx.globalAlpha = 0.1 + rnd()*0.12;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-w/2, -h/2, w, h);
+      ctx.restore();
+    }
+    // лёгкая голубая тонировка
+    ctx.globalAlpha = 0.08;
+    ctx.fillStyle = '#3fa9f5';
+    ctx.fillRect(0, 0, WORLD_W, WORLD_H);
     ctx.restore();
   }
 
+  // лёгкая сетка
   ctx.strokeStyle = 'rgba(255,255,255,0.05)';
   ctx.lineWidth = 2;
   for (let x = 0; x < WORLD_W; x += 100) {
@@ -451,51 +1071,125 @@ function drawFloor() {
   }
 }
 
+// --- ОТРИСОВКА СТЕН ---
+function drawWall(w) {
+  ctx.save();
+  const col = w.color || '#8a8f96';
+  ctx.strokeStyle = col;
+  ctx.lineCap = 'round';
+  ctx.lineWidth = w.thickness || 8;
+  ctx.beginPath();
+  ctx.moveTo(w.x1, w.y1);
+  ctx.lineTo(w.x2, w.y2);
+  ctx.stroke();
+
+  // обводка
+  ctx.strokeStyle = shade(col, -40);
+  ctx.lineWidth = Math.max(1, (w.thickness || 8) * 0.2);
+  ctx.beginPath();
+  ctx.moveTo(w.x1, w.y1);
+  ctx.lineTo(w.x2, w.y2);
+  ctx.stroke();
+
+  // выделение
+  if (selectedObj === w && selectedKind === 'wall') {
+    ctx.strokeStyle = '#ff00ff';
+    ctx.setLineDash([6, 6]);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(w.x1, w.y1);
+    ctx.lineTo(w.x2, w.y2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    // ручки концов
+    ctx.fillStyle = '#ff00ff';
+    ctx.beginPath(); ctx.arc(w.x1, w.y1, 5, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(w.x2, w.y2, 5, 0, TAU); ctx.fill();
+  }
+
+  // этажная подпись
+  if (w.floorLevel) {
+    ctx.fillStyle = 'rgba(127,240,255,0.8)';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('эт.' + w.floorLevel, (w.x1+w.x2)/2, (w.y1+w.y2)/2 - 8);
+    ctx.textAlign = 'start';
+  }
+
+  ctx.restore();
+}
+
 // --- ОТРИСОВКА ОБЪЕКТОВ ---
 function drawFurniture(f) {
   ctx.save();
   ctx.translate(f.x, f.y);
   ctx.rotate((f.rot || 0) * Math.PI / 180);
-  
+
   const r = f.r;
-  const baseColor = f.color || '#ffffff'; 
-  
-  // Функция для затемнения/осветления цвета
-  const shade = (hex, percent) => {
-    let num = parseInt(hex.replace("#",""),16),
-    amt = Math.round(2.55 * percent),
-    R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
-    return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
-  };
+  const baseColor = f.color || '#ffffff';
+  const S = shade;
 
   switch (f.type) {
     case 'desk': {
-      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillStyle = S(baseColor, -40);
       roundRect(ctx, -35, -25, 70, 50, 5); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = shade(baseColor, -70);
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
+      ctx.fillStyle = S(baseColor, -70);
       ctx.fillRect(-30, 15, 8, 20);
       ctx.fillRect(22, 15, 8, 20);
       break;
     }
     case 'chair': {
-      ctx.fillStyle = shade(baseColor, -30);
+      ctx.fillStyle = S(baseColor, -30);
       roundRect(ctx, -18, -15, 36, 30, 4); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 2; ctx.stroke();
       roundRect(ctx, -18, -25, 36, 10, 3); ctx.fill(); ctx.stroke();
       break;
     }
+    case 'compchair': {
+      // колесики
+      ctx.fillStyle = '#222';
+      for (let i = 0; i < 5; i++) {
+        const a = (i/5) * TAU;
+        ctx.beginPath(); ctx.arc(Math.cos(a)*22, Math.sin(a)*22, 4, 0, TAU); ctx.fill();
+      }
+      // сиденье
+      ctx.fillStyle = S(baseColor, -20);
+      roundRect(ctx, -20, -20, 40, 40, 10); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -50); ctx.lineWidth = 2; ctx.stroke();
+      // спинка
+      ctx.fillStyle = S(baseColor, -35);
+      roundRect(ctx, -18, -40, 36, 18, 8); ctx.fill();
+      ctx.stroke();
+      break;
+    }
     case 'cabinet': {
-      ctx.fillStyle = shade(baseColor, -30);
+      ctx.fillStyle = S(baseColor, -30);
       ctx.fillRect(-25, -45, 50, 90);
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 3; ctx.strokeRect(-25, -45, 50, 90);
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 3; ctx.strokeRect(-25, -45, 50, 90);
       ctx.fillStyle = '#ffd700';
       ctx.fillRect(15, -10, 5, 20);
       ctx.fillRect(15, 15, 5, 20);
       break;
     }
+    case 'steelshelf': {
+      ctx.fillStyle = S(baseColor, -20);
+      ctx.fillRect(-40, -50, 80, 100);
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 3; ctx.strokeRect(-40, -50, 80, 100);
+      // полки
+      for (let i = -1; i <= 1; i++) {
+        ctx.strokeStyle = S(baseColor, -40);
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(-40, i*30); ctx.lineTo(40, i*30); ctx.stroke();
+      }
+      // стойки
+      ctx.fillStyle = S(baseColor, -50);
+      ctx.fillRect(-40, -50, 5, 100);
+      ctx.fillRect(35, -50, 5, 100);
+      break;
+    }
     case 'board': {
-      ctx.fillStyle = shade(baseColor, -50);
+      ctx.fillStyle = S(baseColor, -50);
       roundRect(ctx, -120, -50, 240, 100, 8); ctx.fill();
       ctx.strokeStyle = '#8b6d4a'; ctx.lineWidth = 6; ctx.stroke();
       ctx.fillStyle = '#fff';
@@ -505,7 +1199,7 @@ function drawFurniture(f) {
     }
     case 'holo': {
       const t = performance.now() / 1000;
-      ctx.fillStyle = shade(baseColor, 20); ctx.globalAlpha = 0.2;
+      ctx.fillStyle = S(baseColor, 20); ctx.globalAlpha = 0.2;
       ctx.beginPath(); ctx.arc(0, Math.sin(t*2)*10, 40 + Math.sin(t*3)*5, 0, TAU); ctx.fill();
       ctx.strokeStyle = baseColor; ctx.globalAlpha = 0.6; ctx.lineWidth = 2; ctx.stroke();
       ctx.globalAlpha = 1;
@@ -525,9 +1219,9 @@ function drawFurniture(f) {
       break;
     }
     case 'wooddoor': {
-      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillStyle = S(baseColor, -40);
       ctx.fillRect(-30, -50, 60, 100);
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-30, -50, 60, 100);
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-30, -50, 60, 100);
       ctx.fillStyle = '#ffd700';
       ctx.beginPath(); ctx.arc(18, 0, 4, 0, TAU); ctx.fill();
       break;
@@ -559,9 +1253,9 @@ function drawFurniture(f) {
       break;
     }
     case 'woodcab': {
-      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillStyle = S(baseColor, -40);
       ctx.fillRect(-35, -50, 70, 100);
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-35, -50, 70, 100);
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 4; ctx.strokeRect(-35, -50, 70, 100);
       ctx.beginPath(); ctx.moveTo(0, -50); ctx.lineTo(0, 50); ctx.stroke();
       ctx.fillStyle = '#ffd700';
       ctx.beginPath(); ctx.arc(-8, 0, 4, 0, TAU); ctx.fill();
@@ -572,9 +1266,9 @@ function drawFurniture(f) {
       const w = 22, h = 80;
       for (let i = -1; i <= 1; i++) {
         const cx = i * w;
-        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -10) : shade(baseColor, -20);
+        ctx.fillStyle = i % 2 === 0 ? S(baseColor, -10) : S(baseColor, -20);
         ctx.fillRect(cx - w/2 + 1, -h/2, w - 2, h);
-        ctx.strokeStyle = shade(baseColor, -50); ctx.lineWidth = 2;
+        ctx.strokeStyle = S(baseColor, -50); ctx.lineWidth = 2;
         ctx.strokeRect(cx - w/2 + 1, -h/2, w - 2, h);
         ctx.strokeStyle = '#1a2028';
         for (let s = 0; s < 3; s++) {
@@ -591,13 +1285,13 @@ function drawFurniture(f) {
     case 'stairs': {
       const steps = 6, sw = 100, sh = 16;
       for (let i = 0; i < steps; i++) {
-        ctx.fillStyle = i % 2 === 0 ? shade(baseColor, -20) : shade(baseColor, -30);
+        ctx.fillStyle = i % 2 === 0 ? S(baseColor, -20) : S(baseColor, -30);
         ctx.fillRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
-        ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 2;
+        ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 2;
         ctx.strokeRect(-sw/2, -steps*sh/2 + i*sh, sw, sh - 2);
       }
       break;
-    }                        
+    }
     case 'bus': {
       const isApoc = baseColor !== '#ffffff' && baseColor !== '#ffb400';
       const busColor = isApoc ? baseColor : '#ffb400';
@@ -680,10 +1374,10 @@ function drawFurniture(f) {
 
       ctx.fillStyle = busColor;
       ctx.beginPath();
-      ctx.moveTo(85, -10); ctx.lineTo(115, -10); 
-      ctx.quadraticCurveTo(155, -10, 155, 15); 
-      ctx.quadraticCurveTo(155, 35, 125, 35); 
-      ctx.lineTo(85, 35); 
+      ctx.moveTo(85, -10); ctx.lineTo(115, -10);
+      ctx.quadraticCurveTo(155, -10, 155, 15);
+      ctx.quadraticCurveTo(155, 35, 125, 35);
+      ctx.lineTo(85, 35);
       ctx.closePath();
       ctx.fill(); ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
 
@@ -824,10 +1518,10 @@ function drawFurniture(f) {
 
       ctx.fillStyle = busColor;
       ctx.beginPath();
-      ctx.moveTo(85, -10); ctx.lineTo(115, -10); 
-      ctx.quadraticCurveTo(130, -5, 155, 15); 
-      ctx.quadraticCurveTo(155, 35, 125, 35); 
-      ctx.lineTo(85, 35); 
+      ctx.moveTo(85, -10); ctx.lineTo(115, -10);
+      ctx.quadraticCurveTo(130, -5, 155, 15);
+      ctx.quadraticCurveTo(155, 35, 125, 35);
+      ctx.lineTo(85, 35);
       ctx.closePath();
       ctx.fill(); ctx.strokeStyle = darkMetal; ctx.lineWidth = 4; ctx.stroke();
 
@@ -837,7 +1531,7 @@ function drawFurniture(f) {
 
       ctx.fillStyle = '#252525';
       roundRect(ctx, 146, 0, 8, 30, 2); ctx.fill();
-      
+
       ctx.fillStyle = '#222';
       ctx.beginPath(); ctx.arc(154, 5, 4, 0, TAU); ctx.fill();
       ctx.beginPath(); ctx.arc(154, 25, 4, 0, TAU); ctx.fill();
@@ -912,8 +1606,8 @@ function drawFurniture(f) {
     }
     case 'basket_ball': {
       const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 18);
-      g.addColorStop(0, shade(baseColor, 20)); 
-      g.addColorStop(1, shade(baseColor, -40));
+      g.addColorStop(0, S(baseColor, 20));
+      g.addColorStop(1, S(baseColor, -40));
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(0, 0, 18, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#331100'; ctx.lineWidth = 2; ctx.stroke();
@@ -923,7 +1617,7 @@ function drawFurniture(f) {
       break;
     }
     case 'volley_net': {
-      ctx.fillStyle = shade(baseColor, -40);
+      ctx.fillStyle = S(baseColor, -40);
       ctx.fillRect(-120, -40, 6, 80);
       ctx.fillRect(114, -40, 6, 80);
       ctx.strokeStyle = baseColor; ctx.lineWidth = 1.5;
@@ -935,13 +1629,13 @@ function drawFurniture(f) {
         const ny = -25 + (j / 4) * 50;
         ctx.beginPath(); ctx.moveTo(-114, ny); ctx.lineTo(114, ny); ctx.stroke();
       }
-      ctx.strokeStyle = shade(baseColor, 20); ctx.lineWidth = 4;
+      ctx.strokeStyle = S(baseColor, 20); ctx.lineWidth = 4;
       ctx.beginPath(); ctx.moveTo(-114, -25); ctx.lineTo(114, -25); ctx.stroke();
       break;
     }
     case 'volley_ball': {
       const g = ctx.createRadialGradient(-5, -5, 3, 0, 0, 16);
-      g.addColorStop(0, '#ffffff'); g.addColorStop(1, shade(baseColor, -20));
+      g.addColorStop(0, '#ffffff'); g.addColorStop(1, S(baseColor, -20));
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
@@ -951,11 +1645,11 @@ function drawFurniture(f) {
       break;
     }
     case 'globe': {
-      ctx.fillStyle = shade(baseColor, -50);
+      ctx.fillStyle = S(baseColor, -50);
       ctx.fillRect(-3, 10, 6, 20);
       ctx.beginPath(); ctx.arc(0, 30, 14, 0, Math.PI); ctx.fill();
       const g = ctx.createRadialGradient(-6, -6, 4, 0, 0, 24);
-      g.addColorStop(0, shade(baseColor, 30)); g.addColorStop(1, shade(baseColor, -30));
+      g.addColorStop(0, S(baseColor, 30)); g.addColorStop(1, S(baseColor, -30));
       ctx.fillStyle = g;
       ctx.beginPath(); ctx.arc(0, 0, 24, 0, TAU); ctx.fill();
       ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke();
@@ -965,10 +1659,12 @@ function drawFurniture(f) {
       break;
     }
     case 'ruler': {
+      // уменьшена
+      ctx.scale(0.6, 0.6);
       ctx.fillStyle = baseColor;
       roundRect(ctx, -60, -10, 120, 20, 3); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 2; ctx.stroke();
-      ctx.strokeStyle = shade(baseColor, -60); ctx.lineWidth = 1.5;
+      ctx.strokeStyle = S(baseColor, -30); ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 1.5;
       for (let i = 0; i <= 12; i++) {
         const px = -60 + (i / 12) * 120;
         const h = (i % 2 === 0) ? 8 : 5;
@@ -977,12 +1673,12 @@ function drawFurniture(f) {
       break;
     }
     case 'pen': {
-      ctx.scale(0.5, 0.5); 
+      ctx.scale(0.5, 0.5);
       ctx.rotate(0.6);
       ctx.fillStyle = baseColor;
       roundRect(ctx, -30, -5, 55, 10, 4); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
-      ctx.fillStyle = shade(baseColor, 30);
+      ctx.strokeStyle = S(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = S(baseColor, 30);
       roundRect(ctx, 20, -6, 14, 12, 4); ctx.fill();
       ctx.stroke();
       ctx.fillStyle = '#ffd700';
@@ -998,10 +1694,10 @@ function drawFurniture(f) {
       ctx.rotate(0.2);
       ctx.fillStyle = baseColor;
       roundRect(ctx, -22, -12, 44, 24, 5); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
+      ctx.strokeStyle = S(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
       ctx.fillStyle = '#ffffff';
       roundRect(ctx, -22, -12, 44, 8, 4); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -20); ctx.stroke();
+      ctx.strokeStyle = S(baseColor, -20); ctx.stroke();
       break;
     }
     case 'pencil': {
@@ -1009,14 +1705,14 @@ function drawFurniture(f) {
       ctx.rotate(0.5);
       ctx.fillStyle = baseColor;
       ctx.fillRect(-35, -5, 60, 10);
-      ctx.strokeStyle = shade(baseColor, -30); ctx.lineWidth = 2; ctx.strokeRect(-35, -5, 60, 10);
-      ctx.fillStyle = shade(baseColor, -10);
+      ctx.strokeStyle = S(baseColor, -30); ctx.lineWidth = 2; ctx.strokeRect(-35, -5, 60, 10);
+      ctx.fillStyle = S(baseColor, -10);
       ctx.fillRect(-35, -5, 60, 3);
       ctx.fillStyle = '#f2e2c0';
       ctx.beginPath();
       ctx.moveTo(25, -5); ctx.lineTo(38, 0); ctx.lineTo(25, 5);
       ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = shade(baseColor, -30); ctx.stroke();
+      ctx.strokeStyle = S(baseColor, -30); ctx.stroke();
       ctx.fillStyle = '#333';
       ctx.beginPath();
       ctx.moveTo(33, -2); ctx.lineTo(38, 0); ctx.lineTo(33, 2);
@@ -1051,13 +1747,313 @@ function drawFurniture(f) {
       }
       break;
     }
+
+    // === НОВЫЕ ОБЪЕКТЫ ===
+    case 'broken_glass': {
+      const rnd = seededRand(Math.floor(f.x*13 + f.y*7));
+      for (let i = 0; i < 14; i++) {
+        const a = rnd()*TAU;
+        const dist = 4 + rnd()*28;
+        const sx = Math.cos(a)*dist, sy = Math.sin(a)*dist;
+        const s = 3 + rnd()*7;
+        ctx.save();
+        ctx.translate(sx, sy);
+        ctx.rotate(rnd()*TAU);
+        ctx.fillStyle = `rgba(${180+rnd()*60|0},${220+rnd()*35|0},255,${0.45+rnd()*0.4})`;
+        ctx.beginPath();
+        ctx.moveTo(-s/2, -s/2); ctx.lineTo(s/2, -s/3); ctx.lineTo(s/3, s/2); ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.7; ctx.stroke();
+        ctx.restore();
+      }
+      // лужица
+      ctx.fillStyle = 'rgba(120,200,255,0.12)';
+      ctx.beginPath(); ctx.ellipse(0,0,r*0.7,r*0.5,0,0,TAU); ctx.fill();
+      break;
+    }
+    case 'glass_bottles': {
+      const rnd = seededRand(Math.floor(f.x*3 + f.y*11 + 5));
+      for (let i = 0; i < 5; i++) {
+        const bx = (rnd()-0.5)*22, by = (rnd()-0.5)*22;
+        const tilt = (rnd()-0.5)*1.2;
+        ctx.save();
+        ctx.translate(bx, by);
+        ctx.rotate(tilt);
+        // бутылка (вид сверху)
+        ctx.fillStyle = 'rgba(80,180,120,0.65)';
+        roundRect(ctx, -3, -12, 6, 24, 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.8; ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.45)';
+        ctx.beginPath(); ctx.arc(0, -13, 3.2, 0, TAU); ctx.fill();
+        ctx.restore();
+      }
+      break;
+    }
+    case 'tehnikum': {
+      // Техникум как постройка (вид сверху, большой корпус)
+      ctx.fillStyle = S(baseColor, -25);
+      roundRect(ctx, -220, -140, 440, 280, 10); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 5; ctx.stroke();
+      // внутренний двор-коридор
+      ctx.fillStyle = S(baseColor, 10);
+      roundRect(ctx, -180, -100, 360, 200, 6); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -40); ctx.lineWidth = 3; ctx.stroke();
+      // крыло
+      ctx.fillStyle = S(baseColor, -40);
+      roundRect(ctx, -220, 50, 100, 90, 4); ctx.fill();
+      ctx.stroke();
+      // подпись
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('ТЕХНИКУМ', 0, 0);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'kpp': {
+      ctx.fillStyle = S(baseColor, -20);
+      roundRect(ctx, -70, -50, 140, 100, 6); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 4; ctx.stroke();
+      ctx.fillStyle = 'rgba(127,240,255,0.25)';
+      roundRect(ctx, -45, -35, 90, 50, 3); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -40); ctx.lineWidth = 2; ctx.stroke();
+      // дверь
+      ctx.fillStyle = S(baseColor, -45);
+      ctx.fillRect(-15, 25, 30, 25);
+      ctx.strokeStyle = S(baseColor, -65); ctx.lineWidth = 2; ctx.strokeRect(-15,25,30,25);
+      // надпись
+      ctx.fillStyle = '#7ff0ff';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('КПП', 0, -10);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'garage': {
+      ctx.fillStyle = S(baseColor, -25);
+      roundRect(ctx, -110, -80, 220, 160, 6); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 4; ctx.stroke();
+      // ворота
+      ctx.fillStyle = S(baseColor, -45);
+      roundRect(ctx, -80, 30, 160, 35, 4); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -70); ctx.lineWidth = 2;
+      for (let i = 0; i < 6; i++) {
+        ctx.beginPath(); ctx.moveTo(-80 + i*32, 30); ctx.lineTo(-80 + i*32, 65); ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,0.6)';
+      ctx.font = 'bold 12px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('ГАРАЖ', 0, -40);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'parking': {
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      roundRect(ctx, -130, -90, 260, 180, 6); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 3;
+      for (let i = 0; i < 5; i++) {
+        const x = -130 + i*65;
+        ctx.beginPath(); ctx.moveTo(x, -90); ctx.lineTo(x, 90); ctx.stroke();
+      }
+      ctx.beginPath(); ctx.moveTo(-130, -90); ctx.lineTo(130, -90); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-130, 90); ctx.lineTo(130, 90); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.font = 'bold 40px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('P', 0, 0);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'fence':
+    case 'fence_barb': {
+      const barbed = f.type === 'fence_barb';
+      ctx.strokeStyle = S(baseColor, -40);
+      ctx.lineWidth = 3;
+      // столбы
+      for (let x = -100; x <= 100; x += 50) {
+        ctx.fillStyle = S(baseColor, -45);
+        ctx.fillRect(x-3, -40, 6, 80);
+        ctx.strokeRect(x-3, -40, 6, 80);
+      }
+      // сетка
+      ctx.strokeStyle = S(baseColor, 10);
+      ctx.lineWidth = 1;
+      for (let x = -100; x <= 100; x += 10) {
+        ctx.beginPath(); ctx.moveTo(x, -38); ctx.lineTo(x, 38); ctx.stroke();
+      }
+      for (let y = -38; y <= 38; y += 10) {
+        ctx.beginPath(); ctx.moveTo(-100, y); ctx.lineTo(100, y); ctx.stroke();
+      }
+      // колючая проволока
+      if (barbed) {
+        ctx.strokeStyle = 'rgba(220,220,220,0.9)';
+        ctx.lineWidth = 1.2;
+        for (let k = 0; k < 3; k++) {
+          const yy = -30 + k*30;
+          ctx.beginPath();
+          for (let x = -100; x <= 100; x += 10) {
+            const yy2 = yy + Math.sin(x*0.4)*3;
+            if (x === -100) ctx.moveTo(x, yy2); else ctx.lineTo(x, yy2);
+          }
+          ctx.stroke();
+          for (let x = -95; x <= 95; x += 20) {
+            ctx.beginPath();
+            ctx.moveTo(x-3, yy-3); ctx.lineTo(x+3, yy+3);
+            ctx.moveTo(x+3, yy-3); ctx.lineTo(x-3, yy+3);
+            ctx.stroke();
+          }
+        }
+      }
+      break;
+    }
+    case 'barrier': {
+      // шлагбаум
+      ctx.fillStyle = '#444';
+      roundRect(ctx, -50, -8, 20, 30, 3); ctx.fill();
+      ctx.strokeStyle = '#222'; ctx.lineWidth = 2; ctx.stroke();
+      // стрела
+      ctx.save();
+      ctx.translate(-30, 5);
+      ctx.fillStyle = '#fff';
+      roundRect(ctx, 0, -6, 110, 12, 4); ctx.fill();
+      ctx.strokeStyle = '#c00'; ctx.lineWidth = 3;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        ctx.moveTo(10 + i*18, -5); ctx.lineTo(20 + i*18, 5);
+      }
+      ctx.stroke();
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+      roundRect(ctx, 0, -6, 110, 12, 4); ctx.stroke();
+      ctx.restore();
+      break;
+    }
+    case 'carrier': {
+      // Перевозчик (грузовик-платформа)
+      ctx.fillStyle = S(baseColor, -20);
+      roundRect(ctx, -90, -45, 180, 90, 6); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
+      // кабина
+      ctx.fillStyle = S(baseColor, -40);
+      roundRect(ctx, 40, -45, 50, 90, 6); ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(127,240,255,0.35)';
+      roundRect(ctx, 48, -35, 34, 20, 3); ctx.fill();
+      // платформа
+      ctx.fillStyle = S(baseColor, -10);
+      roundRect(ctx, -80, -30, 110, 60, 4); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -50); ctx.lineWidth = 2; ctx.stroke();
+      // колёса
+      ctx.fillStyle = '#151515';
+      for (const wx of [-60, 20, 65]) {
+        for (const wy of [-50, 50]) {
+          ctx.beginPath(); ctx.arc(wx, wy, 12, 0, TAU); ctx.fill();
+          ctx.strokeStyle = '#000'; ctx.stroke();
+          ctx.fillStyle = '#666';
+          ctx.beginPath(); ctx.arc(wx, wy, 5, 0, TAU); ctx.fill();
+          ctx.fillStyle = '#151515';
+        }
+      }
+      break;
+    }
+    case 'cardboard': {
+      ctx.fillStyle = S(baseColor, -20);
+      roundRect(ctx, -25, -20, 50, 40, 4); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -50); ctx.lineWidth = 2; ctx.stroke();
+      // скотч
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.fillRect(-3, -20, 6, 40);
+      // надпись
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.font = 'bold 8px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('CARGO', 0, 8);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'woodcrate': {
+      ctx.fillStyle = S(baseColor, -25);
+      roundRect(ctx, -25, -25, 50, 50, 3); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -55); ctx.lineWidth = 3; ctx.stroke();
+      // доски
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = S(baseColor, -40);
+      ctx.beginPath(); ctx.moveTo(-25, -8); ctx.lineTo(25, -8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-25, 8); ctx.lineTo(25, 8); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-8, -25); ctx.lineTo(-8, 25); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(8, -25); ctx.lineTo(8, 25); ctx.stroke();
+      // случайный лут — значок
+      if (f.randomLoot) {
+        ctx.fillStyle = '#ffd700';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('?', 0, 0);
+        ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      }
+      break;
+    }
+    case 'barrel': {
+      const g = ctx.createRadialGradient(-8, -8, 4, 0, 0, 24);
+      g.addColorStop(0, S(baseColor, 20));
+      g.addColorStop(1, S(baseColor, -40));
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(0, 0, 22, 0, TAU); ctx.fill();
+      ctx.strokeStyle = S(baseColor, -60); ctx.lineWidth = 3; ctx.stroke();
+      // обручи
+      ctx.strokeStyle = S(baseColor, -30); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(0, 0, 15, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 8, 0, TAU); ctx.stroke();
+      // блик
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.beginPath(); ctx.ellipse(-7, -7, 6, 10, -0.6, 0, TAU); ctx.fill();
+      break;
+    }
+    case 'extinguisher': {
+      ctx.fillStyle = '#d32f2f';
+      roundRect(ctx, -10, -20, 20, 40, 5); ctx.fill();
+      ctx.strokeStyle = '#7a0000'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.fillStyle = '#333';
+      ctx.fillRect(-4, -28, 8, 10);
+      ctx.strokeStyle = '#333'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, -28); ctx.quadraticCurveTo(16, -30, 14, -12); ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(-8, -6, 16, 10);
+      ctx.fillStyle = '#d32f2f';
+      ctx.font = 'bold 6px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('ОГН', 0, -1);
+      ctx.textAlign = 'start'; ctx.textBaseline = 'alphabetic';
+      break;
+    }
+    case 'smoke': {
+      const t = performance.now()/1000;
+      const rnd = seededRand(777);
+      for (let i = 0; i < 10; i++) {
+        const a = rnd()*TAU + t*0.2;
+        const d = 8 + rnd()*28;
+        const x = Math.cos(a)*d;
+        const y = Math.sin(a)*d - (t*6 + i*2) % 30;
+        ctx.fillStyle = `rgba(140,150,160,${0.12 + rnd()*0.15})`;
+        ctx.beginPath(); ctx.arc(x, y, 10 + rnd()*14, 0, TAU); ctx.fill();
+      }
+      break;
+    }
   }
 
-  if (selectedObj === f) {
+  // маркер этажа
+  if (f.floorLevel) {
+    ctx.fillStyle = 'rgba(127,240,255,0.9)';
+    ctx.font = 'bold 11px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('эт.' + f.floorLevel, 0, -r - 8);
+    ctx.textAlign = 'start';
+  }
+
+  if (selectedObj === f && selectedKind === 'furniture') {
     ctx.strokeStyle = '#ff00ff';
     ctx.setLineDash([5, 5]);
     ctx.lineWidth = 2;
-    ctx.strokeRect(-r-10, -r-10, r*2+20, r*2+20);
+    const hr = Math.max(20, r * 1.2);
+    ctx.strokeRect(-hr-5, -hr-5, hr*2+10, hr*2+10);
     ctx.setLineDash([]);
   }
 
@@ -1066,39 +2062,45 @@ function drawFurniture(f) {
 
 // --- ЗАГРУЗКА ГОТОВЫХ КАРТ ---
 window.loadMap = function(mapType) {
-  furniture = [];
-  rocks = [];
-  selectedObj = null;
-  
+  furniture = []; rocks = []; walls = [];
+  selectedObj = null; selectedKind = null;
+
   if (mapType === 'backyard') {
     WORLD_W = 2600; WORLD_H = 2000;
     document.getElementById('world-w').value = WORLD_W;
     document.getElementById('world-h').value = WORLD_H;
-    document.getElementById('floor-texture').value = 'concrete';
+    document.getElementById('floor-texture').value = 'asphalt';
     document.getElementById('floor-color').value = '#2b3138';
 
-    // Задний двор (открытое пространство, автобусы, ящики)
-    // Ставим большой разбитый автобус по центру
-    furniture.push({ x: 1300, y: 1000, type: 'bus_wreck', r: 100, rot: 0, color: '#cfa641' });
-    rocks.push({ x: 1300, y: 1000, r: 100, type: 'bus_wreck' });
-    
-    // Целый автобус сбоку
-    furniture.push({ x: 500, y: 500, type: 'bus', r: 100, rot: 90, color: '#ffb400' });
-    rocks.push({ x: 500, y: 500, r: 100, type: 'bus' });
+    furniture.push({ x: 1300, y: 1000, type: 'bus_wreck', r: 100, rot: 0, color: '#cfa641', floorLevel: 0 });
+    rocks.push({ x: 1300, y: 1000, r: 100, type: 'bus_wreck', floorLevel: 0 });
 
-    // Несколько деревянных шкафов и дверей для укрытия
+    furniture.push({ x: 500, y: 500, type: 'bus', r: 100, rot: 90, color: '#ffb400', floorLevel: 0 });
+    rocks.push({ x: 500, y: 500, r: 100, type: 'bus', floorLevel: 0 });
+
     for(let i=0; i<5; i++) {
-      furniture.push({ x: 300 + i*400, y: 1700, type: 'woodcab', r: 50, rot: 0, color: '#5a3d2b' });
-      rocks.push({ x: 300 + i*400, y: 1700, r: 50, type: 'woodcab' });
-      
-      furniture.push({ x: 2000, y: 300 + i*300, type: 'woodcab', r: 50, rot: 0, color: '#5a3d2b' });
-      rocks.push({ x: 2000, y: 300 + i*300, r: 50, type: 'woodcab' });
+      furniture.push({ x: 300 + i*400, y: 1700, type: 'woodcab', r: 50, rot: 0, color: '#5a3d2b', floorLevel: 0 });
+      rocks.push({ x: 300 + i*400, y: 1700, r: 50, type: 'woodcab', floorLevel: 0 });
+      furniture.push({ x: 2000, y: 300 + i*300, type: 'woodcab', r: 50, rot: 0, color: '#5a3d2b', floorLevel: 0 });
+      rocks.push({ x: 2000, y: 300 + i*300, r: 50, type: 'woodcab', floorLevel: 0 });
     }
-    
-    // Камни для декора
+
+    // ящики с лутом
+    furniture.push({ x: 1600, y: 1400, type: 'woodcrate', r: 30, rot: 0, color: '#7a5a3a', floorLevel: 0,
+      contents: [{name:'medkit', count:2},{name:'ammo', count:30}], randomLoot: false });
+    furniture.push({ x: 900, y: 1400, type: 'woodcrate', r: 30, rot: 0, color: '#7a5a3a', floorLevel: 0,
+      contents: [], randomLoot: true });
+    rocks.push({ x: 1600, y: 1400, r: 30, type: 'woodcrate', floorLevel: 0 });
+    rocks.push({ x: 900, y: 1400, r: 30, type: 'woodcrate', floorLevel: 0 });
+
+    furniture.push({ x: 700, y: 300, type: 'broken_glass', r: 30, rot: 0, color: '#bfeaff', floorLevel: 0 });
+    furniture.push({ x: 1800, y: 1600, type: 'barrel', r: 24, rot: 0, color: '#3a4a5a', floorLevel: 0 });
+    furniture.push({ x: 1000, y: 900, type: 'cardboard', r: 30, rot: 15, color: '#b08a5a', floorLevel: 0 });
+
     for(let i=0; i<8; i++) {
-      furniture.push({ x: 600 + Math.random()*1400, y: 600 + Math.random()*800, type: 'rock', r: 40, rot: 0, color: '#98a4b3' });
-      rocks.push({ x: furniture[furniture.length-1].x, y: furniture[furniture.length-1].y, r: 40, type: 'rock' });
+      const rx = 600 + Math.random()*1400, ry = 600 + Math.random()*800;
+      furniture.push({ x: rx, y: ry, type: 'rock', r: 40, rot: 0, color: '#98a4b3', floorLevel: 0 });
+      rocks.push({ x: rx, y: ry, r: 40, type: 'rock', floorLevel: 0 });
     }
 
   } else if (mapType === 'gym') {
@@ -1108,40 +2110,38 @@ window.loadMap = function(mapType) {
     document.getElementById('floor-texture').value = 'wood';
     document.getElementById('floor-color').value = '#c4a47a';
 
-    // Спортзал (кольца, сетки, мячи)
-    // Баскетбольные кольца
-    furniture.push({ x: 300, y: 300, type: 'basket_ring', r: 50, rot: 0, color: '#ffffff' });
-    furniture.push({ x: 1900, y: 300, type: 'basket_ring', r: 50, rot: 180, color: '#ffffff' });
-    furniture.push({ x: 300, y: 1300, type: 'basket_ring', r: 50, rot: 90, color: '#ffffff' });
-    furniture.push({ x: 1900, y: 1300, type: 'basket_ring', r: 50, rot: 270, color: '#ffffff' });
+    furniture.push({ x: 300, y: 300, type: 'basket_ring', r: 50, rot: 0, color: '#ffffff', floorLevel: 0 });
+    furniture.push({ x: 1900, y: 300, type: 'basket_ring', r: 50, rot: 180, color: '#ffffff', floorLevel: 0 });
+    furniture.push({ x: 300, y: 1300, type: 'basket_ring', r: 50, rot: 90, color: '#ffffff', floorLevel: 0 });
+    furniture.push({ x: 1900, y: 1300, type: 'basket_ring', r: 50, rot: 270, color: '#ffffff', floorLevel: 0 });
 
-    // Волейбольная сетка по центру
-    furniture.push({ x: 1100, y: 800, type: 'volley_net', r: 100, rot: 0, color: '#ffffff' });
-    
-    // Шкафчики вдоль стен
+    furniture.push({ x: 1100, y: 800, type: 'volley_net', r: 100, rot: 0, color: '#ffffff', floorLevel: 0 });
+
     for(let i=0; i<6; i++) {
-      furniture.push({ x: 100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68' });
-      rocks.push({ x: 100, y: 200 + i*200, r: 40, type: 'locker' });
-
-      furniture.push({ x: 2100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68' });
-      rocks.push({ x: 2100, y: 200 + i*200, r: 40, type: 'locker' });
+      furniture.push({ x: 100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68', floorLevel: 0 });
+      rocks.push({ x: 100, y: 200 + i*200, r: 40, type: 'locker', floorLevel: 0 });
+      furniture.push({ x: 2100, y: 200 + i*200, type: 'locker', r: 40, rot: 0, color: '#4e5a68', floorLevel: 0 });
+      rocks.push({ x: 2100, y: 200 + i*200, r: 40, type: 'locker', floorLevel: 0 });
     }
 
-    // Мячи (декор, без коллизии)
-    furniture.push({ x: 800, y: 600, type: 'basket_ball', r: 20, rot: 0, color: '#ff6600' });
-    furniture.push({ x: 1400, y: 1000, type: 'basket_ball', r: 20, rot: 0, color: '#ff6600' });
-    furniture.push({ x: 900, y: 1100, type: 'volley_ball', r: 20, rot: 0, color: '#ffffff' });
-    furniture.push({ x: 1300, y: 500, type: 'volley_ball', r: 20, rot: 0, color: '#ffffff' });
+    furniture.push({ x: 800, y: 600, type: 'basket_ball', r: 20, rot: 0, color: '#ff6600', floorLevel: 0 });
+    furniture.push({ x: 1400, y: 1000, type: 'basket_ball', r: 20, rot: 0, color: '#ff6600', floorLevel: 0 });
+    furniture.push({ x: 900, y: 1100, type: 'volley_ball', r: 20, rot: 0, color: '#ffffff', floorLevel: 0 });
+    furniture.push({ x: 1300, y: 500, type: 'volley_ball', r: 20, rot: 0, color: '#ffffff', floorLevel: 0 });
 
-    // Немного укрытий (перегородки / столы)
     for(let i=0; i<3; i++) {
-      furniture.push({ x: 600 + i*400, y: 800, type: 'desk', r: 40, rot: 90, color: '#5a3d2b' });
-      rocks.push({ x: 600 + i*400, y: 800, r: 40, type: 'desk' });
+      furniture.push({ x: 600 + i*400, y: 800, type: 'desk', r: 40, rot: 90, color: '#5a3d2b', floorLevel: 0 });
+      rocks.push({ x: 600 + i*400, y: 800, r: 40, type: 'desk', floorLevel: 0 });
     }
+
+    // компьютерные кресла
+    furniture.push({ x: 500, y: 1200, type: 'compchair', r: 30, rot: 0, color: '#2b3a4a', floorLevel: 0 });
+    furniture.push({ x: 1700, y: 400, type: 'compchair', r: 30, rot: 45, color: '#2b3a4a', floorLevel: 0 });
   }
-  
+
   cam.x = -WORLD_W/2 + W/2;
   cam.y = -WORLD_H/2 + H/2;
+  updateTopBar();
   alert('Карта загружена!');
 };
 
@@ -1159,12 +2159,14 @@ function render() {
   ctx.lineWidth = 30;
   ctx.strokeRect(15, 15, WORLD_W - 30, WORLD_H - 30);
 
-  for (const f of furniture) {
-    drawFurniture(f);
+  // стены (сначала)
+  for (const w of walls) {
+    if (visibleOnFloor(w.floorLevel)) drawWall(w);
   }
 
+  // камни (без мебели)
   for (const r of rocks) {
-    if (r.type === 'rock') {
+    if (visibleOnFloor(r.floorLevel) && r.type === 'rock') {
       ctx.beginPath();
       ctx.ellipse(r.x + 7, r.y + 11, r.r*.95, r.r*.78, 0, 0, TAU);
       ctx.fillStyle = 'rgba(0,0,0,0.30)'; ctx.fill();
@@ -1176,12 +2178,34 @@ function render() {
     }
   }
 
-  ctx.strokeStyle = 'rgba(255,0,0,0.3)';
+  // мебель
+  for (const f of furniture) {
+    if (visibleOnFloor(f.floorLevel)) drawFurniture(f);
+  }
+
+  // контуры коллайдеров
+  ctx.strokeStyle = 'rgba(255,0,0,0.22)';
   ctx.lineWidth = 1;
   for (const r of rocks) {
-    if (r.type !== 'rock') {
+    if (r.type !== 'rock' && visibleOnFloor(r.floorLevel)) {
       ctx.beginPath(); ctx.arc(r.x, r.y, r.r, 0, TAU); ctx.stroke();
     }
+  }
+
+  // предпросмотр стены
+  if (wallPreview) {
+    ctx.strokeStyle = 'rgba(127,240,255,0.85)';
+    ctx.lineWidth = Math.max(3, parseInt(document.getElementById('size-slider').value) / 5);
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(wallPreview.x1, wallPreview.y1);
+    ctx.lineTo(wallPreview.x2, wallPreview.y2);
+    ctx.stroke();
+    ctx.setLineDash([6,6]);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#fff';
+    ctx.stroke();
+    ctx.setLineDash([]);
   }
 
   ctx.strokeStyle = '#ff4d4d';
@@ -1193,6 +2217,7 @@ function render() {
 }
 
 requestAnimationFrame(render);
+updateTopBar();
 </script>
 </body>
 </html>
