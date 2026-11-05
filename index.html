@@ -51,7 +51,6 @@
   #lobby-title{font-size:22px; font-weight:800; letter-spacing:2px; color:#7ff0ff; text-shadow:0 0 16px rgba(127,240,255,0.4)}
   #lobby-top .spacer{flex:1}
 
-  /* Валюты в лобби */
   .currency-panel { display: flex; gap: 12px; margin-right: 20px; }
   .currency-item { display: flex; align-items: center; gap: 6px; background: rgba(20,30,42,0.85); border: 2px solid rgba(90,140,180,0.4); padding: 6px 14px; border-radius: 12px; color: #fff; font-weight: 900; font-size: 15px; }
   .curr-icon { width: 24px; height: 24px; background-size: contain; background-repeat: no-repeat; background-position: center; }
@@ -61,7 +60,6 @@
   .top-btn{display:flex; align-items:center; gap:8px; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.4); color:#cfe3f5; padding:9px 18px; border-radius:10px; cursor:pointer; font-size:14px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px); position:relative;}
   .top-btn:hover{background:rgba(40,65,90,0.9); border-color:rgba(127,240,255,0.6); color:#fff}
 
-  /* ДОРОГА СЛАВЫ — ВЕРХНЯЯ ПАНЕЛЬ */
   #road-top-panel { position: relative; z-index: 3; width: 100%; max-width: 1000px; margin: 0 auto 16px auto; background: linear-gradient(90deg, rgba(14,22,32,0.85), rgba(40,30,10,0.75)); border: 2px solid rgba(255,215,0,0.45); border-radius: 12px; padding: 6px 16px; display: flex; align-items: center; gap: 14px; backdrop-filter: blur(6px); box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; transition: all 0.2s; }
   #road-top-panel:hover { border-color: #ffd700; box-shadow: 0 6px 20px rgba(255,215,0,0.3); }
   #road-top-panel .road-panel-title { font-size: 13px; font-weight: 900; letter-spacing: 1px; color: #ffd700; text-transform: uppercase; white-space: nowrap; }
@@ -91,23 +89,22 @@
   
   .fighters-btn-icon{ width:64px; height:64px; border-radius:14px; background:rgba(63,169,245,0.1); border:2px solid rgba(127,240,255,0.4); background-image: url('img/Characters (2).jpg'); background-size: cover; background-position: center; box-shadow: inset 0 0 15px rgba(63,169,245,0.2); }
 
-  /* Блоки анонсов */
   .announce-banner {position: absolute; left: 40px; width: 340px; height: 120px; background: linear-gradient(135deg, rgba(20, 30, 42, 0.95), rgba(255, 180, 80, 0.15)); border: 2px solid #ffb450; border-radius: 16px; cursor: pointer; transition: all .2s; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(255, 180, 80, 0.2); display: flex; align-items: center; overflow: hidden; z-index: 5;}
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
-  .announce-banner.artem { bottom: 230px; border-color: #7ff0ff; box-shadow: 0 10px 30px rgba(127, 240, 255, 0.2);}
-  .announce-banner.artem:hover { border-color: #d8f4ff; box-shadow: 0 15px 40px rgba(127, 240, 255, 0.4); }
+  .announce-banner.artem { bottom: 230px; border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);}
+  .announce-banner.artem:hover { border-color: #fff4a3; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
   .announce-banner.vote { bottom: 100px; border-color: #c084fc; box-shadow: 0 10px 30px rgba(192, 132, 252, 0.2);}
   .announce-banner.vote:hover { border-color: #d8b4fe; box-shadow: 0 15px 40px rgba(192, 132, 252, 0.4); }
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
-  .announce-banner.artem .announce-img { background-image: url('img/Artem.jpg'); border-right-color: #7ff0ff; }
+  .announce-banner.artem .announce-img { background-image: url('img/Artem.jpg'); border-right-color: #ffd700; }
   .announce-banner.vote .announce-img { background-image: url('img/Vote.jpg'); border-right-color: #c084fc; }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
-  .announce-banner.artem .announce-tag { color: #7ff0ff; }
+  .announce-banner.artem .announce-tag { color: #ffd700; }
   .announce-banner.vote .announce-tag { color: #c084fc; }
   .announce-name {font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1.1; margin-top: 2px;}
   .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
-  .announce-banner.artem .announce-timer { color: #7ff0ff; background: rgba(127,240,255,0.15); border-color: rgba(127,240,255,0.4); }
+  .announce-banner.artem .announce-timer { color: #ffd700; background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.4); }
   .announce-banner.vote .announce-timer { color: #d8b4fe; background: rgba(192,132,252,0.15); border-color: rgba(192,132,252,0.4); }
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:12px 22px 18px;}
@@ -145,15 +142,16 @@
   .fighter-card.lesha .fighter-card-icon { background-image: url('img/Lesha.jpg'); }
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
   .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
+  .fighter-card.artem .fighter-card-icon { background-image: url('img/Artem.jpg'); }
 
   .fighter-card .fighter-card-level { position: absolute; top: 10px; left: 10px; z-index: 4; background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700; color: #ffd700; font-size: 12px; font-weight: 900; padding: 3px 8px; border-radius: 8px; }
 
-  /* Закрытый Лёха */
-  .fighter-card.lesha.locked {cursor: not-allowed; border-color: #5a6a7a;}
-  .fighter-card.lesha.locked .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8); display: flex; width:100%; height:100%; align-items:center; justify-content:center; background: rgba(10,15,22,0.6);}
-  .fighter-card.lesha.locked::after {background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%);}
-  .fighter-card.lesha.locked .fighter-card-name {color: #8ea6bd;}
-  .fighter-card.lesha.locked .lock-timer {position: relative; z-index: 3; font-size: 11px; font-weight: 700; color: #ffb450; text-align: center; padding-bottom: 8px; text-transform: uppercase;}
+  /* Закрытые бойцы */
+  .fighter-card.locked {cursor: not-allowed; border-color: #5a6a7a;}
+  .fighter-card.locked .fighter-card-icon::before {content: '🔒'; font-size: 48px; opacity: 0.8; position: absolute; z-index: 1; text-shadow: 0 0 10px rgba(0,0,0,0.8); display: flex; width:100%; height:100%; align-items:center; justify-content:center; background: rgba(10,15,22,0.6);}
+  .fighter-card.locked::after {background: linear-gradient(to top, rgba(10,15,22,0.95) 0%, rgba(10,15,22,0.7) 50%, rgba(10,15,22,0.4) 100%);}
+  .fighter-card.locked .fighter-card-name {color: #8ea6bd;}
+  .fighter-card.locked .lock-timer {position: relative; z-index: 3; font-size: 11px; font-weight: 700; color: #ffb450; text-align: center; padding-bottom: 8px; text-transform: uppercase;}
 
   /* Карточка Скоро */
   .fighter-card.empty {background:rgba(255,255,255,0.02); border-style: dashed; border-color: rgba(90,140,180,0.25); align-items: center; justify-content: center;}
@@ -171,6 +169,7 @@
   .tag-rarity{color:#B0B8C4; background:rgba(176, 184, 196, 0.12); border:1px solid rgba(176, 184, 196, 0.35)}
   .tag-epic {color:#c084fc; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.35)}
   .tag-crazy {color:#ff4d4d; background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35)}
+  .tag-legendary {color:#ffd700; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.35)}
 
   #hero-modal-desc{font-size:14.5px; line-height:1.6; color:rgba(200,220,240,0.92); background:rgba(255,255,255,0.03); padding:14px; border-radius:10px; border-left:3px solid rgba(127,240,255,0.5);}
   .stat-block{display:flex; flex-direction:column; gap:5px}
@@ -193,8 +192,6 @@
   .speech-bubble::after { content: ''; position: absolute; top: 20px; left: -10px; border-width: 8px 10px 8px 0; border-style: solid; border-color: transparent #fff transparent transparent; }
 
   #mode-modal-card { width:min(1000px, 95vw); }
-  
-  /* ИСПРАВЛЕН ЗАГОЛОВОК РЕЖИМА */
   #mode-modal-card h2 { color: #fff; margin-bottom: 20px; font-size: 24px; font-weight: 900; text-align: center; letter-spacing: 2px;}
   
   .mode-grid { display: flex; flex-wrap: nowrap; gap: 20px; overflow-x: auto; padding-bottom: 10px; }
@@ -211,11 +208,20 @@
   .mode-option.selected .mode-option-check { opacity: 1; background:rgba(127,240,255,0.2); }
   
   /* Заглушки для карт */
-  .map-icon-1 { background-image: url('img/CompCenter.jpg'); background-color: #2a1a3a;} /* Заглушки для карт */
+  .map-icon-1 { background-image: url('img/CompCenter.jpg'); background-color: #2a1a3a;}
   .map-icon-2 { background-image: url('img/Backyard.jpg'); background-color: #1a3a2a;}
   .map-icon-3 { background-image: url('img/Gym.jpg'); background-color: #3a2a1a;}
 
-  /* ИСПРАВЛЕН ЗАГОЛОВОК НОВОСТЕЙ */
+  .step-btn {
+    display: block; width: 100%; max-width: 300px; margin: 20px auto 0 auto;
+    padding: 16px; font-size: 20px; font-weight: 900; text-transform: uppercase;
+    color: #0a1420; background: linear-gradient(180deg,#7ff0ff,#3fa9f5);
+    border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 0 #1e6a9e;
+    transition: transform 0.1s;
+  }
+  .step-btn:hover { transform: translateY(-2px); }
+  .step-btn:active { transform: translateY(4px); box-shadow: none; }
+
   .news-content { text-align: left; max-height: 500px; overflow-y: auto; padding-right: 10px; }
   .profile-card h2 { color: #fff; font-size: 28px; font-weight: 900; text-align: center; margin-bottom: 20px; letter-spacing: 2px;}
   .news-block { background: rgba(0,0,0,0.3); padding: 0; border-radius: 16px; margin-bottom: 20px; border: 2px solid rgba(90,140,180,0.4); display: flex; overflow: hidden; cursor: pointer; transition: all 0.2s;}
@@ -227,20 +233,43 @@
   .news-text { font-size: 14px; color: #cfe3f5; line-height: 1.5; }
   .news-badge { display: inline-flex; align-items: center; justify-content: center; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 900; margin-left: 8px; vertical-align: middle; animation: pulse 2s infinite;}
 
-  /* МАГАЗИН */
-  #shop-card { width: min(1280px, 96vw); border-color: #ffb450; padding: 26px 30px; }
+  /* ====== СТИЛЬНЫЙ МАГАЗИН ====== */
+  #shop-card { width: min(1100px, 95vw); border-color: #ffb450; padding: 0; overflow: hidden; display: flex; flex-direction: row; height: 70vh; }
+  .shop-sidebar {
+    width: 220px; background: rgba(10,15,22,0.95); border-right: 2px solid rgba(90,140,180,0.4);
+    display: flex; flex-direction: column; padding: 20px;
+  }
+  .shop-vendor {
+    width: 100%; height: 200px; background: url('img/Vendor.jpg') center/contain no-repeat;
+    margin-bottom: 20px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+    /* Заглушка, если нет картинки продавца */
+    background-color: rgba(255,255,255,0.05); border-radius: 16px; border: 2px dashed rgba(255,180,80,0.5);
+    display: flex; align-items: center; justify-content: center; font-size: 14px; color: #ffb450; text-align: center;
+  }
+  .shop-tabs { display: flex; flex-direction: column; gap: 10px; }
+  .shop-tab-btn {
+    padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 2px solid transparent;
+    color: #b8cde0; font-weight: 800; font-size: 15px; cursor: pointer; text-align: left; transition: all 0.2s;
+  }
+  .shop-tab-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .shop-tab-btn.active { background: rgba(255,180,80,0.15); border-color: #ffb450; color: #ffd700; }
+  
+  .shop-content { flex: 1; padding: 26px 30px; overflow-y: auto; background: rgba(14,22,32,0.97); position: relative; }
   .shop-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,180,80,0.3); padding-bottom: 16px; margin-bottom: 20px; }
   .shop-header h2 { color: #ffd700; font-size: 30px; font-weight: 900; letter-spacing: 2px; }
-  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 22px; }
-  .shop-item { background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(0,0,0,0.25)); border: 2px solid rgba(90,140,180,0.5); border-radius: 18px; padding: 22px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all .2s; }
+  
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+  .shop-item { background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(0,0,0,0.25)); border: 2px solid rgba(90,140,180,0.5); border-radius: 16px; padding: 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all .2s; position: relative; }
   .shop-item:hover { border-color: #ffd700; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(255,180,80,0.25); }
-  .shop-item-icon { width: 130px; height: 130px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 6px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
-  .shop-item-name { font-size: 21px; font-weight: 900; color: #fff; }
-  .shop-item-desc { font-size: 13px; color: #a9c2d8; line-height: 1.35; min-height: 34px; }
-  .shop-item-price { font-size: 18px; font-weight: bold; color: #ff9b6b; display: flex; align-items: center; gap: 6px; margin: 6px 0; }
-  .shop-item button { width: 100%; padding: 13px; background: linear-gradient(180deg,#3fa9f5,#1e6a9e); color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 16px; cursor: pointer; transition: transform 0.1s, background .2s; box-shadow: 0 4px 0 #124d75; }
+  .shop-item-icon { width: 100px; height: 100px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 6px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); }
+  .shop-item-name { font-size: 18px; font-weight: 900; color: #fff; }
+  .shop-item-desc { font-size: 12px; color: #a9c2d8; line-height: 1.35; min-height: 32px; }
+  .shop-item-price { font-size: 16px; font-weight: bold; color: #ff9b6b; display: flex; align-items: center; gap: 6px; margin: 6px 0; }
+  .shop-item button { width: 100%; padding: 12px; background: linear-gradient(180deg,#3fa9f5,#1e6a9e); color: #fff; border: none; border-radius: 10px; font-weight: 900; font-size: 15px; cursor: pointer; transition: transform 0.1s, background .2s; box-shadow: 0 4px 0 #124d75; }
   .shop-item button:hover { transform: translateY(-2px); background: linear-gradient(180deg,#7ff0ff,#3fa9f5); color: #0a1420; }
   .shop-item button:active { transform: translateY(2px); box-shadow: none; }
+  .shop-item.disabled { opacity: 0.6; pointer-events: none; filter: grayscale(1); }
+  .shop-badge { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: #fff; font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 8px; transform: rotate(10deg); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
   /* Дорога Славы (модалка) */
   #road-card { width: 95vw; max-width: 1600px; height: 80vh; border-color: #ffd700; padding: 0; overflow: hidden; display: flex; flex-direction: column; background: url('img/1_Season(Halloween).jpg') center/cover no-repeat; }
@@ -439,7 +468,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 3 ИЗ 4</div>
+      <div id="fighters-count">БОЙЦОВ: 5 ИЗ 6</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -465,6 +494,20 @@
         <div class="fighter-card-level" id="lvl-vasilek">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Василёк</div>
+      </div>
+
+      <!-- Артём (Закрыт) -->
+      <div class="fighter-card artem locked" id="card-artem" onclick="openArtemInfo()">
+        <div class="fighter-card-level">Ур. 1</div>
+        <div class="fighter-card-icon"></div>
+        <div class="fighter-card-name">Артём</div>
+        <div class="lock-timer" style="color: #ffd700;">Скоро</div>
+      </div>
+
+      <!-- Карточка Скоро -->
+      <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
+        <div class="fighter-card-icon">?</div>
+        <div class="fighter-card-name">Скоро</div>
       </div>
     </div>
   </div>
@@ -592,7 +635,7 @@
   </div>
 </div>
 
-<!-- Василёк (ИСПРАВЛЕНО) -->
+<!-- Василёк -->
 <div id="hero-modal-vasilek" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
   <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,77,77,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeVasilekDetails()">✕</button>
@@ -613,8 +656,8 @@
         <b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.
       </div>
       <div class="stat-block">
-        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">4</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:25%" id="stat-vasilek-dmg-bar"></div></div>
+        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">6</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:35%" id="stat-vasilek-dmg-bar"></div></div>
       </div>
       <div class="stat-block">
         <div class="stat-head"><span>Скорость</span><span id="stat-vasilek-spd">208</span></div>
@@ -635,17 +678,17 @@
 
 <!-- Артём (Победитель голосования) -->
 <div id="hero-modal-artem" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
-  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(127,240,255,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
+  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,215,0,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
     <button class="modal-close" onclick="closeArtemDetails()">✕</button>
     <div id="hero-modal-left">
       <div class="speech-bubble" id="bubble-artem"></div>
-      <div id="hero-modal-icon" style="background-image:url('img/Artem.jpg'); border-color: #7ff0ff;"></div>
+      <div id="hero-modal-icon" style="background-image:url('img/Artem.jpg'); border-color: #ffd700;"></div>
     </div>
     <div id="hero-modal-right">
       <div id="hero-modal-name">Артём</div>
       <div class="tag-row">
-        <span class="tag tag-class" style="color:#7ff0ff; border-color:rgba(127,240,255,0.35)">КЛАСС: МАГ</span>
-        <span class="tag tag-epic" style="color:#ffb450; border-color:rgba(255,180,80,0.35)">РЕДКОСТЬ: ЛЕГЕНДАРНЫЙ</span>
+        <span class="tag tag-class" style="color:#ffd700; border-color:rgba(255,215,0,0.35)">КЛАСС: МАГ</span>
+        <span class="tag tag-legendary">РЕДКОСТЬ: ЛЕГЕНДАРНЫЙ</span>
       </div>
       <div id="hero-modal-desc">
         <b>Вид:</b> Человек.<br><br>
@@ -745,72 +788,81 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: РЕЖИМЫ И ВЫБОР КАРТ -->
+<!-- МОДАЛКА: РЕЖИМЫ И ВЫБОР КАРТ (ДВА ШАГА) -->
 <div id="mode-modal">
   <div id="mode-modal-card">
     <button class="modal-close" onclick="closeModeModal()">✕</button>
-    <h2>ВЫБОР РЕЖИМА И КАРТЫ</h2>
     
-    <div style="color: #7ff0ff; font-size: 14px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Режим:</div>
-    <div class="mode-grid">
-      <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
-       <div class="mode-option-icon" style="background-image:url('img/Training.jpg');"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">Тренировка</div>
-          <div class="mode-option-desc">Играйте против ботов (офлайн)</div>
+    <!-- ШАГ 1: ВЫБОР РЕЖИМА -->
+    <div id="step-mode">
+      <h2>ВЫБОР РЕЖИМА</h2>
+      <div class="mode-grid" style="justify-content: center;">
+        <div class="mode-option selected" onclick="selectMode('Тренировка', this)">
+         <div class="mode-option-icon" style="background-image:url('img/Training.jpg');"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">Тренировка</div>
+            <div class="mode-option-desc">Играйте против ботов (офлайн)</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
-      </div>
-      
-      <div class="mode-option" onclick="selectMode('PVP-Битва', this)">
-        <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">PVP-Битва</div>
-          <div class="mode-option-desc">5 минут. Убейте больше всех!</div>
+        
+        <div class="mode-option" onclick="selectMode('PVP-Битва', this)">
+          <div class="mode-option-icon" style="background-image:url('img/PVP.jpg');"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">PVP-Битва</div>
+            <div class="mode-option-desc">5 минут. Убейте больше всех!</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
-      </div>
 
-      <div class="mode-option" onclick="selectMode('Останется только один', this)">
-        <div class="mode-option-icon" style="background-image:url('img/The_Last_One.jpg');"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">Останется только один</div>
-          <div class="mode-option-desc">10 игроков. Выживает сильнейший.</div>
+        <div class="mode-option" onclick="selectMode('Останется только один', this)">
+          <div class="mode-option-icon" style="background-image:url('img/The_Last_One.jpg');"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">Останется только один</div>
+            <div class="mode-option-desc">10 игроков. Выживает сильнейший.</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
       </div>
+      <button class="step-btn" onclick="goToMapSelect()">ДАЛЕЕ (ВЫБОР КАРТЫ)</button>
     </div>
 
-    <div style="color: #7ff0ff; font-size: 14px; font-weight: 800; margin-top: 20px; margin-bottom: 10px; text-transform: uppercase;">Карта:</div>
-    <div class="mode-grid">
-      <!-- Карта 1 -->
-      <div class="mode-option selected" onclick="selectMap('Компьютерный центр', this)">
-        <div class="mode-option-icon map-icon-1"></div> <!-- Здесь будет картинка -->
-        <div class="mode-option-info">
-          <div class="mode-option-name">Компьютерный центр</div>
-          <div class="mode-option-desc">Тесные коридоры и серверные</div>
+    <!-- ШАГ 2: ВЫБОР КАРТЫ -->
+    <div id="step-map" style="display: none;">
+      <h2>ВЫБОР КАРТЫ</h2>
+      <div class="mode-grid" style="justify-content: center;">
+        <!-- Карта 1 -->
+        <div class="mode-option selected" onclick="selectMap('Компьютерный центр', this)">
+          <div class="mode-option-icon map-icon-1"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">Компьютерный центр</div>
+            <div class="mode-option-desc">Тесные коридоры и серверные</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
-      </div>
-      <!-- Карта 2 -->
-      <div class="mode-option" onclick="selectMap('Задний двор', this)">
-        <div class="mode-option-icon map-icon-2"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">Задний двор</div>
-          <div class="mode-option-desc">Открытая местность и ящики</div>
+        <!-- Карта 2 -->
+        <div class="mode-option" onclick="selectMap('Задний двор', this)">
+          <div class="mode-option-icon map-icon-2"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">Задний двор</div>
+            <div class="mode-option-desc">Открытая местность и ящики</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
-      </div>
-      <!-- Карта 3 -->
-      <div class="mode-option" onclick="selectMap('Спортзал', this)">
-        <div class="mode-option-icon map-icon-3"></div>
-        <div class="mode-option-info">
-          <div class="mode-option-name">Спортзал</div>
-          <div class="mode-option-desc">Много укрытий и снарядов</div>
+        <!-- Карта 3 -->
+        <div class="mode-option" onclick="selectMap('Спортзал', this)">
+          <div class="mode-option-icon map-icon-3"></div>
+          <div class="mode-option-info">
+            <div class="mode-option-name">Спортзал</div>
+            <div class="mode-option-desc">Много укрытий и снарядов</div>
+          </div>
+          <div class="mode-option-check">✓</div>
         </div>
-        <div class="mode-option-check">✓</div>
       </div>
+      <button class="step-btn" onclick="confirmModeAndMap()">ПОДТВЕРДИТЬ И ИГРАТЬ</button>
+      <button class="step-btn" style="background: rgba(255,255,255,0.1); color:#fff; box-shadow: none; margin-top: 10px;" onclick="goBackToMode()">НАЗАД</button>
     </div>
+
   </div>
 </div>
 
@@ -827,15 +879,35 @@
     </div>
     
     <div class="road-track">
+      <div class="road-node" id="node-5">
+        <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+        <div class="road-node-name">50 Осколков</div>
+        <div class="road-node-cost">5 Сфер</div>
+      </div>
       <div class="road-node" id="node-10">
         <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
         <div class="road-node-name">100 Дулей</div>
         <div class="road-node-cost">10 Сфер</div>
       </div>
-      <div class="road-node" id="node-25">
+      <div class="road-node" id="node-15">
         <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
-        <div class="road-node-name">Техносундук</div>
+        <div class="road-node-name">Сундук</div>
+        <div class="road-node-cost">15 Сфер</div>
+      </div>
+      <div class="road-node" id="node-25">
+        <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
+        <div class="road-node-name">Охлосундук</div>
         <div class="road-node-cost">25 Сфер</div>
+      </div>
+      <div class="road-node" id="node-35">
+        <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+        <div class="road-node-name">200 Дулей</div>
+        <div class="road-node-cost">35 Сфер</div>
+      </div>
+      <div class="road-node" id="node-40">
+        <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
+        <div class="road-node-name">Ультрасундук</div>
+        <div class="road-node-cost">40 Сфер</div>
       </div>
       <div class="road-node" id="node-50">
         <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
@@ -846,54 +918,88 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: МАГАЗИН -->
+<!-- МОДАЛКА: МАГАЗИН (НОВЫЙ СТИЛЬ) -->
 <div id="shop-modal">
   <div id="shop-card">
     <button class="modal-close" onclick="closeShopModal()">✕</button>
-    <div class="shop-header">
-      <h2>МАГАЗИН</h2>
-      <div class="currency-panel">
-        <div class="currency-item"><div class="curr-icon curr-duli"></div> <span id="shop-ui-duli">0</span></div>
-        <div class="currency-item"><div class="curr-icon curr-oskolki"></div> <span id="shop-ui-oskolki">0</span></div>
+    
+    <!-- Левая панель с продавцом -->
+    <div class="shop-sidebar">
+      <div class="shop-vendor">ПРОДАВЕЦ<br>(Картинка)</div>
+      <div class="shop-tabs">
+        <button class="shop-tab-btn active" onclick="switchShopTab('sale', this)">🔥 Акции</button>
+        <button class="shop-tab-btn" onclick="switchShopTab('skins', this)">👕 Скины</button>
+        <button class="shop-tab-btn" onclick="switchShopTab('chests', this)">📦 Сундуки</button>
       </div>
     </div>
-    
-    <div class="shop-grid">
-      <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Techo_Box.jpg');"></div>
-        <div class="shop-item-name">Техносундук</div>
-        <div class="shop-item-desc">50 Дулей и шанс на сферы</div>
-        <div class="shop-item-price">50 Осколков</div>
-        <button onclick="buyChest('techno', 50)">КУПИТЬ</button>
+
+    <!-- Правая панель с товарами -->
+    <div class="shop-content">
+      <div class="shop-header">
+        <h2 id="shop-title">АКЦИИ</h2>
+        <div class="currency-panel">
+          <div class="currency-item"><div class="curr-icon curr-duli"></div> <span id="shop-ui-duli">0</span></div>
+          <div class="currency-item"><div class="curr-icon curr-oskolki"></div> <span id="shop-ui-oskolki">0</span></div>
+        </div>
       </div>
-      <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Ohlo_Box.jpg');"></div>
-        <div class="shop-item-name">Охлосундук</div>
-        <div class="shop-item-desc">150 Дулей и 1 сфера</div>
-        <div class="shop-item-price">150 Осколков</div>
-        <button onclick="buyChest('octo', 150)">КУПИТЬ</button>
+      
+      <!-- Вкладка 1: Акции -->
+      <div id="shop-tab-sale" class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-badge">-50%</div>
+          <div class="shop-item-icon" style="background-image: url('img/Ultra_Box.jpg');"></div>
+          <div class="shop-item-name">Ультрасундук</div>
+          <div class="shop-item-desc">300 Дулей и 5 сфер</div>
+          <div class="shop-item-price">150 Осколков</div>
+          <button onclick="buyChest('ultra', 150)">КУПИТЬ</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Ohlo_Box.jpg');"></div>
+          <div class="shop-item-name">Охлосундук</div>
+          <div class="shop-item-desc">150 Дулей и 1 сфера</div>
+          <div class="shop-item-price">150 Осколков</div>
+          <button onclick="buyChest('octo', 150)">КУПИТЬ</button>
+        </div>
       </div>
-      <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Ultra_Box.jpg');"></div>
-        <div class="shop-item-name">Ультрасундук</div>
-        <div class="shop-item-desc">300 Дулей и 5 сфер</div>
-        <div class="shop-item-price">300 Осколков</div>
-        <button onclick="buyChest('ultra', 300)">КУПИТЬ</button>
+
+      <!-- Вкладка 2: Скины -->
+      <div id="shop-tab-skins" class="shop-grid" style="display: none;">
+        <div class="shop-item disabled">
+          <div class="shop-badge">СКОРО</div>
+          <div class="shop-item-icon" style="background-image: url('img/Vitya.jpg');"></div>
+          <div class="shop-item-name">Витя (Красная майка)</div>
+          <div class="shop-item-desc">В разработке</div>
+          <div class="shop-item-price">999 Дулей</div>
+          <button>СКОРО</button>
+        </div>
+        <div class="shop-item disabled">
+          <div class="shop-badge">СКОРО</div>
+          <div class="shop-item-icon" style="background-image: url('img/Lesha.jpg');"></div>
+          <div class="shop-item-name">Лёха (Костюм)</div>
+          <div class="shop-item-desc">В разработке</div>
+          <div class="shop-item-price">999 Дулей</div>
+          <button>СКОРО</button>
+        </div>
       </div>
-      <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Dul.jpg');"></div>
-        <div class="shop-item-name">100 Дулей</div>
-        <div class="shop-item-desc">Просто дули для покупок</div>
-        <div class="shop-item-price">30 Осколков</div>
-        <button onclick="buyChest('duli100', 30)">КУПИТЬ</button>
+
+      <!-- Вкладка 3: Сундуки -->
+      <div id="shop-tab-chests" class="shop-grid" style="display: none;">
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Techo_Box.jpg');"></div>
+          <div class="shop-item-name">Техносундук</div>
+          <div class="shop-item-desc">50 Дулей и шанс на сферы</div>
+          <div class="shop-item-price">50 Осколков</div>
+          <button onclick="buyChest('techno', 50)">КУПИТЬ</button>
+        </div>
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Poop.jpg');"></div>
+          <div class="shop-item-name">50 Осколков</div>
+          <div class="shop-item-desc">Осколки для сундуков</div>
+          <div class="shop-item-price">100 Дулей</div>
+          <button onclick="buyChest('oskolki50', 0, 100)">КУПИТЬ</button>
+        </div>
       </div>
-      <div class="shop-item">
-        <div class="shop-item-icon" style="background-image: url('img/Poop.jpg');"></div>
-        <div class="shop-item-name">50 Осколков</div>
-        <div class="shop-item-desc">Осколки для сундуков</div>
-        <div class="shop-item-price">100 Дулей</div>
-        <button onclick="buyChest('oskolki50', 0, 100)">КУПИТЬ</button>
-      </div>
+
     </div>
   </div>
 </div>
@@ -917,10 +1023,10 @@
     <h2>НОВОСТИ</h2>
     <div class="news-content">
       
-      <div class="news-block" style="border-left-color: #7ff0ff;">
+      <div class="news-block" style="border-left-color: #ffd700;">
         <div class="news-img" style="background-image: url('img/Artem.jpg');"></div>
         <div class="news-info">
-          <div class="news-date" style="color: #7ff0ff;">ОБНОВЛЕНИЕ 0.4.5</div>
+          <div class="news-date" style="color: #ffd700;">ОБНОВЛЕНИЕ 0.4.5</div>
           <div class="news-title">Артём победил в голосовании!</div>
           <div class="news-text">Таинственный маг, что в совершенстве овладел магией фаллоиммитотаров. Скоро появится в игре!</div>
         </div>
@@ -994,7 +1100,6 @@
     const votesRef = ref(db, 'votes');
 
     window.voteFor = function(hero, el) {
-      // Жесткая проверка на повторное голосование
       if (localStorage.getItem('hasVotedInApp') === 'true') {
         return alert('Вы уже проголосовали! С одного устройства можно голосовать только один раз.');
       }
@@ -1068,7 +1173,7 @@ const HERO_BASE = {
   Vitya:   { dmg: 16, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
   Lesha:   { dmg: 25, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
   Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
-  Vasilek: { dmg: 4,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 }, // УМЕНЬШЕН УРОН
+  Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 }, // УРОН УВЕЛИЧЕН ДО 6
   Artem:   { dmg: 20, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200 }
 };
 const MAX_HERO_LEVEL = 5;
@@ -1139,8 +1244,12 @@ function updateUI() {
     }
   }
 
+  document.getElementById('node-5').classList.toggle('unlocked', playerData.sferi >= 5);
   document.getElementById('node-10').classList.toggle('unlocked', playerData.sferi >= 10);
+  document.getElementById('node-15').classList.toggle('unlocked', playerData.sferi >= 15);
   document.getElementById('node-25').classList.toggle('unlocked', playerData.sferi >= 25);
+  document.getElementById('node-35').classList.toggle('unlocked', playerData.sferi >= 35);
+  document.getElementById('node-40').classList.toggle('unlocked', playerData.sferi >= 40);
   document.getElementById('node-50').classList.toggle('unlocked', playerData.sferi >= 50);
 
   for (const t of ['Vitya','Lesha','Fialka','Vasilek']) {
@@ -1179,6 +1288,20 @@ function updateHeroStatDisplays() {
 }
 
 // ====== МАГАЗИН ======
+window.switchShopTab = function(tabName, el) {
+  document.querySelectorAll('.shop-tab-btn').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  
+  document.getElementById('shop-tab-sale').style.display = 'none';
+  document.getElementById('shop-tab-skins').style.display = 'none';
+  document.getElementById('shop-tab-chests').style.display = 'none';
+  
+  document.getElementById('shop-tab-' + tabName).style.display = 'grid';
+  
+  const titles = { sale: 'АКЦИИ', skins: 'СКИНЫ', chests: 'СУНДУКИ' };
+  document.getElementById('shop-title').textContent = titles[tabName];
+};
+
 window.buyChest = function(type, priceOskolki, priceDuli) {
   priceOskolki = priceOskolki || 0;
   priceDuli = priceDuli || 0;
@@ -1415,7 +1538,11 @@ function updateLobbySelection() {
   else { disp.style.backgroundImage = "url('img/Vasilek.jpg')"; name.textContent = 'Василёк'; document.getElementById('card-vasilek').classList.add('selected'); }
 }
 
-window.openModeModal = function(){ modeModal.classList.add('show'); };
+window.openModeModal = function(){ 
+  modeModal.classList.add('show'); 
+  document.getElementById('step-mode').style.display = 'block';
+  document.getElementById('step-map').style.display = 'none';
+};
 window.closeModeModal = function(){ modeModal.classList.remove('show'); };
 window.openNewsModal = function(){ newsModal.classList.add('show'); };
 window.closeNewsModal = function(){ newsModal.classList.remove('show'); };
@@ -1430,21 +1557,34 @@ window.closeVoteModal = function(){ voteModal.classList.remove('show'); };
 window.showDev = function(title){ devTitle.textContent = title + ' · В РАЗРАБОТКЕ'; devOverlay.classList.add('show'); };
 window.hideDev = function(){ devOverlay.classList.remove('show'); };
 
+// --- ВЫБОР РЕЖИМА И КАРТЫ ---
 window.selectMode = function(name, el){
   currentMode = name;
-  modeLabel.textContent = 'Режим: ' + name + ' (' + currentMap + ')';
   const grid = el.parentElement;
   grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
   if (el) el.classList.add('selected');
-  // Не закрываем модалку, чтобы можно было выбрать карту
 };
 
 window.selectMap = function(name, el) {
   currentMap = name;
-  modeLabel.textContent = 'Режим: ' + currentMode + ' (' + currentMap + ')';
   const grid = el.parentElement;
   grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
   if (el) el.classList.add('selected');
+};
+
+window.goToMapSelect = function() {
+  document.getElementById('step-mode').style.display = 'none';
+  document.getElementById('step-map').style.display = 'block';
+};
+
+window.goBackToMode = function() {
+  document.getElementById('step-mode').style.display = 'block';
+  document.getElementById('step-map').style.display = 'none';
+};
+
+window.confirmModeAndMap = function() {
+  modeLabel.textContent = 'Режим: ' + currentMode + ' (' + currentMap + ')';
+  closeModeModal();
 };
 
 window.startGame = function(){
@@ -1562,7 +1702,7 @@ function createHero(id, type, isBot) {
     poison: 0, poisonTick: 0, botTimer: 0, botJitter: 0,
     shootCount: 0, grenadeTimer: 0, kbx: 0, kby: 0, stun: 0,
     hookTarget: null, hookX: 0, hookY: 0, healZone: null,
-    dmg: stats.dmg, spd: stats.spd, eliminated: false // Флаг для режима королевской битвы
+    dmg: stats.dmg, spd: stats.spd, eliminated: false
   };
 }
 
@@ -1737,7 +1877,7 @@ function tryAttack(h) {
     for (let i = 0; i < 4; i++) {
       const spread = (i - 1.5) * 0.1;
       const a = h.aim + spread;
-      // ПУЛИ БОЛЬШЕ НЕ РАЗБИВАЮТСЯ (удален тип shard_bullet)
+      // ПУЛИ БОЛЬШЕ НЕ РАЗБИВАЮТСЯ (тип bullet)
       bullets.push({ x: h.x + Math.cos(a)*30, y: h.y + Math.sin(a)*30, vx: Math.cos(a)*1000, vy: Math.sin(a)*1000, r: 5, dmg: h.dmg, life: 0.8, type: 'bullet', owner: h, color: '#ff99cc' });
     }
     spawnHitParticles(h.x + Math.cos(h.aim)*32, h.y + Math.sin(h.aim)*32, '#ff99cc', 6);
@@ -1766,6 +1906,7 @@ function activateUlt(h) {
     if (targetEnemy) { h.hookTarget = targetEnemy; h.hookX = targetEnemy.x; h.hookY = targetEnemy.y; }
     else { h.hookX = h.x + Math.cos(h.aim) * 500; h.hookY = h.y + Math.sin(h.aim) * 500; }
   } else if (h.type === 'Vasilek') {
+    // ВАСИЛЁК МОЖЕТ ДВИГАТЬСЯ ПРИ УЛЬТЕ
     h.ultActive = true; h.ultTime = 5.0;
     h.healZone = { x: h.x, y: h.y, r: 150 };
   } else if (h.type === 'Vitya') {
@@ -1784,7 +1925,6 @@ function damage(target, amount, source, isPoison) {
     target.ultActive = false; target.ultTime = 0; target.poison = 0;
     spawnHitParticles(target.x, target.y, target.color, 28);
     
-    // ВЫБЫВАНИЕ В РЕЖИМЕ КОРОЛЕВСКОЙ БИТВЫ
     if (currentMode === 'Останется только один') {
       target.eliminated = true;
     }
@@ -1798,7 +1938,6 @@ function damage(target, amount, source, isPoison) {
 }
 
 function updateBot(bot, dt) {
-  // Если бот выбыл, он больше не респавнится
   if (bot.eliminated) return;
 
   if (!bot.alive) {
@@ -1849,12 +1988,21 @@ function updateBot(bot, dt) {
         if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) { bot.hookTarget.stun = 2.0; bot.hookTarget = null; }
       }
     } else if (bot.type === 'Vasilek') {
+      // ВАСИЛЁК-БОТ ТОЖЕ МОЖЕТ ДВИГАТЬСЯ И НЕ ЛЕЧИТ СЕБЯ
+      const enemies = getAllEnemies(bot); let target = null, best = Infinity;
+      for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
+      if (target) {
+        const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
+        const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
+        if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
+        const len = Math.hypot(mx, my);
+        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
+      }
       if (bot.healZone) {
-        const enemies = getAllEnemies(bot);
         for (const e of enemies) {
           if (Math.hypot(e.x - bot.healZone.x, e.y - bot.healZone.y) < bot.healZone.r) damage(e, 15 * dt * (bot.dmg/6), bot);
         }
-        if (Math.hypot(bot.x - bot.healZone.x, bot.y - bot.healZone.y) < bot.healZone.r) bot.hp = Math.min(bot.maxHp, bot.hp + 20 * dt);
+        // Убрали лечение бота
       }
     }
     if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; }
@@ -1994,12 +2142,23 @@ function update(dt) {
           if (Math.hypot(player.x - player.hookTarget.x, player.y - player.hookTarget.y) < 40) { player.hookTarget.stun = 2.0; player.hookTarget = null; }
        }
     } else if (player.type === 'Vasilek') {
+       // ВАСИЛЁК МОЖЕТ ДВИГАТЬСЯ И НЕ ЛЕЧИТ СЕБЯ
+       let mx = 0, my = 0;
+       if (keys['KeyD'] || keys['ArrowRight']) mx += 1; if (keys['KeyA'] || keys['ArrowLeft']) mx -= 1;
+       if (keys['KeyS'] || keys['ArrowDown']) my += 1; if (keys['KeyW'] || keys['ArrowUp']) my -= 1;
+       player.mvx = mx; player.mvy = my;
+       if (mx !== 0 || my !== 0) {
+          player.walkPhase += dt * 14; const len = Math.hypot(mx, my);
+          player.x += (mx/len) * player.spd * dt; player.y += (my/len) * player.spd * dt;
+          player.x = clamp(player.x, 20, WORLD_W - 20); player.y = clamp(player.y, 20, WORLD_H - 20);
+       } else player.walkPhase = 0;
+
        if (player.healZone) {
          const enemies = getAllEnemies(player);
          for (const e of enemies) {
            if (Math.hypot(e.x - player.healZone.x, e.y - player.healZone.y) < player.healZone.r) damage(e, 15 * dt * (player.dmg/6), player);
          }
-         if (Math.hypot(player.x - player.healZone.x, player.y - player.healZone.y) < player.healZone.r) player.hp = Math.min(player.maxHp, player.hp + 20 * dt);
+         // Убрали лечение себя
        }
     }
 
@@ -2076,28 +2235,6 @@ function update(dt) {
                 b.chained.push(nextTarget); lastTarget = nextTarget; chainCount++;
               } else break;
             }
-            break;
-          }
-        }
-      }
-      if (dead) bullets.splice(i, 1);
-      continue;
-    }
-
-    if (b.type === 'shard_bullet') {
-      b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; let dead = b.life <= 0;
-      if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { dead = true; spawnHitParticles(b.x, b.y, '#ff99cc', 4); break; } } }
-      if (!dead) {
-        const enemies = getAllEnemies(b.owner);
-        for (const e of enemies) {
-          if (!e.alive) continue;
-          if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-            damage(e, b.dmg, b.owner); dead = true;
-            for (let j = 0; j < 3; j++) {
-              const ang = Math.random() * TAU;
-              bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 500, vy: Math.sin(ang) * 500, r: 4, dmg: 4, life: 0.4, type: 'bomb', poison: false, exploded: false, owner: b.owner, color: '#ffcccc' });
-            }
-            spawnHitParticles(b.x, b.y, '#ff99cc', 6);
             break;
           }
         }
@@ -2293,7 +2430,7 @@ function drawBullets(){
 function drawLasers(){
   const t = performance.now() / 1000;
   for (const h of [player, ...bots]) {
-    if (h.eliminated) continue; // Не рисуем выбывших
+    if (h.eliminated) continue;
     if (h.ultActive && h.type === 'Vitya' && h.alive) {
       let maxLen = 1100; const sx = h.x, sy = h.y; const ex0 = sx + Math.cos(h.aim) * 1100; const ey0 = sy + Math.sin(h.aim) * 1100;
       for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
@@ -2373,7 +2510,6 @@ function drawScoreboard(){
        const m = Math.floor(gameTimeLeft / 60); const s = Math.floor(gameTimeLeft % 60);
        ctx.fillText(`${m}:${s < 10 ? '0'+s : s}`, x + 166, y + 20);
     } else {
-       // Считаем только не выбывших
        const aliveCount = bots.filter(b=>!b.eliminated && b.alive).length + (player.alive?1:0);
        ctx.fillText('Живых: ' + aliveCount, x + 166, y + 20);
     }
