@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protocol: Modernization — PRE-ALPHA 0.4.5</title>
+<title>Protocol: Modernization — PRE-ALPHA 0.5</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
@@ -109,12 +109,12 @@
   .tab-btn .icon{font-size:22px}
   .tab-btn .lock{font-size:10px; color:rgba(255,180,80,0.8); margin-top:2px}
 
-  #fighters-modal, #hero-modal, #mode-modal, #news-modal, #fialka-info-modal, #vasilek-info-modal, #road-modal, #shop-modal, #community-modal, #upgrade-modal, #result-modal, #profile-modal, #friends-modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
-  #fighters-modal.show, #hero-modal.show, #mode-modal.show, #news-modal.show, #fialka-info-modal.show, #vasilek-info-modal.show, #road-modal.show, #shop-modal.show, #community-modal.show, #upgrade-modal.show, #result-modal.show, #profile-modal.show, #friends-modal.show {display:flex} 
+  /* Модалки */
+  .modal {position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.92); backdrop-filter:blur(10px); padding:20px;}
+  .modal.show {display:flex} 
   
-  #fighters-card, #hero-modal-card, #mode-modal-card, .profile-card, #fialka-info-card, #vasilek-info-card, #road-card, #shop-card, #community-card, #upgrade-card, #result-card, #profile-card, #friends-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
+  .modal-card {width:min(1000px, 95vw); max-height:85vh; display:flex; flex-direction:column; background:rgba(14,22,32,0.97); border:2px solid rgba(90,140,180,0.6); border-radius:22px; padding:24px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative; overflow-y: auto;}
   #hero-modal-card { flex-direction: row; gap: 26px; }
-  #fialka-info-card, #vasilek-info-card, #community-card, #result-card { width:min(600px, 95vw); align-items: center; text-align: center; border-color: rgba(255,180,80,0.6); }
   .profile-card { width:min(450px, 95vw); text-align: center; }
 
   .modal-close{position:absolute; top:14px; right:16px; width:36px; height:36px; border-radius:50%; background:rgba(255,80,80,0.2); border:1px solid rgba(255,80,80,0.5); color:#ff7b7b; font-size:20px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .15s; z-index: 100;}
@@ -122,8 +122,10 @@
 
   #fighters-header{display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; padding-bottom: 12px; padding-right: 40px; border-bottom: 1px solid rgba(90,140,180,0.3);}
   #fighters-title{font-size:22px; font-weight:900; color:#fff; letter-spacing:1px;}
-  #fighters-count{font-size:14px; font-weight:700; color:#7ff0ff; background:rgba(127,240,255,0.1); padding:4px 12px; border-radius:8px; border:1px solid rgba(127,240,255,0.3);}
-  
+  .fighters-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+  .fighters-tab-btn { padding: 8px 20px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 2px solid transparent; color: #b8cde0; font-weight: 800; cursor: pointer; }
+  .fighters-tab-btn.active { background: rgba(127,240,255,0.15); border-color: #7ff0ff; color: #7ff0ff; }
+
   #fighters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 6px 4px 20px 4px; max-width: 1000px; margin: 0 auto; width: 100%; }
   .fighter-card{ position: relative; display:flex; flex-direction:column; justify-content:flex-end; width: 100%; aspect-ratio: 3/4; border-radius: 16px; cursor:pointer; background:rgba(255,255,255,0.03); border: 3px solid rgba(90,140,180,0.25); transition:all .15s; overflow: hidden; }
   .fighter-card:hover{ transform:translateY(-4px); box-shadow: 0 0 20px rgba(176, 184, 196, 0.3); }
@@ -271,6 +273,10 @@
 
   /* ====== СИСТЕМА АККАУНТОВ ====== */
   .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(63,169,245,0.1); border: 2px solid #7ff0ff; background-size: cover; background-position: center; margin: 0 auto 10px auto; cursor: pointer; }
+  .avatar-selector { display: flex; gap: 10px; justify-content: center; margin-bottom: 15px; }
+  .avatar-option { width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; background-size: cover; background-position: center; }
+  .avatar-option:hover, .avatar-option.selected { border-color: #7ff0ff; transform: scale(1.1); }
+
   .profile-stats { display: flex; justify-content: center; gap: 20px; margin: 15px 0; }
   .profile-stat { display: flex; flex-direction: column; align-items: center; font-size: 14px; color: #a9c2d8; }
   .profile-stat span { font-size: 20px; font-weight: 900; color: #fff; }
@@ -280,6 +286,9 @@
   .friend-avatar { width: 40px; height: 40px; border-radius: 50%; background: #3fa9f5; }
   .friend-name { font-weight: 800; color: #fff; flex: 1; }
   .friend-status { font-size: 12px; color: #4fd6a0; }
+
+  .auth-input { width: 100%; padding: 12px; margin-bottom: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; font-size: 16px; outline: none; }
+  .auth-input:focus { border-color: #7ff0ff; }
 
   .comm-btn { display: block; width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 12px; font-size: 18px; font-weight: 900; text-decoration: none; color: #fff; text-align: center; transition: transform 0.1s; }
   .comm-btn:hover { transform: translateY(-2px); }
@@ -327,6 +336,24 @@
   .btn-result-continue { padding: 18px 60px; font-size: 22px; font-weight: 900; color: #0a1420; background: linear-gradient(180deg,#7ff0ff,#3fa9f5); border: none; border-radius: 14px; cursor: pointer; box-shadow: 0 6px 0 #1e6a9e; transition: transform 0.1s; text-transform: uppercase; letter-spacing: 2px;}
   .btn-result-continue:hover { transform: translateY(-2px); }
   .btn-result-continue:active { transform: translateY(4px); box-shadow: none; }
+
+  /* Всплывающее уведомление о подборе */
+  #pickup-toast {
+    position: fixed; top: 20%; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.85); border: 2px solid #ffd700; border-radius: 12px;
+    padding: 10px 20px; display: none; align-items: center; gap: 15px; z-index: 200;
+    box-shadow: 0 10px 30px rgba(255,215,0,0.4); animation: popIn 0.3s ease-out;
+  }
+  #pickup-toast.show { display: flex; }
+  #pickup-toast img { width: 40px; height: 40px; }
+  #pickup-toast .toast-text { color: #fff; font-weight: 900; font-size: 20px; text-shadow: 0 2px 4px #000; }
+  @keyframes popIn { 0% { transform: translate(-50%, 20px) scale(0.8); opacity: 0; } 100% { transform: translate(-50%, 0) scale(1); opacity: 1; } }
+
+  /* Скины */
+  .skin-list { display: flex; flex-direction: column; gap: 10px; }
+  .skin-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid rgba(90,140,180,0.3); }
+  .skin-item img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+  .skin-item button { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 800; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -353,11 +380,17 @@
 <canvas id="game"></canvas>
 <div id="hint">WASD — движение &nbsp;·&nbsp; ЛКМ — атака &nbsp;·&nbsp; ПРОБЕЛ / ПКМ — ульта &nbsp;·&nbsp; ESC — лобби</div>
 
+<!-- Уведомление о подборе -->
+<div id="pickup-toast">
+  <img id="toast-icon" src="" alt="">
+  <span class="toast-text" id="toast-name"></span>
+</div>
+
 <div id="start-screen" class="screen hidden">
   <div class="screen-bg"></div>
   <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
-  <div id="start-version">PRE-ALPHA 0.4.5</div>
+  <div id="start-version">PRE-ALPHA 0.5</div>
 </div>
 
 <div id="lobby-screen" class="screen hidden">
@@ -409,7 +442,6 @@
       </div>
     </div>
     
-    <!-- Анонс Артёма -->
     <div class="announce-banner artem" onclick="openArtemInfo()">
       <div class="announce-img"></div>
       <div class="announce-info">
@@ -438,297 +470,200 @@
 </div>
 
 <!-- МОДАЛКА: ПРОФИЛЬ -->
-<div id="profile-modal">
-  <div class="profile-card" style="width:min(400px, 95vw);">
+<div id="profile-modal" class="modal">
+  <div class="profile-card" style="width:min(450px, 95vw);">
     <button class="modal-close" onclick="closeProfileModal()">✕</button>
     <h2 style="color: #fff; margin-bottom: 10px;">Профиль</h2>
-    <div class="profile-avatar" style="background-image: url('img/Avatar1.jpg');"></div>
-    <h3 style="color: #7ff0ff; font-size: 24px; font-weight: 900;">Игрок</h3>
-    <div class="profile-stats">
-      <div class="profile-stat"><span id="prof-sferi">0</span>Сфер</div>
-      <div class="profile-stat"><span id="prof-boytsov">4</span>Бойцов</div>
+    
+    <div id="auth-section">
+      <input type="text" id="auth-login" class="auth-input" placeholder="Логин">
+      <input type="password" id="auth-pass" class="auth-input" placeholder="Пароль">
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button class="step-btn" style="margin: 0; padding: 12px; font-size: 16px;" onclick="registerAccount()">РЕГИСТРАЦИЯ</button>
+        <button class="step-btn" style="margin: 0; padding: 12px; font-size: 16px; background: linear-gradient(180deg,#ff7b7b,#ff4d4d); box-shadow: 0 6px 0 #b32d2d;" onclick="loginAccount()">ВОЙТИ</button>
+      </div>
+      <p style="color: #a9c2d8; font-size: 14px;">Войдите или зарегистрируйтесь, чтобы добавлять друзей и сохранять прогресс.</p>
     </div>
-    <button class="step-btn" onclick="openFriendsModal()" style="background: linear-gradient(180deg,#c084fc,#a855f7); box-shadow: 0 6px 0 #7e22ce;">ДРУЗЬЯ</button>
-    <button class="step-btn" style="background: rgba(255,255,255,0.1); color:#fff; box-shadow: none; margin-top: 10px;" onclick="closeProfileModal()">ЗАКРЫТЬ</button>
+
+    <div id="profile-section" style="display: none;">
+      <div class="profile-avatar" id="prof-avatar" style="background-image: url('img/Avatar1.jpg');"></div>
+      <div class="avatar-selector">
+        <div class="avatar-option" onclick="selectAvatar('img/Avatar1.jpg', this)" style="background-image: url('img/Avatar1.jpg');"></div>
+        <div class="avatar-option" onclick="selectAvatar('img/Avatar2.jpg', this)" style="background-image: url('img/Avatar2.jpg');"></div>
+        <div class="avatar-option" onclick="selectAvatar('img/Avatar3.jpg', this)" style="background-image: url('img/Avatar3.jpg');"></div>
+        <div class="avatar-option" onclick="selectAvatar('img/Avatar4.jpg', this)" style="background-image: url('img/Avatar4.jpg');"></div>
+        <div class="avatar-option" onclick="selectAvatar('img/Avatar5.jpg', this)" style="background-image: url('img/Avatar5.jpg');"></div>
+      </div>
+
+      <h3 style="color: #7ff0ff; font-size: 24px; font-weight: 900;" id="prof-name">Игрок</h3>
+      
+      <div class="profile-stats">
+        <div class="profile-stat"><span id="prof-sferi">0</span>Сфер</div>
+        <div class="profile-stat"><span id="prof-boytsov">5</span>Бойцов</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+        <img src="img/Vitya.jpg" style="width: 40px; height: 40px; border-radius: 8px;" title="Витя">
+        <img src="img/Lesha.jpg" style="width: 40px; height: 40px; border-radius: 8px;" title="Лёха">
+        <img src="img/Fialka.jpg" style="width: 40px; height: 40px; border-radius: 8px;" title="Фиалка">
+        <img src="img/Vasilek.jpg" style="width: 40px; height: 40px; border-radius: 8px;" title="Василёк">
+        <img src="img/Artem.jpg" style="width: 40px; height: 40px; border-radius: 8px;" title="Артём">
+      </div>
+
+      <button class="step-btn" onclick="openFriendsModal()" style="background: linear-gradient(180deg,#c084fc,#a855f7); box-shadow: 0 6px 0 #7e22ce;">ДРУЗЬЯ</button>
+      <button class="step-btn" style="background: rgba(255,255,255,0.1); color:#fff; box-shadow: none; margin-top: 10px;" onclick="logoutAccount()">ВЫЙТИ</button>
+    </div>
   </div>
 </div>
 
 <!-- МОДАЛКА: ДРУЗЬЯ -->
-<div id="friends-modal">
+<div id="friends-modal" class="modal">
   <div class="profile-card" style="width:min(500px, 95vw);">
     <button class="modal-close" onclick="closeFriendsModal()">✕</button>
     <h2 style="color: #fff; margin-bottom: 10px;">Друзья</h2>
     
-    <div class="friend-list">
-      <!-- Пример друга 1 -->
-      <div class="friend-item" onclick="alert('Просмотр профиля друга (в разработке)')">
-        <div class="friend-avatar" style="background-image: url('img/Avatar2.jpg'); background-size: cover;"></div>
-        <div class="friend-name">Тимур</div>
-        <div class="friend-status">В сети</div>
-      </div>
-      <!-- Пример друга 2 -->
-      <div class="friend-item" onclick="alert('Просмотр профиля друга (в разработке)')">
-        <div class="friend-avatar" style="background-image: url('img/Avatar3.jpg'); background-size: cover;"></div>
-        <div class="friend-name">Алексей</div>
-        <div class="friend-status" style="color: #888;">Не в сети</div>
-      </div>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <input type="text" id="friend-input" class="auth-input" placeholder="Логин друга" style="margin: 0;">
+      <button class="step-btn" style="margin: 0; padding: 0 20px; font-size: 16px;" onclick="addFriend()">+</button>
     </div>
 
-    <button class="step-btn" style="background: linear-gradient(180deg,#4fd6a0,#2e8b57); box-shadow: 0 6px 0 #1e5e3a; margin-top: 20px;" onclick="alert('Поиск друзей (в разработке)')">ДОБАВИТЬ ДРУГА</button>
+    <div class="friend-list" id="friend-list-container">
+      <!-- Список друзей будет здесь -->
+    </div>
   </div>
 </div>
 
 <!-- МОДАЛКА: БОЙЦЫ -->
-<div id="fighters-modal">
-  <div id="fighters-card">
+<div id="fighters-modal" class="modal">
+  <div id="fighters-card" class="modal-card">
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 5 ИЗ 6</div>
+      <div class="fighters-tabs">
+        <button class="fighters-tab-btn active" onclick="switchFightersTab('heroes', this)">ГЕРОИ</button>
+        <button class="fighters-tab-btn" onclick="switchFightersTab('skins', this)">СКИНЫ</button>
+      </div>
     </div>
-    <div id="fighters-grid">
-      <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
-        <div class="fighter-card-level" id="lvl-vitya">Ур. 1</div>
-        <div class="fighter-card-icon"></div>
-        <div class="fighter-card-name">Витя</div>
-      </div>
-      
-      <div class="fighter-card lesha locked" id="card-lesha" onclick="checkLeshaUnlock()">
-        <div class="fighter-card-level" id="lvl-lesha">Ур. 1</div>
-        <div class="fighter-card-icon"></div>
-        <div class="fighter-card-name">Лёха</div>
-        <div class="lock-timer" id="lock-lesha-text">Нужно 50 сфер</div>
-      </div>
 
-      <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
-        <div class="fighter-card-level" id="lvl-fialka">Ур. 1</div>
-        <div class="fighter-card-icon"></div>
-        <div class="fighter-card-name">Фиалка</div>
-      </div>
+    <!-- Вкладка Героев -->
+    <div id="fighters-tab-heroes">
+      <div id="fighters-grid">
+        <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
+          <div class="fighter-card-level" id="lvl-vitya">Ур. 1</div>
+          <div class="fighter-card-icon"></div>
+          <div class="fighter-card-name">Витя</div>
+        </div>
+        
+        <div class="fighter-card lesha locked" id="card-lesha" onclick="checkLeshaUnlock()">
+          <div class="fighter-card-level" id="lvl-lesha">Ур. 1</div>
+          <div class="fighter-card-icon"></div>
+          <div class="fighter-card-name">Лёха</div>
+          <div class="lock-timer" id="lock-lesha-text">Нужно 50 сфер</div>
+        </div>
 
-      <div class="fighter-card vasilek" id="card-vasilek" onclick="openHeroDetails('Vasilek')">
-        <div class="fighter-card-level" id="lvl-vasilek">Ур. 1</div>
-        <div class="fighter-card-icon"></div>
-        <div class="fighter-card-name">Василёк</div>
-      </div>
+        <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
+          <div class="fighter-card-level" id="lvl-fialka">Ур. 1</div>
+          <div class="fighter-card-icon"></div>
+          <div class="fighter-card-name">Фиалка</div>
+        </div>
 
-      <div class="fighter-card artem" id="card-artem" onclick="openHeroDetails('Artem')">
-        <div class="fighter-card-level">Ур. 1</div>
-        <div class="fighter-card-icon"></div>
-        <div class="fighter-card-name">Артём</div>
-      </div>
+        <div class="fighter-card vasilek" id="card-vasilek" onclick="openHeroDetails('Vasilek')">
+          <div class="fighter-card-level" id="lvl-vasilek">Ур. 1</div>
+          <div class="fighter-card-icon"></div>
+          <div class="fighter-card-name">Василёк</div>
+        </div>
 
-      <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
-        <div class="fighter-card-icon">?</div>
-        <div class="fighter-card-name">Скоро</div>
+        <div class="fighter-card artem" id="card-artem" onclick="openHeroDetails('Artem')">
+          <div class="fighter-card-level">Ур. 1</div>
+          <div class="fighter-card-icon"></div>
+          <div class="fighter-card-name">Артём</div>
+        </div>
+
+        <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
+          <div class="fighter-card-icon">?</div>
+          <div class="fighter-card-name">Скоро</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Вкладка Скинов -->
+    <div id="fighters-tab-skins" style="display: none;">
+      <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+        
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Skin_Vitya.jpg');"></div>
+          <div class="shop-item-name">Спортсмен Витя</div>
+          <div class="shop-item-desc">Новый образ для Вити</div>
+          <button onclick="equipSkin('Vitya', 'sport')">ВЫБРАТЬ</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Skin_Lesha.jpg');"></div>
+          <div class="shop-item-name">Волейболист Лёха</div>
+          <div class="shop-item-desc">Новый образ для Лёхи</div>
+          <button onclick="equipSkin('Lesha', 'volley')">ВЫБРАТЬ</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Skin_Fialka.jpg');"></div>
+          <div class="shop-item-name">Принцесса Фиалка</div>
+          <div class="shop-item-desc">Новый образ для Фиалки</div>
+          <button onclick="equipSkin('Fialka', 'princess')">ВЫБРАТЬ</button>
+        </div>
+
+        <div class="shop-item">
+          <div class="shop-item-icon" style="background-image: url('img/Skin_Vasilek.jpg');"></div>
+          <div class="shop-item-name">Принц Василёк</div>
+          <div class="shop-item-desc">Новый образ для Василька</div>
+          <button onclick="equipSkin('Vasilek', 'prince')">ВЫБРАТЬ</button>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
 
-<!-- МОДАЛКА: ДЕТАЛИ ГЕРОЕВ -->
-<div id="hero-modal">
-  <div id="hero-modal-card">
+<!-- МОДАЛКА: ДЕТАЛИ ГЕРОЕВ (Универсальная) -->
+<div id="hero-modal" class="modal">
+  <div id="hero-modal-card" class="modal-card">
     <button class="modal-close" onclick="closeHeroDetails()">✕</button>
     <div id="hero-modal-left">
-      <div class="speech-bubble" id="bubble-vitya"></div>
+      <div class="speech-bubble" id="bubble-hero"></div>
       <div id="hero-modal-icon"></div>
     </div>
     <div id="hero-modal-right">
       <div id="hero-modal-name">Витя</div>
       <div class="tag-row">
-        <span class="tag tag-class">КЛАСС: КОМБО-РЕЙНДЖЕР</span>
-        <span class="tag tag-rarity">РЕДКОСТЬ: ОБЫЧНЫЙ</span>
+        <span class="tag tag-class" id="hero-modal-class">КЛАСС</span>
+        <span class="tag" id="hero-modal-rarity">РЕДКОСТЬ</span>
       </div>
-      <div id="hero-modal-desc">
-        <b>Вид:</b> Человек.<br><br>
-        Витя с детства выделялся на фоне других своим огромным весом, его часто дразнили за это, именно поэтому с началом проекта "Модернизация", он присоединился к Охлакратам, чтобы недопустить стирание жирного рода с лица земли.<br>
-        <b>Ульта:</b> встаёт на месте и атакует лазером из груди.
+      <div id="hero-modal-desc">Описание...</div>
+      
+      <div class="stat-block">
+        <div class="stat-head"><span>Урон</span><span id="stat-dmg">16</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:40%" id="stat-dmg-bar"></div></div>
       </div>
       <div class="stat-block">
-        <div class="stat-head"><span>Урон (выстрел)</span><span id="stat-vitya-dmg">16</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:40%" id="stat-vitya-dmg-bar"></div></div>
+        <div class="stat-head"><span>Скорость</span><span id="stat-spd">208</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-spd-bar"></div></div>
       </div>
       <div class="stat-block">
-        <div class="stat-head"><span>Скорость</span><span id="stat-vitya-spd">208</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-vitya-spd-bar"></div></div>
+        <div class="stat-head"><span>Здоровье</span><span id="stat-hp">100</span></div>
+        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-hp-bar"></div></div>
       </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Здоровье</span><span id="stat-vitya-hp">100</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-vitya-hp-bar"></div></div>
-      </div>
+      
       <div class="upgrade-row">
-        <button class="btn-select" onclick="selectHeroAndClose('Vitya')">ВЫБРАТЬ</button>
-        <button class="btn-upgrade" onclick="openUpgrade('Vitya')">УЛУЧШИТЬ</button>
+        <button class="btn-select" onclick="selectCurrentHero()">ВЫБРАТЬ</button>
+        <button class="btn-upgrade" onclick="openUpgrade(currentHeroType)">УЛУЧШИТЬ</button>
       </div>
-      <div class="upgrade-cost" id="upg-cost-vitya">Улучшение ур. 2: 100 Дулей</div>
-    </div>
-  </div>
-</div>
-
-<div id="hero-modal-lesha" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
-  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,180,80,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
-    <button class="modal-close" onclick="closeLeshaDetails()">✕</button>
-    <div id="hero-modal-left">
-      <div class="speech-bubble" id="bubble-lesha"></div>
-      <div id="hero-modal-icon" style="background-image:url('img/Lesha.jpg'); border-color: #ffb450;"></div>
-    </div>
-    <div id="hero-modal-right">
-      <div id="hero-modal-name">Лёха</div>
-      <div class="tag-row">
-        <span class="tag tag-class" style="color:#ffb450; border-color:rgba(255,180,80,0.35)">КЛАСС: ГРЕНАДЕР</span>
-        <span class="tag tag-rarity" style="color:#B0B8C4; border-color:rgba(176, 184, 196, 0.35)">РЕДКОСТЬ: ОБЫЧНЫЙ</span>
-      </div>
-      <div id="hero-modal-desc">
-        <b>Вид:</b> Человек.<br><br>
-        Печально известный лидер Синдиката "Трусы", вся война Технократов и Охлократов для него всего лишь способ заявить миру, что он всё ещё здесь..., ну и прорекламировать свой бренд трусов...<br>
-        <b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Урон (бомба)</span><span id="stat-lesha-dmg">25</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:55%" id="stat-lesha-dmg-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Скорость</span><span id="stat-lesha-spd">208</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-lesha-spd-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Здоровье</span><span id="stat-lesha-hp">100</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-lesha-hp-bar"></div></div>
-      </div>
-      <div class="upgrade-row">
-        <button class="btn-select" onclick="selectLeshaAndClose()">ВЫБРАТЬ</button>
-        <button class="btn-upgrade" onclick="openUpgrade('Lesha')">УЛУЧШИТЬ</button>
-      </div>
-      <div class="upgrade-cost" id="upg-cost-lesha">Улучшение ур. 2: 100 Дулей</div>
-    </div>
-  </div>
-</div>
-
-<div id="hero-modal-fialka" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
-  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(192,132,252,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
-    <button class="modal-close" onclick="closeFialkaDetails()">✕</button>
-    <div id="hero-modal-left">
-      <div class="speech-bubble" id="bubble-fialka"></div>
-      <div id="hero-modal-icon" style="background-image:url('img/Fialka.jpg'); border-color: #c084fc;"></div>
-    </div>
-    <div id="hero-modal-right">
-      <div id="hero-modal-name">Фиалка</div>
-      <div class="tag-row">
-        <span class="tag tag-class" style="color:#c084fc; border-color:rgba(192,132,252,0.35)">КЛАСС: УБИЙЦА</span>
-        <span class="tag tag-epic">РЕДКОСТЬ: ЭПИЧЕСКИЙ</span>
-      </div>
-      <div id="hero-modal-desc">
-        <b>Вид:</b> Робот.<br><br>
-        Одна из первых моделей роботов исследователей класса: GNOC (Универсальный навигатор и классификатор объектов), в отличие от своих собратьев, обожает природу и органику, именно по этой причине она присоединилась к Охлократам.<br>
-        <b>Атака:</b> Цепная молния.<br>
-        <b>Ульта:</b> Притягивает противника косой и парализует его.
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Урон (молния)</span><span id="stat-fialka-dmg">18</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:45%" id="stat-fialka-dmg-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Скорость</span><span id="stat-fialka-spd">208</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:65%" id="stat-fialka-spd-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Здоровье</span><span id="stat-fialka-hp">100</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:45%" id="stat-fialka-hp-bar"></div></div>
-      </div>
-      <div class="upgrade-row">
-        <button class="btn-select" onclick="selectFialkaAndClose()">ВЫБРАТЬ</button>
-        <button class="btn-upgrade" onclick="openUpgrade('Fialka')">УЛУЧШИТЬ</button>
-      </div>
-      <div class="upgrade-cost" id="upg-cost-fialka">Улучшение ур. 2: 150 Дулей</div>
-    </div>
-  </div>
-</div>
-
-<div id="hero-modal-vasilek" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
-  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,77,77,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
-    <button class="modal-close" onclick="closeVasilekDetails()">✕</button>
-    <div id="hero-modal-left">
-      <div class="speech-bubble" id="bubble-vasilek"></div>
-      <div id="hero-modal-icon" style="background-image:url('img/Vasilek.jpg'); border-color: #ff4d4d;"></div>
-    </div>
-    <div id="hero-modal-right">
-      <div id="hero-modal-name">Василёк</div>
-      <div class="tag-row">
-        <span class="tag tag-class" style="color:#ff4d4d; border-color:rgba(255,77,77,0.35)">КЛАСС: ПОДДЕРЖКА</span>
-        <span class="tag tag-crazy">РЕДКОСТЬ: БЕЗУМНАЯ</span>
-      </div>
-      <div id="hero-modal-desc">
-        <b>Вид:</b> Робот.<br><br>
-        Изначально Василёк, задумывался как полицейский робот, однако его легкая броня и возможно (не возможно, а точно) его раскраска, не позволили этому случиться, поэтому он стал вторым роботом модели GNOC, имел романтические чувства к Фиалке, однако она не смогла ответить ему взаимностью, теперь он на стороне Технократов уничтожает всё живое, чтобы сделать Фиалке больно.<br>
-        <b>Атака:</b> Автомат (очередь).<br>
-        <b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Урон (очередь)</span><span id="stat-vasilek-dmg">6</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:35%" id="stat-vasilek-dmg-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Скорость</span><span id="stat-vasilek-spd">208</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-vasilek-spd-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Здоровье</span><span id="stat-vasilek-hp">100</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:55%" id="stat-vasilek-hp-bar"></div></div>
-      </div>
-      <div class="upgrade-row">
-        <button class="btn-select" onclick="selectVasilekAndClose()">ВЫБРАТЬ</button>
-        <button class="btn-upgrade" onclick="openUpgrade('Vasilek')">УЛУЧШИТЬ</button>
-      </div>
-      <div class="upgrade-cost" id="upg-cost-vasilek">Улучшение ур. 2: 150 Дулей</div>
-    </div>
-  </div>
-</div>
-
-<!-- Артём -->
-<div id="hero-modal-artem" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
-  <div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,215,0,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
-    <button class="modal-close" onclick="closeArtemDetails()">✕</button>
-    <div id="hero-modal-left">
-      <div class="speech-bubble" id="bubble-artem"></div>
-      <div id="hero-modal-icon" style="background-image:url('img/Artem.jpg'); border-color: #ffd700;"></div>
-    </div>
-    <div id="hero-modal-right">
-      <div id="hero-modal-name">Артём</div>
-      <div class="tag-row">
-        <span class="tag tag-class" style="color:#ffd700; border-color:rgba(255,215,0,0.35)">КЛАСС: МАГ</span>
-        <span class="tag tag-legendary">РЕДКОСТЬ: ЛЕГЕНДАРНЫЙ</span>
-      </div>
-      <div id="hero-modal-desc">
-        <b>Вид:</b> Человек (Худи, джинсы, ботинки, очки).<br><br>
-        Таинственный маг, что в совершенстве овладел магией фаллоиммитотаров.<br>
-        <b>Атака:</b> Стреляет фаллоиммитатором, который самонаводится на врага. При попадании снаряд летает вокруг цели, нанося урон другим врагам поблизости.<br>
-        <b>Ульта:</b> Создаёт огромный фаллоиммитатор и ставит его. Через время он взрывается, выпуская 4 самонаводящихся снаряда.
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Урон (снаряд)</span><span id="stat-artem-dmg">20</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-artem-dmg-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Скорость</span><span id="stat-artem-spd">208</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:60%" id="stat-artem-spd-bar"></div></div>
-      </div>
-      <div class="stat-block">
-        <div class="stat-head"><span>Здоровье</span><span id="stat-artem-hp">100</span></div>
-        <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-artem-hp-bar"></div></div>
-      </div>
-      <div class="upgrade-row">
-        <button class="btn-select" onclick="selectArtemAndClose()">ВЫБРАТЬ</button>
-        <button class="btn-upgrade" onclick="openUpgrade('Artem')">УЛУЧШИТЬ</button>
-      </div>
-      <div class="upgrade-cost" id="upg-cost-artem">Улучшение ур. 2: 200 Дулей</div>
+      <div class="upgrade-cost" id="upg-cost">Улучшение ур. 2: 100 Дулей</div>
     </div>
   </div>
 </div>
 
 <!-- МОДАЛКА УЛУЧШЕНИЯ -->
-<div id="upgrade-modal">
-  <div id="upgrade-card">
+<div id="upgrade-modal" class="modal">
+  <div id="upgrade-card" class="modal-card">
     <button class="modal-close" onclick="closeUpgrade()">✕</button>
     <div class="upgrade-hero-head">
       <div class="upgrade-hero-img" id="upg-hero-img"></div>
@@ -746,8 +681,8 @@
 </div>
 
 <!-- МОДАЛКА РЕЗУЛЬТАТОВ -->
-<div id="result-modal">
-  <div id="result-card">
+<div id="result-modal" class="modal">
+  <div id="result-card" class="modal-card">
     <div class="result-title" id="res-title">ПОБЕДА!</div>
     <div class="result-subtitle" id="res-subtitle">Вы победили в Горном техникуме!</div>
     
@@ -766,12 +701,11 @@
   </div>
 </div>
 
-<!-- МОДАЛКА: РЕЖИМЫ И ВЫБОР КАРТ (ДВА ШАГА) -->
-<div id="mode-modal">
-  <div id="mode-modal-card">
+<!-- МОДАЛКА: РЕЖИМЫ И ВЫБОР КАРТ -->
+<div id="mode-modal" class="modal">
+  <div id="mode-modal-card" class="modal-card">
     <button class="modal-close" onclick="closeModeModal()">✕</button>
     
-    <!-- ШАГ 1: ВЫБОР РЕЖИМА -->
     <div id="step-mode">
       <h2>ВЫБОР РЕЖИМА</h2>
       <div class="mode-grid" style="justify-content: center;">
@@ -805,11 +739,9 @@
       <button class="step-btn" onclick="goToMapSelect()">ДАЛЕЕ (ВЫБОР КАРТЫ)</button>
     </div>
 
-    <!-- ШАГ 2: ВЫБОР КАРТЫ -->
     <div id="step-map" style="display: none;">
       <h2>ВЫБОР КАРТЫ</h2>
       <div class="mode-grid" style="justify-content: center;">
-        <!-- Карта 1 -->
         <div class="mode-option selected" onclick="selectMap('Компьютерный центр', this)">
           <div class="mode-option-icon map-icon-1"></div>
           <div class="mode-option-info">
@@ -818,7 +750,6 @@
           </div>
           <div class="mode-option-check">✓</div>
         </div>
-        <!-- Карта 2 -->
         <div class="mode-option" onclick="selectMap('Задний двор', this)">
           <div class="mode-option-icon map-icon-2"></div>
           <div class="mode-option-info">
@@ -827,7 +758,6 @@
           </div>
           <div class="mode-option-check">✓</div>
         </div>
-        <!-- Карта 3 -->
         <div class="mode-option" onclick="selectMap('Спортзал', this)">
           <div class="mode-option-icon map-icon-3"></div>
           <div class="mode-option-info">
@@ -845,8 +775,8 @@
 </div>
 
 <!-- ДОРОГА СЛАВЫ -->
-<div id="road-modal">
-  <div id="road-card">
+<div id="road-modal" class="modal">
+  <div id="road-card" class="modal-card">
     <button class="modal-close" onclick="closeRoadModal()">✕</button>
     <div class="road-bg-image">
       <div class="road-title">Сезон 1</div>
@@ -897,8 +827,8 @@
 </div>
 
 <!-- МАГАЗИН -->
-<div id="shop-modal">
-  <div id="shop-card">
+<div id="shop-modal" class="modal">
+  <div id="shop-card" class="modal-card">
     <button class="modal-close" onclick="closeShopModal()">✕</button>
     
     <div class="shop-sidebar">
@@ -946,30 +876,6 @@
           <div class="shop-item-price">999 Дулей</div>
           <button>СКОРО</button>
         </div>
-        <div class="shop-item disabled">
-          <div class="shop-badge">СКОРО</div>
-          <div class="shop-item-icon" style="background-image: url('img/Skin_Lesha.jpg');"></div>
-          <div class="shop-item-name">Волейболист Лёха</div>
-          <div class="shop-item-desc">В разработке</div>
-          <div class="shop-item-price">999 Дулей</div>
-          <button>СКОРО</button>
-        </div>
-        <div class="shop-item disabled">
-          <div class="shop-badge">СКОРО</div>
-          <div class="shop-item-icon" style="background-image: url('img/Skin_Fialka.jpg');"></div>
-          <div class="shop-item-name">Принцесса Фиалка</div>
-          <div class="shop-item-desc">В разработке</div>
-          <div class="shop-item-price">999 Дулей</div>
-          <button>СКОРО</button>
-        </div>
-        <div class="shop-item disabled">
-          <div class="shop-badge">СКОРО</div>
-          <div class="shop-item-icon" style="background-image: url('img/Skin_Vasilek.jpg');"></div>
-          <div class="shop-item-name">Принц Василёк</div>
-          <div class="shop-item-desc">В разработке</div>
-          <div class="shop-item-price">999 Дулей</div>
-          <button>СКОРО</button>
-        </div>
       </div>
 
       <div id="shop-tab-chests" class="shop-grid" style="display: none;">
@@ -993,8 +899,8 @@
   </div>
 </div>
 
-<div id="community-modal">
-  <div id="community-card">
+<div id="community-modal" class="modal">
+  <div id="community-card" class="modal-card" style="width:min(600px, 95vw);">
     <button class="modal-close" onclick="closeCommunityModal()">✕</button>
     <h2 style="color: #fff; margin-bottom: 20px;">Наше Сообщество</h2>
     <p style="color: #ccc; margin-bottom: 20px;">Присоединяйтесь к нам, чтобы первыми узнавать о новостях и обновлениях!</p>
@@ -1005,18 +911,17 @@
 </div>
 
 <!-- НОВОСТИ -->
-<div id="news-modal">
+<div id="news-modal" class="modal">
   <div class="profile-card" style="width:min(900px, 95vw);">
     <button class="modal-close" onclick="closeNewsModal()">✕</button>
     <h2>НОВОСТИ</h2>
     <div class="news-content">
-      
       <div class="news-block" style="border-left-color: #ffd700;">
         <div class="news-img" style="background-image: url('img/Artem.jpg');"></div>
         <div class="news-info">
-          <div class="news-date" style="color: #ffd700;">ОБНОВЛЕНИЕ 0.4.5</div>
+          <div class="news-date" style="color: #ffd700;">ОБНОВЛЕНИЕ 0.5</div>
           <div class="news-title">Новый боец: Артём!</div>
-          <div class="news-text">Таинственный маг, что в совершенстве овладел магией фаллоиммитотаров. Его самонаводящиеся снаряды не оставят врагам шанса!</div>
+          <div class="news-text">Таинственный маг с магией фаллоиммитотаров. Самонаводящиеся снаряды и мощная ульта!</div>
         </div>
       </div>
 
@@ -1028,34 +933,6 @@
           <div class="news-text">Безумный розовый робот-поддержка с автоматом и лечащим полем.</div>
         </div>
       </div>
-
-      <div class="news-block" style="border-left-color: #c084fc;">
-        <div class="news-img" style="background-image: url('img/Fialka.jpg');"></div>
-        <div class="news-info">
-          <div class="news-date" style="color: #c084fc;">ОБНОВЛЕНИЕ 0.3</div>
-          <div class="news-title">Новый боец: Фиалка</div>
-          <div class="news-text">Эпический убийца с цепной молнией и притягивающей косой.</div>
-        </div>
-      </div>
-
-      <div class="news-block" style="border-left-color: #7ff0ff;">
-        <div class="news-img" style="background-image: url('img/Vitya.jpg');"></div>
-        <div class="news-info">
-          <div class="news-date" style="color: #7ff0ff;">ОБНОВЛЕНИЕ 0.2.5</div>
-          <div class="news-title">Новые скины!</div>
-          <div class="news-text">Витя переоделся в красную майку и джинсы, а Лёха надел деловой костюм.</div>
-        </div>
-      </div>
-
-      <div class="news-block" style="border-left-color: #ffb450;">
-        <div class="news-img" style="background-image: url('img/Lesha.jpg');"></div>
-        <div class="news-info">
-          <div class="news-date" style="color: #ffb450;">ОБНОВЛЕНИЕ 0.2</div>
-          <div class="news-title">Добавлен Лёха</div>
-          <div class="news-text">Новый боец-гранадер. Его бомбы оставляют за собой ядовитый след.</div>
-        </div>
-      </div>
-      
     </div>
   </div>
 </div>
@@ -1073,23 +950,46 @@
 (function(){
 'use strict';
 
+// --- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ---
+let currentUser = null;
+const users = JSON.parse(localStorage.getItem('game_users') || '{}'); // Все аккаунты
+let playerData = JSON.parse(localStorage.getItem('game_data') || 'null'); // Данные текущего игрока
+
+// Инициализация данных игрока, если их нет
+if (!playerData) {
+  playerData = {
+    duli: 500, oskolki: 500, sferi: 0,
+    leshaUnlocked: false,
+    heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1 },
+    skins: {},
+    avatar: 'img/Avatar1.jpg',
+    friends: []
+  };
+}
+
+function saveData() {
+  if (currentUser) {
+    playerData.username = currentUser;
+    users[currentUser] = playerData;
+    localStorage.setItem('game_users', JSON.stringify(users));
+    localStorage.setItem('game_data', JSON.stringify(playerData));
+    updateUI();
+  }
+}
+
 // --- ЗВУКОВАЯ СИСТЕМА ---
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
-
 function initAudio() {
   if (!audioCtx) audioCtx = new AudioContext();
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
-
 function playSound(type) {
   if (!audioCtx) return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+  osc.connect(gain); gain.connect(audioCtx.destination);
   const now = audioCtx.currentTime;
-  
   if (type === 'shoot') {
     osc.type = 'square'; osc.frequency.setValueAtTime(400, now); osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
     gain.gain.setValueAtTime(0.1, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
@@ -1098,92 +998,25 @@ function playSound(type) {
     osc.type = 'sawtooth'; osc.frequency.setValueAtTime(200, now); osc.frequency.linearRampToValueAtTime(800, now + 0.3);
     gain.gain.setValueAtTime(0.15, now); gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
     osc.start(now); osc.stop(now + 0.3);
-  } else if (type === 'step') {
-    osc.type = 'triangle'; osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.05);
-    gain.gain.setValueAtTime(0.05, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-    osc.start(now); osc.stop(now + 0.05);
   }
 }
 
 // --- ФРАЗЫ ГЕРОЕВ ---
 const phrases = {
-  Vitya: [
-    "Будущее за жиром!",
-    "Мой вес — моё преимущество!",
-    "Раздавим фанатов Веблена, Бэлла и Турена",
-    "Разобьём этих спичек!",
-    "Долой липосакцию!",
-    "Я выжгу тебя своим жиром",
-    "Столовые мира будут моими!",
-    "Эти жестянки станут, отличными кострюлями для моих супов"
-  ],
-  Lesha: [
-    "Трусы — это бренд!",
-    "Всем кто служит Господину 'Порядку', трусы со скидкой 30%",
-    "Неважно кто победит, трусы будут обосраны у всех!",
-    "Трусы со скидкой 25 %, всем кто служит Госпоже 'Свободе'",
-    "Мой Синдикат найдёт вас в два счёта",
-    "Мир будет покупать мои трусы!",
-    "Вонючая смерть!",
-    "Я лидер, а вы — так..."
-  ],
-  Fialka: [
-    "Мои системы в норме. А твои?",
-    "Природа — лучший алгоритм.",
-    "Сопротивление бесполезно. Ты будешь парализован.",
-    "Электричество — моя стихия.",
-    "В отличие от вас, я создана для гармонии.",
-    "Охлократы — единственный путь.",
-    "Цепная реакция неизбежна."
-  ],
-  Vasilek: [
-    "Лечение — это искусство!",
-    "Стойте в зоне!",
-    "Я розовый, но опасный!",
-    "Мой автомат не дремлет!",
-    "Осколки летят!",
-    "Поддержка решает всё!",
-    "Хаос — моя стихия!",
-    "Я собран из лучших деталей!",
-    "Фиалка, я всё ещё люблю тебя...",
-    "Я стану полицейским! Даже если для этого придётся убить всех!"
-  ],
-  Artem: [
-    "Магия фаллоиммитотаров!",
-    "Я таинственный маг!",
-    "Мои чары неотразимы!",
-    "Тьма ждёт!",
-    "Скоро я буду в игре!"
-  ]
+  Vitya: ["Будущее за жиром!", "Мой вес — моё преимущество!", "Раздавим фанатов Веблена, Бэлла и Турена", "Разобьём этих спичек!", "Долой липосакцию!", "Я выжгу тебя своим жиром", "Столовые мира будут моими!", "Эти жестянки станут, отличными кострюлями для моих супов"],
+  Lesha: ["Трусы — это бренд!", "Всем кто служит Господину 'Порядку', трусы со скидкой 30%", "Неважно кто победит, трусы будут обосраны у всех!", "Трусы со скидкой 25 %, всем кто служит Госпоже 'Свободе'", "Мой Синдикат найдёт вас в два счёта", "Мир будет покупать мои трусы!", "Вонючая смерть!", "Я лидер, а вы — так..."],
+  Fialka: ["Мои системы в норме. А твои?", "Природа — лучший алгоритм.", "Сопротивление бесполезно. Ты будешь парализован.", "Электричество — моя стихия.", "В отличие от вас, я создана для гармонии.", "Охлократы — единственный путь.", "Цепная реакция неизбежна."],
+  Vasilek: ["Лечение — это искусство!", "Стойте в зоне!", "Я розовый, но опасный!", "Мой автомат не дремлет!", "Осколки летят!", "Поддержка решает всё!", "Хаос — моя стихия!", "Я собран из лучших деталей!", "Фиалка, я всё ещё люблю тебя...", "Я стану полицейским! Даже если для этого придётся убить всех!"],
+  Artem: ["Магия фаллоиммитотаров!", "Я таинственный маг!", "Мои чары неотразимы!", "Тьма ждёт!"]
 };
 
-// --- ДАННЫЕ ИГРОКА ---
-const DEFAULT_DATA = {
-  duli: 500,
-  oskolki: 500,
-  sferi: 0,
-  leshaUnlocked: false,
-  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1 },
-  claimedRoad10: false,
-  claimedRoad25: false
-};
-
-let playerData;
-try {
-  playerData = JSON.parse(localStorage.getItem('gameData_04'));
-  if (!playerData || typeof playerData !== 'object') playerData = JSON.parse(JSON.stringify(DEFAULT_DATA));
-  for (const k in DEFAULT_DATA) if (!(k in playerData)) playerData[k] = DEFAULT_DATA[k];
-  for (const k in DEFAULT_DATA.heroLevels) if (!(k in playerData.heroLevels)) playerData.heroLevels[k] = 1;
-} catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
-
-window.playerData = playerData;
-
+// --- БАЗОВЫЕ ХАРАКТЕРИСТИКИ ---
 const HERO_BASE = {
-  Vitya:   { dmg: 16, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
-  Lesha:   { dmg: 25, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100 },
-  Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
-  Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 },
-  Artem:   { dmg: 20, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200 }
+  Vitya:   { dmg: 16, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100, class: 'КОМБО-РЕЙНДЖЕР' },
+  Lesha:   { dmg: 25, spd: 208, hp: 100, rarity: 'ОБЫЧНЫЙ', cost: 100, class: 'ГРЕНАДЕР' },
+  Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150, class: 'УБИЙЦА' },
+  Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150, class: 'ПОДДЕРЖКА' },
+  Artem:   { dmg: 25, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200, class: 'МАГ' } // Урон увеличен
 };
 const MAX_HERO_LEVEL = 5;
 
@@ -1205,21 +1038,43 @@ function getUpgradeCost(type) {
   return Math.round(base * Math.pow(1.5, lvl - 1));
 }
 
-window.saveData = function() {
-  localStorage.setItem('gameData_04', JSON.stringify(playerData));
-  updateUI();
-}
-
+// --- UI ---
 function updateUI() {
   document.getElementById('ui-duli').textContent = playerData.duli;
   document.getElementById('ui-oskolki').textContent = playerData.oskolki;
   document.getElementById('shop-ui-duli').textContent = playerData.duli;
   document.getElementById('shop-ui-oskolki').textContent = playerData.oskolki;
   
-  document.getElementById('prof-sferi').textContent = playerData.sferi;
-  let count = 0;
-  for (const k in playerData.heroLevels) if (playerData.heroLevels[k] > 0) count++;
-  document.getElementById('prof-boytsov').textContent = count;
+  if (currentUser) {
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('profile-section').style.display = 'block';
+    document.getElementById('prof-name').textContent = currentUser;
+    document.getElementById('prof-avatar').style.backgroundImage = `url('${playerData.avatar}')`;
+    document.getElementById('prof-sferi').textContent = playerData.sferi;
+    let count = 0;
+    for (const k in playerData.heroLevels) if (playerData.heroLevels[k] > 0) count++;
+    document.getElementById('prof-boytsov').textContent = count;
+    
+    // Отрисовка друзей
+    const list = document.getElementById('friend-list-container');
+    list.innerHTML = '';
+    if (playerData.friends.length === 0) {
+      list.innerHTML = '<div style="color: #888; text-align: center;">Пока нет друзей</div>';
+    } else {
+      playerData.friends.forEach(f => {
+        list.innerHTML += `
+          <div class="friend-item" onclick="viewFriendProfile('${f}')">
+            <div class="friend-avatar"></div>
+            <div class="friend-name">${f}</div>
+            <div class="friend-status">В сети</div>
+          </div>
+        `;
+      });
+    }
+  } else {
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('profile-section').style.display = 'none';
+  }
 
   const prog = Math.min(100, (playerData.sferi / 50) * 100);
   document.getElementById('road-panel-fill').style.width = prog + '%';
@@ -1248,81 +1103,93 @@ function updateUI() {
     }
   }
 
-  document.getElementById('node-5').classList.toggle('unlocked', playerData.sferi >= 5);
-  document.getElementById('node-10').classList.toggle('unlocked', playerData.sferi >= 10);
-  document.getElementById('node-15').classList.toggle('unlocked', playerData.sferi >= 15);
-  document.getElementById('node-25').classList.toggle('unlocked', playerData.sferi >= 25);
-  document.getElementById('node-35').classList.toggle('unlocked', playerData.sferi >= 35);
-  document.getElementById('node-40').classList.toggle('unlocked', playerData.sferi >= 40);
-  document.getElementById('node-50').classList.toggle('unlocked', playerData.sferi >= 50);
-
-  for (const t of ['Vitya','Lesha','Fialka','Vasilek', 'Artem']) {
+  for (const t of ['Vitya','Lesha','Fialka','Vasilek','Artem']) {
     const el = document.getElementById('lvl-' + t.toLowerCase());
     if (el) el.textContent = 'Ур. ' + (playerData.heroLevels[t] || 1);
   }
-
-  updateHeroStatDisplays();
 }
 
-function updateHeroStatDisplays() {
-  const map = { Vitya: 'vitya', Lesha: 'lesha', Fialka: 'fialka', Vasilek: 'vasilek', Artem: 'artem' };
-  for (const t in map) {
-    const id = map[t];
-    const s = getHeroStats(t);
-    const dmgEl = document.getElementById('stat-' + id + '-dmg');
-    const spdEl = document.getElementById('stat-' + id + '-spd');
-    const hpEl = document.getElementById('stat-' + id + '-hp');
-    const dmgBar = document.getElementById('stat-' + id + '-dmg-bar');
-    const spdBar = document.getElementById('stat-' + id + '-spd-bar');
-    const hpBar = document.getElementById('stat-' + id + '-hp-bar');
-    if (dmgEl) dmgEl.textContent = s.dmg;
-    if (spdEl) spdEl.textContent = s.spd;
-    if (hpEl) hpEl.textContent = s.hp;
-    if (dmgBar) dmgBar.style.width = Math.min(100, (s.dmg / 30) * 100) + '%';
-    if (spdBar) spdBar.style.width = Math.min(100, (s.spd / 260) * 100) + '%';
-    if (hpBar) hpBar.style.width = Math.min(100, (s.hp / 160) * 100) + '%';
+// --- АККАУНТЫ ---
+window.registerAccount = function() {
+  const login = document.getElementById('auth-login').value.trim();
+  const pass = document.getElementById('auth-pass').value.trim();
+  if (!login || !pass) return alert('Введите логин и пароль!');
+  if (users[login]) return alert('Этот логин уже занят!');
+  
+  users[login] = {
+    password: pass,
+    duli: 500, oskolki: 500, sferi: 0, leshaUnlocked: false,
+    heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1 },
+    skins: {}, avatar: 'img/Avatar1.jpg', friends: []
+  };
+  localStorage.setItem('game_users', JSON.stringify(users));
+  alert('Аккаунт создан! Войдите в него.');
+};
 
-    const costEl = document.getElementById('upg-cost-' + id);
-    if (costEl) {
-      const lvl = playerData.heroLevels[t] || 1;
-      if (lvl >= MAX_HERO_LEVEL) costEl.textContent = 'Максимальный уровень!';
-      else costEl.textContent = 'Улучшение ур. ' + (lvl + 1) + ': ' + getUpgradeCost(t) + ' Дулей';
-    }
-  }
-}
+window.loginAccount = function() {
+  const login = document.getElementById('auth-login').value.trim();
+  const pass = document.getElementById('auth-pass').value.trim();
+  if (!users[login] || users[login].password !== pass) return alert('Неверный логин или пароль!');
+  
+  currentUser = login;
+  playerData = users[login];
+  localStorage.setItem('game_data', JSON.stringify(playerData));
+  updateUI();
+  alert('Вы вошли как ' + login);
+};
 
+window.logoutAccount = function() {
+  currentUser = null;
+  playerData = JSON.parse(localStorage.getItem('game_data')) || {};
+  updateUI();
+};
+
+window.selectAvatar = function(img, el) {
+  playerData.avatar = img;
+  document.getElementById('prof-avatar').style.backgroundImage = `url('${img}')`;
+  saveData();
+};
+
+window.addFriend = function() {
+  if (!currentUser) return alert('Войдите в аккаунт!');
+  const fName = document.getElementById('friend-input').value.trim();
+  if (!fName) return;
+  if (!users[fName]) return alert('Игрок с таким логином не найден!');
+  if (fName === currentUser) return alert('Вы не можете добавить себя!');
+  if (playerData.friends.includes(fName)) return alert('Уже в друзьях!');
+  
+  playerData.friends.push(fName);
+  document.getElementById('friend-input').value = '';
+  saveData();
+};
+
+window.viewFriendProfile = function(name) {
+  const fData = users[name];
+  if (!fData) return;
+  alert(`Профиль друга: ${name}\nСферы: ${fData.sferi}\nБойцы: ${Object.keys(fData.heroLevels).length}\nАватарка: ${fData.avatar}`);
+};
+
+// --- МАГАЗИН ---
 window.switchShopTab = function(tabName, el) {
   document.querySelectorAll('.shop-tab-btn').forEach(b => b.classList.remove('active'));
   if (el) el.classList.add('active');
-  
   document.getElementById('shop-tab-sale').style.display = 'none';
   document.getElementById('shop-tab-skins').style.display = 'none';
   document.getElementById('shop-tab-chests').style.display = 'none';
-  
   document.getElementById('shop-tab-' + tabName).style.display = 'grid';
-  
   const titles = { sale: 'АКЦИИ', skins: 'СКИНЫ', chests: 'СУНДУКИ' };
   document.getElementById('shop-title').textContent = titles[tabName];
 };
 
 window.buyChest = function(type, priceOskolki, priceDuli) {
-  priceOskolki = priceOskolki || 0;
-  priceDuli = priceDuli || 0;
-  if (playerData.oskolki < priceOskolki) return alert('Недостаточно Осколков!');
-  if (playerData.duli < priceDuli) return alert('Недостаточно Дулей!');
-  
+  if (playerData.oskolki < priceOskolki) return alert('Мало Осколков!');
   playerData.oskolki -= priceOskolki;
-  playerData.duli -= priceDuli;
-  
   let reward = '';
   if (type === 'techno') { playerData.duli += 50; playerData.sferi += 1; reward = '50 Дулей и 1 Сфера!'; }
   if (type === 'octo') { playerData.duli += 150; playerData.sferi += 2; reward = '150 Дулей и 2 Сферы!'; }
   if (type === 'ultra') { playerData.duli += 300; playerData.sferi += 5; reward = '300 Дулей и 5 Сфер!'; }
-  if (type === 'duli100') { playerData.duli += 100; reward = '100 Дулей!'; }
-  if (type === 'oskolki50') { playerData.oskolki += 50; reward = '50 Осколков!'; }
-  
   saveData();
-  alert('Вы открыли сундук и получили: ' + reward);
+  alert('Вы получили: ' + reward);
 };
 
 window.checkLeshaUnlock = function() {
@@ -1330,7 +1197,77 @@ window.checkLeshaUnlock = function() {
   else alert('Лёха откроется, когда вы наберёте 50 Сфер Влияния на Дороге Славы!');
 };
 
+// --- ГЕРОИ ---
+let currentHeroType = 'Vitya';
 let upgradeTargetType = null;
+
+window.switchFightersTab = function(tab, el) {
+  document.querySelectorAll('.fighters-tab-btn').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('fighters-tab-heroes').style.display = tab === 'heroes' ? 'block' : 'none';
+  document.getElementById('fighters-tab-skins').style.display = tab === 'skins' ? 'block' : 'none';
+};
+
+window.equipSkin = function(hero, skin) {
+  playerData.skins[hero] = skin;
+  saveData();
+  alert(`Скин для ${hero} надет! Он появится в бою.`);
+};
+
+window.openHeroDetails = function(hero) {
+  currentHeroType = hero;
+  const base = HERO_BASE[hero];
+  const stats = getHeroStats(hero);
+  
+  const modal = document.getElementById('hero-modal');
+  document.getElementById('hero-modal-icon').style.backgroundImage = `url('img/${hero}.jpg')`;
+  document.getElementById('hero-modal-name').textContent = hero === 'Vitya' ? 'Витя' : hero === 'Lesha' ? 'Лёха' : hero === 'Fialka' ? 'Фиалка' : hero === 'Vasilek' ? 'Василёк' : 'Артём';
+  document.getElementById('hero-modal-class').textContent = 'КЛАСС: ' + base.class;
+  document.getElementById('hero-modal-rarity').textContent = 'РЕДКОСТЬ: ' + base.rarity;
+  
+  const descriptions = {
+    Vitya: "<b>Ульта:</b> встаёт на месте и атакует лазером из груди.",
+    Lesha: "<b>Ульта:</b> Кидает огромную бомбу, которая разлетается на кучу мелких отравленных осколков.",
+    Fialka: "<b>Ульта:</b> Притягивает противника косой и парализует его.",
+    Vasilek: "<b>Ульта:</b> Создаёт поле, которое лечит союзников и наносит урон врагам.",
+    Artem: "<b>Атака:</b> Стреляет фаллоиммитатором, который самонаводится на врага.<br><b>Ульта:</b> Создаёт огромный фаллоиммитатор, который взрывается и выпускает 4 снаряда."
+  };
+  document.getElementById('hero-modal-desc').innerHTML = descriptions[hero];
+
+  document.getElementById('stat-dmg').textContent = stats.dmg;
+  document.getElementById('stat-dmg-bar').style.width = Math.min(100, (stats.dmg / 30) * 100) + '%';
+  document.getElementById('stat-spd').textContent = stats.spd;
+  document.getElementById('stat-spd-bar').style.width = Math.min(100, (stats.spd / 260) * 100) + '%';
+  document.getElementById('stat-hp').textContent = stats.hp;
+  document.getElementById('stat-hp-bar').style.width = Math.min(100, (stats.hp / 160) * 100) + '%';
+
+  const costEl = document.getElementById('upg-cost');
+  const lvl = playerData.heroLevels[hero] || 1;
+  if (lvl >= MAX_HERO_LEVEL) costEl.textContent = 'Максимальный уровень!';
+  else costEl.textContent = 'Улучшение ур. ' + (lvl + 1) + ': ' + getUpgradeCost(hero) + ' Дулей';
+
+  modal.classList.add('show');
+  setTimeout(() => showRandomPhrase(hero), 300);
+};
+
+window.closeHeroDetails = function() { document.getElementById('hero-modal').classList.remove('show'); };
+
+window.selectCurrentHero = function() {
+  selectedHero = currentHeroType;
+  updateLobbySelection();
+  closeHeroDetails();
+  closeFightersModal();
+};
+
+function showRandomPhrase(heroType) {
+  const bubble = document.getElementById('bubble-hero');
+  if (!bubble) return;
+  const arr = phrases[heroType];
+  const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
+  bubble.textContent = randomPhrase;
+  bubble.classList.add('show');
+  setTimeout(() => bubble.classList.remove('show'), 3500);
+}
 
 window.openUpgrade = function(type) {
   upgradeTargetType = type;
@@ -1341,7 +1278,7 @@ window.openUpgrade = function(type) {
 
   const modal = document.getElementById('upgrade-modal');
   document.getElementById('upg-hero-img').style.backgroundImage = `url('img/${type}.jpg')`;
-  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : (type === 'Artem' ? 'Артём' : 'Василёк');
+  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : type === 'Artem' ? 'Артём' : 'Василёк';
   document.getElementById('upg-hero-level').textContent = isMax ? `Уровень ${lvl} — МАКСИМУМ` : `Уровень ${lvl} → ${lvl + 1}`;
 
   const statsEl = document.getElementById('upg-stats');
@@ -1395,9 +1332,10 @@ window.confirmUpgrade = function() {
   playerData.heroLevels[type] = lvl + 1;
   saveData();
   closeUpgrade();
-  alert(`${type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : (type === 'Artem' ? 'Артём' : 'Василёк')} улучшен до уровня ${lvl + 1}!`);
+  alert(`Улучшен до уровня ${lvl + 1}!`);
 };
 
+// --- НАВИГАЦИЯ ---
 const studioSplash = document.getElementById('studio-splash');
 const loadingScreen = document.getElementById('loading-screen');
 const loadingBar = document.getElementById('loading-bar');
@@ -1407,14 +1345,13 @@ const tipText = document.getElementById('tip-text');
 
 const tips = [
   { type: "СОВЕТ", text: "Используйте укрытия. Витя наносит большой урон в ближнем бою." },
-  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов. Используйте её, чтобы вытащить врага." },
+  { type: "СОВЕТ", text: "Ульта Фиалки притягивает врагов." },
   { type: "ЛОР", text: "Проект «Модернизация» разделил мир на Технократов и Охлакратов." },
-  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект. Каждая третья бомба разлетается на осколки." },
-  { type: "СОВЕТ", text: "Следите за патронами. Перезарядка занимает время." },
+  { type: "ФАКТ", text: "Бомбы Лёхи имеют тройной эффект." },
+  { type: "СОВЕТ", text: "Следите за патронами." },
   { type: "СОВЕТ", text: "Цепная молния Фиалки может поразить до 4 врагов подряд." },
-  { type: "ФАКТ", text: "Поле Василька лечит вас и наносит урон врагам. Стойте в нём!" }
+  { type: "ФАКТ", text: "Поле Василька лечит вас и наносит урон врагам." }
 ];
-
 let currentTip = tips[Math.floor(Math.random() * tips.length)];
 tipLabel.textContent = currentTip.type;
 tipText.textContent = currentTip.text;
@@ -1458,12 +1395,6 @@ const resultModal = document.getElementById('result-modal');
 const profileModal = document.getElementById('profile-modal');
 const friendsModal = document.getElementById('friends-modal');
 
-const heroModal   = document.getElementById('hero-modal');
-const heroModalLesha = document.getElementById('hero-modal-lesha');
-const heroModalFialka = document.getElementById('hero-modal-fialka');
-const heroModalVasilek = document.getElementById('hero-modal-vasilek');
-const heroModalArtem = document.getElementById('hero-modal-artem');
-
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
 
@@ -1472,61 +1403,32 @@ let currentMode = 'Тренировка';
 let currentMap = 'Компьютерный центр';
 let selectedHero = 'Vitya';
 
-function showRandomPhrase(heroType) {
-  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : 'bubble-artem'))));
-  if (!bubble) return;
-  const arr = phrases[heroType];
-  if (!arr) return;
-  const randomPhrase = arr[Math.floor(Math.random() * arr.length)];
-  bubble.textContent = randomPhrase;
-  bubble.classList.add('show');
-
-  setTimeout(() => bubble.classList.remove('show'), 3500);
-}
-
 function playLobbyMusic() { bgMusicBattle.pause(); bgMusicLobby.volume = 0.5; bgMusicLobby.play().catch(e=>{}); }
 function playBattleMusic() { bgMusicLobby.pause(); bgMusicBattle.volume = 0.5; bgMusicBattle.play().catch(e=>{}); }
 
 window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); updateUI(); initAudio(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
 window.closeFightersModal = function(){ fightersModal.classList.remove('show'); };
-
 window.openProfileModal = function() { updateUI(); profileModal.classList.add('show'); };
 window.closeProfileModal = function() { profileModal.classList.remove('show'); };
 window.openFriendsModal = function() { friendsModal.classList.add('show'); };
 window.closeFriendsModal = function() { friendsModal.classList.remove('show'); };
-
-window.openHeroDetails = function(hero){ 
-  if (hero === 'Vitya') { heroModal.classList.add('show'); setTimeout(() => showRandomPhrase('Vitya'), 300); }
-  if (hero === 'Lesha') { heroModalLesha.style.display = 'flex'; setTimeout(() => showRandomPhrase('Lesha'), 300); }
-  if (hero === 'Fialka') { heroModalFialka.style.display = 'flex'; setTimeout(() => showRandomPhrase('Fialka'), 300); }
-  if (hero === 'Vasilek') { heroModalVasilek.style.display = 'flex'; setTimeout(() => showRandomPhrase('Vasilek'), 300); }
-  if (hero === 'Artem') { heroModalArtem.style.display = 'flex'; setTimeout(() => showRandomPhrase('Artem'), 300); }
-};
-window.openArtemInfo = function() { heroModalArtem.style.display = 'flex'; setTimeout(() => showRandomPhrase('Artem'), 300); };
-window.closeArtemDetails = function() { heroModalArtem.style.display = 'none'; };
-
-window.closeHeroDetails = function(){ heroModal.classList.remove('show'); };
-window.closeLeshaDetails = function(){ heroModalLesha.style.display = 'none'; };
-window.closeFialkaDetails = function(){ heroModalFialka.style.display = 'none'; };
-window.closeVasilekDetails = function(){ heroModalVasilek.style.display = 'none'; };
-
-window.selectHeroAndClose = function(hero){ selectedHero = hero; closeHeroDetails(); closeFightersModal(); updateLobbySelection(); };
-window.selectLeshaAndClose = function(){ selectedHero = 'Lesha'; closeLeshaDetails(); closeFightersModal(); updateLobbySelection(); };
-window.selectFialkaAndClose = function(){ selectedHero = 'Fialka'; closeFialkaDetails(); closeFightersModal(); updateLobbySelection(); };
-window.selectVasilekAndClose = function(){ selectedHero = 'Vasilek'; closeVasilekDetails(); closeFightersModal(); updateLobbySelection(); };
-window.selectArtemAndClose = function(){ selectedHero = 'Artem'; closeArtemDetails(); closeFightersModal(); updateLobbySelection(); };
+window.openArtemInfo = function() { openHeroDetails('Artem'); };
+window.closeArtemDetails = function() { closeHeroDetails(); };
+window.closeLeshaDetails = function() { closeHeroDetails(); };
+window.closeFialkaDetails = function() { closeHeroDetails(); };
+window.closeVasilekDetails = function() { closeHeroDetails(); };
 
 function updateLobbySelection() {
   const disp = document.getElementById('lobby-hero-display-inner');
   const name = document.getElementById('lobby-hero-name-big');
   document.querySelectorAll('.fighter-card').forEach(c => c.classList.remove('selected'));
-
-  if (selectedHero === 'Vitya') { disp.style.backgroundImage = "url('img/Vitya.jpg')"; name.textContent = 'Витя'; document.getElementById('card-vitya').classList.add('selected'); }
-  else if (selectedHero === 'Lesha') { disp.style.backgroundImage = "url('img/Lesha.jpg')"; name.textContent = 'Лёха'; document.getElementById('card-lesha').classList.add('selected'); }
-  else if (selectedHero === 'Fialka') { disp.style.backgroundImage = "url('img/Fialka.jpg')"; name.textContent = 'Фиалка'; document.getElementById('card-fialka').classList.add('selected'); }
-  else if (selectedHero === 'Vasilek') { disp.style.backgroundImage = "url('img/Vasilek.jpg')"; name.textContent = 'Василёк'; document.getElementById('card-vasilek').classList.add('selected'); }
-  else { disp.style.backgroundImage = "url('img/Artem.jpg')"; name.textContent = 'Артём'; document.getElementById('card-artem').classList.add('selected'); }
+  
+  disp.style.backgroundImage = `url('img/${selectedHero}.jpg')`;
+  const names = { Vitya: 'Витя', Lesha: 'Лёха', Fialka: 'Фиалка', Vasilek: 'Василёк', Artem: 'Артём' };
+  name.textContent = names[selectedHero];
+  const card = document.getElementById('card-' + selectedHero.toLowerCase());
+  if (card) card.classList.add('selected');
 }
 
 window.openModeModal = function(){ 
@@ -1552,24 +1454,20 @@ window.selectMode = function(name, el){
   grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
   if (el) el.classList.add('selected');
 };
-
 window.selectMap = function(name, el) {
   currentMap = name;
   const grid = el.parentElement;
   grid.querySelectorAll('.mode-option').forEach(o => o.classList.remove('selected'));
   if (el) el.classList.add('selected');
 };
-
 window.goToMapSelect = function() {
   document.getElementById('step-mode').style.display = 'none';
   document.getElementById('step-map').style.display = 'block';
 };
-
 window.goBackToMode = function() {
   document.getElementById('step-mode').style.display = 'block';
   document.getElementById('step-map').style.display = 'none';
 };
-
 window.confirmModeAndMap = function() {
   modeLabel.textContent = 'Режим: ' + currentMode + ' (' + currentMap + ')';
   closeModeModal();
@@ -1599,10 +1497,6 @@ addEventListener('keydown', e => {
   if (e.code === 'Escape'){
     if (gameRunning) backToLobby();
     else if (heroModal.classList.contains('show')) closeHeroDetails();
-    else if (heroModalLesha.style.display === 'flex') closeLeshaDetails();
-    else if (heroModalFialka.style.display === 'flex') closeFialkaDetails();
-    else if (heroModalVasilek.style.display === 'flex') closeVasilekDetails();
-    else if (heroModalArtem.style.display === 'flex') closeArtemDetails();
     else if (document.getElementById('upgrade-modal').classList.contains('show')) closeUpgrade();
     else if (profileModal.classList.contains('show')) closeProfileModal();
     else if (friendsModal.classList.contains('show')) closeFriendsModal();
@@ -1649,13 +1543,14 @@ let furniture = [];
 let bullets = [];
 let particles = [];
 let killFeed = []; 
-let pickups = []; // Бонусы
+let pickups = [];
 let matchSplashTimer = 0; 
 let gameOver = false;
 let gameTimeLeft = 0;
 let matchKills = 0;
 const cam = { x: 0, y: 0 };
 let winnerName = '';
+let pickupToastTimer = 0;
 
 const player = {
   x: 500, y: 500, r: 19, hp: 100, maxHp: 100,
@@ -1680,7 +1575,7 @@ function createHero(id, type, isBot) {
   if (isLesha) { maxAmmo = MAX_AMMO_LESHA; reloadTime = RELOAD_LESHA; color = '#ff7a4d'; colorLight = '#ffb99b'; }
   else if (isFialka) { maxAmmo = MAX_AMMO_FIALKA; reloadTime = RELOAD_FIALKA; color = '#c084fc'; colorLight = '#d8b4fe'; }
   else if (type === 'Vasilek') { maxAmmo = MAX_AMMO_VASILEK; reloadTime = RELOAD_VASILEK; color = '#ff4d4d'; colorLight = '#ff9999'; }
-  else if (isArtem) { maxAmmo = MAX_AMMO_ARTEM; reloadTime = RELOAD_ARTEM; color = '#3fa9f5'; colorLight = '#a8e0ff'; } // Артём
+  else if (isArtem) { maxAmmo = MAX_AMMO_ARTEM; reloadTime = RELOAD_ARTEM; color = '#ffd700'; colorLight = '#fff4a3'; }
 
   return {
     id: id, type: type, isPlayer: !isBot,
@@ -1733,7 +1628,6 @@ function genWorld(){
   furniture.push({x: 800, y: 600, type: 'holo'});
   furniture.push({x: 1800, y: 1400, type: 'holo'});
 
-  // Спавн бонусов
   const types = ['energy', 'diamond', 'battery'];
   for (let i = 0; i < 6; i++) {
     let px, py, ok;
@@ -1757,6 +1651,11 @@ function startBattle(){
   const pData = createHero('player', selectedHero, false);
   Object.assign(player, pData);
   player.isPlayer = true; player.name = 'Вы';
+  
+  // Применяем скин
+  if (playerData.skins[selectedHero]) {
+    player.skin = playerData.skins[selectedHero];
+  }
 
   matchKills = 0;
 
@@ -1887,14 +1786,16 @@ function tryAttack(h) {
     }
     spawnHitParticles(h.x + Math.cos(h.aim)*32, h.y + Math.sin(h.aim)*32, '#ff99cc', 6);
   } else if (h.type === 'Artem') {
-    // Фаллоиммитатор самонаводится
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.1);
-    bullets.push({ x: h.x, y: h.y, vx: Math.cos(a)*600, vy: Math.sin(a)*600, r: 10, dmg: h.dmg, life: 3.0, type: 'homing', owner: h, color: '#ffd700', target: null, orbitAngle: 0, orbiting: false });
-    spawnHitParticles(h.x + Math.cos(a)*30, h.y + Math.sin(a)*30, '#ffd700', 6);
+    bullets.push({ x: h.x, y: h.y, vx: Math.cos(a)*600, vy: Math.sin(a)*600, r: 12, dmg: h.dmg, life: 3.0, type: 'homing', owner: h, color: '#c084fc', target: null, orbitAngle: 0, orbiting: false });
+    spawnHitParticles(h.x + Math.cos(a)*30, h.y + Math.sin(a)*30, '#c084fc', 6);
   }
 
   if (h.ammo <= 0 && h.reloading <= 0) h.reloading = h.reloadTime;
   if (h.isPlayer) playSound('shoot');
+  
+  // Начисление ульты за атаку
+  if (h.ult < 100) h.ult = Math.min(100, h.ult + 10);
 }
 
 function activateUlt(h) {
@@ -1923,9 +1824,8 @@ function activateUlt(h) {
   } else if (h.type === 'Vitya') {
     h.ultActive = true; h.ultTime = 3.5; 
   } else if (h.type === 'Artem') {
-    // Огромный фаллоиммитатор
     h.ultActive = true; h.ultTime = 1.0;
-    bullets.push({ x: h.x, y: h.y, vx: 0, vy: 0, r: 30, dmg: 0, life: 2.0, type: 'big_homing', owner: h, color: '#ffd700', exploded: false });
+    bullets.push({ x: h.x, y: h.y, vx: 0, vy: 0, r: 30, dmg: 0, life: 2.0, type: 'big_homing', owner: h, color: '#c084fc', exploded: false });
   }
 }
 
@@ -1933,7 +1833,10 @@ function damage(target, amount, source, isPoison) {
   if (!target.alive) return;
   target.hp -= amount; target.hitFlash = 0.18;
   if (isPoison) target.poison = Math.max(target.poison, 3.0);
-  if (source && source !== target && !source.ultActive) source.ult = Math.min(100, source.ult + amount * 0.5);
+  // Начисление ульты за нанесенный урон
+  if (source && source !== target && !source.ultActive) {
+    source.ult = Math.min(100, source.ult + amount * 0.5);
+  }
   
   if (target.hp <= 0) {
     target.hp = 0; target.alive = false; target.respawn = 3;
@@ -2083,8 +1986,21 @@ function finishBattle(isWin, reason) {
   resultModal.classList.add('show');
 }
 
+function showPickupToast(name, iconSrc) {
+  const toast = document.getElementById('pickup-toast');
+  document.getElementById('toast-name').textContent = name;
+  document.getElementById('toast-icon').src = iconSrc;
+  toast.classList.add('show');
+  pickupToastTimer = 2.0;
+}
+
 function update(dt) {
   if (gameOver || !gameRunning) return;
+  
+  if (pickupToastTimer > 0) {
+    pickupToastTimer -= dt;
+    if (pickupToastTimer <= 0) document.getElementById('pickup-toast').classList.remove('show');
+  }
 
   if (matchSplashTimer > 0) { matchSplashTimer -= dt; return; }
 
@@ -2175,8 +2091,6 @@ function update(dt) {
            if (Math.hypot(e.x - player.healZone.x, e.y - player.healZone.y) < player.healZone.r) damage(e, 15 * dt * (player.dmg/6), player);
          }
        }
-    } else if (player.type === 'Artem') {
-       // Ульта Артёма - он просто стоит
     }
 
     if (player.ultTime <= 0) { player.ultActive = false; player.healZone = null; }
@@ -2193,20 +2107,17 @@ function update(dt) {
     } else player.walkPhase = 0;
   }
 
-  // Звук шагов (Игрок)
-  if (Math.hypot(player.mvx, player.mvy) > 0.1 && player.alive && !player.ultActive) {
-    player.stepTimer += dt;
-    if (player.stepTimer > 0.4) { playSound('step'); player.stepTimer = 0; }
-  }
-
   // Подбор бонусов
   for (const p of pickups) {
     if (!p.active) continue;
     if (player.alive && Math.hypot(player.x - p.x, player.y - p.y) < player.r + p.r) {
       p.active = false;
-      if (p.type === 'energy') player.hp = Math.min(player.maxHp, player.hp + 40);
-      if (p.type === 'battery') player.ult = Math.min(100, player.ult + 30);
-      if (p.type === 'diamond') { /* Временный бафф, можно реализовать */ player.hp = Math.min(player.maxHp, player.hp + 20); player.ult = Math.min(100, player.ult + 10); }
+      let name = '', icon = '';
+      if (p.type === 'energy') { player.hp = Math.min(player.maxHp, player.hp + 40); name = 'Энергетик "Super Monster"'; icon = 'img/Energy.jpg'; }
+      if (p.type === 'battery') { player.ult = Math.min(100, player.ult + 30); name = 'Аккумулятор'; icon = 'img/Battery.jpg'; }
+      if (p.type === 'diamond') { player.hp = Math.min(player.maxHp, player.hp + 20); player.ult = Math.min(100, player.ult + 10); name = 'Ультраалмаз'; icon = 'img/Diamond.jpg'; }
+      
+      showPickupToast(name, icon);
       spawnHitParticles(p.x, p.y, '#ffd700', 15);
     }
   }
@@ -2250,27 +2161,23 @@ function update(dt) {
 
       if (b.target) {
         if (!b.orbiting) {
-          // Летим к цели
           const ang = Math.atan2(b.target.y - b.y, b.target.x - b.x);
-          b.vx = Math.cos(ang) * 500;
-          b.vy = Math.sin(ang) * 500;
+          b.vx = Math.cos(ang) * 500; b.vy = Math.sin(ang) * 500;
           b.x += b.vx * dt; b.y += b.vy * dt;
           if (Math.hypot(b.x - b.target.x, b.y - b.target.y) < b.target.r + b.r) {
             b.orbiting = true;
             b.orbitAngle = Math.atan2(b.y - b.target.y, b.x - b.target.x);
           }
         } else {
-          // Крутимся вокруг цели
           b.orbitAngle += dt * 8;
           b.x = b.target.x + Math.cos(b.orbitAngle) * 60;
           b.y = b.target.y + Math.sin(b.orbitAngle) * 60;
           
-          // Наносим урон другим врагам рядом
           const enemies = getAllEnemies(b.owner);
           for (const e of enemies) {
             if (e === b.target) continue;
             if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-              damage(e, 10 * dt * (b.owner.dmg / 20), b.owner);
+              damage(e, 15 * dt * (b.owner.dmg / 25), b.owner);
             }
           }
         }
@@ -2278,28 +2185,21 @@ function update(dt) {
         b.x += b.vx * dt; b.y += b.vy * dt;
       }
       
-      // Проверка на препятствия
       let hitRock = false;
       for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { hitRock = true; break; } }
-      if (hitRock && !b.orbiting) { spawnHitParticles(b.x, b.y, '#ffd700', 10); bullets.splice(i, 1); continue; }
-      
+      if (hitRock && !b.orbiting) { spawnHitParticles(b.x, b.y, '#c084fc', 10); bullets.splice(i, 1); continue; }
       continue;
     }
 
-    // Огромный фаллоиммитатор (Ульта Артёма)
     if (b.type === 'big_homing') {
-      if (b.exploded) {
-        b.life -= dt;
-        if (b.life <= 0) { bullets.splice(i, 1); }
-        continue;
-      }
+      if (b.exploded) { b.life -= dt; if (b.life <= 0) { bullets.splice(i, 1); } continue; }
       b.life -= dt;
       if (b.life <= 0) {
         b.exploded = true;
-        spawnHitParticles(b.x, b.y, '#ffd700', 50);
+        spawnHitParticles(b.x, b.y, '#c084fc', 50);
         for (let j = 0; j < 4; j++) {
           const ang = (j / 4) * TAU;
-          bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang)*300, vy: Math.sin(ang)*300, r: 12, dmg: 30, life: 3.0, type: 'homing', owner: b.owner, color: '#ffd700', target: null, orbitAngle: 0, orbiting: false });
+          bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang)*300, vy: Math.sin(ang)*300, r: 12, dmg: 30, life: 3.0, type: 'homing', owner: b.owner, color: '#c084fc', target: null, orbitAngle: 0, orbiting: false });
         }
       }
       continue;
@@ -2423,9 +2323,7 @@ function drawPickups(){
     if (!p.active) continue;
     ctx.save();
     ctx.translate(p.x, p.y + Math.sin(t*3)*5);
-    // Свечение
     ctx.beginPath(); ctx.arc(0, 0, 20, 0, TAU); ctx.fillStyle = 'rgba(255,215,0,0.2)'; ctx.fill();
-    // Иконка (заглушка)
     ctx.beginPath(); ctx.arc(0, 0, 15, 0, TAU); 
     if (p.type === 'energy') ctx.fillStyle = '#5cff5c';
     if (p.type === 'diamond') ctx.fillStyle = '#7ff0ff';
@@ -2433,7 +2331,6 @@ function drawPickups(){
     ctx.fill();
     ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
     
-    // Буква (вместо картинки)
     ctx.fillStyle = '#000'; ctx.font = 'bold 14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (p.type === 'energy') ctx.fillText('E', 0, 0);
     if (p.type === 'diamond') ctx.fillText('D', 0, 0);
@@ -2476,12 +2373,25 @@ function drawHero(h){
   const isVitya = h.type === 'Vitya'; const isLesha = h.type === 'Lesha';
   const isFialka = h.type === 'Fialka'; const isVasilek = h.type === 'Vasilek';
   const isArtem = h.type === 'Artem';
+  
+  // Скины
+  let headColor = '#fcd34d';
+  let bodyColor = h.color;
+  let isCrowned = false;
+  let hasBall = false;
+  let isSporty = false;
+
+  if (h.isPlayer && playerData.skins[h.type]) {
+    if (h.type === 'Vitya' && playerData.skins[h.type] === 'sport') isSporty = true;
+    if (h.type === 'Lesha' && playerData.skins[h.type] === 'volley') hasBall = true;
+    if (h.type === 'Fialka' && playerData.skins[h.type] === 'princess') isCrowned = true;
+    if (h.type === 'Vasilek' && playerData.skins[h.type] === 'prince') isCrowned = true;
+  }
 
   ctx.save(); ctx.translate(h.x, h.y);
   ctx.beginPath(); ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
   ctx.fillStyle = 'rgba(0,0,0,0.32)'; ctx.fill();
 
-  // Визуализация готовой ульты
   if (h.ult >= 100 && !h.ultActive && h.alive) {
     const p = 0.5 + 0.5 * Math.sin(t * 6);
     ctx.beginPath();
@@ -2489,59 +2399,91 @@ function drawHero(h){
     ctx.strokeStyle = isMe ? `rgba(127, 240, 255, ${0.4 + 0.4 * p})` : `rgba(255, 215, 0, ${0.3 + 0.3 * p})`;
     ctx.lineWidth = 3;
     ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(0, 0, 18 + p * 4, 0, TAU);
-    ctx.strokeStyle = isMe ? `rgba(127, 240, 255, ${0.2 + 0.2 * p})` : `rgba(255, 215, 0, ${0.1 + 0.1 * p})`;
-    ctx.lineWidth = 2;
-    ctx.stroke();
   }
-
-  if (h.ultActive && isVitya){ const p = .5 + .5*Math.sin(t*22); ctx.beginPath(); ctx.arc(0, 0, 19 + 10 + p*7, 0, TAU); ctx.strokeStyle = 'rgba(120,225,255,' + (.35 + .45*p) + ')'; ctx.lineWidth = 4; ctx.stroke(); }
 
   if (h.stun > 0) { ctx.beginPath(); ctx.arc(0, 0, 25, 0, TAU); ctx.strokeStyle = 'rgba(255, 255, 0, ' + (0.5 + 0.5*Math.sin(t*20)) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
 
   const walk = Math.sin(h.walkPhase || 0) * 4; const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
 
-  if (isVitya) { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#e5e7eb'; ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
-  else if (isLesha) { ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
-  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  // Рисуем ноги
+  if (isVitya) { ctx.strokeStyle = isSporty ? '#ff0000' : '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#e5e7eb'; ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else if (isLesha) { ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = hasBall ? '#fff' : '#111'; ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else if (isVasilek) { ctx.strokeStyle = isCrowned ? '#8b0000' : '#ff4d4d'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
   else if (isArtem) { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#333'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
-  else { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else { ctx.strokeStyle = isCrowned ? '#ffd700' : '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
 
+  // Руки
   ctx.lineWidth = 4.5;
-  if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
-  else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
-  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  if (isVitya) { ctx.strokeStyle = isSporty ? '#fff' : '#fca5a5'; ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else if (isLesha) { ctx.strokeStyle = hasBall ? '#000' : '#1e293b'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else if (isVasilek) { ctx.strokeStyle = isCrowned ? '#ffcc00' : '#ff4d4d'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
   else if (isArtem) { ctx.strokeStyle = '#1e3a8a'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
-  else { ctx.strokeStyle = '#3b82f6'; ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
+  else { ctx.strokeStyle = isCrowned ? '#ffd700' : '#3b82f6'; ctx.beginPath(); ctx.moveTo(-7, -4); ctx.lineTo(-15, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
 
+  // Тело
   const g = ctx.createRadialGradient(-h.r*.35, -h.r*.4, h.r*.12, 0, 0, h.r*1.1);
   
-  if (isVitya) { g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c'); ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke(); ctx.fillStyle = '#1f2937'; roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke(); ctx.fillStyle = '#374151'; ctx.fillRect(-5, -10, 2, 18); ctx.fillRect(3, -10, 2, 18); }
-  else if (isLesha) { g.addColorStop(0, '#f8fafc'); g.addColorStop(1, '#cbd5e1'); ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke(); ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(9, -10); ctx.lineTo(4, 10); ctx.lineTo(9, 12); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill(); }
-  else if (isVasilek) { g.addColorStop(0, '#ff7b7b'); g.addColorStop(1, '#b32d2d'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#800000'; ctx.stroke(); ctx.fillStyle = '#ff99cc'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#ffcccc'; ctx.stroke(); }
+  if (isVitya) { 
+    g.addColorStop(0, isSporty ? '#ff4d4d' : '#f87171'); g.addColorStop(1, isSporty ? '#b30000' : '#b91c1c'); 
+    ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke(); 
+    ctx.fillStyle = isSporty ? '#fff' : '#1f2937'; roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill(); 
+    ctx.fillStyle = '#374151'; ctx.fillRect(-5, -10, 2, 18); ctx.fillRect(3, -10, 2, 18); 
+  }
+  else if (isLesha) { 
+    g.addColorStop(0, hasBall ? '#3fa9f5' : '#f8fafc'); g.addColorStop(1, hasBall ? '#1e6a9e' : '#cbd5e1'); 
+    ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke(); 
+    ctx.fillStyle = hasBall ? '#ffd700' : '#1e293b'; ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill(); 
+    ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(-2, 0); ctx.lineTo(0, 4); ctx.lineTo(2, 0); ctx.closePath(); ctx.fill(); 
+  }
+  else if (isVasilek) { 
+    g.addColorStop(0, isCrowned ? '#8b0000' : '#ff7b7b'); g.addColorStop(1, isCrowned ? '#4a0000' : '#b32d2d'); 
+    ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#800000'; ctx.stroke(); 
+    ctx.fillStyle = isCrowned ? '#ffd700' : '#ff99cc'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); 
+  }
   else if (isArtem) { 
     g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
     ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
     ctx.fillStyle = '#60a5fa'; ctx.fillRect(-8, -6, 6, 4); ctx.fillRect(2, -6, 6, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(-8, -6, 6, 4); ctx.strokeRect(2, -6, 6, 4);
   }
-  else { g.addColorStop(0, '#3b82f6'); g.addColorStop(1, '#1e40af'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke(); ctx.fillStyle = '#60a5fa'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke(); }
+  else { 
+    g.addColorStop(0, isCrowned ? '#ffd700' : '#3b82f6'); g.addColorStop(1, isCrowned ? '#b8860b' : '#1e40af'); 
+    ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke(); 
+    ctx.fillStyle = isCrowned ? '#fff' : '#60a5fa'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); 
+  }
 
+  // Голова
   ctx.beginPath(); ctx.arc(0, -14, 9, 0, TAU);
   if (isVasilek) { ctx.fillStyle = '#ffccff'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#ff4d4d'; ctx.stroke(); }
   else { ctx.fillStyle = isFialka ? '#e2e8f0' : (isArtem ? '#fcd34d' : '#fcd34d'); ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = isFialka ? '#94a3b8' : '#b45309'; ctx.stroke(); }
 
-  if (isVitya) { ctx.fillStyle = '#78350f'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-4, -18, 5, 0, TAU); ctx.fill(); }
-  else if (isLesha) { ctx.fillStyle = '#451a03'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(0, -23); ctx.lineTo(1, -16); ctx.lineTo(-1, -16); ctx.closePath(); ctx.fill(); }
-  else if (isVasilek) { ctx.fillStyle = '#ff66cc'; ctx.beginPath(); ctx.arc(0, -17, 9, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-5, -18, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(5, -18, 4, 0, TAU); ctx.fill(); }
-  else if (isArtem) {
-    ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(0, -16, 11, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-6, -18, 6, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(6, -18, 6, 0, TAU); ctx.fill();
+  // Волосы/шляпы
+  if (isVitya) { ctx.fillStyle = '#78350f'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); }
+  else if (isLesha) { ctx.fillStyle = '#451a03'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); }
+  else if (isVasilek) { ctx.fillStyle = '#ff66cc'; ctx.beginPath(); ctx.arc(0, -17, 9, Math.PI, 0); ctx.fill(); }
+  else if (isArtem) { ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(0, -16, 11, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-6, -18, 6, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(6, -18, 6, 0, TAU); ctx.fill(); }
+  else { ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); }
+
+  // Короны для скинов
+  if (isCrowned) {
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath();
+    ctx.moveTo(-8, -22); ctx.lineTo(-8, -28); ctx.lineTo(-4, -24); ctx.lineTo(0, -30); ctx.lineTo(4, -24); ctx.lineTo(8, -28); ctx.lineTo(8, -22); ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 1.5; ctx.stroke();
   }
-  else { ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke(); ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke(); }
+
+  // Мяч для Лёхи
+  if (hasBall) {
+    ctx.fillStyle = '#ffd700';
+    ctx.beginPath(); ctx.arc(12, 5, 8, 0, TAU); ctx.fill();
+    ctx.strokeStyle = '#b8860b'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(12, -3); ctx.lineTo(12, 13); ctx.stroke();
+  }
 
   if (h.poison > 0) { ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU); ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')'; ctx.lineWidth = 2; ctx.stroke(); }
   if (h.ultActive && isVitya){ ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU); ctx.fillStyle = '#eaffff'; ctx.fill(); }
 
+  // Оружие
   ctx.save(); ctx.translate(8, -4); ctx.rotate(h.aim || 0);
   let swingOff = 0;
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
@@ -2550,21 +2492,19 @@ function drawHero(h){
   if (h.reloading > 0) reloadOff = Math.sin((h.reloading / h.reloadTime) * Math.PI) * 0.6;
   ctx.rotate(reloadOff);
 
-  if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#1f2937'; roundRect(ctx, 10, -4, 16, 8, 2); ctx.fill(); ctx.fillStyle = '#374151'; roundRect(ctx, 8, -2, 6, 10, 1); ctx.fill(); ctx.fillStyle = '#6b7280'; ctx.beginPath(); ctx.arc(26, 0, 2, 0, TAU); ctx.fill(); }
-  else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#ef4444'; roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill(); ctx.fillStyle = '#5cff5c'; ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); }
-  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#333'; roundRect(ctx, 10, -4, 24, 8, 2); ctx.fill(); ctx.fillStyle = '#ff99cc'; roundRect(ctx, 30, -2, 6, 4, 1); ctx.fill(); }
+  if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#1f2937'; roundRect(ctx, 10, -4, 16, 8, 2); ctx.fill(); }
+  else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill(); }
+  else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#333'; roundRect(ctx, 10, -4, 24, 8, 2); ctx.fill(); }
   else if (isArtem) { 
     ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(15, 0); ctx.stroke(); 
     ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(20, 0, 6, 0, TAU); ctx.fill(); 
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(20, 0, 3, 0, TAU); ctx.fill(); 
   }
-  else { ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke(); ctx.fillStyle = '#1e293b'; roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill(); ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.strokeStyle = '#93c5fd'; ctx.beginPath(); ctx.moveTo(14, -4); ctx.lineTo(18, 4); ctx.lineTo(22, -4); ctx.stroke(); }
+  else { ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke(); ctx.fillStyle = '#1e293b'; roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill(); }
   ctx.restore();
 
-  if (h.swing > 0){ const st = 1 - h.swing / .25; const baseA = h.aim - 1.1 + st*2.1; ctx.beginPath(); ctx.arc(0, 0, 19*1.95, baseA - .95, baseA + .45); ctx.strokeStyle = 'rgba(255,236,180,' + (.75 * (1 - st)) + ')'; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.stroke(); }
-
   ctx.restore();
 
+  // UI над головой
   const bw = 54, bh = 8; const bx = h.x - bw/2, by = h.y - 19 - 34;
   ctx.fillStyle = 'rgba(8,12,18,0.75)'; roundRect(ctx, bx - 1.5, by - 1.5, bw + 3, bh + 3, 4); ctx.fill();
   const frac = Math.max(0, h.hp / h.maxHp); ctx.fillStyle = isMe ? '#4fd6a0' : (isVasilek ? '#ff4d4d' : (isFialka ? '#c084fc' : '#ff5a5a'));
@@ -2583,20 +2523,35 @@ function drawHeroes(){ for (const bot of bots) if (bot.alive && !bot.eliminated)
 
 function drawBullets(){
   for (const b of bullets) {
-    if (b.type === 'big_bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff3333'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU); ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke(); }
-    else if (b.type === 'bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#111'; ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444'; roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill(); }
+    if (b.type === 'big_bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff3333'; ctx.fill(); }
+    else if (b.type === 'bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#111'; ctx.fill(); ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444'; roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill(); }
     else if (b.type === 'chain_bolt') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill(); ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
     else if (b.type === 'homing') { 
-      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ffd700'; ctx.fill(); 
-      ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 15; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke(); ctx.shadowBlur = 0;
+      // Отрисовка фаллоиммитатора (снаряд Артёма)
+      ctx.save(); ctx.translate(b.x, b.y);
+      ctx.beginPath(); ctx.ellipse(0, 0, 12, 8, 0, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill();
+      ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 2; ctx.stroke();
+      // Глаз
+      ctx.beginPath(); ctx.arc(0, 0, 4, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 0, 2, 0, TAU); ctx.fillStyle = '#000'; ctx.fill();
+      // Щупальца
+      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 2;
+      for(let i=0; i<4; i++) {
+        ctx.beginPath(); ctx.moveTo(Math.cos(i*Math.PI/2)*8, Math.sin(i*Math.PI/2)*5); ctx.lineTo(Math.cos(i*Math.PI/2)*14, Math.sin(i*Math.PI/2)*10); ctx.stroke();
+      }
+      ctx.restore();
     }
     else if (b.type === 'big_homing') {
       if (!b.exploded) {
-        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ffd700'; ctx.fill();
-        ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 30; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.stroke(); ctx.shadowBlur = 0;
+        ctx.save(); ctx.translate(b.x, b.y);
+        ctx.beginPath(); ctx.ellipse(0, 0, 30, 20, 0, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill();
+        ctx.strokeStyle = '#ffd700'; ctx.lineWidth = 4; ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 10, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 0, 5, 0, TAU); ctx.fillStyle = '#000'; ctx.fill();
+        ctx.restore();
       }
     }
-    else { ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU); ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#e6f7ff'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU); ctx.fillStyle = b.color; ctx.fill(); }
+    else { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#e6f7ff'; ctx.fill(); }
   }
 }
 
@@ -2609,19 +2564,13 @@ function drawLasers(){
       for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
       const ex = sx + Math.cos(h.aim) * maxLen; const ey = sy + Math.sin(h.aim) * maxLen;
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(60,170,255,0.16)'; ctx.lineWidth = 42; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(90,212,255,0.30)'; ctx.lineWidth = 23; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(185,245,255,0.85)'; ctx.lineWidth = 10; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
-      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU); ctx.fillStyle = 'rgba(160,238,255,0.35)'; ctx.fill();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(60,170,255,0.3)'; ctx.lineWidth = 15; ctx.stroke();
       ctx.restore();
     }
     
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
         ctx.save(); ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(h.hookX, h.hookY);
-        ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 4; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15; ctx.stroke();
-        const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x); ctx.translate(h.hookX, h.hookY); ctx.rotate(angleToHook);
-        ctx.beginPath(); ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2); ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 6; ctx.stroke();
+        ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 4; ctx.stroke();
         ctx.restore();
     }
 
@@ -2642,7 +2591,7 @@ function drawAmmoBar(){
   const bw = 200, bh = 14; const bx = W/2 - bw/2, by = H - 76;
   ctx.fillStyle = 'rgba(6,10,16,0.72)'; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 7); ctx.fill();
   const step = bw / player.maxAmmo;
-  for (let i = 0; i < player.maxAmmo; i++){ const ax = bx + 6 + i * (step - 4); ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3); ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; ctx.fill(); ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; ctx.stroke(); }
+  for (let i = 0; i < player.maxAmmo; i++){ const ax = bx + 6 + i * (step - 4); ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3); ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; ctx.fill(); }
   if (player.reloading > 0){
     const frac = 1 - player.reloading / player.reloadTime; ctx.fillStyle = 'rgba(255,153,0,0.8)';
     roundRect(ctx, bx, by + bh + 5, bw * frac, 4, 2); ctx.fill();
@@ -2716,7 +2665,7 @@ function drawVersionBadge(){
   roundRect(ctx, x, y, w, h, 8); ctx.fill(); ctx.strokeStyle = 'rgba(90,140,180,0.4)'; ctx.lineWidth = 1.5;
   roundRect(ctx, x, y, w, h, 8); ctx.stroke(); ctx.textAlign = 'left'; ctx.font = 'bold 10px system-ui, sans-serif';
   ctx.fillStyle = 'rgba(140,180,215,0.9)'; ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
-  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff'; ctx.fillText('PRE-ALPHA 0.4.5', x + 10, y + 24);
+  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff'; ctx.fillText('PRE-ALPHA 0.5', x + 10, y + 24);
 }
 
 function render() {
