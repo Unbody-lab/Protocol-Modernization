@@ -183,13 +183,13 @@
   .hero-tab.active { background: rgba(255,180,80,0.2); color: #ffd700; border: 1px solid rgba(255,180,80,0.5); }
 
   /* Скины в карточке */
-  .skins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-  .skin-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.3); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+  .skins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
+  .skin-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.3); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
   .skin-item:hover { border-color: #7ff0ff; }
   .skin-item.selected { border-color: #4fd6a0; background: rgba(79,214,160,0.15); box-shadow: 0 0 15px rgba(79,214,160,0.3); }
-  .skin-icon { width: 60px; height: 60px; background-size: cover; background-position: center; border-radius: 8px; margin: 0 auto 6px auto; border: 1px solid rgba(255,255,255,0.2); }
-  .skin-name { font-size: 12px; font-weight: 800; color: #fff; }
-  .skin-lock { position: absolute; top: 5px; right: 5px; font-size: 16px; }
+  .skin-icon { width: 80px; height: 80px; background-size: cover; background-position: center; border-radius: 8px; margin: 0 auto 8px auto; border: 2px solid rgba(255,255,255,0.2); }
+  .skin-name { font-size: 14px; font-weight: 800; color: #fff; }
+  .skin-lock { position: absolute; top: 8px; right: 8px; font-size: 18px; }
 
   .upgrade-row { display: flex; gap: 10px; margin-top: 10px; }
   .btn-select { flex: 1; padding: 14px 0; font-size: 16px; font-weight: 800; letter-spacing: 2px; color: #0a1420; background: linear-gradient(180deg,#ffb450,#ff7a4d); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 0 #b87a00; transition: transform .1s; }
@@ -1312,7 +1312,7 @@ const HERO_BASE = {
 };
 const MAX_HERO_LEVEL = 5;
 
-// КОНФИГ СКИНОВ (Визуальные настройки, вдохновленные картинками)
+// КОНФИГ СКИНОВ (Визуальные настройки)
 const SKINS_CONFIG = {
   Vitya: {
     base: { name: 'Базовый', icon: 'img/Vitya.jpg', color: '#3fa9f5', colorLight: '#a8e0ff', type: 'vitya_base' },
@@ -1717,6 +1717,7 @@ function renderSkins(hero) {
       playerData.selectedSkins[hero] = skinId;
       saveData();
       renderSkins(hero);
+      updateLobbySelection(); // Обновляем иконку в лобби
     };
     
     div.innerHTML = `
@@ -1884,11 +1885,31 @@ function updateLobbySelection() {
   const name = document.getElementById('lobby-hero-name-big');
   document.querySelectorAll('.fighter-card').forEach(c => c.classList.remove('selected'));
 
-  if (selectedHero === 'Vitya') { disp.style.backgroundImage = "url('img/Vitya.jpg')"; name.textContent = 'Витя'; document.getElementById('card-vitya').classList.add('selected'); }
-  else if (selectedHero === 'Lesha') { disp.style.backgroundImage = "url('img/Lesha.jpg')"; name.textContent = 'Лёха'; document.getElementById('card-lesha').classList.add('selected'); }
-  else if (selectedHero === 'Fialka') { disp.style.backgroundImage = "url('img/Fialka.jpg')"; name.textContent = 'Фиалка'; document.getElementById('card-fialka').classList.add('selected'); }
-  else if (selectedHero === 'Vasilek') { disp.style.backgroundImage = "url('img/Vasilek.jpg')"; name.textContent = 'Василёк'; document.getElementById('card-vasilek').classList.add('selected'); }
-  else { disp.style.backgroundImage = "url('img/Artem.jpg')"; name.textContent = 'Артём'; document.getElementById('card-artem').classList.add('selected'); }
+  // Получаем иконку текущего скина для отображения
+  let dispIcon = 'img/Vitya.jpg';
+  let heroName = 'Витя';
+  const skinId = playerData.selectedSkins[selectedHero] || 'base';
+  if (SKINS_CONFIG[selectedHero] && SKINS_CONFIG[selectedHero][skinId]) {
+    dispIcon = SKINS_CONFIG[selectedHero][skinId].icon;
+    heroName = selectedHero === 'Vitya' ? 'Витя' : selectedHero === 'Lesha' ? 'Лёха' : selectedHero === 'Fialka' ? 'Фиалка' : selectedHero === 'Vasilek' ? 'Василёк' : 'Артём';
+  }
+
+  disp.style.backgroundImage = `url('${dispIcon}')`; 
+  name.textContent = heroName;
+
+  if (selectedHero === 'Vitya') { document.getElementById('card-vitya').classList.add('selected'); }
+  else if (selectedHero === 'Lesha') { document.getElementById('card-lesha').classList.add('selected'); }
+  else if (selectedHero === 'Fialka') { document.getElementById('card-fialka').classList.add('selected'); }
+  else if (selectedHero === 'Vasilek') { document.getElementById('card-vasilek').classList.add('selected'); }
+  else { document.getElementById('card-artem').classList.add('selected'); }
+
+  // Обновляем иконки в карточках бойцов, чтобы они соответствовали выбранным скинам
+  ['Vitya', 'Lesha', 'Fialka', 'Vasilek', 'Artem'].forEach(h => {
+    const sId = playerData.selectedSkins[h] || 'base';
+    const iconUrl = SKINS_CONFIG[h][sId] ? SKINS_CONFIG[h][sId].icon : `img/${h}.jpg`;
+    const cardIcon = document.querySelector(`#card-${h.toLowerCase()} .fighter-card-icon`);
+    if (cardIcon) cardIcon.style.backgroundImage = `url('${iconUrl}')`;
+  });
 }
 
 window.openModeModal = function(){ 
@@ -2266,7 +2287,9 @@ function tryAttack(h) {
     const spread = isTriple ? [-0.2, 0, 0.2] : [0];
     for (let angOffset of spread) {
       const a = h.aim + angOffset;
-      bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100, r: 10, dmg: h.dmg, life: 1.0, type: 'bomb', poison: isPoison, exploded: false, owner: h, color: h.color });
+      // Если скин волейболиста, то это мяч
+      const bType = h.skin === 'volley' ? 'volleyball' : 'bomb';
+      bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(a) * 1100, vy: Math.sin(a) * 1100, r: 10, dmg: h.dmg, life: 1.0, type: bType, poison: isPoison, exploded: false, owner: h, color: h.color });
     }
   } else if (h.type === 'Fialka') {
     const a = h.aim + (h.isPlayer ? 0 : (Math.random()-.5)*.07);
@@ -2523,7 +2546,6 @@ function update(dt) {
 
   const mwx = mouse.x - W/2 + player.x; const mwy = mouse.y - H/2 + player.y;
   
-  // ИСПРАВЛЕНИЕ ПРИЦЕЛИВАНИЯ ВИТИ
   if (!player.ultActive && player.alive && player.stun <= 0) player.aim = Math.atan2(mwy - player.y, mwx - player.x);
 
   if (!player.alive) {
@@ -2731,16 +2753,38 @@ function update(dt) {
       continue;
     }
 
-    if (b.type === 'big_bomb' && !b.exploded) {
+    // Обработка бомб и волейбольных мячей
+    if ((b.type === 'big_bomb' || b.type === 'bomb' || b.type === 'volleyball') && !b.exploded) {
       b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt;
+      
+      if (b.type !== 'big_bomb') {
+        b.vx *= 0.9; b.vy *= 0.9;
+      }
+
       let hitEnemy = false; const enemies = getAllEnemies(b.owner);
       for (const e of enemies) { if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) { hitEnemy = true; break; } }
-      if (b.life <= 0 || Math.hypot(b.x - b.tx, b.y - b.ty) < 20 || hitEnemy) {
-        b.exploded = true; spawnHitParticles(b.x, b.y, '#ff0000', 40);
-        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 150) damage(e, 50 * (b.owner.dmg/25), b.owner); }
-        for (let j = 0; j < 8; j++) {
-          const ang = (j / 8) * TAU;
-          bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, owner: b.owner, color: '#ff5a5a' });
+      
+      let explode = false;
+      if (b.life <= 0 || hitEnemy) explode = true;
+      if (b.type === 'big_bomb' && Math.hypot(b.x - b.tx, b.y - b.ty) < 20) explode = true;
+      if (b.type === 'bomb' && (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15)) explode = true;
+      if (b.type === 'volleyball' && (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15)) explode = true;
+
+      if (explode) {
+        b.exploded = true; 
+        let radius = b.type === 'big_bomb' ? 150 : 95;
+        spawnHitParticles(b.x, b.y, b.type === 'volleyball' ? '#3b82f6' : (b.poison ? '#5cff5c' : '#ffaa33'), 15);
+        for (const e of enemies) { 
+          if (Math.hypot(e.x - b.x, e.y - b.y) < radius) {
+            if (b.type === 'big_bomb') damage(e, 50 * (b.owner.dmg/25), b.owner);
+            else damage(e, b.dmg, b.owner, b.poison);
+          }
+        }
+        if (b.type === 'big_bomb') {
+          for (let j = 0; j < 8; j++) {
+            const ang = (j / 8) * TAU;
+            bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang) * 600, vy: Math.sin(ang) * 600, r: 7, dmg: 10, life: 1.2, type: 'bomb', poison: true, exploded: false, owner: b.owner, color: '#ff5a5a' });
+          }
         }
         bullets.splice(i, 1);
       }
@@ -2776,23 +2820,15 @@ function update(dt) {
       continue;
     }
 
+    // Обычные пули
     b.x += b.vx * dt; b.y += b.vy * dt; b.life -= dt; let dead = b.life <= 0;
-    if (!dead && b.type === 'bomb') {
-      b.vx *= 0.9; b.vy *= 0.9;
-      if (Math.hypot(b.vx, b.vy) < 80 || b.life < 0.15 || Math.hypot(b.x - b.tx, b.y - b.ty) < 15) {
-        dead = true; spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15);
-        const enemies = getAllEnemies(b.owner);
-        for (const e of enemies) { if (Math.hypot(e.x - b.x, e.y - b.y) < 95) damage(e, b.dmg, b.owner, b.poison); }
-      }
-    }
-    if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { spawnHitParticles(b.x, b.y, '#b9c9d8', 6); dead = true; if (b.type === 'bomb') spawnHitParticles(b.x, b.y, '#ffaa33', 10); break; } } }
+    if (!dead) { for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { spawnHitParticles(b.x, b.y, '#b9c9d8', 6); dead = true; break; } } }
     if (!dead) {
       const enemies = getAllEnemies(b.owner);
       for (const e of enemies) {
         if (!e.alive) continue;
         if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + b.r) {
-          if (b.type === 'bomb') { spawnHitParticles(b.x, b.y, b.poison ? '#5cff5c' : '#ffaa33', 15); damage(e, b.dmg, b.owner, b.poison); }
-          else damage(e, b.dmg, b.owner);
+          damage(e, b.dmg, b.owner);
           spawnHitParticles(b.x, b.y, b.color, 9); dead = true; break;
         }
       }
@@ -2925,12 +2961,14 @@ function drawHero(h){
 
   const walk = Math.sin(h.walkPhase || 0) * 4; const isWalking = isMe ? Math.hypot(player.mvx, player.mvy) > .001 : true;
 
+  // Ноги
   if (isVitya) { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-5 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(5 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#e5e7eb'; ctx.beginPath(); ctx.ellipse(-5 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(5 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
-  else if (isLesha) { ctx.strokeStyle = '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
+  else if (isLesha) { ctx.strokeStyle = h.skin === 'volley' ? '#1e3a8a' : '#333'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-3, 8); ctx.lineTo(-3 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3, 8); ctx.lineTo(3 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = h.skin === 'volley' ? '#3b82f6' : '#111'; ctx.beginPath(); ctx.ellipse(-3 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(3 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
   else if (isVasilek) { ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
   else if (isArtem) { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#333'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
   else { ctx.strokeStyle = '#1e3a8a'; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(-4, 8); ctx.lineTo(-4 - (isWalking ? walk : 0), 16); ctx.stroke(); ctx.beginPath(); ctx.moveTo(4, 8); ctx.lineTo(4 + (isWalking ? walk : 0), 16); ctx.stroke(); ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.ellipse(-4 - (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(4 + (isWalking ? walk : 0), 18, 5, 3, 0, 0, TAU); ctx.fill(); }
 
+  // Руки
   ctx.lineWidth = 4.5;
   if (isVitya) { ctx.strokeStyle = '#fca5a5'; ctx.beginPath(); ctx.moveTo(-8, -4); ctx.lineTo(-16, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
   else if (isLesha) { ctx.strokeStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(-14, 4 + (isWalking ? walk : 0)); ctx.stroke(); }
@@ -2942,20 +2980,17 @@ function drawHero(h){
   
   // --- ОТРИСОВКА МОДЕЛЕК С УЧЕТОМ СКИНОВ ---
   
-  // 1. ВИТЯ
   if (isVitya) { 
     if (h.skin === 'sport') {
-      // Спортсмен Витя (Синий костюм, золотые акценты, реактор)
-      g.addColorStop(0, '#60a5fa'); g.addColorStop(1, '#1e3a8a'); 
-      ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#b45309'; ctx.stroke(); 
-      // Реактор
-      ctx.beginPath(); ctx.arc(0, 0, 5, 0, TAU); ctx.fillStyle = '#e0f2fe'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#38bdf8'; ctx.stroke();
-      ctx.beginPath(); ctx.arc(0, 0, 8, 0, TAU); ctx.strokeStyle = 'rgba(56, 189, 248, 0.5)'; ctx.stroke();
-      // Золотые полосы
+      // Спортсмен Витя: Сине-желтый костюм
+      g.addColorStop(0, '#3b82f6'); g.addColorStop(1, '#1e3a8a'); 
+      ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fcd34d'; ctx.stroke(); 
+      // Реактор (Синий лазер)
+      ctx.beginPath(); ctx.arc(0, 0, 5, 0, TAU); ctx.fillStyle = '#60a5fa'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#3b82f6'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, 8, 0, TAU); ctx.strokeStyle = 'rgba(59, 130, 246, 0.5)'; ctx.stroke();
+      // Желтые полосы
       ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-9, -8); ctx.lineTo(9, -8); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(-11, 4); ctx.lineTo(11, 4); ctx.stroke();
     } else {
-      // Базовый
       g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c'); 
       ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke(); 
       ctx.fillStyle = '#1f2937'; roundRect(ctx, -11, -10, 22, 18, 4); ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#111827'; ctx.stroke(); 
@@ -2963,20 +2998,14 @@ function drawHero(h){
     }
   }
   
-  // 2. ЛЁХА
   else if (isLesha) { 
     if (h.skin === 'volley') {
-      // Волейболист Лёха (Синяя футболка, повязка, мяч)
+      // Волейболист Лёха: Синяя майка, шорты
       g.addColorStop(0, '#60a5fa'); g.addColorStop(1, '#1d4ed8'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fcd34d'; ctx.stroke(); 
       // Повязка
       ctx.fillStyle = '#111'; ctx.fillRect(-10, -6, 4, 10);
-      // Мяч
-      ctx.beginPath(); ctx.arc(6, 2, 6, 0, TAU); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 1.5; ctx.stroke();
-      // Полосы на мяче
-      ctx.beginPath(); ctx.arc(6, 2, 3, 0, Math.PI); ctx.stroke();
     } else {
-      // Базовый
       g.addColorStop(0, '#f8fafc'); g.addColorStop(1, '#cbd5e1'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 9, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#94a3b8'; ctx.stroke(); 
       ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.moveTo(-9, -10); ctx.lineTo(-4, 10); ctx.lineTo(-9, 12); ctx.closePath(); ctx.fill(); 
@@ -2985,48 +3014,39 @@ function drawHero(h){
     }
   }
   
-  // 3. ФИАЛКА
   else if (isFialka) { 
     if (h.skin === 'princess') {
-      // Принцесса Фиалка (Белая/золотая броня, кристалл)
+      // Принцесса Фиалка: Белая броня, золотые узоры
       g.addColorStop(0, '#ffffff'); g.addColorStop(1, '#cbd5e1'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fbbf24'; ctx.stroke();
       // Золотые узоры
       ctx.strokeStyle = '#fbbf24'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(6, -4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8, 2); ctx.lineTo(8, 2); ctx.stroke();
-      // Розовый кристалл в руке
-      ctx.beginPath(); ctx.moveTo(12, -2); ctx.lineTo(16, 2); ctx.lineTo(12, 6); ctx.lineTo(8, 2); ctx.closePath(); ctx.fillStyle = '#ec4899'; ctx.fill(); ctx.strokeStyle = '#be185d'; ctx.stroke();
-      // Корона (крылья)
-      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(-8, -14); ctx.lineTo(-4, -18); ctx.lineTo(0, -14); ctx.lineTo(4, -18); ctx.lineTo(8, -14); ctx.closePath(); ctx.fill();
     } else {
-      // Базовая
+      // Базовая Фиалка (возвращена старая)
       g.addColorStop(0, '#e2e8f0'); g.addColorStop(1, '#94a3b8'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#475569'; ctx.stroke(); 
-      ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); 
+      ctx.fillStyle = '#c084fc'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); 
     }
   }
   
-  // 4. ВАСИЛЁК
   else if (isVasilek) { 
     if (h.skin === 'prince') {
-      // Принц Василёк (Красная броня, золото, синий плащ)
-      g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c'); 
+      // Принц Василёк: Красная броня, золото, фиолетовый плащ
+      g.addColorStop(0, '#ef4444'); g.addColorStop(1, '#991b1b'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#fcd34d'; ctx.stroke();
-      // Плащ
-      ctx.fillStyle = '#312e81'; ctx.beginPath(); ctx.moveTo(-10, 0); ctx.lineTo(-14, 12); ctx.lineTo(-6, 12); ctx.closePath(); ctx.fill();
+      // Плащ сзади
+      ctx.fillStyle = '#6b21a8'; ctx.beginPath(); ctx.moveTo(-10, 0); ctx.lineTo(-16, 14); ctx.lineTo(-4, 14); ctx.closePath(); ctx.fill();
+      // Золотые узоры
+      ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(5, -6); ctx.stroke();
       // Синие глаза
       ctx.fillStyle = '#22d3ee'; ctx.beginPath(); ctx.arc(-3, -4, 2, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(3, -4, 2, 0, TAU); ctx.fill();
-      // Корона
-      ctx.fillStyle = '#312e81'; ctx.beginPath(); ctx.moveTo(-8, -14); ctx.lineTo(-4, -20); ctx.lineTo(0, -14); ctx.lineTo(4, -20); ctx.lineTo(8, -14); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#22d3ee'; ctx.beginPath(); ctx.arc(0, -16, 2, 0, TAU); ctx.fill();
     } else {
-      // Базовый
       g.addColorStop(0, '#ff7b7b'); g.addColorStop(1, '#b32d2d'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#800000'; ctx.stroke(); 
       ctx.fillStyle = '#ff99cc'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#ffcccc'; ctx.stroke(); 
     }
   }
   
-  // 5. АРТЁМ
   else if (isArtem) { 
     g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
     ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
@@ -3040,7 +3060,7 @@ function drawHero(h){
   if (isVasilek) { ctx.fillStyle = '#ffccff'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#ff4d4d'; ctx.stroke(); }
   else { ctx.fillStyle = isFialka ? '#e2e8f0' : (isArtem ? '#fcd34d' : '#fcd34d'); ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = isFialka ? '#94a3b8' : '#b45309'; ctx.stroke(); }
 
-  // ВОЛОСЫ / ШЛЕМ
+  // ВОЛОСЫ / КОРОНА / ШЛЕМ
   if (isVitya) { 
     if (h.skin === 'sport') {
       ctx.fillStyle = '#1e3a8a'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
@@ -3057,7 +3077,9 @@ function drawHero(h){
   }
   else if (isVasilek) { 
     if (h.skin === 'prince') {
-      ctx.fillStyle = '#312e81'; ctx.beginPath(); ctx.arc(0, -16, 11, Math.PI, 0); ctx.fill();
+      // Корона принца
+      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(-9, -14); ctx.lineTo(-6, -20); ctx.lineTo(-2, -14); ctx.lineTo(2, -20); ctx.lineTo(6, -14); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(0, -16, 2, 0, TAU); ctx.fill();
     } else {
       ctx.fillStyle = '#ff66cc'; ctx.beginPath(); ctx.arc(0, -17, 9, Math.PI, 0); ctx.fill(); ctx.beginPath(); ctx.arc(-5, -18, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(5, -18, 4, 0, TAU); ctx.fill(); 
     }
@@ -3067,7 +3089,8 @@ function drawHero(h){
   }
   else { 
     if (h.skin === 'princess') {
-      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
+      // Корона принцессы (крылья)
+      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(-8, -14); ctx.lineTo(-4, -20); ctx.lineTo(0, -14); ctx.lineTo(4, -20); ctx.lineTo(8, -14); ctx.closePath(); ctx.fill();
     } else {
       ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke(); ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke(); 
     }
@@ -3102,6 +3125,8 @@ function drawHero(h){
   else if (isLesha) { 
     if (h.skin === 'volley') {
       ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill(); ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.stroke();
+      // Логотип трусов на мяче
+      ctx.fillStyle = '#1e293b'; ctx.font = 'bold 4px sans-serif'; ctx.fillText('ТРУСЫ', 15, 1);
     } else {
       ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(12, 0); ctx.stroke(); ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(18, 0, 8, 0, TAU); ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#ef4444'; roundRect(ctx, 14, -4, 8, 6, 1); ctx.fill(); ctx.fillStyle = '#5cff5c'; ctx.beginPath(); ctx.arc(18, -8, 3, 0, TAU); ctx.fill(); 
     }
@@ -3121,8 +3146,10 @@ function drawHero(h){
   }
   else { 
     if (h.skin === 'princess') {
+      // Золотой дробовик
       ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke(); 
-      ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.moveTo(18, -6); ctx.lineTo(22, 0); ctx.lineTo(18, 6); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#fcd34d'; roundRect(ctx, 10, -5, 18, 10, 2); ctx.fill(); 
+      ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.moveTo(18, -6); ctx.lineTo(24, 0); ctx.lineTo(18, 6); ctx.closePath(); ctx.fill();
     } else {
       ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(14, 0); ctx.stroke(); ctx.fillStyle = '#1e293b'; roundRect(ctx, 10, -6, 20, 12, 2); ctx.fill(); ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.strokeStyle = '#93c5fd'; ctx.beginPath(); ctx.moveTo(14, -4); ctx.lineTo(18, 4); ctx.lineTo(22, -4); ctx.stroke(); 
     }
@@ -3153,20 +3180,28 @@ function drawBullets(){
   for (const b of bullets) {
     if (b.type === 'big_bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#ff3333'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5, 0, TAU); ctx.strokeStyle = 'rgba(255,0,0,0.5)'; ctx.lineWidth = 2; ctx.stroke(); }
     else if (b.type === 'bomb') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#111'; ctx.fill(); ctx.strokeStyle = '#333'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = b.poison ? '#5cff5c' : '#ef4444'; roundRect(ctx, b.x - 5, b.y - 5, 10, 8, 2); ctx.fill(); }
+    else if (b.type === 'volleyball') { 
+      // Волейбольный мяч
+      ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#f8fafc'; ctx.fill(); ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 2; ctx.stroke(); 
+      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(b.x - 3, b.y - 3, b.r*0.6, 0, TAU); ctx.fill();
+      // Логотип трусов
+      ctx.fillStyle = '#1e293b'; ctx.font = 'bold 6px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('ТРУСЫ', b.x, b.y);
+    }
     else if (b.type === 'chain_bolt') { ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#c084fc'; ctx.fill(); ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(b.x, b.y, b.r*0.5, 0, TAU); ctx.fillStyle = '#fff'; ctx.fill(); ctx.shadowBlur = 0; }
     else if (b.type === 'homing') { 
-      // Ракета Артёма (Розовая, прозрачно-неоновая, с шариками)
+      // Ракета с круглым концом
       const ang = Math.atan2(b.vy, b.vx);
       ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(ang);
       
+      // Свечение
       ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 15;
       
-      // Тело ракеты
+      // Тело ракеты (прозрачное неоновое)
       ctx.beginPath(); ctx.moveTo(-b.r, -b.r*0.6); ctx.lineTo(b.r, -b.r*0.6); ctx.arc(b.r, 0, b.r*0.6, -Math.PI/2, Math.PI/2); ctx.lineTo(-b.r, b.r*0.6); ctx.closePath();
-      ctx.fillStyle = 'rgba(255, 102, 204, 0.4)'; ctx.fill(); 
+      ctx.fillStyle = 'rgba(255, 102, 204, 0.3)'; ctx.fill(); 
       ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 2; ctx.stroke();
       
-      // Два розовых шарика снизу
+      // Шарики снизу
       ctx.beginPath(); ctx.arc(-b.r*0.5, b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
       ctx.beginPath(); ctx.arc(0, b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
       
@@ -3174,10 +3209,8 @@ function drawBullets(){
     }
     else if (b.type === 'big_homing') {
       if (!b.exploded) {
-        // Огромная ракета (Ульта)
         ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = 'rgba(255, 102, 204, 0.4)'; ctx.fill();
         ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 30; ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 4; ctx.stroke(); ctx.shadowBlur = 0;
-        
         // Шарики
         ctx.beginPath(); ctx.arc(b.x - b.r*0.5, b.y + b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
         ctx.beginPath(); ctx.arc(b.x + b.r*0.5, b.y + b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
