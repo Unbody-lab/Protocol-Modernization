@@ -2322,7 +2322,8 @@ function activateUlt(h) {
   if (h.type === 'Lesha') {
     h.ultTime = 1.0;
     const tx = h.x + Math.cos(h.aim) * 500; const ty = h.y + Math.sin(h.aim) * 500;
-    bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false, owner: h, color: '#ff0000' });
+    const bType = h.skin === 'volley' ? 'volleyball' : 'big_bomb';
+    bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, r: 25, dmg: 50, life: 1.0, type: bType, exploded: false, owner: h, color: '#ff0000' });
   } else if (h.type === 'Fialka') {
     h.ultActive = true; h.ultTime = 1.0; h.hookTarget = null;
     const enemies = getAllEnemies(h); let bestDist = 500; let targetEnemy = null;
