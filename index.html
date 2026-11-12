@@ -187,7 +187,7 @@
   .skin-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.3); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
   .skin-item:hover { border-color: #7ff0ff; }
   .skin-item.selected { border-color: #4fd6a0; background: rgba(79,214,160,0.15); box-shadow: 0 0 15px rgba(79,214,160,0.3); }
-  .skin-icon { width: 80px; height: 80px; background-size: cover; background-position: center; border-radius: 8px; margin: 0 auto 8px auto; border: 2px solid rgba(255,255,255,0.2); }
+  .skin-icon { width: 90px; height: 90px; background-size: cover; background-position: center; border-radius: 8px; margin: 0 auto 8px auto; border: 2px solid rgba(255,255,255,0.2); }
   .skin-name { font-size: 14px; font-weight: 800; color: #fff; }
   .skin-lock { position: absolute; top: 8px; right: 8px; font-size: 18px; }
 
@@ -2054,7 +2054,8 @@ const player = {
   name: 'Вы', color: '#3fa9f5', colorLight: '#a8e0ff',
   isPlayer: true, moveTick: 0, mvx: 0, mvy: 0,
   type: 'Vitya', poison: 0, stun: 0, shootCount: 0, skin: 'base',
-  buffEnergy: 0, buffBattery: 0, buffDiamond: 0
+  buffEnergy: 0, buffBattery: 0, buffDiamond: 0,
+  rocketAngle: 0
 };
 
 function createHero(id, type, isBot) {
@@ -2100,7 +2101,8 @@ function createHero(id, type, isBot) {
     hookTarget: null, hookX: 0, hookY: 0, healZone: null,
     dmg: stats.dmg, spd: stats.spd, eliminated: false, stepTimer: 0,
     skin: skin,
-    buffEnergy: 0, buffBattery: 0, buffDiamond: 0
+    buffEnergy: 0, buffBattery: 0, buffDiamond: 0,
+    rocketAngle: 0
   };
 }
 
@@ -2322,8 +2324,7 @@ function activateUlt(h) {
   if (h.type === 'Lesha') {
     h.ultTime = 1.0;
     const tx = h.x + Math.cos(h.aim) * 500; const ty = h.y + Math.sin(h.aim) * 500;
-    const bType = h.skin === 'volley' ? 'volleyball' : 'big_bomb';
-    bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, r: 25, dmg: 50, life: 1.0, type: bType, exploded: false, owner: h, color: '#ff0000' });
+    bullets.push({ x: h.x, y: h.y, tx: tx, ty: ty, vx: Math.cos(h.aim) * 800, vy: Math.sin(h.aim) * 800, r: 25, dmg: 50, life: 1.0, type: 'big_bomb', exploded: false, owner: h, color: '#ff0000' });
   } else if (h.type === 'Fialka') {
     h.ultActive = true; h.ultTime = 1.0; h.hookTarget = null;
     const enemies = getAllEnemies(h); let bestDist = 500; let targetEnemy = null;
@@ -2343,7 +2344,7 @@ function activateUlt(h) {
   } else if (h.type === 'Artem') {
     // Огромный фаллоиммитатор
     h.ultActive = true; h.ultTime = 1.0;
-    bullets.push({ x: h.x, y: h.y, vx: 0, vy: 0, r: 30, dmg: 0, life: 2.0, type: 'big_homing', owner: h, color: '#ff66cc', exploded: false });
+    bullets.push({ x: h.x, y: h.y, vx: Math.cos(h.aim) * 400, vy: Math.sin(h.aim) * 400, r: 30, dmg: 0, life: 3.0, type: 'megarocket', owner: h, color: '#ff66cc', exploded: false, spawnTimer: 0 });
   }
 }
 
@@ -2629,6 +2630,11 @@ function update(dt) {
   if (player.buffBattery > 0) player.buffBattery -= dt;
   if (player.buffDiamond > 0) player.buffDiamond -= dt;
 
+  // Вращение ракет вокруг Артёма
+  if (player.type === 'Artem' && player.alive) {
+    player.rocketAngle += dt * 4; // Скорость вращения
+  }
+
   // Звук шагов
   if (Math.hypot(player.mvx, player.mvy) > 0.1 && player.alive && !player.ultActive) {
     player.stepTimer += dt;
@@ -2735,22 +2741,28 @@ function update(dt) {
       continue;
     }
 
-    // Огромный фаллоиммитатор (Ульта Артёма)
-    if (b.type === 'big_homing') {
-      if (b.exploded) {
-        b.life -= dt;
-        if (b.life <= 0) { bullets.splice(i, 1); }
-        continue;
-      }
+    // Мега-ракета (Ульта Артёма)
+    if (b.type === 'megarocket') {
       b.life -= dt;
-      if (b.life <= 0) {
-        b.exploded = true;
-        spawnHitParticles(b.x, b.y, '#ff66cc', 50);
-        for (let j = 0; j < 4; j++) {
-          const ang = (j / 4) * TAU;
-          bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang)*300, vy: Math.sin(ang)*300, r: 12, dmg: 35, life: 3.0, type: 'homing', owner: b.owner, color: '#ff66cc', target: null, orbitAngle: 0, orbiting: false });
+      b.x += b.vx * dt; b.y += b.vy * dt;
+
+      // Каждые 1.5 секунды выпускает самонаводящиеся ракеты
+      b.spawnTimer += dt;
+      if (b.spawnTimer >= 1.5 && b.life > 0) {
+        b.spawnTimer = 0;
+        const enemies = getAllEnemies(b.owner);
+        // Стреляет в сторону врагов
+        enemies.forEach(e => {
+           const ang = Math.atan2(e.y - b.y, e.x - b.x);
+           bullets.push({ x: b.x, y: b.y, vx: Math.cos(ang)*400, vy: Math.sin(ang)*400, r: 10, dmg: 20, life: 3.0, type: 'homing', owner: b.owner, color: '#ff66cc', target: null, orbitAngle: 0, orbiting: false });
+        });
+        if (enemies.length === 0) {
+           // Если врагов нет, стреляет вперед
+           bullets.push({ x: b.x, y: b.y, vx: b.vx, vy: b.vy, r: 10, dmg: 20, life: 3.0, type: 'homing', owner: b.owner, color: '#ff66cc', target: null, orbitAngle: 0, orbiting: false });
         }
       }
+
+      if (b.life <= 0) { bullets.splice(i, 1); }
       continue;
     }
 
@@ -3041,6 +3053,8 @@ function drawHero(h){
       ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(5, -6); ctx.stroke();
       // Синие глаза
       ctx.fillStyle = '#22d3ee'; ctx.beginPath(); ctx.arc(-3, -4, 2, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(3, -4, 2, 0, TAU); ctx.fill();
+      // Синий луч на груди
+      ctx.strokeStyle = '#3b82f6'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 10); ctx.stroke();
     } else {
       g.addColorStop(0, '#ff7b7b'); g.addColorStop(1, '#b32d2d'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#800000'; ctx.stroke(); 
@@ -3092,6 +3106,9 @@ function drawHero(h){
     if (h.skin === 'princess') {
       // Корона принцессы (крылья)
       ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(-8, -14); ctx.lineTo(-4, -20); ctx.lineTo(0, -14); ctx.lineTo(4, -20); ctx.lineTo(8, -14); ctx.closePath(); ctx.fill();
+      // Очки с синими линзами и желтой оправой
+      ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 2.5, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 2.5, 0, TAU); ctx.fill();
     } else {
       ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(6, -12); ctx.lineTo(10, 2); ctx.lineTo(8, 10); ctx.stroke(); ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill(); ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.stroke(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.stroke(); 
     }
@@ -3141,9 +3158,8 @@ function drawHero(h){
     }
   }
   else if (isArtem) { 
+    // Убрали желтую сферу, оставили просто руку
     ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 4.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(15, 0); ctx.stroke(); 
-    ctx.fillStyle = '#ffd700'; ctx.beginPath(); ctx.arc(20, 0, 6, 0, TAU); ctx.fill(); 
-    ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(20, 0, 3, 0, TAU); ctx.fill(); 
   }
   else { 
     if (h.skin === 'princess') {
@@ -3175,7 +3191,10 @@ function drawHero(h){
   if (h.reloading > 0 && h.alive) { ctx.font = 'bold 10px system-ui, sans-serif'; ctx.fillStyle = '#ff9900'; ctx.fillText('ПЕРЕЗАРЯДКА', h.x, by + 18); }
 }
 
-function drawHeroes(){ for (const bot of bots) if (bot.alive && !bot.eliminated) drawHero(bot); if (player.alive) drawHero(player); }
+function drawHeroes(){ 
+  for (const bot of bots) if (bot.alive && !bot.eliminated) drawHero(bot); 
+  if (player.alive) drawHero(player); 
+}
 
 function drawBullets(){
   for (const b of bullets) {
@@ -3208,14 +3227,16 @@ function drawBullets(){
       
       ctx.restore();
     }
-    else if (b.type === 'big_homing') {
-      if (!b.exploded) {
-        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = 'rgba(255, 102, 204, 0.4)'; ctx.fill();
-        ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 30; ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 4; ctx.stroke(); ctx.shadowBlur = 0;
-        // Шарики
-        ctx.beginPath(); ctx.arc(b.x - b.r*0.5, b.y + b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
-        ctx.beginPath(); ctx.arc(b.x + b.r*0.5, b.y + b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
-      }
+    else if (b.type === 'megarocket') {
+      // Огромная ракета (Ульта)
+      const ang = Math.atan2(b.vy, b.vx);
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(ang);
+      ctx.beginPath(); ctx.arc(0, 0, b.r, 0, TAU); ctx.fillStyle = 'rgba(255, 102, 204, 0.4)'; ctx.fill();
+      ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 30; ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 4; ctx.stroke(); ctx.shadowBlur = 0;
+      // Шарики
+      ctx.beginPath(); ctx.arc(-b.r*0.5, b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      ctx.beginPath(); ctx.arc(b.r*0.5, b.r*0.8, b.r*0.3, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      ctx.restore();
     }
     else { ctx.beginPath(); ctx.arc(b.x, b.y, b.r*2.4, 0, TAU); ctx.fillStyle = 'rgba(150,215,255,0.16)'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, TAU); ctx.fillStyle = '#e6f7ff'; ctx.fill(); ctx.beginPath(); ctx.arc(b.x, b.y, b.r*.5, 0, TAU); ctx.fillStyle = b.color; ctx.fill(); }
   }
@@ -3251,6 +3272,36 @@ function drawLasers(){
         ctx.fillStyle = 'rgba(255, 77, 77, 0.2)'; ctx.fill();
         ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
         ctx.restore();
+    }
+  }
+}
+
+function drawArtemRockets(){
+  const t = performance.now() / 1000;
+  for (const h of [player, ...bots]) {
+    if (h.type !== 'Artem' || !h.alive || h.eliminated) continue;
+    
+    // Рисуем кружащиеся ракеты
+    for (let i = 0; i < h.ammo; i++) {
+      const angle = h.rocketAngle + (i / h.maxAmmo) * TAU; // Равномерно распределяем
+      const rx = h.x + Math.cos(angle) * 40;
+      const ry = h.y + Math.sin(angle) * 40;
+      
+      ctx.save();
+      ctx.translate(rx, ry);
+      // Поворачиваем ракету по направлению движения
+      ctx.rotate(angle + Math.PI/2);
+      
+      // Отрисовка маленькой ракеты
+      ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.moveTo(-5, -3); ctx.lineTo(5, -3); ctx.arc(5, 0, 3, -Math.PI/2, Math.PI/2); ctx.lineTo(-5, 3); ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 102, 204, 0.6)'; ctx.fill(); 
+      ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 1; ctx.stroke();
+      // Шарики
+      ctx.beginPath(); ctx.arc(-2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      ctx.beginPath(); ctx.arc(2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      
+      ctx.restore();
     }
   }
 }
@@ -3345,7 +3396,7 @@ function render() {
   ctx.clearRect(0, 0, W, H);
   ctx.save(); ctx.translate(-cam.x, -cam.y);
 
-  drawGround(); drawFurniture(); drawPickups(); drawHeroes(); drawBullets(); drawLasers(); drawParticles();
+  drawGround(); drawFurniture(); drawPickups(); drawHeroes(); drawArtemRockets(); drawBullets(); drawLasers(); drawParticles();
   ctx.restore();
 
   drawVersionBadge(); drawCrosshair(); drawUltBar(); drawAmmoBar(); drawScoreboard(); drawKillFeed();
