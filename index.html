@@ -177,12 +177,10 @@
   .stat-track{height:9px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden}
   .stat-fill{height:100%; border-radius:5px; background:linear-gradient(90deg,#3fa9f5,#7ff0ff)}
   
-  /* Вкладки в карточке героя */
   .hero-tabs { display: flex; gap: 10px; margin-top: 10px; border-bottom: 1px solid rgba(90,140,180,0.3); padding-bottom: 10px; }
   .hero-tab { padding: 8px 16px; border-radius: 8px; background: rgba(255,255,255,0.05); color: #a9c2d8; font-weight: 800; cursor: pointer; font-size: 14px; }
   .hero-tab.active { background: rgba(255,180,80,0.2); color: #ffd700; border: 1px solid rgba(255,180,80,0.5); }
 
-  /* Скины в карточке */
   .skins-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 10px; }
   .skin-item { background: rgba(255,255,255,0.05); border: 2px solid rgba(90,140,180,0.3); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
   .skin-item:hover { border-color: #7ff0ff; }
@@ -272,10 +270,17 @@
   /* ====== ДОРОГА СЛАВЫ (ОБНОВЛЕНА) ====== */
   #road-card { width: 95vw; max-width: 1600px; height: 80vh; border-color: #ffd700; padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative; }
   
-  /* Контейнер для сезонов */
-  .seasons-wrapper { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+  .seasons-wrapper { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; position: relative; }
+  .seasons-wrapper::-webkit-scrollbar { display: none; }
   .season-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
   
+  /* Стрелки */
+  .season-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #ffd700; cursor: pointer; z-index: 10; transition: all 0.2s; }
+  .season-arrow:hover { background: #ffd700; color: #000; }
+  .season-arrow.left { left: 20px; }
+  .season-arrow.right { right: 20px; }
+  .season-arrow.hidden { display: none; }
+
   /* Сезон 1 */
   .season-1-bg { background: url('img/1_Season.jpg') center/cover no-repeat; }
   .season-1-bg .road-title { color: #ffffff; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #7ff0ff, 0 0 40px #7ff0ff, 0 0 80px #7ff0ff; }
@@ -303,11 +308,16 @@
   .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s; box-shadow: 0 0 15px #ffd700;}
   .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;}
   .road-track { display: flex; align-items: center; gap: 0; padding: 40px 20px; overflow-x: auto; background: transparent; flex: 1; }
-  .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(14,22,32,0.7); backdrop-filter: blur(4px); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px;}
+  
+  /* Кликабельные награды */
+  .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(14,22,32,0.7); backdrop-filter: blur(4px); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px; cursor: pointer; transition: all 0.2s;}
+  .road-node:hover { transform: scale(1.05); border-color: #fff; }
   .road-node::after { content: ''; position: absolute; top: 50%; left: 100%; width: 60px; height: 4px; background: rgba(255,255,255,0.3); z-index: -1; }
   .road-node:last-child::after { display: none; }
   .road-node.unlocked { border-color: #4fd6a0; background: rgba(20,45,35,0.8); box-shadow: 0 0 20px rgba(79,214,160,0.4);}
   .road-node.unlocked::after { background: #4fd6a0; box-shadow: 0 0 10px #4fd6a0;}
+  .road-node.claimed { border-color: #555; background: rgba(30,30,30,0.8); opacity: 0.6; cursor: not-allowed;}
+  .road-node.claimed::before { content: '✓'; position: absolute; top: 5px; right: 5px; color: #4fd6a0; font-weight: bold; font-size: 16px; }
   .road-node-icon { width: 50px; height: 50px; background-size: contain; background-repeat: no-repeat; background-position: center; margin-bottom: 5px;}
   .road-node-name { font-size: 11px; font-weight: 900; color: #fff; line-height: 1.1; text-shadow: 0 1px 2px #000;}
   .road-node-cost { font-size: 11px; color: #ffd700; margin-top: 2px; font-weight: bold; text-shadow: 0 1px 2px #000;}
@@ -620,7 +630,7 @@
         <div class="fighter-card-level" id="lvl-lesha">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Лёха</div>
-        <div class="lock-timer" id="lock-lesha-text">Нужно 500 сфер</div>
+        <div class="lock-timer" id="lock-lesha-text">Нужно 50 сфер</div>
       </div>
 
       <div class="fighter-card fialka" id="card-fialka" onclick="openHeroDetails('Fialka')">
@@ -1036,7 +1046,7 @@
   <div id="road-card">
     <button class="modal-close" onclick="closeRoadModal()">✕</button>
     
-    <div class="seasons-wrapper">
+    <div class="seasons-wrapper" id="seasons-wrapper">
       <!-- Сезон 1 -->
       <div class="season-slide season-1-bg">
         <div class="road-bg-image">
@@ -1047,22 +1057,48 @@
           </div>
         </div>
         <div class="road-track">
-          <div class="road-node" id="node-50">
+          <!-- Награды -->
+          <div class="road-node" id="node-50" onclick="claimReward(50, 'Сферы', 5, 'img/Poop.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
-            <div class="road-node-name">50 Осколков</div>
+            <div class="road-node-name">5 Сфер</div>
             <div class="road-node-cost">50 Сфер</div>
           </div>
-          <div class="road-node" id="node-100">
+          <div class="road-node" id="node-75" onclick="claimReward(75, 'Дули', 50, 'img/Dul.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-            <div class="road-node-name">100 Дулей</div>
+            <div class="road-node-name">50 Дулей</div>
+            <div class="road-node-cost">75 Сфер</div>
+          </div>
+          <div class="road-node" id="node-100" onclick="claimReward(100, 'Сундук', 1, 'img/Techo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
+            <div class="road-node-name">Техносундук</div>
             <div class="road-node-cost">100 Сфер</div>
           </div>
-          <div class="road-node" id="node-250">
-            <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
-            <div class="road-node-name">Сундук</div>
+          <div class="road-node" id="node-150" onclick="claimReward(150, 'Дули', 100, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">100 Дулей</div>
+            <div class="road-node-cost">150 Сфер</div>
+          </div>
+          <div class="road-node" id="node-250" onclick="claimReward(250, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
+            <div class="road-node-name">Охлосундук</div>
             <div class="road-node-cost">250 Сфер</div>
           </div>
-          <div class="road-node" id="node-500">
+          <div class="road-node" id="node-300" onclick="claimReward(300, 'Дули', 200, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">200 Дулей</div>
+            <div class="road-node-cost">300 Сфер</div>
+          </div>
+          <div class="road-node" id="node-400" onclick="claimReward(400, 'Ультрасундук', 1, 'img/Ultra_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
+            <div class="road-node-name">Ультрасундук</div>
+            <div class="road-node-cost">400 Сфер</div>
+          </div>
+          <div class="road-node" id="node-450" onclick="claimReward(450, 'Дули', 300, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">300 Дулей</div>
+            <div class="road-node-cost">450 Сфер</div>
+          </div>
+          <div class="road-node" id="node-500" onclick="claimReward(500, 'Боец: Лёха', 0, 'img/Lesha.jpg', true)">
             <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
             <div class="road-node-name">Боец: Лёха</div>
             <div class="road-node-cost">500 Сфер</div>
@@ -1082,6 +1118,10 @@
         </div>
       </div>
     </div>
+    
+    <!-- Стрелки для перелистывания -->
+    <div class="season-arrow left hidden" id="arrow-left" onclick="scrollSeasons(-1)">❮</div>
+    <div class="season-arrow right" id="arrow-right" onclick="scrollSeasons(1)">❯</div>
   </div>
 </div>
 
@@ -1335,8 +1375,7 @@ const DEFAULT_DATA = {
   unlockedSkins: { Vitya: ['base'], Lesha: ['base'], Fialka: ['base'], Vasilek: ['base'], Artem: ['base'] },
   selectedSkins: { Vitya: 'base', Lesha: 'base', Fialka: 'base', Vasilek: 'base', Artem: 'base' },
   friends: [],
-  claimedRoad10: false,
-  claimedRoad25: false
+  claimedRewards: [] // Массив ID забранных наград
 };
 
 let playerData;
@@ -1348,6 +1387,7 @@ try {
   for (const k in DEFAULT_DATA.unlockedSkins) if (!(k in playerData.unlockedSkins)) playerData.unlockedSkins[k] = ['base'];
   for (const k in DEFAULT_DATA.selectedSkins) if (!(k in playerData.selectedSkins)) playerData.selectedSkins[k] = 'base';
   if (!playerData.friends) playerData.friends = [];
+  if (!playerData.claimedRewards) playerData.claimedRewards = [];
 } catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
 
 window.playerData = playerData;
@@ -1361,7 +1401,6 @@ const HERO_BASE = {
 };
 const MAX_HERO_LEVEL = 5;
 
-// КОНФИГ СКИНОВ (Визуальные настройки)
 const SKINS_CONFIG = {
   Vitya: {
     base: { name: 'Базовый', icon: 'img/Vitya.jpg', color: '#3fa9f5', colorLight: '#a8e0ff', type: 'vitya_base' },
@@ -1575,7 +1614,7 @@ function updateUI() {
   document.getElementById('mini-node-250').classList.toggle('unlocked', playerData.sferi >= 250);
   document.getElementById('mini-node-500').classList.toggle('unlocked', playerData.sferi >= 500);
 
-  if (playerData.sferi >= 500) {
+  if (playerData.sferi >= 50) {
     playerData.leshaUnlocked = true;
     const cardLesha = document.getElementById('card-lesha');
     if (cardLesha) {
@@ -1588,14 +1627,28 @@ function updateUI() {
     if (cardLesha) {
       cardLesha.classList.add('locked');
       cardLesha.querySelector('.lock-timer').style.display = 'block';
-      cardLesha.querySelector('.lock-timer').textContent = 'Нужно ' + (500 - playerData.sferi) + ' сфер';
+      cardLesha.querySelector('.lock-timer').textContent = 'Нужно ' + (50 - playerData.sferi) + ' сфер';
     }
   }
 
-  document.getElementById('node-50').classList.toggle('unlocked', playerData.sferi >= 50);
-  document.getElementById('node-100').classList.toggle('unlocked', playerData.sferi >= 100);
-  document.getElementById('node-250').classList.toggle('unlocked', playerData.sferi >= 250);
-  document.getElementById('node-500').classList.toggle('unlocked', playerData.sferi >= 500);
+  // Отрисовка нод в дороге славы
+  const rewards = [50, 75, 100, 150, 250, 300, 400, 450, 500];
+  rewards.forEach(req => {
+    const node = document.getElementById('node-' + req);
+    if (!node) return;
+    
+    // Проверка, забрана ли награда
+    if (playerData.claimedRewards.includes(req)) {
+      node.classList.add('claimed');
+      node.classList.remove('unlocked');
+    } else if (playerData.sferi >= req) {
+      node.classList.add('unlocked');
+      node.classList.remove('claimed');
+    } else {
+      node.classList.remove('unlocked');
+      node.classList.remove('claimed');
+    }
+  });
 
   for (const t of ['Vitya','Lesha','Fialka','Vasilek', 'Artem']) {
     const el = document.getElementById('lvl-' + t.toLowerCase());
@@ -1605,6 +1658,38 @@ function updateUI() {
   updateHeroStatDisplays();
   updateShopSkinsState();
 }
+
+// ФУНКЦИЯ ЗАБОРА НАГРАД
+window.claimReward = function(reqSferi, name, amount, iconUrl, isHero = false) {
+  if (playerData.claimedRewards.includes(reqSferi)) {
+    return showAlert('🎁', 'Уже получено', 'Вы уже забрали эту награду.');
+  }
+  if (playerData.sferi < reqSferi) {
+    return showAlert('🔒', 'Закрыто', 'Вам нужно набрать ' + reqSferi + ' сфер, чтобы получить эту награду.');
+  }
+
+  playerData.claimedRewards.push(reqSferi);
+
+  if (isHero) {
+    playerData.leshaUnlocked = true;
+    updateUI();
+    showAlert('🥳', 'Боец открыт!', 'Поздравляем! Вы разблокировали Лёху!');
+    return;
+  }
+
+  if (name === 'Сферы') {
+    playerData.sferi += amount;
+  } else if (name === 'Дули') {
+    playerData.duli += amount;
+  } else if (name === 'Сундук' || name === 'Охлосундук' || name === 'Ультрасундук') {
+    if (name === 'Сундук') { playerData.duli += 50; playerData.sferi += 5; }
+    if (name === 'Охлосундук') { playerData.duli += 150; playerData.sferi += 15; }
+    if (name === 'Ультрасундук') { playerData.duli += 300; playerData.sferi += 30; }
+  }
+
+  saveData();
+  showAlert('🎁', 'Награда получена!', `Вы забрали: <b>${name}</b>`);
+};
 
 function updateShopSkinsState() {
   const skins = [
@@ -1707,7 +1792,7 @@ window.buySkin = function(hero, skinId, price) {
 
 window.checkLeshaUnlock = function() {
   if (playerData.leshaUnlocked) openHeroDetails('Lesha');
-  else showAlert('🔒', 'Боец закрыт', 'Лёха откроется, когда вы наберёте 500 Сфер Влияния на Дороге Славы!');
+  else showAlert('🔒', 'Боец закрыт', 'Лёха откроется, когда вы наберёте 50 Сфер Влияния на Дороге Славы!');
 };
 
 let upgradeTargetType = null;
@@ -1929,6 +2014,7 @@ let gameRunning = false;
 let currentMode = 'Тренировка';
 let currentMap = 'Компьютерный центр';
 let selectedHero = 'Vitya';
+let currentSeason = 0; // 0 - Сезон 1, 1 - Сезон 2
 
 function showRandomPhrase(heroType) {
   const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : 'bubble-artem'))));
@@ -2013,7 +2099,12 @@ window.openModeModal = function(){
 window.closeModeModal = function(){ modeModal.classList.remove('show'); };
 window.openNewsModal = function(){ newsModal.classList.add('show'); };
 window.closeNewsModal = function(){ newsModal.classList.remove('show'); };
-window.openRoadModal = function(){ roadModal.classList.add('show'); updateUI(); };
+window.openRoadModal = function(){ 
+  roadModal.classList.add('show'); 
+  currentSeason = 0;
+  updateSeasonView();
+  updateUI(); 
+};
 window.closeRoadModal = function(){ roadModal.classList.remove('show'); };
 window.openShopModal = function(){ shopModal.classList.add('show'); updateUI(); };
 window.closeShopModal = function(){ shopModal.classList.remove('show'); };
@@ -2021,6 +2112,21 @@ window.openCommunityModal = function(){ communityModal.classList.add('show'); };
 window.closeCommunityModal = function(){ communityModal.classList.remove('show'); };
 window.showDev = function(title){ devTitle.textContent = title + ' · В РАЗРАБОТКЕ'; devOverlay.classList.add('show'); };
 window.hideDev = function(){ devOverlay.classList.remove('show'); };
+
+window.scrollSeasons = function(dir) {
+  currentSeason += dir;
+  if (currentSeason < 0) currentSeason = 0;
+  if (currentSeason > 1) currentSeason = 1;
+  updateSeasonView();
+};
+
+function updateSeasonView() {
+  const wrapper = document.getElementById('seasons-wrapper');
+  wrapper.scrollTo({ left: currentSeason * wrapper.offsetWidth, behavior: 'smooth' });
+  
+  document.getElementById('arrow-left').classList.toggle('hidden', currentSeason === 0);
+  document.getElementById('arrow-right').classList.toggle('hidden', currentSeason === 1);
+}
 
 // ОБНОВЛЕННЫЙ ВЫБОР РЕЖИМА (СРАЗУ К КАРТЕ)
 window.selectMode = function(name, el){
@@ -3137,7 +3243,7 @@ function drawHero(h){
 
   // ВОЛОСЫ / КОРОНА / ШЛЕМ
   if (isVitya) { 
-    ctx.fillStyle = '#1e3a8a'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); 
+    ctx.fillStyle = '#78350f'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill(); 
     ctx.beginPath(); ctx.arc(4, -18, 4, 0, TAU); ctx.fill();
   }
   else if (isLesha) { 
@@ -3160,12 +3266,9 @@ function drawHero(h){
   }
   else { 
     if (h.skin === 'princess') {
-      // Коса (Принцесса)
       ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 3; 
       ctx.beginPath(); ctx.moveTo(8, -10); ctx.quadraticCurveTo(20, 0, 15, 15); ctx.stroke();
-      // Корона принцессы (крылья)
       ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.moveTo(-8, -14); ctx.lineTo(-4, -20); ctx.lineTo(0, -14); ctx.lineTo(4, -20); ctx.lineTo(8, -14); ctx.closePath(); ctx.fill();
-      // Очки с синими линзами
       ctx.fillStyle = '#fcd34d'; ctx.beginPath(); ctx.arc(-4, -14, 4, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 4, 0, TAU); ctx.fill();
       ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(-4, -14, 2.5, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(4, -14, 2.5, 0, TAU); ctx.fill();
     } else {
@@ -3176,13 +3279,11 @@ function drawHero(h){
   if (h.poison > 0) { ctx.beginPath(); ctx.arc(0, 0, 23, 0, TAU); ctx.strokeStyle = 'rgba(92, 255, 92, ' + (0.5 + 0.5*Math.sin(t*10)) + ')'; ctx.lineWidth = 2; ctx.stroke(); }
   if (h.ultActive && isVitya){ ctx.beginPath(); ctx.arc(0, -2, 4.5, 0, TAU); ctx.fillStyle = '#eaffff'; ctx.fill(); }
   
-  // Аура бессмертия
   if (h.buffDiamond > 0) {
       ctx.beginPath(); ctx.arc(0, 0, 26, 0, TAU); ctx.strokeStyle = 'rgba(255, 215, 0, 0.8)'; ctx.lineWidth = 4; ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, 30, 0, TAU); ctx.strokeStyle = 'rgba(255, 215, 0, 0.4)'; ctx.lineWidth = 2; ctx.stroke();
   }
 
-  // РУКИ / ОРУЖИЕ
   ctx.save(); ctx.translate(8, -4); ctx.rotate(h.aim || 0);
   let swingOff = 0;
   if (h.swing > 0){ const st = 1 - h.swing / .25; swingOff = -1.2 + st * 2.1; }
