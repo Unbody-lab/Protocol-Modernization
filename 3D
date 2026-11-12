@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol: Modernization 3D — Prototype</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        canvas { display: block; }
+        #ui {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+        }
+        #crosshair {
+            position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
+            transform: translate(-50%, -50%); border: 2px solid rgba(255,255,255,0.7);
+            border-radius: 50%; pointer-events: none;
+        }
+        #crosshair::before, #crosshair::after {
+            content: ''; position: absolute; background: rgba(255,255,255,0.7);
+        }
+        #crosshair::before { top: 8px; left: -10px; width: 38px; height: 2px; }
+        #crosshair::after { top: -10px; left: 8px; width: 2px; height: 38px; }
+        
+        #hud {
+            position: absolute; bottom: 20px; left: 20px;
+            color: white; font-size: 20px; font-weight: bold; text-shadow: 2px 2px 0 #000;
+        }
+        #health-bar-container {
+            width: 200px; height: 20px; background: rgba(0,0,0,0.5);
+            border: 2px solid #333; border-radius: 10px; overflow: hidden; margin-top: 5px;
+        }
+        #health-bar {
+            width: 100%; height: 100%; background: #4fd6a0; transition: width 0.2s;
+        }
+        #instructions {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.7); font-size: 14px; text-align: center;
+            background: rgba(0,0,0,0.6); padding: 10px 20px; border-radius: 10px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div id="crosshair"></div>
+        <div id="instructions">
+            <b>WASD</b> — Движение &nbsp;|&nbsp; <b>ЛКМ</b> — Стрельба &nbsp;|&nbsp; <b>Мышь</b> — Вращение камеры
+        </div>
+        <div id="hud">
+            Витя <br>
+            <div id="health-bar-container"><div id="health-bar"></div></div>
+        </div>
+    </div>
+
+    <!-- Подключаем Three.js через CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+
+        // ==========================================
+        // ИНИЦИАЛИЗАЦИЯ СЦЕНЫ
+        // ==========================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a2530);
+        scene.fog = new THREE.Fog(0x1a2530, 20, 50);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        // Освещение
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        dirLight.position.set(20, 30, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.left = -30;
+        dirLight.shadow.camera.right = 30;
+        dirLight.shadow.camera.top = 30;
+        dirLight.shadow.camera.bottom = -30;
+        scene.add(dirLight);
+
+        // ==========================================
+        // ПОЛ И ПРЕПЯТСТВИЯ
+        // ==========================================
+        const floorGeo = new THREE.PlaneGeometry(100, 100);
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0x2b3138, roughness: 0.8 });
+        const floor = new THREE.Mesh(floorGeo, floorMat);
+        floor.rotation.x = -Math.PI / 2;
+        floor.receiveShadow = true;
+        scene.add(floor);
+
+        // Сетка на полу для ориентации
+        const gridHelper = new THREE.GridHelper(100, 50, 0x444444, 0x333333);
+        gridHelper.position.y = 0.01;
+        scene.add(gridHelper);
+
+        // Стены / Ящики (препятствия)
+        const obstacles = [];
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0x5a3d2b, roughness: 0.9 });
+
+        function createObstacle(x, z, w, d, h) {
+            const geo = new THREE.BoxGeometry(w, h, d);
+            const mesh = new THREE.Mesh(geo, wallMat);
+            mesh.position.set(x, h/2, z);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            scene.add(mesh);
+            
+            // Добавляем в массив для коллизий
+            obstacles.push({ x, z, w, d });
+        }
+
+        // Генерируем случайные ящики
+        for (let i = 0; i < 15; i++) {
+            let rx = (Math.random() - 0.5) * 60;
+            let rz = (Math.random() - 0.5) * 60;
+            // Не спавним в центре, где игрок
+            if (Math.sqrt(rx*rx + rz*rz) > 5) {
+                createObstacle(rx, rz, 2 + Math.random()*2, 2 + Math.random()*2, 2 + Math.random()*3);
+            }
+        }
+
+        // ==========================================
+        // ПЕРСОНАЖИ (Витя и Боты)
+        // ==========================================
+        const player = {
+            mesh: null,
+            hp: 100,
+            maxHp: 100,
+            speed: 10,
+            radius: 0.8,
+            fireRate: 0.4,
+            lastFire: 0,
+            score: 0
+        };
+
+        // Создаем модель Вити (Красный цилиндр)
+        const playerGeo = new THREE.CylinderGeometry(0.8, 0.8, 2, 16);
+        const playerMat = new THREE.MeshStandardMaterial({ color: 0xef4444 }); // Красный
+        player.mesh = new THREE.Mesh(playerGeo, playerMat);
+        player.mesh.castShadow = true;
+        player.mesh.receiveShadow = true;
+        player.mesh.position.set(0, 1, 0); // Поднимаем на половину высоты
+        scene.add(player.mesh);
+
+        // Группа для пуль
+        const bullets = [];
+        const bulletGeo = new THREE.SphereGeometry(0.3, 8, 8);
+        const bulletMat = new THREE.MeshStandardMaterial({ color: 0x7ff0ff, emissive: 0x7ff0ff, emissiveIntensity: 0.5 });
+
+        // Боты
+        const bots = [];
+        const botGeo = new THREE.CylinderGeometry(0.8, 0.8, 2, 16);
+        
+        function spawnBot() {
+            const botMat = new THREE.MeshStandardMaterial({ color: Math.random() * 0xffffff });
+            const mesh = new THREE.Mesh(botGeo, botMat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            
+            // Спавн в случайном месте
+            let bx, bz;
+            do {
+                bx = (Math.random() - 0.5) * 60;
+                bz = (Math.random() - 0.5) * 60;
+            } while (Math.sqrt(bx*bx + bz*bz) < 10); // Не слишком близко к игроку
+
+            mesh.position.set(bx, 1, bz);
+            scene.add(mesh);
+
+            bots.push({
+                mesh,
+                hp: 100,
+                speed: 4,
+                lastFire: 0,
+                radius: 0.8
+            });
+        }
+
+        // Спавним 5 ботов
+        for (let i = 0; i < 5; i++) spawnBot();
+
+        // ==========================================
+        // УПРАВЛЕНИЕ
+        // ==========================================
+        const keys = { w: false, a: false, s: false, d: false };
+        let mouseDown = false;
+        let cameraAngle = 0; // Угол вокруг игрока
+        
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyW') keys.w = true;
+            if (e.code === 'KeyA') keys.a = true;
+            if (e.code === 'KeyS') keys.s = true;
+            if (e.code === 'KeyD') keys.d = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'KeyW') keys.w = false;
+            if (e.code === 'KeyA') keys.a = false;
+            if (e.code === 'KeyS') keys.s = false;
+            if (e.code === 'KeyD') keys.d = false;
+        });
+
+        window.addEventListener('mousedown', () => mouseDown = true);
+        window.addEventListener('mouseup', () => mouseDown = false);
+
+        // Вращение камеры мышью
+        window.addEventListener('mousemove', (e) => {
+            if (document.pointerLockElement === document.body || e.buttons === 1) {
+                cameraAngle -= e.movementX * 0.002;
+            }
+        });
+
+        // Запрос захвата мыши при клике на канвас
+        renderer.domElement.addEventListener('click', () => {
+            renderer.domElement.requestPointerLock();
+        });
+
+        // ==========================================
+        // ИГРОВАЯ ЛОГИКА (Коллизии и т.д.)
+        // ==========================================
+
+        // Проверка коллизии круга с прямоугольниками (ящиками)
+        function resolveCollisions(pos, radius) {
+            for (const obs of obstacles) {
+                // Находим ближайшую точку прямоугольника к центру круга
+                const closestX = Math.max(obs.x - obs.w/2, Math.min(pos.x, obs.x + obs.w/2));
+                const closestZ = Math.max(obs.z - obs.d/2, Math.min(pos.z, obs.z + obs.d/2));
+                
+                const dx = pos.x - closestX;
+                const dz = pos.z - closestZ;
+                const distSq = dx*dx + dz*dz;
+
+                if (distSq < radius * radius) {
+                    const dist = Math.sqrt(distSq);
+                    // Выталкиваем
+                    if (dist > 0) {
+                        const pushX = (dx / dist) * (radius - dist);
+                        const pushZ = (dz / dist) * (radius - dist);
+                        pos.x += pushX;
+                        pos.z += pushZ;
+                    } else {
+                        // Если центр внутри, выталкиваем по X
+                        pos.x += radius;
+                    }
+                }
+            }
+        }
+
+        // Стрельба
+        function shoot(x, z, angle, isPlayer) {
+            const bullet = new THREE.Mesh(bulletGeo, bulletMat.clone());
+            
+            // Позиция пули чуть впереди персонажа
+            bullet.position.set(x + Math.sin(angle) * 1.5, 1.5, z + Math.cos(angle) * 1.5);
+            
+            // Направление
+            const speed = isPlayer ? 40 : 25;
+            bullet.userData = {
+                vx: Math.sin(angle) * speed,
+                vz: Math.cos(angle) * speed,
+                life: 1.5, // Время жизни в секундах
+                isPlayer: isPlayer,
+                damage: isPlayer ? 20 : 10
+            };
+
+            scene.add(bullet);
+            bullets.push(bullet);
+        }
+
+        // ==========================================
+        // ЦИКЛ АНИМАЦИИ
+        // ==========================================
+        const clock = new THREE.Clock();
+        const camOffset = new THREE.Vector3();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const dt = Math.min(clock.getDelta(), 0.1);
+
+            // --- ОБНОВЛЕНИЕ ИГРОКА ---
+            if (player.hp > 0) {
+                let moveX = 0;
+                let moveZ = 0;
+
+                // Движение относительно направления камеры
+                if (keys.w) { moveX += Math.sin(cameraAngle); moveZ += Math.cos(cameraAngle); }
+                if (keys.s) { moveX -= Math.sin(cameraAngle); moveZ -= Math.cos(cameraAngle); }
+                if (keys.a) { moveX += Math.cos(cameraAngle); moveZ -= Math.sin(cameraAngle); }
+                if (keys.d) { moveX -= Math.cos(cameraAngle); moveZ += Math.sin(cameraAngle); }
+
+                // Нормализация (чтобы по диагонали не было быстрее)
+                const len = Math.sqrt(moveX*moveX + moveZ*moveZ);
+                if (len > 0) {
+                    moveX /= len;
+                    moveZ /= len;
+                    player.mesh.position.x += moveX * player.speed * dt;
+                    player.mesh.position.z += moveZ * player.speed * dt;
+                }
+
+                // Коллизии игрока
+                resolveCollisions(player.mesh.position, player.radius);
+
+                // Границы карты
+                player.mesh.position.x = Math.max(-48, Math.min(48, player.mesh.position.x));
+                player.mesh.position.z = Math.max(-48, Math.min(48, player.mesh.position.z));
+
+                // Стрельба
+                if (mouseDown && clock.elapsedTime - player.lastFire > player.fireRate) {
+                    shoot(player.mesh.position.x, player.mesh.position.z, cameraAngle, true);
+                    player.lastFire = clock.elapsedTime;
+                }
+            }
+
+            // --- ОБНОВЛЕНИЕ БОТОВ ---
+            bots.forEach(bot => {
+                if (bot.hp <= 0) return;
+
+                // ИИ: Движение к игроку
+                const dx = player.mesh.position.x - bot.mesh.position.x;
+                const dz = player.mesh.position.z - bot.mesh.position.z;
+                const dist = Math.sqrt(dx*dx + dz*dz);
+
+                if (dist > 5 && player.hp > 0) {
+                    bot.mesh.position.x += (dx/dist) * bot.speed * dt;
+                    bot.mesh.position.z += (dz/dist) * bot.speed * dt;
+                }
+                
+                // Коллизии ботов
+                resolveCollisions(bot.mesh.position, bot.radius);
+
+                // Бот стреляет если видит игрока
+                if (dist < 20 && player.hp > 0 && clock.elapsedTime - bot.lastFire > 1.5) {
+                    const angle = Math.atan2(dx, dz);
+                    shoot(bot.mesh.position.x, bot.mesh.position.z, angle, false);
+                    bot.lastFire = clock.elapsedTime;
+                }
+
+                // Поворот бота к игроку
+                bot.mesh.rotation.y = Math.atan2(dx, dz);
+            });
+
+            // --- ОБНОВЛЕНИЕ ПУЛЬ ---
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                const b = bullets[i];
+                b.position.x += b.userData.vx * dt;
+                b.position.z += b.userData.vz * dt;
+                b.userData.life -= dt;
+
+                let hit = false;
+
+                // Проверка попадания в стены
+                for (const obs of obstacles) {
+                    if (b.position.x > obs.x - obs.w/2 && b.position.x < obs.x + obs.w/2 &&
+                        b.position.z > obs.z - obs.d/2 && b.position.z < obs.z + obs.d/2) {
+                        hit = true;
+                        break;
+                    }
+                }
+
+                // Проверка попадания в игрока
+                if (!hit && !b.userData.isPlayer && player.hp > 0) {
+                    const dx = b.position.x - player.mesh.position.x;
+                    const dz = b.position.z - player.mesh.position.z;
+                    if (Math.sqrt(dx*dx + dz*dz) < player.radius + 0.3) {
+                        player.hp -= b.userData.damage;
+                        hit = true;
+                        updateHUD();
+                    }
+                }
+
+                // Проверка попадания в ботов
+                if (!hit && b.userData.isPlayer) {
+                    for (const bot of bots) {
+                        if (bot.hp <= 0) continue;
+                        const dx = b.position.x - bot.mesh.position.x;
+                        const dz = b.position.z - bot.mesh.position.z;
+                        if (Math.sqrt(dx*dx + dz*dz) < bot.radius + 0.3) {
+                            bot.hp -= b.userData.damage;
+                            hit = true;
+                            
+                            // Убийство
+                            if (bot.hp <= 0) {
+                                scene.remove(bot.mesh);
+                                player.score++;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Удаление пули
+                if (hit || b.userData.life <= 0) {
+                    scene.remove(b);
+                    bullets.splice(i, 1);
+                }
+            }
+
+            // --- КАМЕРА ---
+            // Камера следует за игроком под углом
+            const camDist = 15;
+            const camHeight = 12;
+            
+            camOffset.x = player.mesh.position.x - Math.sin(cameraAngle) * camDist;
+            camOffset.z = player.mesh.position.z - Math.cos(cameraAngle) * camDist;
+            camOffset.y = camHeight;
+
+            camera.position.lerp(camOffset, 0.1); // Плавное следование
+            camera.lookAt(player.mesh.position.x, 1, player.mesh.position.z);
+
+            // Вращение игрока в сторону камеры
+            if (player.hp > 0) {
+                player.mesh.rotation.y = cameraAngle;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function updateHUD() {
+            const bar = document.getElementById('health-bar');
+            const percent = Math.max(0, (player.hp / player.maxHp) * 100);
+            bar.style.width = percent + '%';
+            bar.style.background = percent > 50 ? '#4fd6a0' : (percent > 20 ? '#ffd700' : '#ff4d4d');
+        }
+
+        // Обработка ресайза
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Старт
+        animate();
+
+    </script>
+</body>
+</html>
