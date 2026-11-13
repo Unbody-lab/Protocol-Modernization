@@ -268,11 +268,29 @@
   .shop-badge { position: absolute; top: -10px; right: -10px; background: #ff4d4d; color: #fff; font-size: 12px; font-weight: 900; padding: 4px 10px; border-radius: 8px; transform: rotate(10deg); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
   /* ====== ДОРОГА СЛАВЫ (ОБНОВЛЕНА) ====== */
-  #road-card { width: 95vw; max-width: 1600px; height: 80vh; border-color: #ffd700; padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+    #road-card { 
+    width: 95vw; 
+    max-width: 1600px; 
+    height: 90vh; /* Увеличили высоту до 90% экрана */
+    border-color: #ffd700; 
+    padding: 0; 
+    overflow: hidden; 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+  }
   
   .seasons-wrapper { display: flex; width: 100%; height: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; position: relative; }
   .seasons-wrapper::-webkit-scrollbar { display: none; }
-  .season-slide { flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: start; display: flex; flex-direction: column; position: relative; }
+    .season-slide { 
+    flex: 0 0 100%; 
+    width: 100%; 
+    height: 100%; 
+    scroll-snap-align: start; 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
+  }
   
   /* Стрелки */
   .season-arrow { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; background: rgba(0,0,0,0.7); border: 2px solid #ffd700; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #ffd700; cursor: pointer; z-index: 10; transition: all 0.2s; }
@@ -305,7 +323,15 @@
   .season-complete-title { font-size: 64px; font-weight: 900; color: #ffd700; text-shadow: 0 0 30px #ffd700, 0 0 60px #ffaa00; margin-bottom: 20px; animation: popIn 0.6s ease-out; }
   .season-complete-sub { font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 2px 10px #000; animation: fadeIn 1s ease-out; }
 
-  .road-bg-image { width: 100%; height: 220px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
+    .road-bg-image { 
+    flex: 1; /* Блок с фоном теперь занимает всё свободное место */
+    width: 100%; 
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-end; 
+    padding: 20px; 
+  }
   
   .road-title { 
     font-size: 32px; font-weight: 900; 
@@ -317,7 +343,18 @@
   .road-progress-bar { width: 100%; height: 24px; background: rgba(0,0,0,0.7); border-radius: 12px; border: 2px solid #ffd700; position: relative; overflow: hidden; z-index: 2;}
   .road-progress-fill { height: 100%; background: linear-gradient(90deg, #ffb450, #ffd700); width: 0%; transition: width 0.5s; box-shadow: 0 0 15px #ffd700;}
   .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;}
-  .road-track { display: flex; align-items: center; gap: 0; padding: 40px 20px; overflow-x: auto; background: transparent; flex: 1; }
+  .road-track { 
+    display: flex; 
+    align-items: center; 
+    gap: 0; 
+    padding: 40px 20px; 
+    overflow-x: auto; 
+    background: transparent; 
+    height: 200px; /* Фиксированная высота для трека с наградами */
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
   
   .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(14,22,32,0.7); backdrop-filter: blur(4px); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px; cursor: pointer; transition: all 0.2s;}
   .road-node:hover { transform: scale(1.05); border-color: #fff; }
