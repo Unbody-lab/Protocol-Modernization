@@ -285,27 +285,25 @@
   .season-1-bg { background: url('img/1_Season.jpg') center/cover no-repeat; }
   .season-1-bg .road-title { color: #ffffff; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #7ff0ff, 0 0 40px #7ff0ff, 0 0 80px #7ff0ff; }
   
-    /* Сезон 2 */
+  /* Сезон 2 (Закрыт) */
   .season-2-bg { background: url('img/2_Season.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38,#2a3a4a); }
+  .season-2-bg::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1; }
+  .season-2-bg .road-title { color: #ffd700; text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffaa00, 0 0 40px #ffaa00; z-index: 2; position: relative; }
   
-  /* Убрали затемнение фона, чтобы картинка была яркой */
-  .season-2-bg::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); z-index: 1; }
+  .locked-season-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 3; background: rgba(10,15,22,0.7); backdrop-filter: blur(4px); }
+  .locked-season-icon { font-size: 80px; margin-bottom: 20px; text-shadow: 0 0 20px #000; }
+  .locked-season-text { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 10px #000; text-align: center; }
+  .locked-season-sub { font-size: 16px; color: #ccc; margin-top: 10px; }
   
-  /* Сделали заголовок точно таким же, как в 1 сезоне, но желтым */
-  .season-2-bg .road-title { 
-    color: #ffd700; 
-    text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffaa00, 0 0 40px #ffaa00, 0 0 80px #ffaa00;
-    z-index: 4; 
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%); 
-    font-size: 32px; /* Вернули размер как у 1 сезона */
-    margin-bottom: 10px;
-    letter-spacing: 4px;
+  /* Оверлей завершения 1 сезона */
+  #season-complete-overlay {
+    position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.85);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.5s;
   }
-  
-  /* Убрали стили .locked-season-overlay ... */
+  #season-complete-overlay.show { display: flex; opacity: 1; }
+  .season-complete-title { font-size: 64px; font-weight: 900; color: #ffd700; text-shadow: 0 0 30px #ffd700, 0 0 60px #ffaa00; margin-bottom: 20px; animation: popIn 0.6s ease-out; }
+  .season-complete-sub { font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 2px 10px #000; animation: fadeIn 1s ease-out; }
 
   .road-bg-image { width: 100%; height: 220px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
   
@@ -321,7 +319,6 @@
   .road-progress-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; color: #fff; text-shadow: 0 1px 2px #000;}
   .road-track { display: flex; align-items: center; gap: 0; padding: 40px 20px; overflow-x: auto; background: transparent; flex: 1; }
   
-  /* Кликабельные награды */
   .road-node { position: relative; width: 110px; height: 110px; flex-shrink: 0; border-radius: 16px; background: rgba(14,22,32,0.7); backdrop-filter: blur(4px); border: 3px solid rgba(255,215,0,0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; z-index: 2; margin-right: 60px; cursor: pointer; transition: all 0.2s;}
   .road-node:hover { transform: scale(1.05); border-color: #fff; }
   .road-node::after { content: ''; position: absolute; top: 50%; left: 100%; width: 60px; height: 4px; background: rgba(255,255,255,0.3); z-index: -1; }
@@ -439,6 +436,12 @@
 </style>
 </head>
 <body>
+
+<!-- Оверлей завершения сезона -->
+<div id="season-complete-overlay">
+  <div class="season-complete-title">1 СЕЗОН ЗАВЕРШЕН!</div>
+  <div class="season-complete-sub">2 СЕЗОН "ТЦ КАЛИНА" ОТКРЫТ!</div>
+</div>
 
 <!-- Стильное уведомление -->
 <div id="custom-alert">
@@ -1069,9 +1072,10 @@
           </div>
         </div>
         <div class="road-track">
-          <div class="road-node" id="node-50" onclick="claimReward(50, 'Осколки', 10, 'img/Poop.jpg')">
+          <!-- Награды -->
+          <div class="road-node" id="node-50" onclick="claimReward(50, 'Сферы', 5, 'img/Poop.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
-            <div class="road-node-name">10 Осколков</div>
+            <div class="road-node-name">5 Сфер</div>
             <div class="road-node-cost">50 Сфер</div>
           </div>
           <div class="road-node" id="node-75" onclick="claimReward(75, 'Дули', 50, 'img/Dul.jpg')">
@@ -1079,7 +1083,7 @@
             <div class="road-node-name">50 Дулей</div>
             <div class="road-node-cost">75 Сфер</div>
           </div>
-          <div class="road-node" id="node-100" onclick="claimReward(100, 'Техносундук', 1, 'img/Techo_Box.jpg')">
+          <div class="road-node" id="node-100" onclick="claimReward(100, 'Сундук', 1, 'img/Techo_Box.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
             <div class="road-node-name">Техносундук</div>
             <div class="road-node-cost">100 Сфер</div>
@@ -1109,115 +1113,119 @@
             <div class="road-node-name">300 Дулей</div>
             <div class="road-node-cost">450 Сфер</div>
           </div>
-          <div class="road-node" id="node-50-hero" onclick="claimReward(50, 'Боец: Лёха', 0, 'img/Lesha.jpg', true)">
-           <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
-           <div class="road-node-name">Боец: Лёха</div>
-           <div class="road-node-cost">50 Сфер</div>
+          <div class="road-node" id="node-500" onclick="claimReward(500, 'Боец: Лёха', 0, 'img/Lesha.jpg', true)">
+            <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
+            <div class="road-node-name">Боец: Лёха</div>
+            <div class="road-node-cost">500 Сфер</div>
           </div>
         </div>
       </div>
 
-          <!-- Сезон 2 -->
-      <div class="season-slide season-2-bg">
+      <!-- Сезон 2 (Закрыт) -->
+      <div class="season-slide season-2-bg" id="season-2-slide">
         <div class="road-bg-image">
           <div class="road-title">2 СЕЗОН "ТЦ КАЛИНА"</div>
-          <div class="road-progress-bar">
-            <div class="road-progress-fill" style="width: 0%;"></div>
-            <div class="road-progress-text">ЗАКРЫТО (Требуется 500 сфер)</div>
+        </div>
+        <div class="locked-season-overlay" id="season-2-lock-overlay">
+          <div class="locked-season-icon">🔒</div>
+          <div class="locked-season-text">Требуется 500 сфер</div>
+          <div class="locked-season-sub">Пройдите 1 сезон, чтобы открыть</div>
+        </div>
+        <div class="road-track" id="season-2-track" style="display: none;">
+          <!-- Награды Сезона 2 -->
+          <div class="road-node" id="node-530" onclick="claimReward(530, 'Осколки', 50, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">50 Осколков</div>
+            <div class="road-node-cost">530 Сфер</div>
+          </div>
+          <div class="road-node" id="node-540" onclick="claimReward(540, 'Дули', 100, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">100 Дулей</div>
+            <div class="road-node-cost">540 Сфер</div>
+          </div>
+          <div class="road-node" id="node-580" onclick="claimReward(580, 'Сундук', 1, 'img/Techo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
+            <div class="road-node-name">Техносундук</div>
+            <div class="road-node-cost">580 Сфер</div>
+          </div>
+          <div class="road-node" id="node-620" onclick="claimReward(620, 'Осколки', 100, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">100 Осколков</div>
+            <div class="road-node-cost">620 Сфер</div>
+          </div>
+          <div class="road-node" id="node-650" onclick="claimReward(650, 'Дули', 200, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">200 Дулей</div>
+            <div class="road-node-cost">650 Сфер</div>
+          </div>
+          <div class="road-node" id="node-720" onclick="claimReward(720, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
+            <div class="road-node-name">Охлосундук</div>
+            <div class="road-node-cost">720 Сфер</div>
+          </div>
+          <div class="road-node" id="node-740" onclick="claimReward(740, 'Осколки', 150, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">150 Осколков</div>
+            <div class="road-node-cost">740 Сфер</div>
+          </div>
+          <div class="road-node" id="node-780" onclick="claimReward(780, 'Дули', 300, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">300 Дулей</div>
+            <div class="road-node-cost">780 Сфер</div>
+          </div>
+          <div class="road-node" id="node-810" onclick="claimReward(810, 'Ультрасундук', 1, 'img/Ultra_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
+            <div class="road-node-name">Ультрасундук</div>
+            <div class="road-node-cost">810 Сфер</div>
+          </div>
+          <div class="road-node" id="node-830" onclick="claimReward(830, 'Осколки', 200, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">200 Осколков</div>
+            <div class="road-node-cost">830 Сфер</div>
+          </div>
+          <div class="road-node" id="node-870" onclick="claimReward(870, 'Дули', 400, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">400 Дулей</div>
+            <div class="road-node-cost">870 Сфер</div>
+          </div>
+          <div class="road-node" id="node-900" onclick="claimReward(900, 'Осколки', 250, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">250 Осколков</div>
+            <div class="road-node-cost">900 Сфер</div>
+          </div>
+          <div class="road-node" id="node-920" onclick="claimReward(920, 'Сундук', 2, 'img/Techo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
+            <div class="road-node-name">Техносундук</div>
+            <div class="road-node-cost">920 Сфер</div>
+          </div>
+          <div class="road-node" id="node-930" onclick="claimReward(930, 'Дули', 500, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">500 Дулей</div>
+            <div class="road-node-cost">930 Сфер</div>
+          </div>
+          <div class="road-node" id="node-940" onclick="claimReward(940, 'Осколки', 300, 'img/Poop.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
+            <div class="road-node-name">300 Осколков</div>
+            <div class="road-node-cost">940 Сфер</div>
+          </div>
+          <div class="road-node" id="node-980" onclick="claimReward(980, 'Охлосундук', 2, 'img/Ohlo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
+            <div class="road-node-name">Охлосундук</div>
+            <div class="road-node-cost">980 Сфер</div>
+          </div>
+          <div class="road-node" id="node-990" onclick="claimReward(990, 'Дули', 600, 'img/Dul.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
+            <div class="road-node-name">600 Дулей</div>
+            <div class="road-node-cost">990 Сфер</div>
+          </div>
+          <div class="road-node" id="node-1000" onclick="claimReward(1000, 'Ультрасундук', 2, 'img/Ultra_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
+            <div class="road-node-name">Ультрасундук</div>
+            <div class="road-node-cost">1000 Сфер</div>
           </div>
         </div>
-        <div class="road-track">
-  <div class="road-node" id="node-530" onclick="claimReward(530, 'Осколки', 20, 'img/Poop.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
-    <div class="road-node-name">20 Осколков</div>
-    <div class="road-node-cost">530 Сфер</div>
-  </div>
-  <div class="road-node" id="node-540" onclick="claimReward(540, 'Дули', 100, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">100 Дулей</div>
-    <div class="road-node-cost">540 Сфер</div>
-  </div>
-  <div class="road-node" id="node-580" onclick="claimReward(580, 'Техносундук', 1, 'img/Techo_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
-    <div class="road-node-name">Техносундук</div>
-    <div class="road-node-cost">580 Сфер</div>
-  </div>
-  <div class="road-node" id="node-620" onclick="claimReward(620, 'Дули', 150, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">150 Дулей</div>
-    <div class="road-node-cost">620 Сфер</div>
-  </div>
-  <div class="road-node" id="node-650" onclick="claimReward(650, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
-    <div class="road-node-name">Охлосундук</div>
-    <div class="road-node-cost">650 Сфер</div>
-  </div>
-  <div class="road-node" id="node-720" onclick="claimReward(720, 'Дули', 250, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">250 Дулей</div>
-    <div class="road-node-cost">720 Сфер</div>
-  </div>
-  <div class="road-node" id="node-740" onclick="claimReward(740, 'Ультрасундук', 1, 'img/Ultra_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
-    <div class="road-node-name">Ультрасундук</div>
-    <div class="road-node-cost">740 Сфер</div>
-  </div>
-  <div class="road-node" id="node-780" onclick="claimReward(780, 'Дули', 300, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">300 Дулей</div>
-    <div class="road-node-cost">780 Сфер</div>
-  </div>
-  <div class="road-node" id="node-810" onclick="claimReward(810, 'Осколки', 50, 'img/Poop.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
-    <div class="road-node-name">50 Осколков</div>
-    <div class="road-node-cost">810 Сфер</div>
-  </div>
-  <div class="road-node" id="node-830" onclick="claimReward(830, 'Дули', 400, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">400 Дулей</div>
-    <div class="road-node-cost">830 Сфер</div>
-  </div>
-  <div class="road-node" id="node-870" onclick="claimReward(870, 'Техносундук', 1, 'img/Techo_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
-    <div class="road-node-name">Техносундук</div>
-    <div class="road-node-cost">870 Сфер</div>
-  </div>
-  <div class="road-node" id="node-900" onclick="claimReward(900, 'Дули', 500, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">500 Дулей</div>
-    <div class="road-node-cost">900 Сфер</div>
-  </div>
-  <div class="road-node" id="node-920" onclick="claimReward(920, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
-    <div class="road-node-name">Охлосундук</div>
-    <div class="road-node-cost">920 Сфер</div>
-  </div>
-  <div class="road-node" id="node-930" onclick="claimReward(930, 'Дули', 600, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">600 Дулей</div>
-    <div class="road-node-cost">930 Сфер</div>
-  </div>
-  <div class="road-node" id="node-940" onclick="claimReward(940, 'Ультрасундук', 1, 'img/Ultra_Box.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Ultra_Box.jpg');"></div>
-    <div class="road-node-name">Ультрасундук</div>
-    <div class="road-node-cost">940 Сфер</div>
-  </div>
-  <div class="road-node" id="node-980" onclick="claimReward(980, 'Дули', 800, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">800 Дулей</div>
-    <div class="road-node-cost">980 Сфер</div>
-  </div>
-  <div class="road-node" id="node-990" onclick="claimReward(990, 'Осколки', 100, 'img/Poop.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
-    <div class="road-node-name">100 Осколков</div>
-    <div class="road-node-cost">990 Сфер</div>
-  </div>
-  <div class="road-node" id="node-1000" onclick="claimReward(1000, 'Дули', 1000, 'img/Dul.jpg')">
-    <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
-    <div class="road-node-name">1000 Дулей</div>
-    <div class="road-node-cost">1000 Сфер</div>
-  </div>
-</div>
+      </div>
+    </div>
     
     <!-- Стрелки для перелистывания -->
     <div class="season-arrow left hidden" id="arrow-left" onclick="scrollSeasons(-1)">❮</div>
@@ -1475,7 +1483,8 @@ const DEFAULT_DATA = {
   unlockedSkins: { Vitya: ['base'], Lesha: ['base'], Fialka: ['base'], Vasilek: ['base'], Artem: ['base'] },
   selectedSkins: { Vitya: 'base', Lesha: 'base', Fialka: 'base', Vasilek: 'base', Artem: 'base' },
   friends: [],
-  claimedRewards: [] // Массив ID забранных наград
+  claimedRewards: [],
+  season2Unlocked: false
 };
 
 let playerData;
@@ -1488,6 +1497,7 @@ try {
   for (const k in DEFAULT_DATA.selectedSkins) if (!(k in playerData.selectedSkins)) playerData.selectedSkins[k] = 'base';
   if (!playerData.friends) playerData.friends = [];
   if (!playerData.claimedRewards) playerData.claimedRewards = [];
+  if (playerData.season2Unlocked === undefined) playerData.season2Unlocked = false;
 } catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
 
 window.playerData = playerData;
@@ -1714,7 +1724,7 @@ function updateUI() {
   document.getElementById('mini-node-250').classList.toggle('unlocked', playerData.sferi >= 250);
   document.getElementById('mini-node-500').classList.toggle('unlocked', playerData.sferi >= 500);
 
-  // ЛОГИКА ОТКРЫТИЯ ЛЁХИ (50 СФЕР)
+  // Лёха открывается на 50 сфер!
   if (playerData.sferi >= 50) {
     playerData.leshaUnlocked = true;
     const cardLesha = document.getElementById('card-lesha');
@@ -1732,12 +1742,39 @@ function updateUI() {
     }
   }
 
-  // Отрисовка нод в дороге славы (Сезон 1)
+  // Открытие 2 сезона
+  if (playerData.sferi >= 500 && !playerData.season2Unlocked) {
+    playerData.season2Unlocked = true;
+    document.getElementById('season-2-lock-overlay').style.display = 'none';
+    document.getElementById('season-2-track').style.display = 'flex';
+    document.getElementById('season-complete-overlay').classList.add('show');
+    setTimeout(() => {
+      document.getElementById('season-complete-overlay').classList.remove('show');
+    }, 3500);
+    saveData();
+  }
+
+  // Отрисовка нод в дороге славы
   const rewards1 = [50, 75, 100, 150, 250, 300, 400, 450, 500];
   rewards1.forEach(req => {
     const node = document.getElementById('node-' + req);
     if (!node) return;
-    
+    if (playerData.claimedRewards.includes(req)) {
+      node.classList.add('claimed');
+      node.classList.remove('unlocked');
+    } else if (playerData.sferi >= req) {
+      node.classList.add('unlocked');
+      node.classList.remove('claimed');
+    } else {
+      node.classList.remove('unlocked');
+      node.classList.remove('claimed');
+    }
+  });
+
+  const rewards2 = [530, 540, 580, 620, 650, 720, 740, 780, 810, 830, 870, 900, 920, 930, 940, 980, 990, 1000];
+  rewards2.forEach(req => {
+    const node = document.getElementById('node-' + req);
+    if (!node) return;
     if (playerData.claimedRewards.includes(req)) {
       node.classList.add('claimed');
       node.classList.remove('unlocked');
@@ -1777,26 +1814,20 @@ window.claimReward = function(reqSferi, name, amount, iconUrl, isHero = false) {
     return;
   }
 
-  let alertText = '';
-  if (name === 'Осколки') {
-    playerData.oskolki += amount;
-    alertText = `Вы получили <b>${amount} Осколков</b>!`;
+  if (name === 'Сферы') {
+    playerData.sferi += amount;
   } else if (name === 'Дули') {
     playerData.duli += amount;
-    alertText = `Вы получили <b>${amount} Дулей</b>!`;
-  } else if (name === 'Техносундук') {
-    playerData.duli += 50; playerData.sferi += 5;
-    alertText = `Из сундука выпало: <b>50 Дулей и 5 Сфер</b>!`;
-  } else if (name === 'Охлосундук') {
-    playerData.duli += 150; playerData.sferi += 15;
-    alertText = `Из сундука выпало: <b>150 Дулей и 15 Сфер</b>!`;
-  } else if (name === 'Ультрасундук') {
-    playerData.duli += 300; playerData.sferi += 30;
-    alertText = `Из сундука выпало: <b>300 Дулей и 30 Сфер</b>!`;
+  } else if (name === 'Осколки') {
+    playerData.oskolki += amount;
+  } else if (name === 'Сундук' || name === 'Охлосундук' || name === 'Ультрасундук') {
+    if (name === 'Сундук') { playerData.duli += 50; playerData.sferi += 5; }
+    if (name === 'Охлосундук') { playerData.duli += 150; playerData.sferi += 15; }
+    if (name === 'Ультрасундук') { playerData.duli += 300; playerData.sferi += 30; }
   }
 
   saveData();
-  showAlert('🎁', 'Награда получена!', alertText);
+  showAlert('🎁', 'Награда получена!', `Вы забрали: <b>${name}</b>`);
 };
 
 function updateShopSkinsState() {
@@ -2005,7 +2036,7 @@ function renderSkins(hero) {
       playerData.selectedSkins[hero] = skinId;
       saveData();
       renderSkins(hero);
-      updateLobbySelection(); // Обновляем иконку в лобби
+      updateLobbySelection();
     };
     
     div.innerHTML = `
@@ -2029,7 +2060,7 @@ window.openAvatarSelect = function() {
     div.onclick = () => {
       playerData.avatarId = av;
       saveData();
-      openAvatarSelect(); // Перерисовать
+      openAvatarSelect();
       document.getElementById('profile-avatar-img').style.backgroundImage = `url('img/${av}.jpg')`;
     };
     grid.appendChild(div);
@@ -2122,7 +2153,7 @@ let gameRunning = false;
 let currentMode = 'Тренировка';
 let currentMap = 'Компьютерный центр';
 let selectedHero = 'Vitya';
-let currentSeason = 0; // 0 - Сезон 1, 1 - Сезон 2
+let currentSeason = 0;
 
 function showRandomPhrase(heroType) {
   const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : 'bubble-artem'))));
@@ -2770,56 +2801,41 @@ function updateBot(bot, dt) {
 function finishBattle(isWin, reason) {
   gameOver = true;
   gameRunning = false;
-  
-  // Сортировка по очкам (киллам)
-  const sorted = [player, ...bots].sort((a,b) => b.score - a.score);
-  const playerPlace = sorted.indexOf(player) + 1; // 1, 2, 3...
+  winnerName = isWin ? 'Вы' : (reason === 'time' ? 'По очкам' : 'Боты');
 
   let sferiDelta = 0, duliDelta = 0;
   let resultText = '';
-  let titleText = '';
 
   if (currentMode === 'Тренировка') {
-    // В тренировке бой не заканчивается, эта ветка не должна срабатывать
-    return;
-  } 
-  
-  if (currentMode === 'PVP-Битва' || currentMode === 'Останется только один') {
-    // Сбалансированные награды
-    if (playerPlace === 1) {
-      sferiDelta = 25; duliDelta = 150; titleText = 'ПОБЕДА! (1 МЕСТО)';
-    } else if (playerPlace === 2) {
-      sferiDelta = 15; duliDelta = 100; titleText = '2 МЕСТО';
-    } else if (playerPlace === 3) {
-      sferiDelta = 10; duliDelta = 75; titleText = '3 МЕСТО';
-    } else if (playerPlace === 4) {
-      sferiDelta = 5; duliDelta = 50; titleText = '4 МЕСТО';
-    } else {
-      sferiDelta = -2; duliDelta = 20; titleText = 'ПОРАЖЕНИЕ...';
-    }
+    resultText = 'Тренировка окончена!';
+    // В тренировке нет наград, но и нет штрафов
+  } else if (currentMode === 'PVP-Битва') {
+    const sorted = [player, ...bots].sort((a, b) => b.score - a.score);
+    const place = sorted.indexOf(player) + 1;
+    
+    if (place === 1) { sferiDelta = 10; duliDelta = 100; resultText = '1-е место в PVP-Битве!'; }
+    else if (place === 2) { sferiDelta = 7; duliDelta = 70; resultText = '2-е место в PVP-Битве!'; }
+    else if (place === 3) { sferiDelta = 5; duliDelta = 50; resultText = '3-е место в PVP-Битве!'; }
+    else if (place === 4) { sferiDelta = 3; duliDelta = 30; resultText = '4-е место в PVP-Битве!'; }
+    else { sferiDelta = 1; duliDelta = 10; resultText = 'Вы проиграли в PVP-Битве...'; }
+  } else if (currentMode === 'Останется только один') {
+    if (isWin) { sferiDelta = 20; duliDelta = 200; resultText = 'Королевская победа!'; }
+    else { sferiDelta = 2; duliDelta = 20; resultText = 'Вас одолели...'; }
   }
 
   playerData.sferi = Math.max(0, playerData.sferi + sferiDelta);
   playerData.duli = Math.max(0, playerData.duli + duliDelta);
-  
-  // Проверка на открытие 2 сезона
-  if (playerData.sferi >= 500 && !localStorage.getItem('season2Unlocked')) {
-    localStorage.setItem('season2Unlocked', 'true');
-    setTimeout(() => {
-      showAlert('🏆', '1 СЕЗОН ЗАВЕРШЕН!', 'Второй сезон "ТЦ Калина" теперь открыт!', 'ОТЛИЧНО');
-    }, 1000);
-  }
-
   saveData();
 
-  document.getElementById('res-title').textContent = titleText;
-  document.getElementById('res-title').style.color = playerPlace <= 3 ? '#4fd6a0' : '#ff4d4d';
-  document.getElementById('res-subtitle').textContent = isWin ? 'Вы победили в PVP-Битве!' : 'Вы заняли ' + playerPlace + ' место.';
+  document.getElementById('res-title').textContent = isWin ? 'ПОБЕДА!' : (currentMode === 'Тренировка' ? 'ТРЕНИРОВКА' : 'ПОРАЖЕНИЕ');
+  document.getElementById('res-title').style.color = isWin ? '#4fd6a0' : (currentMode === 'Тренировка' ? '#ffd700' : '#ff4d4d');
+  document.getElementById('res-subtitle').textContent = resultText;
   document.getElementById('res-duli').textContent = (duliDelta > 0 ? '+' : '') + duliDelta;
   document.getElementById('res-sferi').textContent = (sferiDelta > 0 ? '+' : '') + sferiDelta;
   
   resultModal.classList.add('show');
 }
+
 function update(dt) {
   if (gameOver || !gameRunning) return;
 
@@ -2842,9 +2858,8 @@ function update(dt) {
       finishBattle(true, 'win');
       return;
     }
-    } else if (currentMode === 'Тренировка') {
-    // В тренировке нет конца, просто играем
   }
+  // В тренировке нет условия победы/поражения
 
   pickupTimer -= dt;
   if (pickupTimer <= 0) {
@@ -3520,7 +3535,6 @@ function drawLasers(){
       for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
       const ex = sx + Math.cos(h.aim) * maxLen; const ey = sy + Math.sin(h.aim) * maxLen;
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-      // КРАСНЫЙ ЛАЗЕР
       ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,60,60,0.16)'; ctx.lineWidth = 42; ctx.stroke();
       ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,90,90,0.30)'; ctx.lineWidth = 23; ctx.stroke();
       ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,185,185,0.85)'; ctx.lineWidth = 10; ctx.stroke();
