@@ -90,14 +90,19 @@
   .announce-banner:hover {transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 180, 80, 0.4); border-color: #ffd700;}
   .announce-banner.artem { bottom: 100px; border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);}
   .announce-banner.artem:hover { border-color: #fff4a3; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
+  .announce-banner.dmitry { bottom: 240px; border-color: #7ff0ff; box-shadow: 0 10px 30px rgba(127, 240, 255, 0.2);}
+  .announce-banner.dmitry:hover { border-color: #a8e0ff; box-shadow: 0 15px 40px rgba(127, 240, 255, 0.4); }
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
   .announce-banner.artem .announce-img { background-image: url('img/Artem.jpg'); border-right-color: #ffd700; }
+  .announce-banner.dmitry .announce-img { border-right-color: #7ff0ff; }
   .announce-info {padding: 12px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; flex: 1;}
   .announce-tag {font-size: 11px; font-weight: 900; color: #ffb450; letter-spacing: 1px; text-transform: uppercase;}
   .announce-banner.artem .announce-tag { color: #ffd700; }
+  .announce-banner.dmitry .announce-tag { color: #7ff0ff; }
   .announce-name {font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); line-height: 1.1; margin-top: 2px;}
   .announce-timer {font-size: 13px; font-weight: 800; color: #4fd6a0; background: rgba(79,214,160,0.15); padding: 4px 10px; border-radius: 6px; display: inline-block; width: fit-content; margin-top: 6px; border: 1px solid rgba(79,214,160,0.4); text-transform: uppercase;}
   .announce-banner.artem .announce-timer { color: #ffd700; background: rgba(255,215,0,0.15); border-color: rgba(255,215,0,0.4); }
+  .announce-banner.dmitry .announce-timer { color: #7ff0ff; background: rgba(127,240,255,0.15); border-color: rgba(127,240,255,0.4); }
 
   #lobby-bottom{position:relative; z-index:2; display:flex; justify-content:center; gap:10px; padding:12px 22px 18px;}
   .tab-btn{display:flex; flex-direction:column; align-items:center; gap:4px; width:120px; padding:12px 8px; cursor:pointer; background:rgba(20,30,42,0.75); border:1px solid rgba(90,140,180,0.35); border-radius:12px; color:#b8cde0; font-size:12px; font-weight:600; transition:all .15s; backdrop-filter:blur(6px);}
@@ -145,6 +150,7 @@
   .fighter-card.fialka .fighter-card-icon { background-image: url('img/Fialka.jpg'); }
   .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
   .fighter-card.artem .fighter-card-icon { background-image: url('img/Artem.jpg'); }
+  .fighter-card.dmitry .fighter-card-icon { background-image: url('img/Characters (2).jpg'); background-position: center; }
 
   .fighter-card .fighter-card-level { position: absolute; top: 10px; left: 10px; z-index: 4; background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700; color: #ffd700; font-size: 12px; font-weight: 900; padding: 3px 8px; border-radius: 8px; }
 
@@ -524,7 +530,7 @@
         <div class="mini-icon" style="background-image:url('img/Techo_Box.jpg')"></div> 250
       </div>
       <div class="road-mini-node" id="mini-node-500">
-        <div class="mini-icon" style="background-image:url('img/Lesha.jpg')"></div> 500
+        <div class="mini-icon" style="background-image:url('img/Techo_Box.jpg')"></div> 500
       </div>
     </div>
   </div>
@@ -544,6 +550,16 @@
         <div class="announce-tag">Новый боец</div>
         <div class="announce-name">Артём</div>
         <div class="announce-timer">Доступен!</div>
+      </div>
+    </div>
+
+    <!-- Анонс Дмитрия -->
+    <div class="announce-banner dmitry" onclick="showDev('Дмитрий')">
+      <div class="announce-img" style="background-image:url('img/Characters (2).jpg'); background-position: center;"></div>
+      <div class="announce-info">
+        <div class="announce-tag">Скоро</div>
+        <div class="announce-name">Дмитрий</div>
+        <div class="announce-timer">В разработке</div>
       </div>
     </div>
 
@@ -632,7 +648,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 5 ИЗ 6</div>
+      <div id="fighters-count">БОЙЦОВ: 5 ИЗ 7</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -664,6 +680,13 @@
         <div class="fighter-card-level">Ур. 1</div>
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Артём</div>
+      </div>
+
+      <div class="fighter-card dmitry locked" id="card-dmitry" onclick="showDev('Дмитрий')">
+        <div class="fighter-card-level">Ур. 1</div>
+        <div class="fighter-card-icon"></div>
+        <div class="fighter-card-name">Дмитрий</div>
+        <div class="lock-timer">Скоро</div>
       </div>
 
       <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
@@ -1113,9 +1136,9 @@
             <div class="road-node-name">300 Дулей</div>
             <div class="road-node-cost">450 Сфер</div>
           </div>
-          <div class="road-node" id="node-500" onclick="claimReward(500, 'Боец: Лёха', 0, 'img/Lesha.jpg', true)">
-            <div class="road-node-icon" style="background-image:url('img/Lesha.jpg'); border-radius: 50%;"></div>
-            <div class="road-node-name">Боец: Лёха</div>
+          <div class="road-node" id="node-500" onclick="claimReward(500, 'Ультрасундук', 1, 'img/Techo_Box.jpg')">
+            <div class="road-node-icon" style="background-image:url('img/Techo_Box.jpg');"></div>
+            <div class="road-node-name">Ультрасундук</div>
             <div class="road-node-cost">500 Сфер</div>
           </div>
         </div>
@@ -1302,6 +1325,27 @@
           <div class="shop-item-desc">Скин для Василька</div>
           <div class="shop-item-price">800 Дулей</div>
           <button onclick="buySkin('Vasilek', 'prince', 800)">КУПИТЬ</button>
+        </div>
+        <div class="shop-item" id="skin-shop-vitya-golden">
+          <div class="shop-item-icon" style="background-image: url('img/Vitya.jpg'); filter: sepia(1) saturate(3) hue-rotate(10deg);"></div>
+          <div class="shop-item-name">Golden Bob Витя</div>
+          <div class="shop-item-desc">Золотой костюм и цилиндр. Золотой лазер!</div>
+          <div class="shop-item-price">1200 Дулей</div>
+          <button onclick="buySkin('Vitya', 'golden', 1200)">КУПИТЬ</button>
+        </div>
+        <div class="shop-item" id="skin-shop-artem-apothecary">
+          <div class="shop-item-icon" style="background-image: url('img/Artem.jpg'); filter: hue-rotate(90deg);"></div>
+          <div class="shop-item-name">Аптекарь Артём</div>
+          <div class="shop-item-desc">Средневековый аптекарь. Шприцы вокруг!</div>
+          <div class="shop-item-price">1000 Дулей</div>
+          <button onclick="buySkin('Artem', 'apothecary', 1000)">КУПИТЬ</button>
+        </div>
+        <div class="shop-item" id="skin-shop-artem-bartender">
+          <div class="shop-item-icon" style="background-image: url('img/Artem.jpg'); filter: hue-rotate(-30deg) saturate(1.5);"></div>
+          <div class="shop-item-name">Бармен Артём</div>
+          <div class="shop-item-desc">Стильный бармен. Бокалы вокруг!</div>
+          <div class="shop-item-price">1000 Дулей</div>
+          <button onclick="buySkin('Artem', 'bartender', 1000)">КУПИТЬ</button>
         </div>
       </div>
 
@@ -1514,7 +1558,8 @@ const MAX_HERO_LEVEL = 5;
 const SKINS_CONFIG = {
   Vitya: {
     base: { name: 'Базовый', icon: 'img/Vitya.jpg', color: '#3fa9f5', colorLight: '#a8e0ff', type: 'vitya_base' },
-    sport: { name: 'Спортсмен', icon: 'img/Skin_Vitya.jpg', color: '#2563eb', colorLight: '#60a5fa', type: 'vitya_sport' }
+    sport: { name: 'Спортсмен', icon: 'img/Skin_Vitya.jpg', color: '#2563eb', colorLight: '#60a5fa', type: 'vitya_sport' },
+    golden: { name: 'Golden Bob', icon: 'img/Vitya.jpg', color: '#ffd700', colorLight: '#fff4a3', type: 'vitya_golden' }
   },
   Lesha: {
     base: { name: 'Базовый', icon: 'img/Lesha.jpg', color: '#ff7a4d', colorLight: '#ffb99b', type: 'lesha_base' },
@@ -1529,7 +1574,9 @@ const SKINS_CONFIG = {
     prince: { name: 'Принц', icon: 'img/Skin_Vasilek.jpg', color: '#dc2626', colorLight: '#f87171', type: 'vasilek_prince' }
   },
   Artem: {
-    base: { name: 'Базовый', icon: 'img/Artem.jpg', color: '#3fa9f5', colorLight: '#a8e0ff', type: 'artem_base' }
+    base: { name: 'Базовый', icon: 'img/Artem.jpg', color: '#3fa9f5', colorLight: '#a8e0ff', type: 'artem_base' },
+    apothecary: { name: 'Аптекарь', icon: 'img/Artem.jpg', color: '#5cff5c', colorLight: '#a8ffa8', type: 'artem_apothecary' },
+    bartender: { name: 'Бармен', icon: 'img/Artem.jpg', color: '#ff9b6b', colorLight: '#ffccaa', type: 'artem_bartender' }
   }
 };
 
@@ -1833,9 +1880,12 @@ window.claimReward = function(reqSferi, name, amount, iconUrl, isHero = false) {
 function updateShopSkinsState() {
   const skins = [
     { id: 'skin-shop-vitya-sport', hero: 'Vitya', skin: 'sport' },
+    { id: 'skin-shop-vitya-golden', hero: 'Vitya', skin: 'golden' },
     { id: 'skin-shop-lesha-volley', hero: 'Lesha', skin: 'volley' },
     { id: 'skin-shop-fialka-princess', hero: 'Fialka', skin: 'princess' },
-    { id: 'skin-shop-vasilek-prince', hero: 'Vasilek', skin: 'prince' }
+    { id: 'skin-shop-vasilek-prince', hero: 'Vasilek', skin: 'prince' },
+    { id: 'skin-shop-artem-apothecary', hero: 'Artem', skin: 'apothecary' },
+    { id: 'skin-shop-artem-bartender', hero: 'Artem', skin: 'bartender' }
   ];
   
   skins.forEach(s => {
@@ -3309,6 +3359,17 @@ function drawHero(h){
       ctx.beginPath(); ctx.arc(0, 0, 5, 0, TAU); ctx.fillStyle = '#60a5fa'; ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#3b82f6'; ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, 8, 0, TAU); ctx.strokeStyle = 'rgba(59, 130, 246, 0.5)'; ctx.stroke();
       ctx.strokeStyle = '#fcd34d'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-8, -6); ctx.lineTo(8, -6); ctx.stroke();
+    } else if (h.skin === 'golden') {
+      g.addColorStop(0, '#ffd700'); g.addColorStop(1, '#b8860b'); 
+      ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); 
+      ctx.lineWidth = 2; ctx.strokeStyle = '#daa520'; ctx.stroke(); 
+      // Золотой цилиндр
+      ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -22, 20, 8, 2); ctx.fill();
+      ctx.fillStyle = '#b8860b'; ctx.fillRect(-12, -24, 24, 3);
+      ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
+      // Золотые пуговицы
+      ctx.fillStyle = '#fff4a3'; ctx.beginPath(); ctx.arc(0, -2, 2, 0, TAU); ctx.fill();
+      ctx.beginPath(); ctx.arc(0, 4, 2, 0, TAU); ctx.fill();
     } else {
       g.addColorStop(0, '#f87171'); g.addColorStop(1, '#b91c1c'); 
       ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#7f1d1d'; ctx.stroke(); 
@@ -3365,10 +3426,25 @@ function drawHero(h){
   }
   
   else if (isArtem) { 
-    g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
-    ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
-    // Очки
-    ctx.fillStyle = '#60a5fa'; ctx.fillRect(-8, -6, 6, 4); ctx.fillRect(2, -6, 6, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(-8, -6, 6, 4); ctx.strokeRect(2, -6, 6, 4);
+    if (h.skin === 'apothecary') {
+      g.addColorStop(0, '#4ade80'); g.addColorStop(1, '#166534'); 
+      ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#14532d'; ctx.stroke();
+      // Мантия аптекаря
+      ctx.fillStyle = '#854d0e'; roundRect(ctx, -12, -8, 24, 20, 3); ctx.fill();
+      ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(0, -4, 3, 0, TAU); ctx.fill();
+    } else if (h.skin === 'bartender') {
+      g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
+      ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
+      // Рубашка бармена + бабочка
+      ctx.fillStyle = '#fff'; roundRect(ctx, -9, -8, 18, 14, 2); ctx.fill();
+      ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(-4, -2); ctx.lineTo(0, 0); ctx.lineTo(4, -2); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#000'; ctx.fillRect(-1, -4, 2, 6);
+    } else {
+      g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
+      ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
+      // Очки
+      ctx.fillStyle = '#60a5fa'; ctx.fillRect(-8, -6, 6, 4); ctx.fillRect(2, -6, 6, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(-8, -6, 6, 4); ctx.strokeRect(2, -6, 6, 4);
+    }
   }
   
   else { g.addColorStop(0, '#3b82f6'); g.addColorStop(1, '#1e40af'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke(); ctx.fillStyle = '#60a5fa'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke(); }
@@ -3535,11 +3611,17 @@ function drawLasers(){
       for (const r of rocks){ const t2 = segCircle(sx, sy, ex0, ey0, r.x, r.y, r.r); if (t2 >= 0) maxLen = Math.min(maxLen, t2 * 1100); }
       const ex = sx + Math.cos(h.aim) * maxLen; const ey = sy + Math.sin(h.aim) * maxLen;
       ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,60,60,0.16)'; ctx.lineWidth = 42; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,90,90,0.30)'; ctx.lineWidth = 23; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = 'rgba(255,185,185,0.85)'; ctx.lineWidth = 10; ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
-      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU); ctx.fillStyle = 'rgba(255,160,160,0.35)'; ctx.fill();
+      let laserOuter = 'rgba(255,60,60,0.16)', laserMid = 'rgba(255,90,90,0.30)', laserInner = 'rgba(255,185,185,0.85)', laserCore = '#ffffff', laserEnd = 'rgba(255,160,160,0.35)';
+      if (h.skin === 'sport') {
+        laserOuter = 'rgba(37,99,235,0.16)'; laserMid = 'rgba(59,130,246,0.30)'; laserInner = 'rgba(147,197,253,0.85)'; laserCore = '#e0f2fe'; laserEnd = 'rgba(96,165,250,0.35)';
+      } else if (h.skin === 'golden') {
+        laserOuter = 'rgba(255,180,0,0.20)'; laserMid = 'rgba(255,215,0,0.35)'; laserInner = 'rgba(255,244,163,0.9)'; laserCore = '#ffffff'; laserEnd = 'rgba(255,215,0,0.4)';
+      }
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = laserOuter; ctx.lineWidth = 42; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = laserMid; ctx.lineWidth = 23; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = laserInner; ctx.lineWidth = 10; ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.strokeStyle = laserCore; ctx.lineWidth = 4 + Math.sin(t*42) * 1.6; ctx.stroke();
+      ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU); ctx.fillStyle = laserEnd; ctx.fill();
       ctx.restore();
     }
     
@@ -3574,12 +3656,31 @@ function drawArtemRockets(){
       ctx.translate(rx, ry);
       ctx.rotate(angle + Math.PI/2);
       
-      ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 8;
-      ctx.beginPath(); ctx.moveTo(-5, -3); ctx.lineTo(5, -3); ctx.arc(5, 0, 3, -Math.PI/2, Math.PI/2); ctx.lineTo(-5, 3); ctx.closePath();
-      ctx.fillStyle = 'rgba(255, 102, 204, 0.6)'; ctx.fill(); 
-      ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 1; ctx.stroke();
-      ctx.beginPath(); ctx.arc(-2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
-      ctx.beginPath(); ctx.arc(2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      if (h.skin === 'apothecary') {
+        // Шприц
+        ctx.shadowColor = '#5cff5c'; ctx.shadowBlur = 6;
+        ctx.fillStyle = '#e2e8f0'; roundRect(ctx, -3, -8, 6, 12, 1); ctx.fill();
+        ctx.fillStyle = '#5cff5c'; ctx.fillRect(-2, -10, 4, 3);
+        ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.strokeRect(-3, -8, 6, 12);
+        ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, 9); ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5; ctx.stroke();
+      } else if (h.skin === 'bartender') {
+        // Бокал
+        ctx.shadowColor = '#ff9b6b'; ctx.shadowBlur = 6;
+        ctx.strokeStyle = '#ffccaa'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(-4, 2); ctx.lineTo(4, 2); ctx.lineTo(5, -6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, 2); ctx.lineTo(0, 6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-3, 6); ctx.lineTo(3, 6); ctx.stroke();
+        ctx.fillStyle = 'rgba(255, 155, 107, 0.4)'; 
+        ctx.beginPath(); ctx.moveTo(-4, -4); ctx.lineTo(-3.5, 1); ctx.lineTo(3.5, 1); ctx.lineTo(4, -4); ctx.closePath(); ctx.fill();
+      } else {
+        // Стандартный фаллоиммитатор-ракета
+        ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 8;
+        ctx.beginPath(); ctx.moveTo(-5, -3); ctx.lineTo(5, -3); ctx.arc(5, 0, 3, -Math.PI/2, Math.PI/2); ctx.lineTo(-5, 3); ctx.closePath();
+        ctx.fillStyle = 'rgba(255, 102, 204, 0.6)'; ctx.fill(); 
+        ctx.strokeStyle = '#ff66cc'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.beginPath(); ctx.arc(-2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+        ctx.beginPath(); ctx.arc(2, 4, 1.5, 0, TAU); ctx.fillStyle = '#ff66cc'; ctx.fill();
+      }
       
       ctx.restore();
     }
