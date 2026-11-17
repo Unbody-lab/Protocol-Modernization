@@ -291,26 +291,10 @@
   .season-1-bg { background: url('img/1_Season.jpg') center/cover no-repeat; }
   .season-1-bg .road-title { color: #ffffff; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #7ff0ff, 0 0 40px #7ff0ff, 0 0 80px #7ff0ff; }
   
-  /* Сезон 2 (Закрыт) */
+  /* Сезон 2 (ОТКРЫТ) */
   .season-2-bg { background: url('img/2_Season.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38,#2a3a4a); }
-  .season-2-bg::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.6); z-index: 1; }
   .season-2-bg .road-title { color: #ffd700; text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffaa00, 0 0 40px #ffaa00; z-index: 2; position: relative; }
   
-  .locked-season-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 3; background: rgba(10,15,22,0.7); backdrop-filter: blur(4px); }
-  .locked-season-icon { font-size: 80px; margin-bottom: 20px; text-shadow: 0 0 20px #000; }
-  .locked-season-text { font-size: 24px; font-weight: 900; color: #fff; text-shadow: 0 2px 10px #000; text-align: center; }
-  .locked-season-sub { font-size: 16px; color: #ccc; margin-top: 10px; }
-  
-  /* Оверлей завершения 1 сезона */
-  #season-complete-overlay {
-    position: fixed; inset: 0; z-index: 500; background: rgba(0,0,0,0.85);
-    display: none; flex-direction: column; align-items: center; justify-content: center;
-    backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.5s;
-  }
-  #season-complete-overlay.show { display: flex; opacity: 1; }
-  .season-complete-title { font-size: 64px; font-weight: 900; color: #ffd700; text-shadow: 0 0 30px #ffd700, 0 0 60px #ffaa00; margin-bottom: 20px; animation: popIn 0.6s ease-out; }
-  .season-complete-sub { font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 2px 10px #000; animation: fadeIn 1s ease-out; }
-
   .road-bg-image { width: 100%; height: 220px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
   
   .road-title { 
@@ -443,11 +427,7 @@
 </head>
 <body>
 
-<!-- Оверлей завершения сезона -->
-<div id="season-complete-overlay">
-  <div class="season-complete-title">1 СЕЗОН ЗАВЕРШЕН!</div>
-  <div class="season-complete-sub">2 СЕЗОН "ТЦ КАЛИНА" ОТКРЫТ!</div>
-</div>
+<!-- Оверлей завершения сезона УДАЛЕН -->
 
 <!-- Стильное уведомление -->
 <div id="custom-alert">
@@ -481,15 +461,21 @@
   </div>
 </div>
 
+<!-- Музыка лобби -->
 <audio id="bg-music-lobby" loop><source src="sounds/lobby.mp3" type="audio/mpeg"></audio>
+<!-- Музыка боя (общая fallback) -->
 <audio id="bg-music-battle" loop><source src="sounds/battle.mp3" type="audio/mpeg"></audio>
+<!-- Музыка карт -->
+<audio id="bg-music-compcenter" loop><source src="sounds/compcenter.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music-backyard" loop><source src="sounds/backyard.mp3" type="audio/mpeg"></audio>
+<audio id="bg-music-gym" loop><source src="sounds/gym.mp3" type="audio/mpeg"></audio>
 
 <canvas id="game"></canvas>
 <div id="hint">WASD — движение &nbsp;·&nbsp; ЛКМ — атака &nbsp;·&nbsp; ПРОБЕЛ / ПКМ — ульта &nbsp;·&nbsp; ESC — лобби</div>
 
 <div id="start-screen" class="screen hidden">
   <div class="screen-bg"></div>
-  <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
+  <div id="start-logo">Protocol: Modernization<small>ПОЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
   <div id="start-version">PRE-ALPHA 0.4.5</div>
 </div>
@@ -580,7 +566,6 @@
     <div class="tab-btn" onclick="openRoadModal()"><span class="icon">🏆</span> Дорога Славы</div>
   </div>
 </div>
-
 <!-- МОДАЛКА АККАУНТА -->
 <div id="auth-modal">
   <div id="auth-card">
@@ -1044,7 +1029,7 @@
       </div>
     </div>
 
-    <!-- ШАГ 2: ВЫБОР КАРТЫ (ПОЯВЛЯЕТСЯ СРАЗУ ПОСЛЕ КЛИКА ПО РЕЖИМУ) -->
+    <!-- ШАГ 2: ВЫБОР КАРТЫ -->
     <div id="step-map" style="display: none;">
       <h2 style="color: #7ff0ff;">ВЫБЕРИТЕ КАРТУ</h2>
       <div class="mode-grid" style="justify-content: center;">
@@ -1078,8 +1063,7 @@
 
   </div>
 </div>
-
-<!-- ДОРОГА СЛАВЫ (ОБНОВЛЕНА) -->
+<!-- ДОРОГА СЛАВЫ (СЕЗОН 2 ОТКРЫТ) -->
 <div id="road-modal">
   <div id="road-card">
     <button class="modal-close" onclick="closeRoadModal()">✕</button>
@@ -1118,7 +1102,7 @@
           </div>
           <div class="road-node" id="node-250" onclick="claimReward(250, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
-            <div class="road-node-name">Охлосундук</div>
+            <div class="road-node-name">Охлосунду</div>
             <div class="road-node-cost">250 Сфер</div>
           </div>
           <div class="road-node" id="node-300" onclick="claimReward(300, 'Дули', 200, 'img/Dul.jpg')">
@@ -1144,17 +1128,16 @@
         </div>
       </div>
 
-      <!-- Сезон 2 (Закрыт) -->
+      <!-- Сезон 2 (ОТКРЫТ — без замка) -->
       <div class="season-slide season-2-bg" id="season-2-slide">
         <div class="road-bg-image">
           <div class="road-title">2 СЕЗОН "ТЦ КАЛИНА"</div>
+          <div class="road-progress-bar">
+            <div class="road-progress-fill" id="road-ui-progress-2"></div>
+            <div class="road-progress-text" id="road-ui-progress-text-2">0 / 1000</div>
+          </div>
         </div>
-        <div class="locked-season-overlay" id="season-2-lock-overlay">
-          <div class="locked-season-icon">🔒</div>
-          <div class="locked-season-text">Требуется 500 сфер</div>
-          <div class="locked-season-sub">Пройдите 1 сезон, чтобы открыть</div>
-        </div>
-        <div class="road-track" id="season-2-track" style="display: none;">
+        <div class="road-track" id="season-2-track">
           <!-- Награды Сезона 2 -->
           <div class="road-node" id="node-530" onclick="claimReward(530, 'Осколки', 50, 'img/Poop.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Poop.jpg');"></div>
@@ -1179,7 +1162,7 @@
           <div class="road-node" id="node-650" onclick="claimReward(650, 'Дули', 200, 'img/Dul.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Dul.jpg');"></div>
             <div class="road-node-name">200 Дулей</div>
-            <div class="road-node-cost">650 Сфер</div>
+            <div class="road-node-cost">650 Сер</div>
           </div>
           <div class="road-node" id="node-720" onclick="claimReward(720, 'Охлосундук', 1, 'img/Ohlo_Box.jpg')">
             <div class="road-node-icon" style="background-image:url('img/Ohlo_Box.jpg');"></div>
@@ -1445,7 +1428,6 @@
     <button onclick="hideDev()">ПОНЯТНО</button>
   </div>
 </div>
-
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database-compat.js"></script>
@@ -1528,7 +1510,7 @@ const DEFAULT_DATA = {
   selectedSkins: { Vitya: 'base', Lesha: 'base', Fialka: 'base', Vasilek: 'base', Artem: 'base' },
   friends: [],
   claimedRewards: [],
-  season2Unlocked: false
+  season2Unlocked: true  // Сезон 2 сразу открыт
 };
 
 let playerData;
@@ -1541,7 +1523,8 @@ try {
   for (const k in DEFAULT_DATA.selectedSkins) if (!(k in playerData.selectedSkins)) playerData.selectedSkins[k] = 'base';
   if (!playerData.friends) playerData.friends = [];
   if (!playerData.claimedRewards) playerData.claimedRewards = [];
-  if (playerData.season2Unlocked === undefined) playerData.season2Unlocked = false;
+  // Сезон 2 всегда открыт
+  playerData.season2Unlocked = true;
 } catch(e) { playerData = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
 
 window.playerData = playerData;
@@ -1660,7 +1643,7 @@ window.loginAccount = function() {
       closeAuthModal();
       updateUI();
     } else {
-      showAlert('❌', 'Ошибка', 'Пользователь не найден. Зарегистрируйтесь!');
+      showAlert('❌', 'Ошибка', 'Пользователь не найден. Зарегистрирутесь!');
     }
   }).catch(e => showAlert('❌', 'Ошибка сети', e.message));
 };
@@ -1767,11 +1750,18 @@ function updateUI() {
   document.getElementById('road-ui-progress').style.width = prog + '%';
   document.getElementById('road-ui-progress-text').textContent = Math.min(500, playerData.sferi) + ' / 500';
 
+  // Прогресс сезона 2
+  const prog2 = playerData.sferi >= 500 ? Math.min(100, ((playerData.sferi - 500) / 500) * 100) : 0;
+  const prog2El = document.getElementById('road-ui-progress-2');
+  const prog2Text = document.getElementById('road-ui-progress-text-2');
+  if (prog2El) prog2El.style.width = prog2 + '%';
+  if (prog2Text) prog2Text.textContent = Math.max(0, Math.min(1000, playerData.sferi)) + ' / 1000';
+
   document.getElementById('mini-node-50').classList.toggle('unlocked', playerData.sferi >= 50);
   document.getElementById('mini-node-250').classList.toggle('unlocked', playerData.sferi >= 250);
   document.getElementById('mini-node-500').classList.toggle('unlocked', playerData.sferi >= 500);
 
-  // Лёха открывается на 50 сфер!
+  // Лёха открывается на 50 сфер
   if (playerData.sferi >= 50) {
     playerData.leshaUnlocked = true;
     const cardLesha = document.getElementById('card-lesha');
@@ -1789,19 +1779,7 @@ function updateUI() {
     }
   }
 
-  // Открытие 2 сезона
-  if (playerData.sferi >= 500 && !playerData.season2Unlocked) {
-    playerData.season2Unlocked = true;
-    document.getElementById('season-2-lock-overlay').style.display = 'none';
-    document.getElementById('season-2-track').style.display = 'flex';
-    document.getElementById('season-complete-overlay').classList.add('show');
-    setTimeout(() => {
-      document.getElementById('season-complete-overlay').classList.remove('show');
-    }, 3500);
-    saveData();
-  }
-
-  // Отрисовка нод в дороге славы
+  // Отрисовка нод в дороге славы (сезон 1)
   const rewards1 = [50, 75, 100, 150, 250, 300, 400, 450, 500];
   rewards1.forEach(req => {
     const node = document.getElementById('node-' + req);
@@ -1818,6 +1796,7 @@ function updateUI() {
     }
   });
 
+  // Сезон 2 ноды
   const rewards2 = [530, 540, 580, 620, 650, 720, 740, 780, 810, 830, 870, 900, 920, 930, 940, 980, 990, 1000];
   rewards2.forEach(req => {
     const node = document.getElementById('node-' + req);
@@ -1970,7 +1949,7 @@ window.buyChest = function(type, priceOskolki, priceDuli) {
 
 window.buySkin = function(hero, skinId, price) {
   if (playerData.unlockedSkins[hero].includes(skinId)) return showAlert('⚠️', 'Уже куплено', 'Этот скин уже есть в вашей коллекции.');
-  if (playerData.duli < price) return showAlert('❌', 'Недостаточно средств', 'Вам не хватает Дулей!');
+  if (playerData.duli < price) return showAlert('❌', 'Недостаточно срдств', 'Вам не хватает Дулей!');
   
   playerData.duli -= price;
   playerData.unlockedSkins[hero].push(skinId);
@@ -1995,7 +1974,7 @@ window.openUpgrade = function(type) {
 
   const modal = document.getElementById('upgrade-modal');
   document.getElementById('upg-hero-img').style.backgroundImage = `url('img/${type}.jpg')`;
-  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : (type === 'Artem' ? 'Артём' : 'Василёк');
+  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёа' : type === 'Fialka' ? 'Фиалка' : (type === 'Artem' ? 'Артём' : 'Василёк');
   document.getElementById('upg-hero-level').textContent = isMax ? `Уровень ${lvl} — МАКСИМУМ` : `Уровень ${lvl} → ${lvl + 1}`;
 
   const statsEl = document.getElementById('upg-stats');
@@ -2198,6 +2177,9 @@ const heroModalArtem = document.getElementById('hero-modal-artem');
 
 const bgMusicLobby = document.getElementById('bg-music-lobby');
 const bgMusicBattle = document.getElementById('bg-music-battle');
+const bgMusicCompCenter = document.getElementById('bg-music-compcenter');
+const bgMusicBackyard = document.getElementById('bg-music-backyard');
+const bgMusicGym = document.getElementById('bg-music-gym');
 
 let gameRunning = false;
 let currentMode = 'Тренировка';
@@ -2217,8 +2199,32 @@ function showRandomPhrase(heroType) {
   setTimeout(() => bubble.classList.remove('show'), 3500);
 }
 
-function playLobbyMusic() { bgMusicBattle.pause(); bgMusicLobby.volume = 0.5; bgMusicLobby.play().catch(e=>{}); }
-function playBattleMusic() { bgMusicLobby.pause(); bgMusicBattle.volume = 0.5; bgMusicBattle.play().catch(e=>{}); }
+// ====== МУЗЫКА ПО КАРТАМ ======
+function playLobbyMusic() {
+  bgMusicBattle.pause();
+  bgMusicCompCenter.pause();
+  bgMusicBackyard.pause();
+  bgMusicGym.pause();
+  bgMusicLobby.currentTime = 0;
+  bgMusicLobby.volume = 0.5;
+  bgMusicLobby.play().catch(e=>{});
+}
+
+function playBattleMusic() {
+  bgMusicLobby.pause();
+  bgMusicCompCenter.pause();
+  bgMusicBackyard.pause();
+  bgMusicGym.pause();
+  
+  let track = bgMusicBattle;
+  if (currentMap === 'Компьютерный центр') track = bgMusicCompCenter;
+  else if (currentMap === 'Задний двор') track = bgMusicBackyard;
+  else if (currentMap === 'Спортзал') track = bgMusicGym;
+  
+  track.currentTime = 0;
+  track.volume = 0.5;
+  track.play().catch(e=>{});
+}
 
 window.goToLobby = function(){ startScreen.classList.add('hidden'); lobbyScreen.classList.remove('hidden'); playLobbyMusic(); updateLobbySelection(); updateUI(); initAudio(); };
 window.openFightersModal = function(){ fightersModal.classList.add('show'); };
@@ -2317,7 +2323,7 @@ function updateSeasonView() {
   document.getElementById('arrow-right').classList.toggle('hidden', currentSeason === 1);
 }
 
-// ОБНОВЛЕННЫЙ ВЫБОР РЕЖИМА (СРАЗУ К КАРТЕ)
+// ОБНОВЛЕННЫЙ ВЫБОР РЖИМА (СРАЗУ К КАРТЕ)
 window.selectMode = function(name, el){
   currentMode = name;
   document.getElementById('step-mode').style.display = 'none';
@@ -2383,7 +2389,6 @@ addEventListener('keydown', e => {
     else if (document.getElementById('custom-alert').classList.contains('show')) closeAlert();
   }
 });
-
 /* ============================================================
    ИГРОВАЯ ЛОГИКА
 ============================================================ */
@@ -2418,7 +2423,7 @@ let furniture = [];
 let bullets = [];
 let particles = [];
 let killFeed = []; 
-let pickups = []; // Бонусы
+let pickups = [];
 let matchSplashTimer = 0; 
 let gameOver = false;
 let gameTimeLeft = 0;
@@ -2858,7 +2863,6 @@ function finishBattle(isWin, reason) {
 
   if (currentMode === 'Тренировка') {
     resultText = 'Тренировка окончена!';
-    // В тренировке нет наград, но и нет штрафов
   } else if (currentMode === 'PVP-Битва') {
     const sorted = [player, ...bots].sort((a, b) => b.score - a.score);
     const place = sorted.indexOf(player) + 1;
@@ -2909,7 +2913,6 @@ function update(dt) {
       return;
     }
   }
-  // В тренировке нет условия победы/поражения
 
   pickupTimer -= dt;
   if (pickupTimer <= 0) {
@@ -3363,11 +3366,9 @@ function drawHero(h){
       g.addColorStop(0, '#ffd700'); g.addColorStop(1, '#b8860b'); 
       ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); 
       ctx.lineWidth = 2; ctx.strokeStyle = '#daa520'; ctx.stroke(); 
-      // Золотой цилиндр
       ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -22, 20, 8, 2); ctx.fill();
       ctx.fillStyle = '#b8860b'; ctx.fillRect(-12, -24, 24, 3);
       ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
-      // Золотые пуговицы
       ctx.fillStyle = '#fff4a3'; ctx.beginPath(); ctx.arc(0, -2, 2, 0, TAU); ctx.fill();
       ctx.beginPath(); ctx.arc(0, 4, 2, 0, TAU); ctx.fill();
     } else {
@@ -3429,20 +3430,17 @@ function drawHero(h){
     if (h.skin === 'apothecary') {
       g.addColorStop(0, '#4ade80'); g.addColorStop(1, '#166534'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#14532d'; ctx.stroke();
-      // Мантия аптекаря
       ctx.fillStyle = '#854d0e'; roundRect(ctx, -12, -8, 24, 20, 3); ctx.fill();
       ctx.fillStyle = '#fef08a'; ctx.beginPath(); ctx.arc(0, -4, 3, 0, TAU); ctx.fill();
     } else if (h.skin === 'bartender') {
       g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
-      // Рубашка бармена + бабочка
       ctx.fillStyle = '#fff'; roundRect(ctx, -9, -8, 18, 14, 2); ctx.fill();
       ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.moveTo(0, -6); ctx.lineTo(-4, -2); ctx.lineTo(0, 0); ctx.lineTo(4, -2); ctx.closePath(); ctx.fill();
       ctx.fillStyle = '#000'; ctx.fillRect(-1, -4, 2, 6);
     } else {
       g.addColorStop(0, '#1e293b'); g.addColorStop(1, '#0f172a'); 
       ctx.beginPath(); ctx.ellipse(0, 0, 11, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#000'; ctx.stroke();
-      // Очки
       ctx.fillStyle = '#60a5fa'; ctx.fillRect(-8, -6, 6, 4); ctx.fillRect(2, -6, 6, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(-8, -6, 6, 4); ctx.strokeRect(2, -6, 6, 4);
     }
   }
@@ -3657,14 +3655,12 @@ function drawArtemRockets(){
       ctx.rotate(angle + Math.PI/2);
       
       if (h.skin === 'apothecary') {
-        // Шприц
         ctx.shadowColor = '#5cff5c'; ctx.shadowBlur = 6;
         ctx.fillStyle = '#e2e8f0'; roundRect(ctx, -3, -8, 6, 12, 1); ctx.fill();
         ctx.fillStyle = '#5cff5c'; ctx.fillRect(-2, -10, 4, 3);
         ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.strokeRect(-3, -8, 6, 12);
         ctx.beginPath(); ctx.moveTo(0, 4); ctx.lineTo(0, 9); ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1.5; ctx.stroke();
       } else if (h.skin === 'bartender') {
-        // Бокал
         ctx.shadowColor = '#ff9b6b'; ctx.shadowBlur = 6;
         ctx.strokeStyle = '#ffccaa'; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(-4, 2); ctx.lineTo(4, 2); ctx.lineTo(5, -6); ctx.stroke();
@@ -3673,7 +3669,6 @@ function drawArtemRockets(){
         ctx.fillStyle = 'rgba(255, 155, 107, 0.4)'; 
         ctx.beginPath(); ctx.moveTo(-4, -4); ctx.lineTo(-3.5, 1); ctx.lineTo(3.5, 1); ctx.lineTo(4, -4); ctx.closePath(); ctx.fill();
       } else {
-        // Стандартный фаллоиммитатор-ракета
         ctx.shadowColor = '#ff66cc'; ctx.shadowBlur = 8;
         ctx.beginPath(); ctx.moveTo(-5, -3); ctx.lineTo(5, -3); ctx.arc(5, 0, 3, -Math.PI/2, Math.PI/2); ctx.lineTo(-5, 3); ctx.closePath();
         ctx.fillStyle = 'rgba(255, 102, 204, 0.6)'; ctx.fill(); 
