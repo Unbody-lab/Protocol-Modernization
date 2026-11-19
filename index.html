@@ -293,7 +293,7 @@
   
   /* Сезон 2 (ОТКРЫТ) */
   .season-2-bg { background: url('img/2_Season.jpg') center/cover no-repeat, linear-gradient(135deg,#1e2a38,#2a3a4a); }
-  .season-2-bg .road-title { color: #ffd700; text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffaa00, 0 0 40px #ffaa00; z-index: 2; position: relative; }
+  .season-2-bg .road-title { color: #ffd700; text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 20px #ffaa00, 0 0 40px #ffaa00; }
   
   .road-bg-image { width: 100%; height: 220px; position: relative; display: flex; flex-direction: column; justify-content: flex-end; padding: 20px; }
   
@@ -1587,7 +1587,7 @@ const HERO_BASE = {
   Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
   Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 },
   Artem:   { dmg: 25, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200 },
-  Dmitry:  { dmg: 22, spd: 208, hp: 100, rarity: 'РЕДКИЙ', cost: 200 }
+  Dmitry:  { dmg: 14, spd: 208, hp: 100, rarity: 'РЕДКИЙ', cost: 200 }
 };
 const MAX_HERO_LEVEL = 5;
 
@@ -2530,7 +2530,7 @@ function createHero(id, type, isBot) {
   else if (isFialka) { maxAmmo = MAX_AMMO_FIALKA; reloadTime = RELOAD_FIALKA; }
   else if (type === 'Vasilek') { maxAmmo = MAX_AMMO_VASILEK; reloadTime = RELOAD_VASILEK; }
   else if (isArtem) { maxAmmo = MAX_AMMO_ARTEM; reloadTime = RELOAD_ARTEM; }
-  else if (isDmitry) { maxAmmo = 999; reloadTime = 0; } // Лазер — бесконечный
+  else if (isDmitry) { maxAmmo = 100; reloadTime = 2.5; } // Заряд лазера 0-100
 
   if (SKINS_CONFIG[type] && SKINS_CONFIG[type][skin]) {
     color = SKINS_CONFIG[type][skin].color;
@@ -2764,26 +2764,23 @@ function tryAttack(h, dt = 0.016) {
   spawnHitParticles(h.x + Math.cos(a)*30, h.y + Math.sin(a)*30, bColor, 6);
 }
  else if (h.type === 'Dmitry') {
-  // Ближний бой — щупальца
-  const enemies = getAllEnemies(h);
-  let meleeTarget = null, bestMelee = 90;
-  for (const e of enemies) {
+  const enemies2 = getAllEnemies(h);
+  let mt = null, bm = 90;
+  for (const e of enemies2) {
     if (!e.alive) continue;
     const d = Math.hypot(h.x - e.x, h.y - e.y);
-    if (d < bestMelee) { bestMelee = d; meleeTarget = e; }
+    if (d < bm) { bm = d; mt = e; }
   }
-  if (meleeTarget) {
-    h.attackCd = 0.7;
-    h.swing = 0.3;
-    damage(meleeTarget, h.dmg * 1.8, h);
-    const ang = Math.atan2(meleeTarget.y - h.y, meleeTarget.x - h.x);
-    meleeTarget.kbx = Math.cos(ang) * 280; meleeTarget.kby = Math.sin(ang) * 280;
-    spawnHitParticles(meleeTarget.x, meleeTarget.y, '#a8b8c8', 14);
+  if (mt) {
+    h.attackCd = 0.7; h.swing = 0.3;
+    damage(mt, h.dmg * 1.8, h);
+    const ang = Math.atan2(mt.y - h.y, mt.x - h.x);
+    mt.kbx = Math.cos(ang) * 280; mt.kby = Math.sin(ang) * 280;
+    spawnHitParticles(mt.x, mt.y, '#a8b8c8', 14);
     return;
   }
-  // Дальний бой — лазер (накапливается)
-  h.laserFiring = true;
-  h.laserCharge = Math.min(DMITRY_LASER_MAX_CHARGE, (h.laserCharge || 0) + dt);
+  if (h.reloading <= 0 && h.ammo > 0) h.laserFiring = true;
+  return;
 }
 
   if (h.ammo <= 0 && h.reloading <= 0) h.reloading = h.reloadTime * (h.buffBattery > 0 ? 0.5 : 1);
@@ -2822,9 +2819,9 @@ function activateUlt(h) {
   else if (h.skin === 'bartender') { megaType = 'megaglass'; megaColor = '#ffccaa'; }
   bullets.push({ x: h.x, y: h.y, vx: Math.cos(h.aim) * 400, vy: Math.sin(h.aim) * 400, r: 30, dmg: 0, life: 3.0, type: megaType, owner: h, color: megaColor, exploded: false, spawnTimer: 0 });
 }
- else if (h.type === 'Dmitry') {
-  h.ultActive = true; h.ultTime = 8.0;
-  // Клешня-постройка
+else if (h.type === 'Dmitry') {
+  h.ultActive = false; // Дмитрий НЕ замирает!
+  if (h.claw) spawnHitParticles(h.claw.x, h.claw.y, '#a8b8c8', 15);
   h.claw = {
     x: h.x + Math.cos(h.aim) * 80,
     y: h.y + Math.sin(h.aim) * 80,
@@ -2873,7 +2870,8 @@ function updateBot(bot, dt) {
     return;
   }
 
-  bot.attackCd = Math.max(0, bot.attackCd - dt);
+ if (bot.type === 'Dmitry') bot.laserFiring = false;
+ bot.attackCd = Math.max(0, bot.attackCd - dt);
   bot.swing = Math.max(0, bot.swing - dt);
   if (bot.reloading > 0) {
     bot.reloading -= dt;
@@ -2929,22 +2927,7 @@ function updateBot(bot, dt) {
       }
     }
    else if (bot.type === 'Dmitry') {
-  // Дмитрий стоит на месте, клешня работает
-  if (bot.claw) {
-    bot.claw.pulseTimer += dt;
-    if (bot.claw.pulseTimer >= 0.5) {
-      bot.claw.pulseTimer = 0;
-      const friends = [bot, ...bots.filter(b => b !== bot && b.alive)];
-      for (const f of friends) {
-        if (Math.hypot(f.x - bot.claw.x, f.y - bot.claw.y) < bot.claw.r + f.r) {
-          if (f.hp < f.maxHp) f.hp = Math.min(f.maxHp, f.hp + 15);
-          f.buffDiamond = Math.max(f.buffDiamond || 0, 1.0); // щит на 1 сек
-        }
-      }
-    }
-  }
-}
-if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; bot.claw = null; }
+if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; }
 return;
   }
 
@@ -3117,20 +3100,7 @@ function update(dt) {
     } else if (player.type === 'Artem') {
        // Стоит на месте
     }
-   else if (player.type === 'Dmitry') {
-  // Стоит на месте, клешня работает
-  if (player.claw) {
-    player.claw.pulseTimer += dt;
-    if (player.claw.pulseTimer >= 0.5) {
-      player.claw.pulseTimer = 0;
-      // Лечим себя
-      if (player.hp < player.maxHp) player.hp = Math.min(player.maxHp, player.hp + 15);
-      player.buffDiamond = Math.max(player.buffDiamond || 0, 1.0);
-    }
-  }
-}
-
-    if (player.ultTime <= 0) { player.ultActive = false; player.healZone = null; player.claw = null; }
+    if (player.ultTime <= 0) { player.ultActive = false; player.healZone = null; }
     
   } else {
     let mx = 0, my = 0;
@@ -3183,12 +3153,14 @@ function update(dt) {
 
   if (mouse.down && player.alive && player.stun <= 0) tryAttack(player, dt);
  // Лазер Дмитрия — накопление и выстрел
+// Лазер Дмитрия — накопление, разряд и выстрел
 if (player.type === 'Dmitry' && player.alive && player.stun <= 0 && !player.ultActive) {
-  if (mouse.down) {
+  if (mouse.down && player.ammo > 0 && player.reloading <= 0) {
     player.laserFiring = true;
     player.laserCharge = Math.min(DMITRY_LASER_MAX_CHARGE, (player.laserCharge || 0) + dt);
-    // Наносим урон по линии с учётом накопления
-    const chargeMult = 1 + (player.laserCharge / DMITRY_LASER_MAX_CHARGE) * 2; // до x3 урона
+    player.ammo -= dt * 33; // ~3 секунды непрерывной стрельбы
+    if (player.ammo <= 0) { player.ammo = 0; player.reloading = player.reloadTime; player.laserFiring = false; }
+    const chargeMult = 1 + (player.laserCharge / DMITRY_LASER_MAX_CHARGE) * 2;
     const enemies = getAllEnemies(player);
     const ex = player.x + Math.cos(player.aim) * 900;
     const ey = player.y + Math.sin(player.aim) * 900;
@@ -3202,10 +3174,14 @@ if (player.type === 'Dmitry' && player.alive && player.stun <= 0 && !player.ultA
     player.laserFiring = false;
     player.laserCharge = Math.max(0, (player.laserCharge || 0) - dt * 2);
   }
+} else { player.laserFiring = false; }
 }
 // Аналогично для ботов-Дмитриев
 for (const bot of bots) {
-  if (bot.type === 'Dmitry' && bot.alive && !bot.ultActive && bot.laserFiring) {
+  if (bot.type === 'Dmitry' && bot.alive && !bot.ultActive && bot.laserFiring && bot.ammo > 0 && bot.reloading <= 0) {
+    bot.laserCharge = Math.min(DMITRY_LASER_MAX_CHARGE, (bot.laserCharge || 0) + dt);
+    bot.ammo -= dt * 33;
+    if (bot.ammo <= 0) { bot.ammo = 0; bot.reloading = bot.reloadTime; bot.laserFiring = false; }
     const enemies = getAllEnemies(bot);
     const ex = bot.x + Math.cos(bot.aim) * 900;
     const ey = bot.y + Math.sin(bot.aim) * 900;
@@ -3216,6 +3192,9 @@ for (const bot of bots) {
         damage(e, bot.dmg * 0.3 * chargeMult * dt * 10, bot);
       }
     }
+  } else if (bot.type === 'Dmitry') {
+    bot.laserFiring = false;
+    bot.laserCharge = Math.max(0, (bot.laserCharge || 0) - dt * 2);
   }
 }
   if ((keys['Space'] || mouse.rightDown) && player.ult >= 100 && !player.ultActive && player.alive && player.stun <= 0) activateUlt(player);
@@ -3239,11 +3218,38 @@ for (const bot of bots) {
       if (bot.poisonTick > 0.5) { bot.poisonTick = 0; damage(bot, 3, null); spawnHitParticles(bot.x, bot.y, '#5cff5c', 3); }
     }
   }
-
+// Клешни Дмитрия: лечение, щит, уничтожение
+for (const h of [player, ...bots]) {
+  if (!h.claw) continue;
+  if (!h.alive) { h.claw = null; continue; }
+  h.claw.pulseTimer += dt;
+  if (h.claw.pulseTimer >= 0.5) {
+    h.claw.pulseTimer = 0;
+    if (Math.hypot(h.x - h.claw.x, h.y - h.claw.y) < 240) {
+      if (h.hp < h.maxHp) h.hp = Math.min(h.maxHp, h.hp + 12);
+      h.buffDiamond = Math.max(h.buffDiamond, 1.0);
+    }
+  }
+  if (h.claw.hp <= 0) {
+    spawnHitParticles(h.claw.x, h.claw.y, '#a8b8c8', 25);
+    h.claw = null;
+  }
+}
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
+   // Снаряды попадают по клешням
+let clawHit = false;
+for (const h of [player, ...bots]) {
+  if (!h.claw || h === b.owner) continue;
+  if (Math.hypot(b.x - h.claw.x, b.y - h.claw.y) < h.claw.r + b.r) {
+    h.claw.hp -= b.dmg;
+    spawnHitParticles(b.x, b.y, '#a8b8c8', 6);
+    clawHit = true; break;
+  }
+}
+if (clawHit) { bullets.splice(i, 1); continue; }
     
-    if (b.type === 'homing') {
+   if (b.type === 'homing' || b.type === 'syringe' || b.type === 'glass') {
       b.life -= dt;
       if (b.life <= 0) { bullets.splice(i, 1); continue; }
 
@@ -3287,7 +3293,9 @@ for (const bot of bots) {
       
       let hitRock = false;
       for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { hitRock = true; break; } }
-      if (hitRock && !b.orbiting) { spawnHitParticles(b.x, b.y, '#ff66cc', 10); bullets.splice(i, 1); continue; }
+      ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -22, 20, 8, 2); ctx.fill();
+ctx.fillStyle = '#b8860b'; ctx.fillRect(-12, -24, 24, 3);
+ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
       
       continue;
     }
@@ -3580,9 +3588,6 @@ const isArtem = h.type === 'Artem'; const isDmitry = h.type === 'Dmitry';
       g.addColorStop(0, '#ffd700'); g.addColorStop(1, '#b8860b'); 
       ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); 
       ctx.lineWidth = 2; ctx.strokeStyle = '#daa520'; ctx.stroke(); 
-      ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -22, 20, 8, 2); ctx.fill();
-      ctx.fillStyle = '#b8860b'; ctx.fillRect(-12, -24, 24, 3);
-      ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
       ctx.fillStyle = '#fff4a3'; ctx.beginPath(); ctx.arc(0, -2, 2, 0, TAU); ctx.fill();
       ctx.beginPath(); ctx.arc(0, 4, 2, 0, TAU); ctx.fill();
     } else {
@@ -3682,8 +3687,11 @@ const isArtem = h.type === 'Artem'; const isDmitry = h.type === 'Dmitry';
   // ВОЛОСЫ / КОРОНА / ШЛЕМ
   if (isVitya) {
   if (h.skin === 'golden') {
-    // Только цилиндр, без волос
-    // (цилиндр уже рисуется в блоке тела)
+    // Цилиндр НАД головой
+    ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -36, 20, 13, 2); ctx.fill();
+    ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1.5; ctx.strokeRect(-10, -36, 20, 13);
+    ctx.fillStyle = '#b8860b'; ctx.fillRect(-13, -24, 26, 4); // поля
+    ctx.fillStyle = '#ef4444'; ctx.fillRect(-10, -27, 20, 3); // лента
   } else {
     ctx.fillStyle = '#78350f'; ctx.beginPath(); ctx.arc(0, -16, 9, Math.PI, 0); ctx.fill();
     ctx.beginPath(); ctx.arc(4, -18, 4, 0, TAU); ctx.fill();
@@ -3797,7 +3805,13 @@ const isArtem = h.type === 'Artem'; const isDmitry = h.type === 'Dmitry';
   roundRect(ctx, bx, by, bw * frac, bh, 3); ctx.fill();
   
   const ammoY = by - 8;
-  if (isMe) { for (let i = 0; i < h.maxAmmo; i++){ const ax = h.x - (h.maxAmmo-1)*4 + i*8; ctx.beginPath(); ctx.arc(ax, ammoY, 2.5, 0, TAU); ctx.fillStyle = i < h.ammo ? '#ffd700' : 'rgba(255,255,255,0.15)'; ctx.fill(); } }
+if (isMe && !isDmitry) { for (let i = 0; i < h.maxAmmo; i++){ const ax = h.x - (h.maxAmmo-1)*4 + i*8; ctx.beginPath(); ctx.arc(ax, ammoY, 2.5, 0, TAU); ctx.fillStyle = i < h.ammo ? '#ffd700' : 'rgba(255,255,255,0.15)'; ctx.fill(); } }
+else if (isMe && isDmitry) {
+  const cbw = 54, cbh = 5;
+  ctx.fillStyle = 'rgba(8,12,18,0.75)'; roundRect(ctx, h.x - cbw/2 - 1, ammoY - 3, cbw + 2, cbh + 2, 3); ctx.fill();
+  ctx.fillStyle = h.reloading > 0 ? '#ff9900' : '#ef4444';
+  roundRect(ctx, h.x - cbw/2, ammoY - 2, cbw * (h.ammo / h.maxAmmo), cbh, 2); ctx.fill();
+}
 
   ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = isMe ? '#a9e8ff' : (isVasilek ? '#ff9999' : (isFialka ? '#d8b4fe' : 'rgba(222,234,246,0.82)'));
   ctx.fillText(h.name, h.x, ammoY - 8);
@@ -4050,6 +4064,15 @@ function drawCrosshair(){ ctx.save(); ctx.translate(mouse.x, mouse.y); ctx.strok
 
 function drawAmmoBar(){
   const bw = 200, bh = 14; const bx = W/2 - bw/2, by = H - 76;
+ if (player.type === 'Dmitry') {
+  ctx.fillStyle = 'rgba(6,10,16,0.72)'; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 7); ctx.fill();
+  ctx.fillStyle = player.reloading > 0 ? '#ff9900' : '#ef4444';
+  roundRect(ctx, bx, by, bw * (player.ammo / player.maxAmmo), bh, 6); ctx.fill();
+  ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; roundRect(ctx, bx, by, bw, bh, 6); ctx.stroke();
+  ctx.fillStyle = '#ff9b9b'; ctx.font = 'bold 12px system-ui, sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(player.reloading > 0 ? 'ПЕРЕЗАРЯДКА ЛАЗЕРА...' : 'ЗАРЯД ЛАЗЕРА', W/2, by - 10);
+  return;
+}
   ctx.fillStyle = 'rgba(6,10,16,0.72)'; roundRect(ctx, bx - 3, by - 3, bw + 6, bh + 6, 7); ctx.fill();
   const step = bw / player.maxAmmo;
   for (let i = 0; i < player.maxAmmo; i++){ const ax = bx + 6 + i * (step - 4); ctx.beginPath(); roundRect(ctx, ax, by, step - 8, bh, 3); ctx.fillStyle = i < player.ammo ? '#ffd700' : 'rgba(255,255,255,0.1)'; ctx.fill(); ctx.strokeStyle = 'rgba(140,220,255,0.3)'; ctx.lineWidth = 1.5; ctx.stroke(); }
