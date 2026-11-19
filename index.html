@@ -3288,14 +3288,9 @@ if (clawHit) { bullets.splice(i, 1); continue; }
       } else {
         b.x += b.vx * dt; b.y += b.vy * dt;
       }
-      
       let hitRock = false;
-      for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { hitRock = true; break; } }
-      ctx.fillStyle = '#ffd700'; roundRect(ctx, -10, -22, 20, 8, 2); ctx.fill();
-ctx.fillStyle = '#b8860b'; ctx.fillRect(-12, -24, 24, 3);
-ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
-      
-      continue;
+for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { hitRock = true; break; } }
+if (hitRock && !b.orbiting) { spawnHitParticles(b.x, b.y, b.color || '#ff66cc', 10); bullets.splice(i, 1); continue; }
     }
 
    if (b.type === 'megarocket' || b.type === 'megasyringe' || b.type === 'megaglass') {
