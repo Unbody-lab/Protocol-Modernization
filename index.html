@@ -3291,9 +3291,8 @@ if (clawHit) { bullets.splice(i, 1); continue; }
       let hitRock = false;
 for (const r of rocks) { if (Math.hypot(b.x - r.x, b.y - r.y) < r.r + b.r) { hitRock = true; break; } }
 if (hitRock && !b.orbiting) { spawnHitParticles(b.x, b.y, b.color || '#ff66cc', 10); bullets.splice(i, 1); continue; }
-    }
-
-   if (b.type === 'megarocket' || b.type === 'megasyringe' || b.type === 'megaglass') {
+}
+if (b.type === 'megarocket' || b.type === 'megasyringe' || b.type === 'megaglass') {
   b.life -= dt;
   b.x += b.vx * dt; b.y += b.vy * dt;
   b.spawnTimer += dt;
