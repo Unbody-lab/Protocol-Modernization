@@ -3911,7 +3911,6 @@ function drawLasers(){
   const t = performance.now() / 1000;
   for (const h of [player, ...bots]) {
     if (h.eliminated) continue;
-    
     // Лазер Вити
     if (h.ultActive && h.type === 'Vitya' && h.alive) {
       let maxLen = 1100; const sx = h.x, sy = h.y; const ex0 = sx + Math.cos(h.aim) * 1100; const ey0 = sy + Math.sin(h.aim) * 1100;
@@ -3931,7 +3930,6 @@ function drawLasers(){
       ctx.beginPath(); ctx.arc(ex, ey, 14 + Math.sin(t*30) * 5, 0, TAU); ctx.fillStyle = laserEnd; ctx.fill();
       ctx.restore();
     }
-
     // Лазер Дмитрия
     if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.laserFiring && h.laserCharge > 0) {
       const chargeFrac = h.laserCharge / DMITRY_LASER_MAX_CHARGE;
@@ -3957,16 +3955,14 @@ function drawLasers(){
       ctx.strokeStyle = '#ffffff'; ctx.lineWidth = Math.max(2, width * 0.4); ctx.stroke();
       ctx.restore();
     }
-    
     // Крюк Фиалки
     if (h.ultActive && h.type === 'Fialka' && h.alive) {
-        ctx.save(); ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(h.hookX, h.hookY);
-        ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 4; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15; ctx.stroke();
-        const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x); ctx.translate(h.hookX, h.hookY); ctx.rotate(angleToHook);
-        ctx.beginPath(); ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2); ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 6; ctx.stroke();
-        ctx.restore();
+      ctx.save(); ctx.beginPath(); ctx.moveTo(h.x, h.y); ctx.lineTo(h.hookX, h.hookY);
+      ctx.strokeStyle = '#c084fc'; ctx.lineWidth = 4; ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 15; ctx.stroke();
+      const angleToHook = Math.atan2(h.hookY - h.y, h.hookX - h.x); ctx.translate(h.hookX, h.hookY); ctx.rotate(angleToHook);
+      ctx.beginPath(); ctx.arc(0, 0, 20, -Math.PI/2, Math.PI/2); ctx.strokeStyle = '#d8b4fe'; ctx.lineWidth = 6; ctx.stroke();
+      ctx.restore();
     }
-
     // Поле Василька
     if (h.ultActive && h.type === 'Vasilek' && h.alive && h.healZone) {
       ctx.save(); ctx.beginPath(); ctx.arc(h.healZone.x, h.healZone.y, h.healZone.r, 0, TAU);
@@ -3974,20 +3970,17 @@ function drawLasers(){
       ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
       ctx.restore();
     }
-
-    // Клешня Дмитрия (ТЕПЕРЬ ВНУТРИ ЦИКЛА!)
+    // Клешня Дмитрия (ВНУТРИ цикла!)
     if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.claw) {
       const t2 = performance.now() / 1000;
       const c = h.claw;
       ctx.save();
-      // Основание
       ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, TAU);
       const gClaw = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, c.r);
       gClaw.addColorStop(0, 'rgba(90, 106, 122, 0.6)');
       gClaw.addColorStop(1, 'rgba(30, 41, 59, 0.3)');
       ctx.fillStyle = gClaw; ctx.fill();
       ctx.strokeStyle = '#5a6a7a'; ctx.lineWidth = 4; ctx.stroke();
-      // Клешни
       ctx.strokeStyle = '#a8b8c8'; ctx.lineWidth = 6; ctx.lineCap = 'round';
       const openAng = 0.4 + Math.sin(t2 * 3) * 0.15;
       for (let s = -1; s <= 1; s += 2) {
@@ -4000,18 +3993,16 @@ function drawLasers(){
         ctx.lineTo(c.x + s * (45 - 15 * Math.cos(openAng)), c.y - 40 - 15 * Math.sin(openAng));
         ctx.stroke();
       }
-      // HP-бар клешни
       const bw = 80, bh = 6;
       ctx.fillStyle = 'rgba(0,0,0,0.7)'; roundRect(ctx, c.x - bw/2 - 1, c.y + c.r + 8 - 1, bw + 2, bh + 2, 3); ctx.fill();
       ctx.fillStyle = '#4fd6a0'; roundRect(ctx, c.x - bw/2, c.y + c.r + 8, bw * (c.hp / c.maxHp), bh, 2); ctx.fill();
-      // Аура лечения/щита
       const pulse = 0.5 + 0.5 * Math.sin(t2 * 4);
       ctx.beginPath(); ctx.arc(c.x, c.y, c.r + 10 + pulse * 8, 0, TAU);
       ctx.strokeStyle = `rgba(79, 214, 160, ${0.3 + pulse * 0.3})`; ctx.lineWidth = 2; ctx.stroke();
       ctx.restore();
     }
-  } // <-- Закрывающая скобка цикла for
-}
+  }  // ← закрывает цикл for
+}    // ← закрывает функцию drawLasers
 
 function drawArtemRockets(){
   const t = performance.now() / 1000;
