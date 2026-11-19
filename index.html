@@ -3411,7 +3411,6 @@ ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
   let tx = player.x - W/2, ty = player.y - H/2;
   tx = Math.max(0, Math.min(WORLD_W - W, tx)); ty = Math.max(0, Math.min(WORLD_H - H, ty));
   cam.x += (tx - cam.x) * Math.min(1, dt * 13);
-cam.y += (ty - cam.y) * Math.min(1, dt * 13);
 }  // ← ЭТА СКОБКА ЗАКРЫВАЕТ ФУНКЦИЮ update(dt)
 
 // --- РЕНДЕР ---
