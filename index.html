@@ -2880,56 +2880,55 @@ function updateBot(bot, dt) {
 
   if (bot.stun > 0) { bot.stun -= dt; bot.mvx = 0; bot.mvy = 0; return; }
 
-  if (bot.ultActive) {
-    bot.ultTime -= dt;
-    if (bot.type === 'Vitya') {
-      const enemies = getAllEnemies(bot);
-      bot.ultTick = (bot.ultTick || 0) + dt;
-      if (bot.ultTick > 0.1) {
-        bot.ultTick = 0;
-        for (const e of enemies) {
-          if (pointSegDist(e.x, e.y, bot.x, bot.y, bot.x + Math.cos(bot.aim)*1100, bot.y + Math.sin(bot.aim)*1100) < e.r + 11) damage(e, 5 * (bot.dmg/16), bot);
-        }
-      }
-    } else if (bot.type === 'Lesha') {
-      const enemies = getAllEnemies(bot); let target = null, best = Infinity;
-      for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
-      if (target) {
-        const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
-        const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
-        if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
-        const len = Math.hypot(mx, my);
-        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
-      }
-    } else if (bot.type === 'Fialka') {
-      if (bot.hookTarget && bot.hookTarget.alive) {
-        const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x); const pullSpeed = 600;
-        bot.hookTarget.x += Math.cos(ang) * pullSpeed * dt; bot.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
-        bot.hookX = bot.hookTarget.x; bot.hookY = bot.hookTarget.y;
-        if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) { bot.hookTarget.stun = 2.0; bot.hookTarget = null; }
-      }
-    } else if (bot.type === 'Vasilek') {
-      const enemies = getAllEnemies(bot); let target = null, best = Infinity;
-      for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
-      if (target) {
-        const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
-        const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
-        if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
-        const len = Math.hypot(mx, my);
-        if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
-      }
-      if (bot.healZone) {
-        bot.healZone.x = bot.x;
-        bot.healZone.y = bot.y;
-        for (const e of enemies) {
-          if (Math.hypot(e.x - bot.healZone.x, e.y - bot.healZone.y) < bot.healZone.r) damage(e, 15 * dt * (bot.dmg/6), bot);
-        }
+if (bot.ultActive) {
+  bot.ultTime -= dt;
+  if (bot.type === 'Vitya') {
+    const enemies = getAllEnemies(bot);
+    bot.ultTick = (bot.ultTick || 0) + dt;
+    if (bot.ultTick > 0.1) {
+      bot.ultTick = 0;
+      for (const e of enemies) {
+        if (pointSegDist(e.x, e.y, bot.x, bot.y, bot.x + Math.cos(bot.aim)*1100, bot.y + Math.sin(bot.aim)*1100) < e.r + 11) damage(e, 5 * (bot.dmg/16), bot);
       }
     }
-   else if (bot.type === 'Dmitry') {
-if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; }
-return;
+  } else if (bot.type === 'Lesha') {
+    const enemies = getAllEnemies(bot); let target = null, best = Infinity;
+    for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
+    if (target) {
+      const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
+      const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
+      if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
+      const len = Math.hypot(mx, my);
+      if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
+    }
+  } else if (bot.type === 'Fialka') {
+    if (bot.hookTarget && bot.hookTarget.alive) {
+      const ang = Math.atan2(bot.y - bot.hookTarget.y, bot.x - bot.hookTarget.x); const pullSpeed = 600;
+      bot.hookTarget.x += Math.cos(ang) * pullSpeed * dt; bot.hookTarget.y += Math.sin(ang) * pullSpeed * dt;
+      bot.hookX = bot.hookTarget.x; bot.hookY = bot.hookTarget.y;
+      if (Math.hypot(bot.x - bot.hookTarget.x, bot.y - bot.hookTarget.y) < 40) { bot.hookTarget.stun = 2.0; bot.hookTarget = null; }
+    }
+  } else if (bot.type === 'Vasilek') {
+    const enemies = getAllEnemies(bot); let target = null, best = Infinity;
+    for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
+    if (target) {
+      const dx = target.x - bot.x, dy = target.y - bot.y; const d = Math.hypot(dx, dy) || 1;
+      const nx = dx / d, ny = dy / d; let mx = 0, my = 0;
+      if (d > 220 + 60) { mx = nx; my = ny; } else if (d < 220 - 80) { mx = -nx; my = -ny; } else { mx = -ny; my = nx; }
+      const len = Math.hypot(mx, my);
+      if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; }
+    }
+    if (bot.healZone) {
+      bot.healZone.x = bot.x;
+      bot.healZone.y = bot.y;
+      for (const e of enemies) {
+        if (Math.hypot(e.x - bot.healZone.x, e.y - bot.healZone.y) < bot.healZone.r) damage(e, 15 * dt * (bot.dmg/6), bot);
+      }
+    }
   }
+  if (bot.ultTime <= 0) { bot.ultActive = false; bot.healZone = null; }
+  return;
+}
 
   const enemies = getAllEnemies(bot); let target = null, best = Infinity;
   for (const e of enemies) { if (!e.alive) continue; const d = Math.hypot(bot.x - e.x, bot.y - e.y); if (d < best) { best = d; target = e; } }
@@ -2952,11 +2951,10 @@ return;
   if (len > 0.001) { bot.mvx = mx; bot.mvy = my; bot.x += (mx / len) * bot.spd * dt; bot.y += (my / len) * bot.spd * dt; bot.walkPhase += dt * 14; } else { bot.mvx = 0; bot.mvy = 0; bot.walkPhase = 0; }
   bot.x = clamp(bot.x, 20, WORLD_W - 20); bot.y = clamp(bot.y, 20, WORLD_H - 20);
 
-  if (d < 720) {
+ if (d < 720) {
   if (bot.ult >= 100 && d < 620 && Math.random() < 0.02) activateUlt(bot);
   else {
     if (bot.type === 'Dmitry' && d < 90) {
-      // Ближний бой щупальцами
       bot.attackCd = 0.7; bot.swing = 0.3;
       damage(target, bot.dmg * 1.8, bot);
       const ang = Math.atan2(target.y - bot.y, target.x - bot.x);
@@ -2967,7 +2965,7 @@ return;
     }
   }
 }
-}
+} // ← ЭТА СКОБКА ЗАКРЫВАЕТ updateBot! Если её нет — update «проваливается» внутрь
 
 function finishBattle(isWin, reason) {
   gameOver = true;
@@ -3234,7 +3232,7 @@ for (const h of [player, ...bots]) {
     spawnHitParticles(h.claw.x, h.claw.y, '#a8b8c8', 25);
     h.claw = null;
   }
-}
+} // ← закрывающая скобка for
   for (let i = bullets.length - 1; i >= 0; i--) {
     const b = bullets[i];
    // Снаряды попадают по клешням
