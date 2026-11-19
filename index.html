@@ -3412,9 +3412,8 @@ ctx.strokeStyle = '#fff4a3'; ctx.lineWidth = 1; ctx.strokeRect(-10, -22, 20, 8);
   tx = Math.max(0, Math.min(WORLD_W - W, tx)); ty = Math.max(0, Math.min(WORLD_H - H, ty));
   cam.x += (tx - cam.x) * Math.min(1, dt * 13);
 }  // ← ЭТА СКОБКА ЗАКРЫВАЕТ ФУНКЦИЮ update(dt)
-
 // --- РЕНДЕР ---
-function roundRect(c,x,y,w,h,r){
+ function roundRect(c,x,y,w,h,r){
   if (w < 0) { x += w; w = -w; } r = Math.min(r, w/2, h/2);
   c.beginPath(); c.moveTo(x+r, y); c.lineTo(x+w-r, y); c.quadraticCurveTo(x+w, y, x+w, y+r);
   c.lineTo(x+w, y+h-r); c.quadraticCurveTo(x+w, y+h, x+w-r, y+h); c.lineTo(x+r, y+h);
