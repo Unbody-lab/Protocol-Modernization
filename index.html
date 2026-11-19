@@ -2504,7 +2504,8 @@ const player = {
   isPlayer: true, moveTick: 0, mvx: 0, mvy: 0,
   type: 'Vitya', poison: 0, stun: 0, shootCount: 0, skin: 'base',
   buffEnergy: 0, buffBattery: 0, buffDiamond: 0,
-  rocketAngle: 0
+rocketAngle: 0,
+laserCharge: 0, laserFiring: false, claw: null
 };
 
 function createHero(id, type, isBot) {
@@ -3491,8 +3492,8 @@ function drawFurniture(){
 function drawHero(h){
   const t = performance.now() / 1000; const isMe = h === player;
   const isVitya = h.type === 'Vitya'; const isLesha = h.type === 'Lesha';
-  const isFialka = h.type === 'Fialka'; const isVasilek = h.type === 'Vasilek';
-  const isArtem = h.type === 'Artem';
+const isFialka = h.type === 'Fialka'; const isVasilek = h.type === 'Vasilek';
+const isArtem = h.type === 'Artem'; const isDmitry = h.type === 'Dmitry';
 
   ctx.save(); ctx.translate(h.x, h.y);
   ctx.beginPath(); ctx.ellipse(0, 19*.8, 19*1, 19*.42, 0, 0, TAU);
