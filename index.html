@@ -3408,7 +3408,7 @@ if (b.type === 'megarocket' || b.type === 'megasyringe' || b.type === 'megaglass
 cam.y += (ty - cam.y) * Math.min(1, dt * 13);
 }  // ← ЭТА СКОБКА ЗАКРЫВАЕТ ФУНКЦИЮ update(dt)  // ← ЭТА СКОБКА ЗАКРЫВАЕТ ФУНКЦИЮ update(dt)
 // --- РЕНДЕР ---
- function roundRect(c,x,y,w,h,r){
+ function roundRect(c,x,y,w,h,r);{
   if (w < 0) { x += w; w = -w; } r = Math.min(r, w/2, h/2);
   c.beginPath(); c.moveTo(x+r, y); c.lineTo(x+w-r, y); c.quadraticCurveTo(x+w, y, x+w, y+r);
   c.lineTo(x+w, y+h-r); c.quadraticCurveTo(x+w, y+h, x+w-r, y+h); c.lineTo(x+r, y+h);
