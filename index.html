@@ -3952,14 +3952,13 @@ if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.laserFiring && h.laserC
         ctx.restore();
     }
 
-    if (h.ultActive && h.type === 'Vasilek' && h.alive && h.healZone) {
-        ctx.save(); ctx.beginPath(); ctx.arc(h.healZone.x, h.healZone.y, h.healZone.r, 0, TAU);
-        ctx.fillStyle = 'rgba(255, 77, 77, 0.2)'; ctx.fill();
-        ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
-        ctx.restore();
-    }
-  }
- // Клешня Дмитрия
+  if (h.ultActive && h.type === 'Vasilek' && h.alive && h.healZone) {
+  ctx.save(); ctx.beginPath(); ctx.arc(h.healZone.x, h.healZone.y, h.healZone.r, 0, TAU);
+  ctx.fillStyle = 'rgba(255, 77, 77, 0.2)'; ctx.fill();
+  ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
+  ctx.restore();
+}
+// Клешня Дмитрия
 if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.claw) {
   const t2 = performance.now() / 1000;
   const c = h.claw;
