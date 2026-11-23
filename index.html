@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Protocol: Modernization — PRE-ALPHA 0.4.5</title>
+<title>Protocol: Modernization — PRE-ALPHA 0.5</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{width:100%;height:100%;overflow:hidden;background:#12161c;
@@ -92,6 +92,11 @@
   .announce-banner.artem:hover { border-color: #fff4a3; box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4); }
   .announce-banner.dmitry { bottom: 240px; border-color: #7ff0ff; box-shadow: 0 10px 30px rgba(127, 240, 255, 0.2);}
   .announce-banner.dmitry:hover { border-color: #a8e0ff; box-shadow: 0 15px 40px rgba(127, 240, 255, 0.4); }
+ .announce-banner.l4g250 { bottom: 100px; border-color: #4fd6a0; box-shadow: 0 10px 30px rgba(79,214,160,0.2);}
+.announce-banner.l4g250:hover { border-color: #7ff0ff; box-shadow: 0 15px 40px rgba(79,214,160,0.4); }
+.announce-banner.l4g250 .announce-img { border-right-color: #4fd6a0; }
+.announce-banner.l4g250 .announce-tag { color: #4fd6a0; }
+.announce-banner.l4g250 .announce-timer { color: #4fd6a0; background: rgba(79,214,160,0.15); border-color: rgba(79,214,160,0.4); }
   .announce-img {width: 120px; height: 100%; background-color: #1b232d; background-size: cover; background-position: center top; border-right: 2px solid #ffb450; flex-shrink: 0; position: relative;}
   .announce-banner.artem .announce-img { background-image: url('img/Artem.jpg'); border-right-color: #ffd700; }
   .announce-banner.dmitry .announce-img { border-right-color: #7ff0ff; }
@@ -176,6 +181,7 @@
   .tag-epic {color:#c084fc; background:rgba(192,132,252,0.12); border:1px solid rgba(192,132,252,0.35)}
   .tag-crazy {color:#ff4d4d; background:rgba(255,77,77,0.12); border:1px solid rgba(255,77,77,0.35)}
   .tag-legendary {color:#ffd700; background:rgba(255,215,0,0.12); border:1px solid rgba(255,215,0,0.35)}
+  .tag-rare {color:#7ff0ff; background:rgba(127,240,255,0.12); border:1px solid rgba(127,240,255,0.35)}
 
   #hero-modal-desc{font-size:14.5px; line-height:1.6; color:rgba(200,220,240,0.92); background:rgba(255,255,255,0.03); padding:14px; border-radius:10px; border-left:3px solid rgba(127,240,255,0.5);}
   .stat-block{display:flex; flex-direction:column; gap:5px}
@@ -475,9 +481,9 @@
 
 <div id="start-screen" class="screen hidden">
   <div class="screen-bg"></div>
-  <div id="start-logo">Protocol: Modernization<small>ПОЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
+  <div id="start-logo">Protocol: Modernization<small>ПОБЕДИ В ГОРНОМ ТЕХНИКУМЕ</small></div>
   <button id="start-play-btn" onclick="goToLobby()">ИГРАТЬ</button>
-  <div id="start-version">PRE-ALPHA 0.4.5</div>
+  <div id="start-version">PRE-ALPHA 0.5</div>
 </div>
 
 <div id="lobby-screen" class="screen hidden">
@@ -532,15 +538,15 @@
       </div>
     </div>
     
-    <!-- Анонс Артёма -->
-    <div class="announce-banner artem" onclick="openHeroDetails('Artem')">
-      <div class="announce-img"></div>
-      <div class="announce-info">
-        <div class="announce-tag">Новый боец</div>
-        <div class="announce-name">Артём</div>
-        <div class="announce-timer">Доступен!</div>
-      </div>
-    </div>
+   <!-- Анонс L4G250 Лесоруб -->
+<div class="announce-banner l4g250" onclick="showDev('L4G250 Лесоруб')">
+  <div class="announce-img" style="background-image:url('img/L4G250.jpg'); background-position: center;"></div>
+  <div class="announce-info">
+    <div class="announce-tag">Скоро</div>
+    <div class="announce-name">L4G250 "Лесоруб"</div>
+    <div class="announce-timer">В разработке</div>
+  </div>
+</div>
 
     <!-- Анонс Дмитрия -->
     <div class="announce-banner dmitry" onclick="openHeroDetails('Dmitry')">
@@ -964,7 +970,7 @@
   <div id="hero-modal-name">Дмитрий</div>
   <div class="tag-row">
     <span class="tag tag-class" style="color:#00FFFF; border-color:rgba(90,106,122,0.35)">КЛАСС: ИНЖЕНЕР</span>
-    <span class="tag tag-legendary">РЕДКОСТЬ: Редкий</span>
+    <span class="tag tag-rare">РЕДКОСТЬ: РЕДКИЙ</span>
   </div>
   <div class="hero-tabs">
     <div class="hero-tab active" onclick="switchHeroTab('Dmitry', 'info', this)">Инфо</div>
@@ -2117,12 +2123,15 @@ function renderSkins(hero) {
     const div = document.createElement('div');
     div.className = `skin-item ${isSelected ? 'selected' : ''}`;
     div.onclick = () => {
-      if (!isUnlocked) return showAlert('🔒', 'Скин закрыт', 'Купите этот скин в магазине!');
-      playerData.selectedSkins[hero] = skinId;
-      saveData();
-      renderSkins(hero);
-      updateLobbySelection();
-    };
+  if (!isUnlocked) return showAlert('🔒', 'Скин закрыт', 'Купите этот скин в магазине!');
+  playerData.selectedSkins[hero] = skinId;
+  saveData();
+  renderSkins(hero);
+  updateLobbySelection();
+  // Обновляем большую иконку в модалке
+  const modalIcon = document.getElementById('hero-modal-icon');
+  if (modalIcon) modalIcon.style.backgroundImage = `url('${skin.icon}')`;
+};
     
     div.innerHTML = `
       <div class="skin-icon" style="background-image: url('${skin.icon}');"></div>
@@ -2760,7 +2769,7 @@ function tryAttack(h, dt = 0.016) {
   let bType = 'homing', bColor = '#ff66cc';
   if (h.skin === 'apothecary') { bType = 'syringe'; bColor = '#5cff5c'; }
   else if (h.skin === 'bartender') { bType = 'glass'; bColor = '#ffccaa'; }
-  bullets.push({ x: h.x, y: h.y, vx: Math.cos(a)*600, vy: Math.sin(a)*600, r: 10, dmg: h.dmg, life: 3.0, type: bType, owner: h, color: bColor, target: null, orbitAngle: 0, orbiting: false });
+  bullets.push({ x: h.x, y: h.y, vx: Math.cos(a)*350, vy: Math.sin(a)*350, r: 10, dmg: h.dmg, life: 3.0, type: bType, owner: h, color: bColor, target: null, orbitAngle: 0, orbiting: false });
   spawnHitParticles(h.x + Math.cos(a)*30, h.y + Math.sin(a)*30, bColor, 6);
 }
  else if (h.type === 'Dmitry') {
@@ -3654,17 +3663,17 @@ const isArtem = h.type === 'Artem'; const isDmitry = h.type === 'Dmitry';
       ctx.fillStyle = '#60a5fa'; ctx.fillRect(-8, -6, 6, 4); ctx.fillRect(2, -6, 6, 4); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.strokeRect(-8, -6, 6, 4); ctx.strokeRect(2, -6, 6, 4);
     }
   }
-  else if (isDmitry) {
-  // Кофта серая
+ else if (isDmitry) {
+  // Кофта серая (худое тело)
   g.addColorStop(0, '#64748b'); g.addColorStop(1, '#334155');
-  ctx.beginPath(); ctx.ellipse(0, 2, 13, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(0, 2, 10, 13, 0, 0, TAU); ctx.fillStyle = g; ctx.fill();
   ctx.lineWidth = 2; ctx.strokeStyle = '#1e293b'; ctx.stroke();
   // Капюшон/ворот
   ctx.fillStyle = '#1e293b';
-  ctx.beginPath(); ctx.moveTo(-8, -8); ctx.quadraticCurveTo(0, -4, 8, -8); ctx.lineTo(8, -4); ctx.quadraticCurveTo(0, 0, -8, -4); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-7, -7); ctx.quadraticCurveTo(0, -3, 7, -7); ctx.lineTo(7, -3); ctx.quadraticCurveTo(0, 1, -7, -3); ctx.closePath(); ctx.fill();
   // Карман
   ctx.strokeStyle = '#475569'; ctx.lineWidth = 1;
-  ctx.strokeRect(-6, 4, 12, 6);
+  ctx.strokeRect(-5, 4, 10, 5);
 }
   
   else { g.addColorStop(0, '#3b82f6'); g.addColorStop(1, '#1e40af'); ctx.beginPath(); ctx.ellipse(0, 0, 10, 14, 0, 0, TAU); ctx.fillStyle = g; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = '#1e3a8a'; ctx.stroke(); ctx.fillStyle = '#60a5fa'; roundRect(ctx, -9, -8, 18, 14, 3); ctx.fill(); ctx.lineWidth = 1; ctx.strokeStyle = '#93c5fd'; ctx.stroke(); }
@@ -3964,37 +3973,54 @@ function drawLasers(){
       ctx.strokeStyle = '#ff4d4d'; ctx.lineWidth = 4; ctx.stroke();
       ctx.restore();
     }
-    // Клешня Дмитрия (ВНУТРИ цикла!)
-    if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.claw) {
-      const t2 = performance.now() / 1000;
-      const c = h.claw;
-      ctx.save();
-      ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, TAU);
-      const gClaw = ctx.createRadialGradient(c.x, c.y, 10, c.x, c.y, c.r);
-      gClaw.addColorStop(0, 'rgba(90, 106, 122, 0.6)');
-      gClaw.addColorStop(1, 'rgba(30, 41, 59, 0.3)');
-      ctx.fillStyle = gClaw; ctx.fill();
-      ctx.strokeStyle = '#5a6a7a'; ctx.lineWidth = 4; ctx.stroke();
-      ctx.strokeStyle = '#a8b8c8'; ctx.lineWidth = 6; ctx.lineCap = 'round';
-      const openAng = 0.4 + Math.sin(t2 * 3) * 0.15;
-      for (let s = -1; s <= 1; s += 2) {
-        ctx.beginPath();
-        ctx.moveTo(c.x, c.y);
-        ctx.quadraticCurveTo(c.x + s * 30, c.y - 20, c.x + s * 45, c.y - 40);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(c.x + s * 45, c.y - 40);
-        ctx.lineTo(c.x + s * (45 - 15 * Math.cos(openAng)), c.y - 40 - 15 * Math.sin(openAng));
-        ctx.stroke();
-      }
-      const bw = 80, bh = 6;
-      ctx.fillStyle = 'rgba(0,0,0,0.7)'; roundRect(ctx, c.x - bw/2 - 1, c.y + c.r + 8 - 1, bw + 2, bh + 2, 3); ctx.fill();
-      ctx.fillStyle = '#4fd6a0'; roundRect(ctx, c.x - bw/2, c.y + c.r + 8, bw * (c.hp / c.maxHp), bh, 2); ctx.fill();
-      const pulse = 0.5 + 0.5 * Math.sin(t2 * 4);
-      ctx.beginPath(); ctx.arc(c.x, c.y, c.r + 10 + pulse * 8, 0, TAU);
-      ctx.strokeStyle = `rgba(79, 214, 160, ${0.3 + pulse * 0.3})`; ctx.lineWidth = 2; ctx.stroke();
-      ctx.restore();
-    }
+ // Две клешни Дмитрия (слева и справа)
+if (h.type === 'Dmitry' && h.alive && !h.eliminated && h.claw) {
+  const t2 = performance.now() / 1000;
+  const c = h.claw;
+  const clawOffset = 70; // расстояние от героя
+  const clawPositions = [
+    { x: c.x - clawOffset, y: c.y },  // левая клешня
+    { x: c.x + clawOffset, y: c.y }   // правая клешня
+  ];
+  for (const cp of clawPositions) {
+    ctx.save();
+    // Основание
+    ctx.beginPath(); ctx.arc(cp.x, cp.y, c.r * 0.7, 0, TAU);
+    const gClaw = ctx.createRadialGradient(cp.x, cp.y, 5, cp.x, cp.y, c.r * 0.7);
+    gClaw.addColorStop(0, 'rgba(90, 106, 122, 0.6)');
+    gClaw.addColorStop(1, 'rgba(30, 41, 59, 0.3)');
+    ctx.fillStyle = gClaw; ctx.fill();
+    ctx.strokeStyle = '#5a6a7a'; ctx.lineWidth = 3; ctx.stroke();
+    // Клешня (одна, направленная вверх)
+    ctx.strokeStyle = '#a8b8c8'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    const openAng = 0.4 + Math.sin(t2 * 3) * 0.15;
+    ctx.beginPath();
+    ctx.moveTo(cp.x, cp.y);
+    ctx.quadraticCurveTo(cp.x - 20, cp.y - 25, cp.x - 30, cp.y - 45);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cp.x - 30, cp.y - 45);
+    ctx.lineTo(cp.x - 30 + 12 * Math.cos(openAng), cp.y - 45 - 12 * Math.sin(openAng));
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cp.x, cp.y);
+    ctx.quadraticCurveTo(cp.x + 20, cp.y - 25, cp.x + 30, cp.y - 45);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cp.x + 30, cp.y - 45);
+    ctx.lineTo(cp.x + 30 - 12 * Math.cos(openAng), cp.y - 45 - 12 * Math.sin(openAng));
+    ctx.stroke();
+    // HP-бар
+    const bw = 50, bh = 5;
+    ctx.fillStyle = 'rgba(0,0,0,0.7)'; roundRect(ctx, cp.x - bw/2 - 1, cp.y + c.r * 0.7 + 5 - 1, bw + 2, bh + 2, 2); ctx.fill();
+    ctx.fillStyle = '#4fd6a0'; roundRect(ctx, cp.x - bw/2, cp.y + c.r * 0.7 + 5, bw * (c.hp / c.maxHp), bh, 2); ctx.fill();
+    // Аура
+    const pulse = 0.5 + 0.5 * Math.sin(t2 * 4);
+    ctx.beginPath(); ctx.arc(cp.x, cp.y, c.r * 0.7 + 8 + pulse * 6, 0, TAU);
+    ctx.strokeStyle = `rgba(79, 214, 160, ${0.3 + pulse * 0.3})`; ctx.lineWidth = 2; ctx.stroke();
+    ctx.restore();
+  }
+}
   }  // ← закрывает цикл for
 }    // ← закрывает функцию drawLasers
 
@@ -4131,7 +4157,7 @@ function drawVersionBadge(){
   roundRect(ctx, x, y, w, h, 8); ctx.fill(); ctx.strokeStyle = 'rgba(90,140,180,0.4)'; ctx.lineWidth = 1.5;
   roundRect(ctx, x, y, w, h, 8); ctx.stroke(); ctx.textAlign = 'left'; ctx.font = 'bold 10px system-ui, sans-serif';
   ctx.fillStyle = 'rgba(140,180,215,0.9)'; ctx.fillText('ВЕРСИЯ', x + 10, y + 12);
-  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff'; ctx.fillText('PRE-ALPHA 0.4.5', x + 10, y + 24);
+  ctx.font = 'bold 13px system-ui, sans-serif'; ctx.fillStyle = '#7ff0ff'; ctx.fillText('PRE-ALPHA 0.5', x + 10, y + 24);
 }
 
 function render() {
