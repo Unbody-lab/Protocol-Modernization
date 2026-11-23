@@ -156,6 +156,7 @@
   .fighter-card.vasilek .fighter-card-icon { background-image: url('img/Vasilek.jpg'); }
   .fighter-card.artem .fighter-card-icon { background-image: url('img/Artem.jpg'); }
   .fighter-card.dmitry .fighter-card-icon { background-image: url('img/Dmitriy.jpg'); background-position: center; }
+  .fighter-card.l4g250 .fighter-card-icon { background-image: url('img/L4G250.jpg'); background-position: center; }
 
   .fighter-card .fighter-card-level { position: absolute; top: 10px; left: 10px; z-index: 4; background: rgba(0,0,0,0.75); border: 1.5px solid #ffd700; color: #ffd700; font-size: 12px; font-weight: 900; padding: 3px 8px; border-radius: 8px; }
 
@@ -642,7 +643,7 @@
     <button class="modal-close" onclick="closeFightersModal()">✕</button>
     <div id="fighters-header">
       <div id="fighters-title">БОЙЦЫ</div>
-      <div id="fighters-count">БОЙЦОВ: 5 ИЗ 7</div>
+      <div id="fighters-count">БОЙЦОВ: 6 ИЗ 7</div>
     </div>
     <div id="fighters-grid">
       <div class="fighter-card" id="card-vitya" onclick="openHeroDetails('Vitya')">
@@ -681,6 +682,13 @@
         <div class="fighter-card-icon"></div>
         <div class="fighter-card-name">Дмитрий</div>
       </div>
+
+     <div class="fighter-card l4g250 locked" id="card-l4g250" onclick="showDev('L4G250 Лесоруб')">
+       <div class="fighter-card-level">Ур. 0</div>
+       <div class="fighter-card-icon"></div>
+       <div class="fighter-card-name">L4G250</div>
+       <div class="lock-timer">Скоро</div>
+     </div>
 
       <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
         <div class="fighter-card-icon">?</div>
@@ -1007,7 +1015,55 @@
 </div>
 </div>
 </div>
-
+ <!-- (L4G250 Лесоруб) -->
+<div id="hero-modal-l4g250" style="position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center; background:rgba(6,10,16,0.88); backdrop-filter:blur(10px); padding:20px;">
+<div id="hero-modal-card" style="width:min(760px, 95vw); max-height:90vh; overflow-y:auto; background:rgba(14,22,32,0.97); border:2px solid rgba(255,77,77,0.6); border-radius:22px; padding:28px; display:flex; gap:26px; box-shadow:0 24px 80px rgba(0,0,0,0.7); position:relative;">
+<button class="modal-close" onclick="closeL4G250Details()">✕</button>
+<div id="hero-modal-left">
+  <div class="speech-bubble" id="bubble-l4g250"></div>
+  <div id="hero-modal-icon" style="background-image:url('img/L4G250.jpg'); border-color: #ff4d4d;"></div>
+</div>
+<div id="hero-modal-right">
+  <div id="hero-modal-name">L4G250 "Лесоруб"</div>
+  <div class="tag-row">
+    <span class="tag tag-class" style="color:#ff4d4d; border-color:rgba(255,77,77,0.35)">КЛАСС: ТАНК</span>
+    <span class="tag tag-crazy">РЕДКОСТЬ: БЕЗУМНАЯ</span>
+  </div>
+  <div class="hero-tabs">
+    <div class="hero-tab active" onclick="switchHeroTab('L4G250', 'info', this)">Инфо</div>
+    <div class="hero-tab" onclick="switchHeroTab('L4G250', 'skins', this)">Скины</div>
+  </div>
+  <div id="hero-tab-info-l4g250">
+    <div id="hero-modal-desc">
+      <b>Вид:</b> Робот.<br><br>
+      Его история очень интересна, изначально созданный Красным камнем, он должден был подавить Александрийцев, однако он был уничтоен Господином порядком. а позже возрожден сценаристами,в Александрии он получил новую броню и должность лесоруб, однако с началом проекта "Модеринизация", он был призван вновь, чтобы убивать и расчленять, впрочем он был не против этого...<br>
+      <b>Атака:</b> В разработке.<br>
+      <b>Ульта:</b> В разработке.
+    </div>
+    <div class="stat-block" style="margin-top: 10px;">
+      <div class="stat-head"><span>Урон</span><span id="stat-l4g250-dmg">30</span></div>
+      <div class="stat-track"><div class="stat-fill" style="width:75%" id="stat-l4g250-dmg-bar"></div></div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-head"><span>Скорость</span><span id="stat-l4g250-spd">180</span></div>
+      <div class="stat-track"><div class="stat-fill" style="width:50%" id="stat-l4g250-spd-bar"></div></div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-head"><span>Здоровье</span><span id="stat-l4g250-hp">200</span></div>
+      <div class="stat-track"><div class="stat-fill" style="width:100%" id="stat-l4g250-hp-bar"></div></div>
+    </div>
+  </div>
+  <div id="hero-tab-skins-l4g250" style="display: none;">
+    <div class="skins-grid" id="skins-l4g250"></div>
+  </div>
+  <div class="upgrade-row">
+    <button class="btn-select" onclick="showAlert('🔒', 'Закрыто', 'Этот боец ещё в разработке!')">ВЫБРАТЬ</button>
+    <button class="btn-upgrade" onclick="showAlert('🔒', 'Закрыто', 'Этот боец ещё в разработке!')">УЛУЧШИТЬ</button>
+  </div>
+  <div class="upgrade-cost" id="upg-cost-l4g250">В разработке</div>
+</div>
+</div>
+</div>
 <!-- МОДАЛКА УЛУЧШЕНИЯ -->
 <div id="upgrade-modal">
   <div id="upgrade-card">
@@ -1552,7 +1608,8 @@ const phrases = {
   Fialka: ["Мои системы в норме. А твои?", "Природа — лучший алгоритм.", "Сопротивление бесполезно. Ты будешь парализован.", "Электричество — моя стихия.", "В отличие от вас, я создана для гармонии.", "Охлократы — единственный путь.", "Цепная реакция неизбежна."],
   Vasilek: ["Лечение — это искусство!", "Стойте в зоне!", "Я розовый, но опасный!", "Мой автомат не дремлет!", "Осколки летят!", "Поддержка решает всё!", "Хаос — моя стихия!", "Я собран из лучших деталей!", "Фиалка, я всё ещё люблю тебя...", "Я стану полицейским! Даже если для этого придётся убить всех!"],
   Artem: ["Магия фаллоиммитотаров!", "Я таинственный маг!", "Мои чары неотразимы!", "Тьма ждёт!", "Скоро я буду в игре!"],
-  Dmitry: ["Щупальца не дремлют!", "Лазер заряжен!", "Я чувствую вашу слабость!", "Клешня сокрушит всех!", "Моя мощь растёт с каждой секундой!"]
+  Dmitry: ["Щупальца не дремлют!", "Лазер заряжен!", "Я чувствую вашу слабость!", "Клешня сокрушит всех!", "Моя мощь растёт с каждой секундой!"],
+  L4G250: ["Я рублю всех!", "Моя пила голодна!", "Лесоруб в здании!", "Никто не уйдёт!", "Я — последняя надежда!"]
 };
 
 // --- ДАННЫЕ ИГРОКА ---
@@ -1563,9 +1620,9 @@ const DEFAULT_DATA = {
   oskolki: 500,
   sferi: 0,
   leshaUnlocked: false,
-  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1 },
-  unlockedSkins: { Vitya: ['base'], Lesha: ['base'], Fialka: ['base'], Vasilek: ['base'], Artem: ['base'] },
-  selectedSkins: { Vitya: 'base', Lesha: 'base', Fialka: 'base', Vasilek: 'base', Artem: 'base' },
+  heroLevels: { Vitya: 1, Lesha: 1, Fialka: 1, Vasilek: 1, Artem: 1, Dmitry: 1, L4G250: 0 },
+unlockedSkins: { Vitya: ['base'], Lesha: ['base'], Fialka: ['base'], Vasilek: ['base'], Artem: ['base'], Dmitry: ['base'], L4G250: [] },
+selectedSkins: { Vitya: 'base', Lesha: 'base', Fialka: 'base', Vasilek: 'base', Artem: 'base', Dmitry: 'base', L4G250: 'base' },
   friends: [],
   claimedRewards: [],
   season2Unlocked: true  // Сезон 2 сразу открыт
@@ -1593,7 +1650,8 @@ const HERO_BASE = {
   Fialka:  { dmg: 18, spd: 208, hp: 100, rarity: 'ЭПИЧЕСКИЙ', cost: 150 },
   Vasilek: { dmg: 6,  spd: 208, hp: 100, rarity: 'БЕЗУМНЫЙ', cost: 150 },
   Artem:   { dmg: 25, spd: 208, hp: 100, rarity: 'ЛЕГЕНДАРНЫЙ', cost: 200 },
-  Dmitry:  { dmg: 14, spd: 208, hp: 100, rarity: 'РЕДКИЙ', cost: 200 }
+  Dmitry:  { dmg: 14, spd: 208, hp: 100, rarity: 'РЕДКИЙ', cost: 200 },
+  L4G250:  { dmg: 30, spd: 180, hp: 200, rarity: 'БЕЗУМНЫЙ', cost: 500 }
 };
 const MAX_HERO_LEVEL = 5;
 
@@ -1622,6 +1680,9 @@ const SKINS_CONFIG = {
   },
  Dmitry: {
   base: { name: 'Базовый', icon: 'img/Dmitriy.jpg', color: '#5a6a7a', colorLight: '#a8b8c8', type: 'dmitry_base' }
+},
+L4G250: {
+  base: { name: 'Базовый', icon: 'img/L4G250.jpg', color: '#ff4d4d', colorLight: '#ff9999', type: 'l4g250_base' }
 }
 };
 
@@ -1946,7 +2007,7 @@ function updateShopSkinsState() {
 }
 
 function updateHeroStatDisplays() {
-  const map = { Vitya: 'vitya', Lesha: 'lesha', Fialka: 'fialka', Vasilek: 'vasilek', Artem: 'artem', Dmitry: 'dmitry' };
+  const map = { Vitya: 'vitya', Lesha: 'lesha', Fialka: 'fialka', Vasilek: 'vasilek', Artem: 'artem', Dmitry: 'dmitry', L4G250: 'l4g250' };
   for (const t in map) {
     const id = map[t];
     const s = getHeroStats(t);
@@ -2036,7 +2097,7 @@ window.openUpgrade = function(type) {
 
   const modal = document.getElementById('upgrade-modal');
   document.getElementById('upg-hero-img').style.backgroundImage = `url('img/${type}.jpg')`;
-  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : type === 'Artem' ? 'Артём' : type === 'Dmitry' ? 'Дмитрий' : 'Василёк';
+  document.getElementById('upg-hero-name').textContent = type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : type === 'Artem' ? 'Артём' : type === 'Dmitry' ? 'Дмитрий' : type === 'L4G250' ? 'L4G250' : 'Василёк';
   document.getElementById('upg-hero-level').textContent = isMax ? `Уровень ${lvl} — МАКСИМУМ` : `Уровень ${lvl} → ${lvl + 1}`;
 
   const statsEl = document.getElementById('upg-stats');
@@ -2090,7 +2151,7 @@ window.confirmUpgrade = function() {
   playerData.heroLevels[type] = lvl + 1;
   saveData();
   closeUpgrade();
-  showAlert('💪', 'Улучшение!', `${type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : type === 'Artem' ? 'Артём' : type === 'Dmitry' ? 'Дмитрий' : 'Василёк'} улучшен до уровня ${lvl + 1}!`);
+  showAlert('💪', 'Улучшение!', `${type === 'Vitya' ? 'Витя' : type === 'Lesha' ? 'Лёха' : type === 'Fialka' ? 'Фиалка' : type === 'Artem' ? 'Артём' : type === 'Dmitry' ? 'Дмитрий' : type === 'L4G250' ? 'L4G250' : 'Василёк'} улучшен до уровня ${lvl + 1}!`);
 };
 
 // ====== РЕНДЕР СКИНОВ В КАРТОЧКЕ ======
@@ -2253,7 +2314,7 @@ let selectedHero = 'Vitya';
 let currentSeason = 0;
 
 function showRandomPhrase(heroType) {
-  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : (heroType === 'Artem' ? 'bubble-artem' : 'bubble-dmitry')))));
+  const bubble = document.getElementById(heroType === 'Vitya' ? 'bubble-vitya' : (heroType === 'Lesha' ? 'bubble-lesha' : (heroType === 'Fialka' ? 'bubble-fialka' : (heroType === 'Vasilek' ? 'bubble-vasilek' : (heroType === 'Artem' ? 'bubble-artem' : (heroType === 'Dmitry' ? 'bubble-dmitry' : 'bubble-l4g250'))))));
   if (!bubble) return;
   const arr = phrases[heroType];
   if (!arr) return;
@@ -2307,10 +2368,13 @@ window.openHeroDetails = function(hero){
   if (hero === 'Vasilek') { heroModalVasilek.style.display = 'flex'; setTimeout(() => showRandomPhrase('Vasilek'), 300); }
   if (hero === 'Artem') { heroModalArtem.style.display = 'flex'; setTimeout(() => showRandomPhrase('Artem'), 300); }
   if (hero === 'Dmitry') { heroModalDmitry.style.display = 'flex'; setTimeout(() => showRandomPhrase('Dmitry'), 300); }
+  if (hero === 'L4G250') { heroModalL4G250.style.display = 'flex'; setTimeout(() => showRandomPhrase('L4G250'), 300); }
 };
 window.openArtemInfo = function() { heroModalArtem.style.display = 'flex'; setTimeout(() => showRandomPhrase('Artem'), 300); };
 window.closeArtemDetails = function() { heroModalArtem.style.display = 'none'; };
 const heroModalDmitry = document.getElementById('hero-modal-dmitry');
+ const heroModalL4G250 = document.getElementById('hero-modal-l4g250');
+window.closeL4G250Details = function() { heroModalL4G250.style.display = 'none'; };
 window.openDmitryInfo = function() { heroModalDmitry.style.display = 'flex'; setTimeout(() => showRandomPhrase('Dmitry'), 300); };
 window.closeDmitryDetails = function() { heroModalDmitry.style.display = 'none'; };
 window.selectDmitryAndClose = function(){ selectedHero = 'Dmitry'; closeDmitryDetails(); closeFightersModal(); updateLobbySelection(); };
@@ -2336,7 +2400,7 @@ function updateLobbySelection() {
   const skinId = playerData.selectedSkins[selectedHero] || 'base';
   if (SKINS_CONFIG[selectedHero] && SKINS_CONFIG[selectedHero][skinId]) {
     dispIcon = SKINS_CONFIG[selectedHero][skinId].icon;
-    heroName = selectedHero === 'Vitya' ? 'Витя' : selectedHero === 'Lesha' ? 'Лёха' : selectedHero === 'Fialka' ? 'Фиалка' : selectedHero === 'Vasilek' ? 'Василёк' : selectedHero === 'Artem' ? 'Артём' : 'Дмитрий';
+    heroName = selectedHero === 'Vitya' ? 'Витя' : selectedHero === 'Lesha' ? 'Лёха' : selectedHero === 'Fialka' ? 'Фиалка' : selectedHero === 'Vasilek' ? 'Василёк' : selectedHero === 'Artem' ? 'Артём' : selectedHero === 'Dmitry' ? 'Дмитрий' : 'L4G250';
   }
 
   disp.style.backgroundImage = `url('${dispIcon}')`; 
@@ -2347,9 +2411,10 @@ function updateLobbySelection() {
   else if (selectedHero === 'Fialka') { document.getElementById('card-fialka').classList.add('selected'); }
   else if (selectedHero === 'Vasilek') { document.getElementById('card-vasilek').classList.add('selected'); }
   else if (selectedHero === 'Dmitry') { document.getElementById('card-dmitry').classList.add('selected'); }
-  else { document.getElementById('card-artem').classList.add('selected'); }
+else if (selectedHero === 'L4G250') { document.getElementById('card-l4g250').classList.add('selected'); }
+else { document.getElementById('card-artem').classList.add('selected'); }
 
-  ['Vitya', 'Lesha', 'Fialka', 'Vasilek', 'Artem', 'Dmitry'].forEach(h => {
+  ['Vitya', 'Lesha', 'Fialka', 'Vasilek', 'Artem', 'Dmitry', 'L4G250'].forEach(h => {
     const sId = playerData.selectedSkins[h] || 'base';
     const iconUrl = SKINS_CONFIG[h][sId] ? SKINS_CONFIG[h][sId].icon : `img/${h}.jpg`;
     const cardIcon = document.querySelector(`#card-${h.toLowerCase()} .fighter-card-icon`);
@@ -2449,6 +2514,7 @@ addEventListener('keydown', e => {
     else if (heroModalVasilek.style.display === 'flex') closeVasilekDetails();
     else if (heroModalArtem.style.display === 'flex') closeArtemDetails();
     else if (heroModalDmitry.style.display === 'flex') closeDmitryDetails();
+    else if (heroModalL4G250.style.display === 'flex') closeL4G250Details();
     else if (document.getElementById('upgrade-modal').classList.contains('show')) closeUpgrade();
     else if (profileModal.classList.contains('show')) closeProfileModal();
     else if (friendsModal.classList.contains('show')) closeFriendsModal();
@@ -4215,3 +4281,4 @@ requestAnimationFrame(frame);
 </script>
 </body>
 </html>
+
