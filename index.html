@@ -683,12 +683,12 @@
         <div class="fighter-card-name">Дмитрий</div>
       </div>
 
-     <div class="fighter-card l4g250 locked" id="card-l4g250" onclick="showDev('L4G250 Лесоруб')">
-       <div class="fighter-card-level">Ур. 0</div>
-       <div class="fighter-card-icon"></div>
-       <div class="fighter-card-name">L4G250</div>
-       <div class="lock-timer">Скоро</div>
-     </div>
+     <div class="fighter-card l4g250" id="card-l4g250" onclick="openHeroDetails('L4G250')">
+  <div class="fighter-card-level">Ур. 0</div>
+  <div class="fighter-card-icon"></div>
+  <div class="fighter-card-name">L4G250</div>
+  <div class="lock-timer">Скоро</div>
+</div>
 
       <div class="fighter-card empty" onclick="showDev('НОВЫЕ БОЙЦЫ')">
         <div class="fighter-card-icon">?</div>
@@ -2183,15 +2183,19 @@ function renderSkins(hero) {
     
     const div = document.createElement('div');
     div.className = `skin-item ${isSelected ? 'selected' : ''}`;
-    div.onclick = () => {
+   div.onclick = () => {
   if (!isUnlocked) return showAlert('🔒', 'Скин закрыт', 'Купите этот скин в магазине!');
   playerData.selectedSkins[hero] = skinId;
   saveData();
   renderSkins(hero);
   updateLobbySelection();
-  // Обновляем большую иконку в модалке
-  const modalIcon = document.getElementById('hero-modal-icon');
-  if (modalIcon) modalIcon.style.backgroundImage = `url('${skin.icon}')`;
+  // Обновляем большую иконку в нужной модалке
+  const modalId = hero === 'Vitya' ? 'hero-modal' : `hero-modal-${hero.toLowerCase()}`;
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    const modalIcon = modal.querySelector('#hero-modal-icon');
+    if (modalIcon) modalIcon.style.backgroundImage = `url('${skin.icon}')`;
+  }
 };
     
     div.innerHTML = `
